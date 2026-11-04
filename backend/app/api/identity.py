@@ -5,7 +5,7 @@ from argon2.exceptions import VerificationError, InvalidHashError
 from fastapi import APIRouter, Depends, Request, Response
 from pydantic import BaseModel, ConfigDict, Field
 from sqlalchemy import select, delete, text
-from app.api.dependencies import get_db, get_actor, mutate, token_hash
+from app.api.dependencies import Database, get_actor, mutate, token_hash
 from app.common import Actor, DomainError, require, check_version, audit, run_command
 from app.models import User, Grant, WarehouseScope, Session, AuditEvent, AppSetting, utcnow
 
@@ -66,7 +66,7 @@ def command(request, db, actor, name, payload, handler):
 
 
 @router.post('/auth/login')
-def login(payload: Login, request: Request, response: Response, db=Depends(get_db)):
+def login(payload: Login, request: Request, response: Response, db: Database):
     # JSON-only login prevents cross-origin form login; browser writes require CSRF afterwards.
     user = db.scalar(select(User).where(User.username == payload.username))
     try:
@@ -88,7 +88,7 @@ def login(payload: Login, request: Request, response: Response, db=Depends(get_d
 
 
 @router.post('/auth/logout')
-def logout(request: Request, response: Response, db=Depends(get_db), actor=Depends(mutate)):
+def logout(request: Request, response: Response, db: Database, actor=Depends(mutate)):
     request.state.session.revoked_at = utcnow()
     request.state.session.version += 1
     audit(db, actor, 'auth.logout', 'user', actor.id, None, None)
@@ -103,13 +103,13 @@ def me(request: Request, actor=Depends(get_actor)):
 
 
 @router.get('/admin/users')
-def users(db=Depends(get_db), actor=Depends(get_actor)):
+def users(db: Database, actor=Depends(get_actor)):
     require(actor, 'users.read')
     return [user_json(user) for user in db.scalars(select(User).order_by(User.username))]
 
 
 @router.post('/admin/users', status_code=201)
-def create_user(payload: UserCreate, request: Request, db=Depends(get_db), actor=Depends(mutate)):
+def create_user(payload: UserCreate, request: Request, db: Database, actor=Depends(mutate)):
     require(actor, 'users.manage')
     def apply():
         user = User(username=payload.username, password_hash=hasher.hash(payload.password))
@@ -121,7 +121,7 @@ def create_user(payload: UserCreate, request: Request, db=Depends(get_db), actor
 
 
 @router.patch('/admin/users/{user_id}')
-def update_user(user_id: str, payload: UserUpdate, request: Request, db=Depends(get_db), actor=Depends(mutate)):
+def update_user(user_id: str, payload: UserUpdate, request: Request, db: Database, actor=Depends(mutate)):
     require(actor, 'users.manage')
     def apply():
         user = locked_user(db, user_id)
@@ -143,13 +143,13 @@ def update_user(user_id: str, payload: UserUpdate, request: Request, db=Depends(
 
 
 @router.delete('/admin/users/{user_id}')
-def deactivate_user(user_id: str, payload: VersionInput, request: Request, db=Depends(get_db), actor=Depends(mutate)):
+def deactivate_user(user_id: str, payload: VersionInput, request: Request, db: Database, actor=Depends(mutate)):
     # Keep identity and audit references; deletion is a reversible deactivation.
     return update_user(user_id, UserUpdate(expected_version=payload.expected_version, active=False), request, db, actor)
 
 
 @router.put('/admin/users/{user_id}/grants')
-def grants(user_id: str, payload: Grants, request: Request, db=Depends(get_db), actor=Depends(mutate)):
+def grants(user_id: str, payload: Grants, request: Request, db: Database, actor=Depends(mutate)):
     require(actor, 'users.manage')
     if any(not item or len(item) > 120 for item in payload.capabilities) or any(not item or len(item) > 36 for item in payload.warehouse_ids):
         raise DomainError('invalid_grants', 'Invalid capability or warehouse ID', 422)
@@ -172,13 +172,13 @@ def grants(user_id: str, payload: Grants, request: Request, db=Depends(get_db), 
 
 
 @router.get('/admin/settings')
-def settings(db=Depends(get_db), actor=Depends(get_actor)):
+def settings(db: Database, actor=Depends(get_actor)):
     require(actor, 'settings.read')
     return [{'key': row.key, 'value': row.value, 'version': row.version} for row in db.scalars(select(AppSetting).order_by(AppSetting.key))]
 
 
 @router.put('/admin/settings/{key}')
-def set_setting(key: str, payload: SettingInput, request: Request, db=Depends(get_db), actor=Depends(mutate)):
+def set_setting(key: str, payload: SettingInput, request: Request, db: Database, actor=Depends(mutate)):
     require(actor, 'settings.manage')
     # Secrets and runtime integration switches are deployment configuration, never API settings.
     if key not in {'billing', 'display', 'business_timezone', 'company_profile'}:
@@ -210,7 +210,7 @@ def set_setting(key: str, payload: SettingInput, request: Request, db=Depends(ge
 
 
 @router.get('/admin/audit')
-def audit_events(limit: int = 100, db=Depends(get_db), actor=Depends(get_actor)):
+def audit_events(db: Database, limit: int = 100, actor=Depends(get_actor)):
     require(actor, 'audit.read')
     rows = db.scalars(select(AuditEvent).order_by(AuditEvent.created_at.desc()).limit(max(1, min(limit, 500))))
     return [{'id': r.id, 'actor_id': r.actor_id, 'action': r.action, 'entity_type': r.entity_type,

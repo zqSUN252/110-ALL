@@ -1,6 +1,6 @@
 import hashlib
 from fastapi import APIRouter, Depends, Request, UploadFile, File, Form, Response
-from app.api.dependencies import get_db, get_actor, mutate
+from app.api.dependencies import Database, get_actor, mutate
 from app.common import DomainError, require, audit, run_command
 from app.models import Attachment
 from app.attachments import put_file, read_file
@@ -9,8 +9,8 @@ router = APIRouter(prefix='/api/attachments')
 
 
 @router.post('', status_code=201)
-async def upload(request: Request, file: UploadFile = File(...), owner_type: str = Form(...),
-    owner_id: str = Form(...), db=Depends(get_db), actor=Depends(mutate)):
+async def upload(request: Request, db: Database, file: UploadFile = File(...), owner_type: str = Form(...),
+    owner_id: str = Form(...), actor=Depends(mutate)):
     require(actor, 'attachments.write')
     if owner_type != 'user' or owner_id != actor.id:
         raise DomainError('forbidden_owner', 'Upload must belong to the current user', 403)
@@ -28,7 +28,7 @@ async def upload(request: Request, file: UploadFile = File(...), owner_type: str
 
 
 @router.get('/{attachment_id}')
-def download(attachment_id: str, request: Request, db=Depends(get_db), actor=Depends(get_actor)):
+def download(attachment_id: str, request: Request, db: Database, actor=Depends(get_actor)):
     require(actor, 'attachments.read')
     row = db.get(Attachment, attachment_id)
     if not row:

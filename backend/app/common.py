@@ -50,6 +50,8 @@ def run_command(db, actor, command, key, payload, handler):
     import hashlib
     import json
     from sqlalchemy import select, text
+    from argon2 import PasswordHasher
+    from argon2.exceptions import VerificationError, InvalidHashError
     from app.models import Command
     if not key or len(key) > 200:
         raise DomainError('idempotency_required', 'Provide Idempotency-Key', 400)
@@ -58,10 +60,16 @@ def run_command(db, actor, command, key, payload, handler):
     db.execute(text('SELECT pg_advisory_xact_lock(:key)'), {'key': lock})
     existing = db.scalar(select(Command).where(Command.actor_id == actor.id, Command.command == command, Command.key == key))
     if existing:
-        if existing.request_hash != digest:
+        prefix = 'argon2id-sha256-v1:'
+        if not existing.request_hash.startswith(prefix):
+            raise DomainError('fingerprint_upgrade_required', 'Command fingerprint requires migration', 503)
+        try:
+            PasswordHasher().verify(existing.request_hash[len(prefix):], digest)
+        except (VerificationError, InvalidHashError):
             raise DomainError('idempotency_conflict', 'Key already used with a different request', 409)
         return existing.result
     result = json_value(handler())
-    db.add(Command(actor_id=actor.id, command=command, key=key, request_hash=digest, result=result))
+    fingerprint = 'argon2id-sha256-v1:' + PasswordHasher().hash(digest)
+    db.add(Command(actor_id=actor.id, command=command, key=key, request_hash=fingerprint, result=result))
     db.flush()
     return result

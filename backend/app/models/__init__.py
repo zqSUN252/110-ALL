@@ -64,7 +64,7 @@ class Command(Record, Base):
     actor_id: Mapped[str] = mapped_column(ForeignKey('users.id'), nullable=False)
     command: Mapped[str] = mapped_column(String(120), nullable=False)
     key: Mapped[str] = mapped_column(String(200), nullable=False)
-    request_hash: Mapped[str] = mapped_column(String(64), nullable=False)
+    request_hash: Mapped[str] = mapped_column(Text, nullable=False)
     result: Mapped[dict] = mapped_column(JSONB, nullable=False)
 
 

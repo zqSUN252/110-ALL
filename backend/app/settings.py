@@ -2,7 +2,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 import json
 import os
-import subprocess
+from app.private_storage import protect_private_root
 
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -38,14 +38,3 @@ def load_settings() -> Settings:
     if 'private_root' in values:
         values['private_root'] = Path(values['private_root'])
     return Settings(**values)
-
-
-def protect_private_root(path: Path):
-    path.mkdir(parents=True, exist_ok=True)
-    if os.name == 'nt':
-        identity = subprocess.check_output(['whoami'], text=True).strip()
-        result = subprocess.run(['icacls', str(path), '/inheritance:r', '/grant:r', f'{identity}:(OI)(CI)F'], capture_output=True)
-        if result.returncode:
-            raise RuntimeError('Cannot restrict private storage permissions')
-    else:
-        path.chmod(0o700)

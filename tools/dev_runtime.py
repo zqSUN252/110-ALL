@@ -6,19 +6,14 @@ from pathlib import Path
 import secrets
 import socket
 import subprocess
+import sys
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / 'backend'))
+from app.private_storage import protect_private_root
+
 PRIVATE = ROOT / 'private'
 BIN = Path(os.environ.get('MCSTAR_PG_BIN', r'D:\APP\PostgreSQL\17\bin'))
-
-
-def protect(path):
-    if os.name == 'nt':
-        identity = subprocess.check_output(['whoami'], text=True).strip()
-        subprocess.run(['icacls', str(path), '/inheritance:r', '/grant:r', f'{identity}:(OI)(CI)F'],
-                       check=True, capture_output=True)
-    else:
-        path.chmod(0o700)
 
 
 def run(executable, *args):
@@ -32,7 +27,7 @@ def run(executable, *args):
 
 def start():
     PRIVATE.mkdir(exist_ok=True)
-    protect(PRIVATE)
+    protect_private_root(PRIVATE)
     keys = PRIVATE / 'keys'
     keys.mkdir(exist_ok=True)
     config = PRIVATE / 'runtime.json'

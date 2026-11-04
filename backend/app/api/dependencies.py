@@ -1,7 +1,9 @@
 import hashlib
 import hmac
+from typing import Annotated
 from fastapi import Depends, Request
 from sqlalchemy import select
+from sqlalchemy.orm import Session as OrmSession
 from app.common import Actor, DomainError
 from app.models import User, Session, Grant, WarehouseScope, utcnow
 
@@ -18,7 +20,12 @@ def get_db(request: Request):
             yield db
 
 
-def get_actor(request: Request, db=Depends(get_db)):
+# All direct/transitive users must import this alias: one cached session, committed
+# before any status/body/cookie is sent. Do not use bare Depends(get_db).
+Database = Annotated[OrmSession, Depends(get_db, scope='function')]
+
+
+def get_actor(request: Request, db: Database):
     token = request.cookies.get('mcstar_session')
     if not token:
         raise DomainError('unauthenticated', 'Sign in required', 401)

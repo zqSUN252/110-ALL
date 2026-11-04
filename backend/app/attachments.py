@@ -2,6 +2,7 @@ import hashlib
 import os
 from pathlib import Path
 import re
+from uuid import uuid4
 from app.common import DomainError, require
 from app.models import Attachment
 
@@ -22,14 +23,26 @@ def put_file(db, actor, content, filename, media_type, owner_type, owner_id):
     if not target.is_relative_to(root):
         raise DomainError('invalid_object', 'Invalid private object path', 500)
     target.parent.mkdir(parents=True, exist_ok=True)
+    temporary = target.parent / ('.' + uuid4().hex + '.tmp')
     try:
-        with target.open('xb') as output:
+        with temporary.open('xb') as output:
             output.write(content)
+            output.flush()
+            os.fsync(output.fileno())
         if os.name != 'nt':
-            target.chmod(0o600)
-    except FileExistsError:
-        if hashlib.sha256(target.read_bytes()).hexdigest() != digest:
-            raise DomainError('integrity_error', 'Stored object checksum mismatch', 500)
+            temporary.chmod(0o600)
+        if hashlib.sha256(temporary.read_bytes()).hexdigest() != digest:
+            raise DomainError('integrity_error', 'Temporary object checksum mismatch', 500)
+        try:
+            # Same-filesystem hard link creates the final name atomically and never
+            # overwrites a winner. The temporary handle is closed before publication.
+            os.link(temporary, target)
+        except FileExistsError:
+            if hashlib.sha256(target.read_bytes()).hexdigest() != digest:
+                raise DomainError('integrity_error', 'Stored object checksum mismatch', 500)
+    finally:
+        # Only our uniquely named temporary object; never a published original.
+        temporary.unlink(missing_ok=True)
     safe_name = Path(filename.replace('\\', '/')).name[:255] or 'attachment'
     row = Attachment(sha256=digest, object_path=relative, filename=safe_name,
         media_type=media_type[:120], size_bytes=len(content), created_by=actor.id,
