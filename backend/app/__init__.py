@@ -1,0 +1,1 @@
+"""MC STAR LOGISTICS application."""
