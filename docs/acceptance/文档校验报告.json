@@ -1,7 +1,7 @@
 {
   "date": "2026-11-04",
   "scope": "仅文档、追溯与来源完整性；不是应用验收",
-  "checks_passed": 38,
+  "checks_passed": 40,
   "checks": [
     "146个唯一需求ID",
     "清单覆盖578段且编号连续",
@@ -17,12 +17,14 @@
     "代码围栏成对:README.md",
     "代码围栏成对:AGENTS.md",
     "代码围栏成对:docs\\acceptance\\设计审阅记录.md",
+    "代码围栏成对:docs\\acceptance\\迁移审查记录.md",
     "代码围栏成对:docs\\acceptance\\验收矩阵.md",
     "代码围栏成对:docs\\development\\assistant-contract.md",
     "代码围栏成对:docs\\development\\documents-contract.md",
     "代码围栏成对:docs\\development\\finance-contract.md",
     "代码围栏成对:docs\\development\\implementation-progress.md",
     "代码围栏成对:docs\\development\\logistics-contract.md",
+    "代码围栏成对:docs\\development\\migration-contract.md",
     "代码围栏成对:docs\\development\\schema-contract.md",
     "代码围栏成对:docs\\development\\ui-contract.md",
     "代码围栏成对:docs\\integration\\110集成方案.md",
