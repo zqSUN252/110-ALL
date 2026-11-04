@@ -437,15 +437,20 @@ def reverse_payment(db,actor,p):
     payment=access(db,actor,Payment,p['id'],'finance.reverse'); check_version(payment,p.get('expected_version'))
     if payment.state!='posted' or p.get('confirmed') is not True or not p.get('reason'):
         raise DomainError('confirmation_required','Explicit posted-payment reversal confirmation and reason required')
-    for iid in sorted(set(db.scalars(select(Allocation.invoice_id).where(Allocation.payment_id==payment.id)))):
-        inv=locked(db,Invoice,iid); amount=total(db,Allocation,'amount_ngn',invoice_id=iid,payment_id=payment.id)
-        if amount: unallocate(db,actor,inv,amount,p['reason'],payment.id)
-        inv.version+=1; invalidate(db,invoice_id=iid,payment_id=payment.id,kind='payment_reversed')
     claim=db.scalar(select(BankClaim).where(BankClaim.payment_id==payment.id,BankClaim.state!='released').with_for_update())
     if claim:
         resolution=p.get('claim_resolution','disputed')
         if resolution not in ('disputed','released'): raise DomainError('invalid_resolution','Choose disputed or explicitly released')
-        if resolution=='released': require(actor,'bank.release',payment.warehouse_id)
+        if resolution=='released':
+            require(actor,'bank.release',payment.warehouse_id)
+            from app.bank.identity import guard_claim
+            from app.models import BankEntry
+            guard_claim(db,locked(db,BankEntry,claim.entry_id))
+    for iid in sorted(set(db.scalars(select(Allocation.invoice_id).where(Allocation.payment_id==payment.id)))):
+        inv=locked(db,Invoice,iid); amount=total(db,Allocation,'amount_ngn',invoice_id=iid,payment_id=payment.id)
+        if amount: unallocate(db,actor,inv,amount,p['reason'],payment.id)
+        inv.version+=1; invalidate(db,invoice_id=iid,payment_id=payment.id,kind='payment_reversed')
+    if claim:
         claim.state=resolution; claim.version+=1; payment.bank_state=resolution
     payment.state='reversed'; payment.version+=1
     return payment_json(db,payment)

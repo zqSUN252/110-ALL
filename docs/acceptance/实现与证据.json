@@ -2218,7 +2218,9 @@
     "source_original_bytes_mtime_acl_unchanged": true,
     "source_old_sessions_activated": 0,
     "new_native_sessions": 2,
-    "external_calls": 0
+    "external_calls": 0,
+    "verified_at_commit": "74df2b66e36a3e4e97fc05f1445f7b7f32139c6b",
+    "rerun_in_fix_round2": false
   },
   "actual_restore": {
     "schema": "restore_task5_fix1_final",
@@ -2452,7 +2454,9 @@
       "migration.writer",
       "migration.restore_gate"
     ],
-    "team_archive": "not_archived"
+    "team_archive": "not_archived",
+    "verified_at_commit": "74df2b66e36a3e4e97fc05f1445f7b7f32139c6b",
+    "rerun_in_fix_round2": false
   },
   "runtime_validation": {
     "fresh_cli_started": true,
@@ -2505,7 +2509,9 @@
     "final_full": {
       "passed": 296,
       "warnings": 1,
-      "seconds": "952.47"
+      "seconds": "952.47",
+      "verified_at_commit": "74df2b66e36a3e4e97fc05f1445f7b7f32139c6b",
+      "scope": "historical_full_suite_baseline_not_fix_round2_head"
     },
     "prior_f5_final_full": {
       "passed": 271,
@@ -2589,6 +2595,51 @@
         "same_code_for_full_tests_trial_and_restore": true
       },
       "M01": "existing_upstream_Starlette_AnyIO_warning_retained_no_ignore"
+    },
+    "fix_round2": {
+      "base_commit": "74df2b66e36a3e4e97fc05f1445f7b7f32139c6b",
+      "finding": "T5-R1-N01",
+      "full_suite_rerun": false,
+      "business_red": {
+        "original_dual_source_probe": "legacy_identity_review_rolled_back_all_rows",
+        "complete_export_regression_failed": 1,
+        "http_reverse_release_returned_200_instead_of_409": true
+      },
+      "focused": {
+        "passed": 37,
+        "warnings": 1,
+        "seconds": "134.04"
+      },
+      "frozen_scoped": {
+        "passed": 119,
+        "warnings": 1,
+        "seconds": "375.09",
+        "files": [
+          "test_migration110.py",
+          "test_migration_review.py",
+          "test_legacy_bank_evidence.py",
+          "test_evidence.py",
+          "test_finance.py",
+          "test_finance_review.py",
+          "test_restore.py",
+          "test_migration.py"
+        ],
+        "freeze_files": 172,
+        "freeze_changes": 0,
+        "freeze_rule": "recursive Python files in backend/app, backend/tests, backend/migrations, tools",
+        "prior_freeze_only": [
+          "deploy/start-local.ps1"
+        ],
+        "excluded_deploy_hash_unchanged": true
+      },
+      "compileall_exit": 0,
+      "pip_check": "No broken requirements found.",
+      "diff_check_exit": 0,
+      "schema_head": "f11000500006",
+      "schema_models_mcstar_parser_unchanged": true,
+      "native_adapter_format_version": 1,
+      "actual_source_rerun": false,
+      "external_calls": 0
     }
   },
   "unaccepted_inputs": [
@@ -2882,11 +2933,12 @@
     "team_archive": "not_archived"
   },
   "review_fixes": {
-    "T5-I01": "implemented_and_verified_pending_independent_rereview",
-    "T5-I02": "implemented_and_verified_pending_independent_rereview",
-    "T5-I03": "implemented_and_verified_pending_independent_rereview",
-    "T5-I04": "implemented_and_verified_pending_independent_rereview",
-    "T5-I05": "implemented_and_verified_pending_independent_rereview",
-    "T5-I06": "implemented_and_verified_pending_independent_rereview"
+    "T5-I01": "addressed_by_independent_round1_rereview",
+    "T5-I02": "addressed_by_independent_round1_rereview",
+    "T5-I03": "addressed_by_independent_round1_rereview",
+    "T5-I04": "addressed_by_independent_round1_rereview",
+    "T5-I05": "addressed_by_independent_round1_rereview",
+    "T5-I06": "addressed_by_independent_round1_rereview",
+    "T5-R1-N01": "implemented_and_verified_pending_independent_rereview"
   }
 }

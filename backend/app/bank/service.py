@@ -241,13 +241,14 @@ def review_case(db,actor,p):
         from app.models import LegacyBankEvidence
         if db.scalar(select(LegacyBankEvidence.id).where(LegacyBankEvidence.claim_id==claim.id)):
             raise DomainError('historical_evidence_bound','Historical evidence needs source reconciliation; generic release/resolve cannot free it',409)
+        entry=locked(db,BankEntry,claim.entry_id)
+        from .identity import guard_claim
+        guard_claim(db,entry)
         if action=='release':
             if claim.payment_id:raise DomainError('financial_reversal_required','Posted claim requires separate explicit payment reversal',409)
             claim.state='released'; case.state='pending'
         else:
-            entry=locked(db,BankEntry,claim.entry_id);account=locked(db,BankAccount,entry.account_id)
-            from .identity import guard_claim
-            guard_claim(db,entry)
+            account=locked(db,BankAccount,entry.account_id)
             account_access(db,actor,account,'bank.review',case.warehouse_id)
             if case.account_id!=account.id or case.scope!=account.scope or entry.currency!=case.currency or entry.credit<=0 or entry.debit!=0:
                 raise DomainError('bank_scope','Original bank direction/currency/account scope conflicts')

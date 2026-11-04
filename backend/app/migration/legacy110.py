@@ -45,7 +45,7 @@ def apply_native(db, actor, source, plan):
     old=db.scalar(select(MigrationBatch).where(MigrationBatch.dataset==dataset))
     if old:
         if old.plan_hash!=plan['plan_hash']:raise DomainError('cross_snapshot_identity_review','Changed source or mapping requires separate review',409)
-        return {'batch_id':old.id,'created':0,'state':old.state}
+        return {'batch_id':old.id,'created':0,'state':old.state,'identity_conflict_entries':old.controls.get('identity_conflict_entries',0)}
     warehouse=db.get(Warehouse,mapping['warehouse_id'])
     if not warehouse:raise DomainError('warehouse_required','Explicit known warehouse required')
     rows=source['rows'];native={};archives={};technical=importer(db)
@@ -153,8 +153,9 @@ def apply_native(db, actor, source, plan):
         cid,raw=owners[0];entry=entries.get(rid);case=cases.get(cid)
         if not entry or not case or case.account_id!=entry.account_id:raise DomainError('claim_mapping_conflict','Claim ownership/account mapping conflicts')
         if db.scalar(select(BankClaim.id).where(BankClaim.case_id==case.id,BankClaim.state!='released')):raise DomainError('claim_conflict','Multiple active source rows require explicit reconciliation')
-        from app.bank.identity import guard_claim
-        guard_claim(db,entry)
+        # Restore every original owner as a frozen fact, not a new verification.
+        # Identity candidates must exist before the controlled adjudication API
+        # can distinguish them. All operational claim paths still use its guard.
         claim=BankClaim(entry_id=entry.id,case_id=case.id,state='disputed',reason='Historical occupied source; current evidence revalidation required',actor_id=technical.id)
         db.add(claim);case.state='disputed';db.flush()
         db.add(EvidenceReview(case_id=case.id,actor_id=technical.id,action='legacy_import',previous_version=case.version,fields={'original_claim':raw,'batch_id':batch.id},reason='Original actor is source text, not current authorization'))
@@ -179,6 +180,27 @@ def apply_native(db, actor, source, plan):
         while parent and parent not in native and parent not in archive_pointers:parent=parent.rsplit('/',1)[0]
         target=native.get(parent) or archive_pointers.get(parent,batch)
         db.add(MigrationSourceMap(batch_id=batch.id,pointer=pointer,target_type=target.__tablename__,target_id=target.id,disposition='historical_nonexecutable',value_hash=item['value_hash']))
+    from app.bank.identity import guard_claim
+    conflicts=0
+    for item in rows.get('bank_rows',[]):
+        entry=entries[str(item['raw']['id'])]
+        try:guard_claim(db,entry)
+        except DomainError as error:
+            if error.code!='legacy_identity_review':raise
+            entry.issues=sorted(set(entry.issues)|{'legacy_occupied_identity_conflict'})
+            issue(item['pointer'],'legacy_occupied_identity_conflict');conflicts+=1
+    batch.controls={**batch.controls,'identity_conflict_entries':conflicts}
     for account in {a.id:a for a in accounts.values()}.values():account.revision+=1
+    db.flush()
+    # A later historical observation also invalidates an existing normal/native
+    # verification when its current identity or relevant bank bucket changed.
+    # Keep its cash/allocation/occupancy; freeze subsequent use, never release it.
+    from app.bank.service import claim_basis_current,freeze_case
+    current_claims=select(BankClaim).join(BankEntry,BankEntry.id==BankClaim.entry_id).where(BankEntry.account_id.in_({a.id for a in accounts.values()}),BankClaim.state.in_(['verified_unallocated','posted','historical_bound'])).with_for_update()
+    for claim in db.scalars(current_claims):
+        if not claim_basis_current(db,claim):
+            case=db.get(EvidenceCase,claim.case_id)
+            freeze_case(db,case,'legacy_bank_basis_changed');case.version+=1
+            db.add(EvidenceReview(case_id=case.id,actor_id=actor.id,action='legacy_bank_basis_changed',previous_version=case.version-1,fields={'batch_id':batch.id},reason='Historical source observation requires current identity and bank-basis review'))
     audit(db,actor,'migration.110_applied','migration_batch',batch.id,None,{'counts':batch.controls,'external_work':'paused'})
-    db.flush();return {'batch_id':batch.id,'created':len(native),'state':'applied','cash_created':0,'external_work':'paused'}
+    db.flush();return {'batch_id':batch.id,'created':len(native),'state':'applied','cash_created':0,'external_work':'paused','identity_conflict_entries':conflicts}
