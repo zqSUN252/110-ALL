@@ -168,14 +168,22 @@ def create_warehouse(db,actor,p):
     db.add(obj); db.flush(); return record(obj)
 
 
-@command('party.create','name warehouse_id classification phone address source')
+@command('party.create','name warehouse_id classification phone address source categories phone_source')
 def create_party(db,actor,p):
     require(actor,'parties.manage',p['warehouse_id'])
     locked(db,Warehouse,p['warehouse_id'])
-    obj=Party(**{k:v for k,v in p.items() if k!='idempotency_key'})
+    obj=Party(**{k:v for k,v in p.items() if k not in ('idempotency_key','categories','phone_source')})
     db.add(obj); db.flush()
     db.add(PartyWarehouse(party_id=obj.id,warehouse_id=obj.warehouse_id,source=p.get('source') or 'Explicit home warehouse on creation'))
-    db.flush(); return record(obj)
+    from app.models import PartyPhone,PartyCategory
+    from app.warehouses.masters import normalized_phone,party_json
+    if p.get('phone'):
+        if not str(p.get('phone_source') or p.get('source') or '').strip():raise DomainError('phone_source','New phone needs original source or explicit manual provenance')
+        db.add(PartyPhone(party_id=obj.id,raw=p['phone'],normalized=normalized_phone(p['phone']),source=p.get('phone_source') or p['source'],actor_id=actor.id))
+    categories=p.get('categories',[])
+    if not isinstance(categories,list) or len(categories)>30 or any(not isinstance(c,str) or not c.strip() or len(c)>100 for c in categories):raise DomainError('categories','Provide explicit categories')
+    db.add_all([PartyCategory(party_id=obj.id,category=c) for c in set(categories)])
+    db.flush(); return party_json(db,obj)
 
 
 @command('party.membership','id expected_version warehouse_id active source')
@@ -189,7 +197,7 @@ def set_party_membership(db,actor,p):
     party.version+=1;db.flush();return record(party)|{'memberships':[record(m) for m in db.scalars(select(PartyWarehouse).where(PartyWarehouse.party_id==party.id))]}
 
 
-@command('invoice.create','party_id warehouse_id scope kind reference amount_ngn charge_usd charge_ngn ngn_per_usd uploaded_on period source_key pricing')
+@command('invoice.create','party_id warehouse_id scope kind reference amount_ngn charge_usd charge_ngn ngn_per_usd uploaded_on period source_key pricing rounding_basis')
 def create_invoice(db,actor,p):
     kind=p.get('kind','AR')
     if kind not in ('AR','AP'):
@@ -198,16 +206,23 @@ def create_invoice(db,actor,p):
     if kind=='AP' and not p.get('period'):
         raise DomainError('period_required','Payables require a billed period')
     uploaded=day(p['uploaded_on'])
-    amount=decimal(p['amount_ngn']); usd=ngn=rate=None
+    amount=decimal(p['amount_ngn']); usd=ngn=rate=None;rounding=ZERO;rounding_basis=None
+    if 'rounding_basis' in p:
+        from .rounding import validate_basis
+        rounding,rounding_basis=validate_basis(db,p['rounding_basis'],amount,payload=p)
     if any(key in p for key in ('charge_usd','charge_ngn','ngn_per_usd')):
         usd=decimal(p.get('charge_usd','0')); ngn=decimal(p.get('charge_ngn','0'))
         rate=decimal(p['ngn_per_usd'],6,True) if usd else None
         calculated=settle(usd,'USD',{'direction':'NGN_PER_USD','rate':str(rate)})+ngn if usd else ngn
-        if calculated!=amount:raise DomainError('charge_mismatch','USD × explicit NGN/USD + native NGN must equal invoice total')
+        if calculated+rounding!=amount:raise DomainError('charge_mismatch','USD × explicit NGN/USD + native NGN + validated rounding must equal invoice total')
     inv=Invoice(party_id=p['party_id'],warehouse_id=p['warehouse_id'],scope=mode,kind=kind,reference=p['reference'],
-        amount_ngn=amount,charge_usd=usd,charge_ngn=ngn,ngn_per_usd=rate,uploaded_on=uploaded,due_on=uploaded+timedelta(days=14),period=p.get('period'),
+        amount_ngn=amount,charge_usd=usd,charge_ngn=ngn,ngn_per_usd=rate,rounding_adjustment_ngn=rounding,uploaded_on=uploaded,due_on=uploaded+timedelta(days=14),period=p.get('period'),
         source_key=p.get('source_key'),pricing=p.get('pricing',{}))
-    db.add(inv); db.flush(); return invoice_json(db,inv)
+    db.add(inv); db.flush()
+    if rounding_basis:
+        from .rounding import save_basis
+        save_basis(db,actor,inv,rounding_basis)
+    return invoice_json(db,inv)
 
 
 def new_payment(db,actor,p,direction='in',state='pending'):
@@ -330,7 +345,7 @@ def unallocate(db,actor,inv,amount,reason,payment_id=None):
     if amount!=0: raise DomainError('ledger_inconsistent','Allocation ledger inconsistent',409)
 
 
-@command('invoice.adjust','id expected_version amount_ngn reason pricing preview discount_total_ngn charge_usd charge_ngn ngn_per_usd')
+@command('invoice.adjust','id expected_version amount_ngn reason pricing preview discount_total_ngn charge_usd charge_ngn ngn_per_usd rounding_basis')
 def adjust_invoice(db,actor,p):
     inv=locked(db,Invoice,p['id']); require(actor,'payables.manage' if inv.kind=='AP' else 'finance.adjust',inv.warehouse_id); check_version(inv,p.get('expected_version'))
     before=invoice_json(db,inv); new=decimal(p['amount_ngn'])
@@ -340,7 +355,7 @@ def adjust_invoice(db,actor,p):
     if discounts>new: raise DomainError('discount_exceeds_price','Existing discounts exceed new price; explicit discount resolution required')
     allocated=total(db,Allocation,'amount_ngn',invoice_id=inv.id)
     excess=max(ZERO,allocated+discounts-new)
-    preview=adjustment_preview(db,actor,inv.id,str(new),p.get('discount_total_ngn'))
+    preview=adjustment_preview(db,actor,inv.id,str(new),p.get('discount_total_ngn'),p.get('rounding_basis'))
     if p.get('preview')!=preview:
         raise DomainError('preview_changed','Financial impact changed',409,preview)
     if not str(p.get('reason','')).strip(): raise DomainError('reason_required','Adjustment reason required')
@@ -349,6 +364,10 @@ def adjust_invoice(db,actor,p):
         db.add(Discount(invoice_id=inv.id,amount_ngn=discounts-old_discounts,reason='Price adjustment: '+p['reason'],actor_id=actor.id)); db.flush()
     if excess: unallocate(db,actor,inv,excess,'invoice_adjustment')
     inv.amount_ngn=new; inv.version+=1
+    inv.rounding_adjustment_ngn=ZERO;rounding_basis=None
+    if 'rounding_basis' in p:
+        from .rounding import validate_basis
+        inv.rounding_adjustment_ngn,rounding_basis=validate_basis(db,p['rounding_basis'],new,invoice=inv,payload=p)
     # Original typed components stay historical in the audit; changed totals require
     # explicit new components or mark this as a manual total, never stale components.
     inv.charge_usd=None; inv.charge_ngn=None; inv.ngn_per_usd=None
@@ -356,15 +375,18 @@ def adjust_invoice(db,actor,p):
         usd=decimal(p.get('charge_usd','0')); ngn=decimal(p.get('charge_ngn','0'))
         rate=decimal(p['ngn_per_usd'],6,True) if usd else None
         calculated=settle(usd,'USD',{'direction':'NGN_PER_USD','rate':str(rate)})+ngn if usd else ngn
-        if calculated!=new:raise DomainError('charge_mismatch','Updated typed charges differ from total')
+        if calculated+inv.rounding_adjustment_ngn!=new:raise DomainError('charge_mismatch','Updated typed charges and validated rounding differ from total')
         inv.charge_usd=usd; inv.charge_ngn=ngn; inv.ngn_per_usd=rate
     if 'pricing' in p: inv.pricing=p['pricing']
+    if rounding_basis:
+        from .rounding import save_basis
+        save_basis(db,actor,inv,rounding_basis)
     invalidate(db,invoice_id=inv.id)
     after=invoice_json(db,inv); audit(db,actor,'invoice.adjusted','invoice',inv.id,before,after)
     return after|{'impact':preview}
 
 
-def adjustment_preview(db,actor,identity,amount_ngn,discount_total_ngn=None):
+def adjustment_preview(db,actor,identity,amount_ngn,discount_total_ngn=None,rounding_basis=None):
     inv=locked(db,Invoice,identity); require(actor,'payables.manage' if inv.kind=='AP' else 'finance.adjust',inv.warehouse_id); new=decimal(amount_ngn)
     allocated=total(db,Allocation,'amount_ngn',invoice_id=inv.id); old_discounts=total(db,Discount,'amount_ngn',invoice_id=inv.id)
     discounts=decimal(discount_total_ngn) if discount_total_ngn is not None else old_discounts
@@ -373,7 +395,11 @@ def adjustment_preview(db,actor,identity,amount_ngn,discount_total_ngn=None):
     for payment in payments:payment_access(db,actor,payment,'payables.manage' if inv.kind=='AP' else 'finance.adjust')
     raw_cash=sum((p.amount_ngn for p in payments if p.approval!='opening'),ZERO)
     historical_credit=sum((p.amount_ngn for p in payments if p.approval=='opening'),ZERO)
-    return json_value({'version':inv.version,'old_ngn':inv.amount_ngn,'new_ngn':new,'original_payment_cash_ngn':raw_cash,'historical_credit_ngn':historical_credit,
+    rounding=ZERO
+    if rounding_basis is not None:
+        from .rounding import validate_basis
+        rounding,_=validate_basis(db,rounding_basis,new,invoice=inv)
+    return json_value({'version':inv.version,'old_ngn':inv.amount_ngn,'new_ngn':new,'old_rounding_adjustment_ngn':inv.rounding_adjustment_ngn,'new_rounding_adjustment_ngn':rounding,'rounding_basis':rounding_basis,'original_payment_cash_ngn':raw_cash,'historical_credit_ngn':historical_credit,
         'allocated_ngn':allocated,'old_discount_ngn':old_discounts,'discount_ngn':discounts,'return_to_balance_ngn':max(ZERO,allocated+discounts-new),
         'outstanding_ngn':max(ZERO,new-discounts-allocated),'invalidate_unexecuted_instructions':True})
 

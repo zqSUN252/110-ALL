@@ -36,7 +36,7 @@ class WarehouseScope(Record, Base):
     __tablename__ = 'warehouse_scopes'
     __table_args__ = (UniqueConstraint('user_id', 'warehouse_id'),)
     user_id: Mapped[str] = mapped_column(ForeignKey('users.id'), nullable=False, index=True)
-    warehouse_id: Mapped[str] = mapped_column(String(36), nullable=False)
+    warehouse_id: Mapped[str] = mapped_column(ForeignKey('warehouses.id'), nullable=False)
 
 
 class Session(Record, Base):
@@ -108,3 +108,5 @@ class Outbox(Record, Base):
 
 from .finance import (Warehouse, Party, Invoice, InvoiceAdjustment, Discount, Payment, Allocation, OpeningBalance, EvidenceCase, EvidenceImage, EvidenceReview, RecognitionJob, BankAccount, BankFile, BankEntry, BankSourceRow, BankClaim, BankMatch, ChannelMessage, ChannelAction, Delivery, FinanceEvent)
 from .finance import PartyWarehouse, BankAccountWarehouse, CrossPartyAuthorization
+
+from .logistics import (PartyCategory, PartyPhone, Receipt, ReceiptSpec, StockEvent, ReceiptReview, TranslationCandidate, PriceCard, QuoteSnapshot, Shipment, DispatchBatch, PackingDocument, ImportBatch, Ticket, CargoSourceRow, DocumentRevision, Arrival, TicketAttachment, TicketReview, ArrivalSettlement)

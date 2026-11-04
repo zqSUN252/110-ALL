@@ -46,6 +46,7 @@ class Invoice(Record, Base):
     kind: Mapped[str] = col(String(8), default='AR')
     reference: Mapped[str] = col(String(200))
     amount_ngn: Mapped[Decimal] = col(Money)
+    rounding_adjustment_ngn: Mapped[Decimal] = col(Money,default=Decimal('0.00'))
     charge_usd: Mapped[Decimal | None] = col(Money)
     charge_ngn: Mapped[Decimal | None] = col(Money)
     ngn_per_usd: Mapped[Decimal | None] = col(Numeric(20,6))

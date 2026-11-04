@@ -155,6 +155,10 @@ def grants(user_id: str, payload: Grants, request: Request, db: Database, actor=
         raise DomainError('invalid_grants', 'Invalid capability or warehouse ID', 422)
     if user_id == actor.id and '*' in actor.capabilities and '*' not in payload.capabilities:
         raise DomainError('self_demote', 'Cannot remove own administrator grant', 409)
+    from app.models import Warehouse
+    existing=set(db.scalars(select(Warehouse.id).where(Warehouse.id.in_(payload.warehouse_ids))))
+    if existing!=set(payload.warehouse_ids):
+        raise DomainError('unknown_warehouse','Every warehouse scope must name an existing warehouse',422)
     def apply():
         user = locked_user(db, user_id)
         check_version(user, payload.expected_version)

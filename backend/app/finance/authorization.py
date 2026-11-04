@@ -195,6 +195,7 @@ def export_access(db,actor,name,result):
         if '*' not in actor.capabilities:raise DomainError('export_provenance_required','Legacy export needs a complete authorized provenance review',403)
         return
     require(actor,'finance.export' if name=='finance.export' else 'bank.export',result['file']['owner_id'])
+    for identity in result.get('source_invoice_ids',[]):require(actor,'finance.read',get(db,Invoice,identity).warehouse_id)
     for identity in result[key]:
         if name=='finance.export':payment_access(db,actor,get(db,Payment,identity),'finance.export')
         else:

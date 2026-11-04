@@ -23,16 +23,19 @@ def test_anonymous_and_admin_login(app):
 
 
 def test_grants_change_on_next_request(app):
+    from app.models import Warehouse
+    with app.state.session_factory() as db,db.begin():
+        warehouse=Warehouse(name='Synthetic scope warehouse');db.add(warehouse);db.flush();warehouse_id=warehouse.id
     with TestClient(app) as admin, TestClient(app) as low:
         headers = login(admin)
         login(low, 'operator')
         assert low.get('/api/admin/users').status_code == 403
         user = next(u for u in admin.get('/api/admin/users').json() if u['username'] == 'operator')
         response = admin.put(f"/api/admin/users/{user['id']}/grants", headers=headers,
-            json={'expected_version': user['version'], 'capabilities': ['users.read'], 'warehouse_ids': ['w1']})
+            json={'expected_version': user['version'], 'capabilities': ['users.read'], 'warehouse_ids': [warehouse_id]})
         assert response.status_code == 200, response.text
         assert low.get('/api/admin/users').status_code == 200
-        assert low.get('/api/me').json()['warehouse_ids'] == ['w1']
+        assert low.get('/api/me').json()['warehouse_ids'] == [warehouse_id]
 
 
 def test_version_csrf_idempotency_and_audit(app):

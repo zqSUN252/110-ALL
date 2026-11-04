@@ -49,6 +49,8 @@ class PartyInput(Input):
     phone:str|None=None
     address:str|None=None
     source:str|None=None
+    categories:list[str]=Field(default_factory=list,max_length=30)
+    phone_source:str|None=None
 
 
 class InvoiceInput(Input):
@@ -366,12 +368,9 @@ def records(kind:str,warehouse_id:str,db:Database,scope:str='live',after:str|Non
 
 
 @router.get('/parties')
-def parties(warehouse_id:str,db:Database,after:str|None=None,limit:int=50,actor=Depends(get_actor)):
-    require(actor,'parties.read',warehouse_id)
-    query=select(Party).join(PartyWarehouse,PartyWarehouse.party_id==Party.id).where(PartyWarehouse.warehouse_id==warehouse_id,PartyWarehouse.active.is_(True))
-    if after:query=query.where(Party.id>after)
-    rows=list(db.scalars(query.order_by(Party.id).limit(min(max(limit,1),200))))
-    return {'items':[finance.record(row) for row in rows],'next':rows[-1].id if rows else None}
+def parties(warehouse_id:str,db:Database,after:str|None=None,limit:int=50,query:str|None=None,category:str|None=None,actor=Depends(get_actor)):
+    from app.warehouses.masters import list_parties
+    return list_parties(db,actor,warehouse_id,after,limit,query,category)
 
 
 @router.get('/warehouses')
