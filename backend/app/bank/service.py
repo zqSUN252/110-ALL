@@ -140,7 +140,7 @@ def confirm_import(db,actor,p):
     for currency,amount in changed_buckets:
         receipt_values=[amount,amount+Decimal('53.75')] if currency=='NGN' else [amount]
         affected.append(or_(and_(BankEntry.currency==currency,BankEntry.credit==amount),and_(EvidenceCase.currency==currency,EvidenceCase.amount.in_(receipt_values))))
-    claims=select(BankClaim).join(BankEntry,BankEntry.id==BankClaim.entry_id).join(EvidenceCase,EvidenceCase.id==BankClaim.case_id).where(BankEntry.account_id==account.id,BankClaim.state.in_(['verified_unallocated','posted']),or_(*affected)).with_for_update() if affected else None
+    claims=select(BankClaim).join(BankEntry,BankEntry.id==BankClaim.entry_id).join(EvidenceCase,EvidenceCase.id==BankClaim.case_id).where(BankEntry.account_id==account.id,BankClaim.state.in_(['verified_unallocated','posted','historical_bound']),or_(*affected)).with_for_update() if affected else None
     for claim in db.scalars(claims) if claims is not None else []:
         case=locked(db,EvidenceCase,claim.case_id)
         if not claim_basis_current(db,claim):
@@ -231,6 +231,9 @@ def review_case(db,actor,p):
         if not isinstance(p.get('reason'),str) or not p['reason'].strip():raise DomainError('reason_required','Claim release/resolution requires original evidence and reason')
         claim=db.scalar(select(BankClaim).where(BankClaim.case_id==case.id,BankClaim.state!='released').with_for_update())
         if not claim:raise DomainError('claim_unavailable','No active claim',409)
+        from app.models import LegacyBankEvidence
+        if db.scalar(select(LegacyBankEvidence.id).where(LegacyBankEvidence.claim_id==claim.id)):
+            raise DomainError('historical_evidence_bound','Historical evidence needs source reconciliation; generic release/resolve cannot free it',409)
         if action=='release':
             if claim.payment_id:raise DomainError('financial_reversal_required','Posted claim requires separate explicit payment reversal',409)
             claim.state='released'; case.state='pending'
@@ -260,6 +263,8 @@ def review_case(db,actor,p):
         freeze_case(db,case,action); case.version+=1
         return record(case)
     entry=locked(db,BankEntry,p['entry_id']); check_version(entry,p.get('entry_version'))
+    if 'legacy_occupied_identity_conflict' in (entry.issues or []):
+        raise DomainError('legacy_identity_review','Historical occupied transaction identity must be adjudicated before another claim',409)
     account=access(db,actor,BankAccount,entry.account_id,'bank.review')
     account_access(db,actor,account,'bank.review',case.warehouse_id)
     if account.scope!=case.scope or case.account_id!=account.id or entry.currency!=case.currency or entry.credit<=0 or entry.debit!=0:
@@ -286,6 +291,8 @@ def freeze_case(db,case,reason):
     claim=db.scalar(select(BankClaim).where(BankClaim.case_id==case.id,BankClaim.state!='released').with_for_update())
     if claim:
         claim.state='disputed'; claim.version+=1
+        from app.migration.bank_evidence import freeze
+        freeze(db,claim)
         if claim.payment_id:
             payment=locked(db,Payment,claim.payment_id); payment.bank_state='disputed'; payment.version+=1
             db.add(FinanceEvent(payment_id=payment.id,kind='evidence_disputed'))

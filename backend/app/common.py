@@ -47,6 +47,8 @@ def audit(db, actor, action, entity_type, entity_id, before, after):
 
 
 def run_command(db, actor, command, key, payload, handler):
+    from app.migration.operations import writer_gate
+    writer_gate(db)
     import hashlib
     import json
     from sqlalchemy import select, text

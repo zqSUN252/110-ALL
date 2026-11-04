@@ -19,6 +19,8 @@ from .service import FIELDS, cache_key, enqueue, set_fields
 
 
 async def run_once(factory,settings,config=None,transport=None):
+    from app.migration.operations import worker_gate
+    worker_gate(factory,settings)
     config=config or ModelConfig.from_env('multimodal')
     if not settings.model_calls_enabled or not config.active:
         return {'status':'provider_unavailable','called':False}

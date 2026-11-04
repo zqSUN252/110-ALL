@@ -7,6 +7,7 @@ import secrets
 import socket
 import subprocess
 import sys
+import time
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / 'backend'))
@@ -50,12 +51,33 @@ def start():
             out.write(f"\nlisten_addresses = '127.0.0.1'\nport = {port}\n")
     state = subprocess.run([str(BIN / 'pg_ctl.exe'), '-D', str(data), 'status'], capture_output=True)
     if state.returncode:
-        run('pg_ctl', '-D', data, '-l', PRIVATE / 'postgres.log', '-w', 'start')
+        if os.name == 'nt':
+            # WMI owns the child process lifetime. Hidden launch, no inherited
+            # execution-cell handles, no service/task and no running-cluster restart.
+            commandline=subprocess.list2cmdline([str(BIN/'pg_ctl.exe'),'-D',str(data),'-l',str(PRIVATE/'postgres.log'),'-w','start'])
+            script="""
+$ErrorActionPreference='Stop'
+$startup=([wmiclass]'Win32_ProcessStartup').CreateInstance()
+$startup.ShowWindow=0
+$result=([wmiclass]'Win32_Process').Create($env:MCSTAR_OWN_PG_COMMAND,$null,$startup)
+if($result.ReturnValue -ne 0){exit 1}
+"""
+            result=subprocess.run(['powershell','-NoProfile','-NonInteractive','-Command',script],env={**os.environ,'MCSTAR_OWN_PG_COMMAND':commandline},capture_output=True,creationflags=subprocess.CREATE_NO_WINDOW,timeout=15)
+            if result.returncode:raise RuntimeError('Own cluster hidden launch failed')
+            deadline=time.monotonic()+30
+            while time.monotonic()<deadline:
+                ready=subprocess.run([str(BIN/'pg_isready.exe'),'-h','127.0.0.1','-p',str(port)],capture_output=True,timeout=5)
+                if ready.returncode==0:break
+                time.sleep(.25)
+            else:raise RuntimeError('Own cluster did not become ready within 30 seconds')
+        else:
+            run('pg_ctl', '-D', data, '-l', PRIVATE / 'postgres.log', '-w', 'start')
     import psycopg
     from psycopg.conninfo import conninfo_to_dict
     url = json.loads(config.read_text('utf-8'))['database_url'].replace('postgresql+psycopg:', 'postgresql:')
     params = conninfo_to_dict(url)
     params['dbname'] = 'postgres'
+    params['connect_timeout'] = 3
     with psycopg.connect(**params, autocommit=True) as connection:
         if not connection.execute("SELECT 1 FROM pg_database WHERE datname='mcstar'").fetchone():
             connection.execute('CREATE DATABASE mcstar')

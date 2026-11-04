@@ -5,6 +5,7 @@ from app.models import Ticket,ArrivalSettlement
 
 
 def cargo_basis(db,ticket):
+    from app.packing.quantities import known_sum,complete as quantity_complete
     from app.packing.service import arrival_projection,charges,invoice_amount
     from app.finance.service import settle
     from app.packing import allocation
@@ -13,8 +14,8 @@ def cargo_basis(db,ticket):
     full_usd,full_ngn=values;control,_=allocation.settlement_control_and_quota(db,ticket,{'pieces':0,'kg':Decimal(0),'cbm':Decimal(0)})
     result=[];settled=Decimal('0.00');quantities={'pieces':0,'kg':Decimal(0),'cbm':Decimal(0)}
     for arrival,usd,ngn in projection:
-        for key in quantities:quantities[key]+=getattr(arrival,key)
-        complete=all(quantities[key]==getattr(ticket,key) for key in quantities)
+        for key in quantities:quantities[key]=known_sum((quantities[key],getattr(arrival,key)))
+        complete=quantity_complete(ticket,quantities)
         native=invoice_amount(usd,ngn,ticket.ngn_per_usd)
         if settled>control:raise DomainError('rounding_allocation','Prior allocation exceeds original charge control',409)
         _,quota=allocation.settlement_control_and_quota(db,ticket,quantities)

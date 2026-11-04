@@ -1,3 +1,4 @@
+from app.packing.quantities import known_sum,remaining as quantity_remaining,nonkg_sea
 """Manufacturer control, freight authority and physical pickup are separate facts."""
 from decimal import Decimal
 import re
@@ -29,7 +30,7 @@ def cargo_hold_state(db,obj):
 
 def physical_totals(db,identity):
     rows=list(db.scalars(select(PhysicalRelease).where(PhysicalRelease.ticket_id==identity)))
-    return {'pieces':sum(r.pieces for r in rows),'kg':sum((r.kg for r in rows),Decimal(0)),'cbm':sum((r.cbm for r in rows),Decimal(0))}
+    return {'pieces':sum(r.pieces for r in rows),'kg':known_sum(r.kg for r in rows),'cbm':sum((r.cbm for r in rows),Decimal(0))}
 
 
 def _basis(db,t):
@@ -66,6 +67,7 @@ def _eligible(db,t,mode):
     if not basis['warehouse_confirmation']['covered_arrivals']:raise DomainError('warehouse_required','Actual warehouse receipt confirmation is required',409)
     inv=basis['invoice']
     if not inv or inv['state']=='void':raise DomainError('invoice_required','Current receivable required',409)
+    if inv.get('historical_bank_state')=='disputed':raise DomainError('payment_disputed','Historical bank evidence requires source reconciliation',409)
     if any(p['bank_state']=='disputed' for p in basis['payments']):raise DomainError('payment_disputed','Payment evidence needs review',409)
     if any(p['state']!='posted' for p in basis['payments'] if sum(Decimal(a['amount_ngn']) for a in basis['allocations'] if a['payment_id']==p['id'])>0):raise DomainError('payment_invalid','Payment allocation is no longer valid',409)
     if mode!='credit' and Decimal(inv['outstanding_ngn'])>0:raise DomainError('outstanding','Invoice remains unpaid',409)
@@ -87,16 +89,18 @@ def issue_order(db,actor,p):
         if not p.get('promise_on') or not str(p.get('guarantor','')).strip():raise DomainError('credit_basis','Promise day and guarantor required')
     order=ReleaseOrder(mode=p['mode'],actor_id=actor.id,promise_on=finance.day(p['promise_on']) if p.get('promise_on') else None,guarantor=p.get('guarantor'),reason=p.get('reason'))
     db.add(order);db.flush()
+    waived=set()
     for m in sorted(members,key=lambda m:m['ticket_id']):
         fields(m,'ticket_id expected_version')
         t=finance.locked(db,Ticket,m['ticket_id']);check_version(t,m.get('expected_version'))
         require(actor,'finance.read',t.warehouse_id)
         if p['mode']=='credit':require(actor,'release.credit',t.warehouse_id)
-        if p['mode']=='waiver':
+        if p['mode']=='waiver' and t.invoice_id not in waived:
             require(actor,'release.waiver',t.warehouse_id)
             inv=finance.get_invoice(db,actor,t.invoice_id);owed=Decimal(inv['outstanding_ngn'])
             if owed<=0 or owed>5000:raise DomainError('waiver_amount','Explicit release waiver must be greater than zero and at most NGN 5000')
             finance.add_discount(db,actor,dict(id=t.invoice_id,expected_version=inv['version'],amount_ngn=str(owed),waiver=True,reason=p.get('reason'),idempotency_key=p['idempotency_key']+':waiver:'+t.id))
+            waived.add(t.invoice_id)
         basis=_eligible(db,t,p['mode'])
         db.add(ReleaseMember(order_id=order.id,ticket_id=t.id,destination_warehouse_id=t.destination_warehouse_id,source_fingerprint=fingerprint(basis),source_snapshot=basis))
     db.flush()
@@ -124,9 +128,10 @@ def eligible_order(db,actor,identity):
         require(actor,'release.read',t.destination_warehouse_id)
         from app.tracking.service import warehouse_arrivals
         actual=warehouse_arrivals(db,t)
-        arrived={k:sum((getattr(a,k) for a in actual),0) for k in ('pieces','kg','cbm')}
+        arrived={k:known_sum(getattr(a,k) for a in actual) for k in ('pieces','kg','cbm')}
+        if t.kg is None:arrived['kg']=None
         used=physical_totals(db,t.id)
-        result.append({'ticket_id':t.id,'receipt':t.receipt,'destination_warehouse_id':t.destination_warehouse_id,'remaining':{k:arrived[k]-used[k] for k in used}})
+        result.append({'ticket_id':t.id,'receipt':t.receipt,'destination_warehouse_id':t.destination_warehouse_id,'remaining':{k:quantity_remaining(arrived[k],used[k]) for k in used}})
     if not result:raise DomainError('forbidden','No authorized destination members',403)
     return json_value({'id':order.id,'version':order.version,'eligible':valid,'members':result})
 
@@ -164,9 +169,10 @@ def physical_release(db,actor,p):
     if not any(m.ticket_id==t.id for m in members):raise DomainError('release_member','Ticket is outside this instruction',403)
     projection=eligible_order(db,actor,order.id)
     remaining=next(m['remaining'] for m in projection['members'] if m['ticket_id']==t.id)
-    quantities={'pieces':integer(p['pieces'],True),'kg':finance.decimal(p['kg'],6),'cbm':finance.decimal(p['cbm'],6)}
-    if any(Decimal(quantities[k])>Decimal(remaining[k]) for k in quantities):raise DomainError('remaining','Pickup exceeds remaining arrived quantities',409)
-    if quantities['pieces']==int(remaining['pieces']) and any(quantities[k]!=Decimal(remaining[k]) for k in ('kg','cbm')):raise DomainError('remaining','Final pieces must take exact remaining KG and CBM',409)
+    if p.get('kg') is None and not nonkg_sea(db,t):raise DomainError('quantities_unresolved','Known/KG-priced quantities require KG',409)
+    quantities={'pieces':integer(p['pieces'],True),'kg':finance.decimal(p['kg'],6) if p.get('kg') is not None else None,'cbm':finance.decimal(p['cbm'],6)}
+    if any(quantities[k] is None or Decimal(quantities[k])>Decimal(remaining[k]) for k in quantities if remaining[k] is not None):raise DomainError('remaining','Pickup exceeds remaining arrived quantities',409)
+    if quantities['pieces']==int(remaining['pieces']) and any(quantities[k]!=Decimal(remaining[k]) for k in ('kg','cbm') if remaining[k] is not None):raise DomainError('remaining','Final pieces must take exact remaining KG and CBM',409)
     if not isinstance(p['photo_ids'],list) or not 1<=len(p['photo_ids'])<=20:raise DomainError('photo_required','Actual pickup photos required')
     from app.attachments import read_file
     from PIL import Image

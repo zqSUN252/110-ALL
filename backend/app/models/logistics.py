@@ -223,7 +223,7 @@ class Ticket(Record,Base):
     ngn_per_usd:Mapped[Decimal|None]=col(Quantity)
     pricing_authority:Mapped[str]=col(String(12),default='pending')
     quote_id:Mapped[str|None]=col(ForeignKey('quote_snapshots.id'))
-    invoice_id:Mapped[str|None]=col(ForeignKey('invoices.id'),unique=True)
+    invoice_id:Mapped[str|None]=col(ForeignKey('invoices.id'),index=True)
     state:Mapped[str]=col(String(20),default='active')
     review_state:Mapped[str]=col(String(20),default='pending')
 
@@ -276,7 +276,7 @@ class Arrival(Record,Base):
     ticket_id:Mapped[str]=col(ForeignKey('tickets.id'),index=True)
     occurred_on:Mapped[date]=col(Date)
     pieces:Mapped[int]=col(Integer)
-    kg:Mapped[Decimal]=col(Quantity)
+    kg:Mapped[Decimal|None]=col(Quantity)
     cbm:Mapped[Decimal]=col(Quantity)
     freight_usd:Mapped[Decimal|None]=col(Money)
     clearing_ngn:Mapped[Decimal|None]=col(Money)

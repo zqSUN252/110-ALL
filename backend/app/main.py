@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.responses import JSONResponse
 from fastapi.exceptions import RequestValidationError
 from sqlalchemy import text
-from sqlalchemy.exc import IntegrityError
+from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 from app.settings import load_settings, protect_private_root
 from app.db import make_engine, session_factory
 from app.common import DomainError
@@ -13,6 +13,7 @@ from app.api.logistics import router as logistics_router
 from app.api.customer import router as customer_router
 from app.api.documents import router as document_router
 from app.api.assistant import router as assistant_router
+from app.api.migration import router as migration_router
 
 
 def create_app(settings=None):
@@ -39,8 +40,11 @@ def create_app(settings=None):
 
     @application.get('/health')
     def health():
-        with application.state.engine.connect() as db:
-            db.execute(text('SELECT 1'))
+        try:
+            with application.state.engine.connect() as db:
+                db.execute(text('SELECT 1'))
+        except SQLAlchemyError:
+            return JSONResponse({'status':'database_unreachable'},status_code=503)
         return {'status': 'ok'}
 
     application.include_router(identity_router)
@@ -50,4 +54,5 @@ def create_app(settings=None):
     application.include_router(customer_router)
     application.include_router(document_router)
     application.include_router(assistant_router)
+    application.include_router(migration_router)
     return application

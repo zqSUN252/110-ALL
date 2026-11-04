@@ -155,7 +155,7 @@ class TicketPatch(TicketFields,Version):
 
 class Arrive(Version):
     pieces:int=Field(ge=1)
-    kg:str
+    kg:str|None=None
     cbm:str
     occurred_on:str
     source:str=Field(min_length=1)

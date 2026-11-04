@@ -64,7 +64,7 @@ class PhysicalRelease(Record, Base):
     actor_id:Mapped[str]=col(ForeignKey('users.id'))
     occurred_at:Mapped[datetime]=col(DateTime(timezone=True))
     pieces:Mapped[int]=col(Integer)
-    kg:Mapped[Decimal]=col(Numeric(20,6))
+    kg:Mapped[Decimal|None]=col(Numeric(20,6))
     cbm:Mapped[Decimal]=col(Numeric(20,6))
 
 

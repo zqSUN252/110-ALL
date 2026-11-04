@@ -1,3 +1,4 @@
+from app.packing.quantities import known_sum
 """One formal packing-list projection for internal and verified-owner documents."""
 from datetime import datetime
 from decimal import Decimal
@@ -55,8 +56,10 @@ def row(db,obj):
         'origin_warehouse':warehouse.name,'origin_contact':warehouse.contact,'container':s.reference if s else None,'pieces':obj.pieces,'kg':obj.kg,'cbm':obj.cbm,
         'freight_usd':obj.freight_usd if ticket else quote.charge_usd if quote else None,'clearing_ngn':obj.clearing_ngn if ticket else quote.charge_ngn if quote else None,
         'ngn_per_usd':obj.ngn_per_usd if ticket else quote.ngn_per_usd if quote else None,'charges':charges,'pricing_authority':obj.pricing_authority if ticket else 'quote' if quote else 'pending',
-        'invoice_id':inv.id if inv else None,'invoice_version':inv.version if inv else None,'invoice_total_ngn':inv.amount_ngn if inv else None,'rounding_adjustment_ngn':inv.rounding_adjustment_ngn if inv else None,
-        'allocated_ngn':invoice['allocated_ngn'] if invoice else None,'discount_ngn':invoice['discount_ngn'] if invoice else None,'outstanding_ngn':invoice['outstanding_ngn'] if invoice else None}
+        'invoice_id':inv.id if inv else None,'invoice_reference':inv.reference if inv else None,'invoice_version':inv.version if inv else None,'invoice_total_ngn':inv.amount_ngn if inv else None,'rounding_adjustment_ngn':inv.rounding_adjustment_ngn if inv else None,
+        'allocated_ngn':invoice['allocated_ngn'] if invoice else None,'historical_received_ngn':invoice['historical_received_ngn'] if invoice else None,
+        'received_total_ngn':Decimal(invoice['allocated_ngn'])+Decimal(invoice['historical_received_ngn']) if invoice else None,
+        'historical_bank_state':invoice['historical_bank_state'] if invoice else None,'discount_ngn':invoice['discount_ngn'] if invoice else None,'outstanding_ngn':invoice['outstanding_ngn'] if invoice else None}
     if ticket:
         from app.packing.allocation import projection as allocated_arrivals
         from app.tracking.service import warehouse_arrivals,warehouse_basis
@@ -64,8 +67,8 @@ def row(db,obj):
         unresolved=any(c['amount'] is None or (Decimal(str(c['amount']))>0 and not getattr(obj,{'PCS':'pieces','KG':'kg','CBM':'cbm'}[c['unit']])) for c in charges)
         batches=[(a,None,None,[]) for a in actual] if unresolved else allocated_arrivals(db,obj,actual)
         confirmed=warehouse_arrivals(db,obj)
-        quantities={k:sum((getattr(a,k) for a in confirmed),0) for k in ('pieces','kg','cbm')}
-        billing_quantities={k:sum((getattr(a,k) for a in actual),0) for k in ('pieces','kg','cbm')}
+        quantities={k:known_sum(getattr(a,k) for a in confirmed) for k in ('pieces','kg','cbm')}
+        billing_quantities={k:known_sum(getattr(a,k) for a in actual) for k in ('pieces','kg','cbm')}
         actual_charges=[]
         for index,c in enumerate(charges):
             values=[parts[index]['amount'] if len(parts)>index else None for a,u,n,parts in batches]
@@ -78,7 +81,9 @@ def row(db,obj):
 
 def packing_projection(db,objects):
     rows=[row(db,o) for o in objects]
-    return {'template_version':'packing-244-535-v1','rows':rows,'totals':{key:aggregate(rows,key) for key in ('pieces','kg','cbm','freight_usd','clearing_ngn','invoice_total_ngn','allocated_ngn','outstanding_ngn')},'profile':profile(db),'generated_on':today(db).isoformat()}
+    money_rows=list({r['invoice_id'] or r['id']:r for r in rows}.values())
+    totals={key:aggregate(money_rows if key in ('invoice_total_ngn','allocated_ngn','received_total_ngn','historical_received_ngn','outstanding_ngn') else rows,key) for key in ('pieces','kg','cbm','freight_usd','clearing_ngn','invoice_total_ngn','allocated_ngn','received_total_ngn','historical_received_ngn','outstanding_ngn')}
+    return {'template_version':'packing-244-535-v1','rows':rows,'totals':totals,'profile':profile(db),'generated_on':today(db).isoformat()}
 
 
 def rates(db,rows):

@@ -42,6 +42,8 @@ def deterministic_reply(results):
 
 
 async def dialogue_once(factory,settings,config=None,transport=None):
+    from app.migration.operations import worker_gate
+    worker_gate(factory,settings)
     config=config or config_now()
     if not settings.model_calls_enabled or not config.active:return {'status':'provider_unavailable','called':False}
     with factory() as db,db.begin():
@@ -119,6 +121,8 @@ async def dialogue_once(factory,settings,config=None,transport=None):
 
 
 def _channel_turn_once(factory,settings,config=None):
+    from app.migration.operations import worker_gate
+    worker_gate(factory,settings)
     """Persist authorized signed source turns; never auto-send or replay completed work."""
     config=config or ChannelConfig.from_env()
     if not settings.collection_enabled:return {'status':'collection_paused','called':False}

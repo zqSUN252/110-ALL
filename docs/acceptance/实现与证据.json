@@ -1,0 +1,2506 @@
+{
+  "task": 5,
+  "status": "DONE_WITH_CONCERNS",
+  "implementation_base": "7cc1c00e30fe961b8e11f8d1393d7cd9d912823b",
+  "schema_head": "f11000500005",
+  "requirements_total": 146,
+  "requirements": [
+    {
+      "requirement_id": "SYS-01",
+      "title": "公司名称",
+      "source_prompt_numbers": [
+        1,
+        9
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#SYS-01",
+      "task5_role": "existing_domain_or_task6_acceptance",
+      "task5_evidence": null,
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "SYS-02",
+      "title": "内部全站中英文",
+      "source_prompt_numbers": [
+        12,
+        477
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#SYS-02",
+      "task5_role": "existing_domain_or_task6_acceptance",
+      "task5_evidence": null,
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "SYS-03",
+      "title": "多账号与服务端权限",
+      "source_prompt_numbers": [
+        57,
+        100,
+        116,
+        347,
+        418,
+        465
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#SYS-03",
+      "task5_role": "migration_or_recovery_support",
+      "task5_evidence": "docs/development/migration-contract.md",
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "SYS-04",
+      "title": "账号不被同步挤掉",
+      "source_prompt_numbers": [
+        82,
+        84,
+        148,
+        151,
+        173,
+        177,
+        257,
+        319,
+        346,
+        350,
+        354,
+        446,
+        498,
+        513
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#SYS-04",
+      "task5_role": "migration_or_recovery_support",
+      "task5_evidence": "docs/development/migration-contract.md",
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "SYS-05",
+      "title": "跨账号设备共享",
+      "source_prompt_numbers": [
+        59,
+        60,
+        65,
+        67,
+        69,
+        72,
+        115,
+        225,
+        226,
+        324,
+        330,
+        358,
+        360,
+        432,
+        530
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#SYS-05",
+      "task5_role": "migration_or_recovery_support",
+      "task5_evidence": "docs/development/migration-contract.md",
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "SYS-06",
+      "title": "保留当前操作现场",
+      "source_prompt_numbers": [
+        23,
+        29,
+        31,
+        86,
+        175,
+        220,
+        227,
+        228,
+        239,
+        269,
+        273,
+        282,
+        392,
+        521,
+        541
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#SYS-06",
+      "task5_role": "existing_domain_or_task6_acceptance",
+      "task5_evidence": null,
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "SYS-07",
+      "title": "操作责任追溯",
+      "source_prompt_numbers": [
+        145
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#SYS-07",
+      "task5_role": "migration_or_recovery_support",
+      "task5_evidence": "docs/development/migration-contract.md",
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "SYS-08",
+      "title": "全局模糊查找",
+      "source_prompt_numbers": [
+        46,
+        78,
+        229,
+        230,
+        267,
+        268,
+        287
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#SYS-08",
+      "task5_role": "existing_domain_or_task6_acceptance",
+      "task5_evidence": null,
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "SYS-09",
+      "title": "独立部署与数据规模",
+      "source_prompt_numbers": [
+        92,
+        101,
+        158,
+        159,
+        162,
+        163,
+        164,
+        165,
+        357,
+        358,
+        360,
+        364,
+        365,
+        366,
+        368
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#SYS-09",
+      "task5_role": "migration_or_recovery_support",
+      "task5_evidence": "docs/development/migration-contract.md",
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "SYS-10",
+      "title": "所有宽表可水平滚动",
+      "source_prompt_numbers": [
+        191,
+        199,
+        220,
+        251,
+        300,
+        302,
+        404,
+        417,
+        437
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#SYS-10",
+      "task5_role": "existing_domain_or_task6_acceptance",
+      "task5_evidence": null,
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "SYS-11",
+      "title": "缺失信息不自配",
+      "source_prompt_numbers": [
+        184,
+        202,
+        231,
+        234,
+        281,
+        331,
+        332,
+        348,
+        349,
+        390
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#SYS-11",
+      "task5_role": "migration_or_recovery_support",
+      "task5_evidence": "docs/development/migration-contract.md",
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "SYS-12",
+      "title": "资料库及团队空间归档",
+      "source_prompt_numbers": [
+        64,
+        66
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#SYS-12",
+      "task5_role": "migration_or_recovery_support",
+      "task5_evidence": "docs/development/migration-contract.md",
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "SYS-13",
+      "title": "备份与可恢复保存",
+      "source_prompt_numbers": [
+        89,
+        90,
+        93,
+        95,
+        101,
+        153,
+        158,
+        172,
+        225,
+        274,
+        275,
+        279,
+        288,
+        301,
+        316,
+        328,
+        340,
+        356,
+        466,
+        523,
+        532,
+        533
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#SYS-13",
+      "task5_role": "migration_or_recovery_support",
+      "task5_evidence": "docs/development/migration-contract.md",
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "SYS-14",
+      "title": "账号入口和公告不遮挡",
+      "source_prompt_numbers": [
+        420,
+        474,
+        475,
+        476
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#SYS-14",
+      "task5_role": "existing_domain_or_task6_acceptance",
+      "task5_evidence": null,
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "SYS-15",
+      "title": "最终导航归属",
+      "source_prompt_numbers": [
+        400,
+        425,
+        453,
+        456,
+        460,
+        461,
+        565
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#SYS-15",
+      "task5_role": "existing_domain_or_task6_acceptance",
+      "task5_evidence": null,
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "SYS-16",
+      "title": "Logo与既有品牌版式",
+      "source_prompt_numbers": [
+        397,
+        398,
+        405,
+        407,
+        409
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#SYS-16",
+      "task5_role": "existing_domain_or_task6_acceptance",
+      "task5_evidence": null,
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "SYS-17",
+      "title": "稳定HTTPS业务入口",
+      "source_prompt_numbers": [
+        88,
+        110,
+        136,
+        141,
+        143,
+        176,
+        373,
+        426,
+        494,
+        503,
+        520
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#SYS-17",
+      "task5_role": "existing_domain_or_task6_acceptance",
+      "task5_evidence": null,
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "SHIP-01",
+      "title": "运输模式与状态",
+      "source_prompt_numbers": [
+        1,
+        61,
+        423,
+        448,
+        459,
+        467,
+        471,
+        542
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#SHIP-01",
+      "task5_role": "migration_or_recovery_support",
+      "task5_evidence": "docs/development/migration-contract.md",
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "SHIP-02",
+      "title": "清关日期及成本方",
+      "source_prompt_numbers": [
+        79,
+        81
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#SHIP-02",
+      "task5_role": "migration_or_recovery_support",
+      "task5_evidence": "docs/development/migration-contract.md",
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "SHIP-03",
+      "title": "仓库客户优先",
+      "source_prompt_numbers": [
+        68
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#SHIP-03",
+      "task5_role": "existing_domain_or_task6_acceptance",
+      "task5_evidence": null,
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "SHIP-04",
+      "title": "到港前不自动生应收",
+      "source_prompt_numbers": [
+        108,
+        150,
+        327,
+        338
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#SHIP-04",
+      "task5_role": "migration_or_recovery_support",
+      "task5_evidence": "docs/development/migration-contract.md",
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "SHIP-05",
+      "title": "删除关联单据",
+      "source_prompt_numbers": [
+        53,
+        54
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#SHIP-05",
+      "task5_role": "migration_or_recovery_support",
+      "task5_evidence": "docs/development/migration-contract.md",
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "SHIP-06",
+      "title": "主箱单拆分",
+      "source_prompt_numbers": [
+        333
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#SHIP-06",
+      "task5_role": "migration_or_recovery_support",
+      "task5_evidence": "docs/development/migration-contract.md",
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "SHIP-07",
+      "title": "空运分批到货",
+      "source_prompt_numbers": [
+        337
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#SHIP-07",
+      "task5_role": "migration_or_recovery_support",
+      "task5_evidence": "docs/development/migration-contract.md",
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "SHIP-08",
+      "title": "空运到货标记",
+      "source_prompt_numbers": [
+        338,
+        339,
+        340
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#SHIP-08",
+      "task5_role": "migration_or_recovery_support",
+      "task5_evidence": "docs/development/migration-contract.md",
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "PL-01",
+      "title": "每次上传独立文档",
+      "source_prompt_numbers": [
+        6,
+        19
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#PL-01",
+      "task5_role": "existing_domain_or_task6_acceptance",
+      "task5_evidence": null,
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "PL-02",
+      "title": "草稿及英文版导入",
+      "source_prompt_numbers": [
+        49,
+        50,
+        52,
+        255,
+        256,
+        258,
+        283,
+        353,
+        390,
+        403,
+        452
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#PL-02",
+      "task5_role": "existing_domain_or_task6_acceptance",
+      "task5_evidence": null,
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "PL-03",
+      "title": "原始行保留",
+      "source_prompt_numbers": [
+        390
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#PL-03",
+      "task5_role": "migration_or_recovery_support",
+      "task5_evidence": "docs/development/migration-contract.md",
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "PL-04",
+      "title": "精确提取双币费用",
+      "source_prompt_numbers": [
+        7,
+        9,
+        10,
+        12,
+        15,
+        34,
+        45,
+        47,
+        48,
+        49
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#PL-04",
+      "task5_role": "existing_domain_or_task6_acceptance",
+      "task5_evidence": null,
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "PL-05",
+      "title": "ON HOLD联系方式原文",
+      "source_prompt_numbers": [
+        260,
+        342,
+        343
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#PL-05",
+      "task5_role": "existing_domain_or_task6_acceptance",
+      "task5_evidence": null,
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "PL-06",
+      "title": "目的城市来自客户子单",
+      "source_prompt_numbers": [
+        104,
+        118,
+        119,
+        120,
+        121,
+        123,
+        124,
+        194,
+        231,
+        232,
+        234,
+        235,
+        237,
+        238,
+        240,
+        244,
+        309,
+        336,
+        406
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#PL-06",
+      "task5_role": "existing_domain_or_task6_acceptance",
+      "task5_evidence": null,
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "PL-07",
+      "title": "分票手工编辑",
+      "source_prompt_numbers": [
+        55,
+        56,
+        311,
+        312,
+        313,
+        341,
+        572
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#PL-07",
+      "task5_role": "existing_domain_or_task6_acceptance",
+      "task5_evidence": null,
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "PL-08",
+      "title": "改目的港计价联动",
+      "source_prompt_numbers": [
+        572
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#PL-08",
+      "task5_role": "existing_domain_or_task6_acceptance",
+      "task5_evidence": null,
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "PL-09",
+      "title": "重传覆盖及收款保留",
+      "source_prompt_numbers": [
+        128,
+        155,
+        274,
+        340,
+        533
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#PL-09",
+      "task5_role": "migration_or_recovery_support",
+      "task5_evidence": "docs/development/migration-contract.md",
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "PL-10",
+      "title": "按原序与时段费率建档",
+      "source_prompt_numbers": [
+        258,
+        293,
+        297,
+        298
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#PL-10",
+      "task5_role": "existing_domain_or_task6_acceptance",
+      "task5_evidence": null,
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "PL-11",
+      "title": "保留原件查看语义",
+      "source_prompt_numbers": [
+        12,
+        129,
+        132,
+        134,
+        239,
+        243,
+        244
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#PL-11",
+      "task5_role": "migration_or_recovery_support",
+      "task5_evidence": "docs/development/migration-contract.md",
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "RATE-01",
+      "title": "三通道收费标准",
+      "source_prompt_numbers": [
+        178,
+        185,
+        193,
+        293,
+        295,
+        296,
+        297,
+        298
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#RATE-01",
+      "task5_role": "existing_domain_or_task6_acceptance",
+      "task5_evidence": null,
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "RATE-02",
+      "title": "结算币种及汇率",
+      "source_prompt_numbers": [
+        2,
+        5,
+        15,
+        73
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#RATE-02",
+      "task5_role": "existing_domain_or_task6_acceptance",
+      "task5_evidence": null,
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "RATE-03",
+      "title": "空运全包价",
+      "source_prompt_numbers": [
+        300,
+        307,
+        310,
+        318,
+        320,
+        325,
+        431
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#RATE-03",
+      "task5_role": "existing_domain_or_task6_acceptance",
+      "task5_evidence": null,
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "RATE-04",
+      "title": "按件及NGN空运计价",
+      "source_prompt_numbers": [
+        568
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#RATE-04",
+      "task5_role": "existing_domain_or_task6_acceptance",
+      "task5_evidence": null,
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "RATE-05",
+      "title": "收费标准通知范围",
+      "source_prompt_numbers": [
+        185,
+        207
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#RATE-05",
+      "task5_role": "existing_domain_or_task6_acceptance",
+      "task5_evidence": null,
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "DOC-01",
+      "title": "统一客户箱单版本",
+      "source_prompt_numbers": [
+        80,
+        102,
+        104,
+        157,
+        244,
+        249,
+        303
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#DOC-01",
+      "task5_role": "existing_domain_or_task6_acceptance",
+      "task5_evidence": null,
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "DOC-02",
+      "title": "公司Logo及抬头",
+      "source_prompt_numbers": [
+        107,
+        129,
+        131,
+        134,
+        249,
+        250
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#DOC-02",
+      "task5_role": "existing_domain_or_task6_acceptance",
+      "task5_evidence": null,
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "DOC-03",
+      "title": "海空运标题和字段",
+      "source_prompt_numbers": [
+        306,
+        307,
+        310,
+        318,
+        320,
+        321,
+        326
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#DOC-03",
+      "task5_role": "existing_domain_or_task6_acceptance",
+      "task5_evidence": null,
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "DOC-04",
+      "title": "海运清关单价",
+      "source_prompt_numbers": [
+        535
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#DOC-04",
+      "task5_role": "existing_domain_or_task6_acceptance",
+      "task5_evidence": null,
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "DOC-05",
+      "title": "图片直接复制",
+      "source_prompt_numbers": [
+        198,
+        249,
+        252,
+        381,
+        385,
+        386,
+        387,
+        388,
+        389,
+        391,
+        499,
+        501,
+        502,
+        515
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#DOC-05",
+      "task5_role": "existing_domain_or_task6_acceptance",
+      "task5_evidence": null,
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "DOC-06",
+      "title": "单页清单导出选择",
+      "source_prompt_numbers": [
+        322,
+        323
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#DOC-06",
+      "task5_role": "existing_domain_or_task6_acceptance",
+      "task5_evidence": null,
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "DOC-07",
+      "title": "客户Excel同版式",
+      "source_prompt_numbers": [
+        261,
+        262,
+        335
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#DOC-07",
+      "task5_role": "existing_domain_or_task6_acceptance",
+      "task5_evidence": null,
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "DOC-08",
+      "title": "主表完整字段",
+      "source_prompt_numbers": [
+        263
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#DOC-08",
+      "task5_role": "existing_domain_or_task6_acceptance",
+      "task5_evidence": null,
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "DOC-09",
+      "title": "宽表冻结与列宽",
+      "source_prompt_numbers": [
+        42,
+        44,
+        126,
+        220,
+        300,
+        302,
+        404,
+        556
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#DOC-09",
+      "task5_role": "existing_domain_or_task6_acceptance",
+      "task5_evidence": null,
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "DOC-10",
+      "title": "客户箱单合并展示",
+      "source_prompt_numbers": [
+        28,
+        335,
+        355
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#DOC-10",
+      "task5_role": "existing_domain_or_task6_acceptance",
+      "task5_evidence": null,
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "DOC-11",
+      "title": "SO/SI/DN文档范围",
+      "source_prompt_numbers": [
+        408,
+        462
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#DOC-11",
+      "task5_role": "existing_domain_or_task6_acceptance",
+      "task5_evidence": null,
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "AR-01",
+      "title": "一票及合并组应收",
+      "source_prompt_numbers": [
+        15,
+        28,
+        62,
+        138
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#AR-01",
+      "task5_role": "existing_domain_or_task6_acceptance",
+      "task5_evidence": null,
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "AR-02",
+      "title": "子单与客户范围合计",
+      "source_prompt_numbers": [
+        19,
+        27
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#AR-02",
+      "task5_role": "existing_domain_or_task6_acceptance",
+      "task5_evidence": null,
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "AR-03",
+      "title": "应收列与颜色",
+      "source_prompt_numbers": [
+        26,
+        32,
+        40,
+        42,
+        44,
+        149,
+        524
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#AR-03",
+      "task5_role": "existing_domain_or_task6_acceptance",
+      "task5_evidence": null,
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "AR-04",
+      "title": "单据及客户可点击",
+      "source_prompt_numbers": [
+        24,
+        46,
+        77,
+        152
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#AR-04",
+      "task5_role": "existing_domain_or_task6_acceptance",
+      "task5_evidence": null,
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "AR-05",
+      "title": "未付款清单",
+      "source_prompt_numbers": [
+        35,
+        41,
+        43
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#AR-05",
+      "task5_role": "existing_domain_or_task6_acceptance",
+      "task5_evidence": null,
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "AR-06",
+      "title": "付款周期",
+      "source_prompt_numbers": [
+        63
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#AR-06",
+      "task5_role": "migration_or_recovery_support",
+      "task5_evidence": "docs/development/migration-contract.md",
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "AR-07",
+      "title": "手工减免与原因",
+      "source_prompt_numbers": [
+        16,
+        17,
+        22,
+        139
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#AR-07",
+      "task5_role": "migration_or_recovery_support",
+      "task5_evidence": "docs/development/migration-contract.md",
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "AR-08",
+      "title": "小额尾款放货",
+      "source_prompt_numbers": [
+        140
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#AR-08",
+      "task5_role": "existing_domain_or_task6_acceptance",
+      "task5_evidence": null,
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "AR-09",
+      "title": "合并付款及拆分",
+      "source_prompt_numbers": [
+        37,
+        127,
+        333,
+        393,
+        395
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#AR-09",
+      "task5_role": "migration_or_recovery_support",
+      "task5_evidence": "docs/development/migration-contract.md",
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "AR-10",
+      "title": "编辑箱单同步应收",
+      "source_prompt_numbers": [
+        56,
+        62,
+        128,
+        312,
+        341
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#AR-10",
+      "task5_role": "migration_or_recovery_support",
+      "task5_evidence": "docs/development/migration-contract.md",
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "AP-01",
+      "title": "柜号显示和手工付款",
+      "source_prompt_numbers": [
+        97,
+        98
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#AP-01",
+      "task5_role": "migration_or_recovery_support",
+      "task5_evidence": "docs/development/migration-contract.md",
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "AP-02",
+      "title": "按账单方周期结算",
+      "source_prompt_numbers": [
+        99,
+        525,
+        526
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#AP-02",
+      "task5_role": "migration_or_recovery_support",
+      "task5_evidence": "docs/development/migration-contract.md",
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "AP-03",
+      "title": "应付导出与权限",
+      "source_prompt_numbers": [
+        99,
+        116
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#AP-03",
+      "task5_role": "migration_or_recovery_support",
+      "task5_evidence": "docs/development/migration-contract.md",
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "PARTY-01",
+      "title": "单位分类",
+      "source_prompt_numbers": [
+        33,
+        51
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#PARTY-01",
+      "task5_role": "migration_or_recovery_support",
+      "task5_evidence": "docs/development/migration-contract.md",
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "PARTY-02",
+      "title": "电话来源与存档",
+      "source_prompt_numbers": [
+        34,
+        47,
+        48,
+        96,
+        180,
+        184,
+        281,
+        286,
+        331,
+        332
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#PARTY-02",
+      "task5_role": "migration_or_recovery_support",
+      "task5_evidence": "docs/development/migration-contract.md",
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "PARTY-03",
+      "title": "五仓与空运仓配置",
+      "source_prompt_numbers": [
+        118,
+        119,
+        120,
+        121,
+        123,
+        124,
+        299,
+        304,
+        309,
+        558
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#PARTY-03",
+      "task5_role": "migration_or_recovery_support",
+      "task5_evidence": "docs/development/migration-contract.md",
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "PARTY-04",
+      "title": "WhatsApp联系入口",
+      "source_prompt_numbers": [
+        122
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#PARTY-04",
+      "task5_role": "existing_domain_or_task6_acceptance",
+      "task5_evidence": null,
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "PAY-01",
+      "title": "文件或优先粘贴",
+      "source_prompt_numbers": [
+        8,
+        16,
+        20,
+        21,
+        83,
+        85
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#PAY-01",
+      "task5_role": "existing_domain_or_task6_acceptance",
+      "task5_evidence": null,
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "PAY-02",
+      "title": "批量图片与审核",
+      "source_prompt_numbers": [
+        285,
+        393,
+        395,
+        491
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#PAY-02",
+      "task5_role": "existing_domain_or_task6_acceptance",
+      "task5_evidence": null,
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "PAY-03",
+      "title": "金额和付款日识别",
+      "source_prompt_numbers": [
+        20,
+        21,
+        85,
+        395
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#PAY-03",
+      "task5_role": "existing_domain_or_task6_acceptance",
+      "task5_evidence": null,
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "PAY-04",
+      "title": "待审立即可见",
+      "source_prompt_numbers": [
+        270,
+        272,
+        273,
+        394
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#PAY-04",
+      "task5_role": "existing_domain_or_task6_acceptance",
+      "task5_evidence": null,
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "PAY-05",
+      "title": "审核成功与持久化",
+      "source_prompt_numbers": [
+        137,
+        144,
+        153,
+        154,
+        274,
+        275,
+        276,
+        279,
+        288,
+        290,
+        291,
+        328,
+        466,
+        523
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#PAY-05",
+      "task5_role": "migration_or_recovery_support",
+      "task5_evidence": "docs/development/migration-contract.md",
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "PAY-06",
+      "title": "核销单独身份",
+      "source_prompt_numbers": [
+        536,
+        537,
+        544
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#PAY-06",
+      "task5_role": "migration_or_recovery_support",
+      "task5_evidence": "docs/development/migration-contract.md",
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "PAY-07",
+      "title": "合并审核后操作保留",
+      "source_prompt_numbers": [
+        468,
+        469,
+        484,
+        485
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#PAY-07",
+      "task5_role": "migration_or_recovery_support",
+      "task5_evidence": "docs/development/migration-contract.md",
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "PAY-08",
+      "title": "今日核销定义",
+      "source_prompt_numbers": [
+        75,
+        76,
+        77,
+        277,
+        492
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#PAY-08",
+      "task5_role": "migration_or_recovery_support",
+      "task5_evidence": "docs/development/migration-contract.md",
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "PAY-09",
+      "title": "核销Excel导出",
+      "source_prompt_numbers": [
+        277,
+        473
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#PAY-09",
+      "task5_role": "existing_domain_or_task6_acceptance",
+      "task5_evidence": null,
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "REL-01",
+      "title": "文字及图片放货指令",
+      "source_prompt_numbers": [
+        8,
+        16,
+        18,
+        19,
+        70,
+        71,
+        376,
+        485,
+        486,
+        541,
+        543
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#REL-01",
+      "task5_role": "existing_domain_or_task6_acceptance",
+      "task5_evidence": null,
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "REL-02",
+      "title": "信用放货",
+      "source_prompt_numbers": [
+        22,
+        25,
+        87,
+        538,
+        539,
+        540,
+        541
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#REL-02",
+      "task5_role": "existing_domain_or_task6_acceptance",
+      "task5_evidence": null,
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "REL-03",
+      "title": "实际仓库标题",
+      "source_prompt_numbers": [
+        22,
+        70,
+        71,
+        194,
+        284,
+        336,
+        541
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#REL-03",
+      "task5_role": "migration_or_recovery_support",
+      "task5_evidence": "docs/development/migration-contract.md",
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "REL-04",
+      "title": "解除控货资料",
+      "source_prompt_numbers": [
+        342,
+        343,
+        355,
+        450
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#REL-04",
+      "task5_role": "existing_domain_or_task6_acceptance",
+      "task5_evidence": null,
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "REL-05",
+      "title": "控货专用到货通知",
+      "source_prompt_numbers": [
+        345,
+        560
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#REL-05",
+      "task5_role": "existing_domain_or_task6_acceptance",
+      "task5_evidence": null,
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "REL-06",
+      "title": "解控日期及取消文案",
+      "source_prompt_numbers": [
+        450,
+        464,
+        465,
+        560
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#REL-06",
+      "task5_role": "existing_domain_or_task6_acceptance",
+      "task5_evidence": null,
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "REL-07",
+      "title": "主管撤销解控",
+      "source_prompt_numbers": [
+        464,
+        465
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#REL-07",
+      "task5_role": "existing_domain_or_task6_acceptance",
+      "task5_evidence": null,
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "REL-08",
+      "title": "目的港实际放货独立",
+      "source_prompt_numbers": [
+        421,
+        454,
+        487,
+        488,
+        550,
+        551
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#REL-08",
+      "task5_role": "migration_or_recovery_support",
+      "task5_evidence": "docs/development/migration-contract.md",
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "NOT-01",
+      "title": "最新到货通知骨架",
+      "source_prompt_numbers": [
+        102,
+        111,
+        308,
+        510,
+        511,
+        512
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#NOT-01",
+      "task5_role": "existing_domain_or_task6_acceptance",
+      "task5_evidence": null,
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "NOT-02",
+      "title": "最新收货通知及CBM",
+      "source_prompt_numbers": [
+        179,
+        202,
+        203,
+        207,
+        527
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#NOT-02",
+      "task5_role": "existing_domain_or_task6_acceptance",
+      "task5_evidence": null,
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "NOT-03",
+      "title": "装柜通知取代列表放货",
+      "source_prompt_numbers": [
+        552
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#NOT-03",
+      "task5_role": "existing_domain_or_task6_acceptance",
+      "task5_evidence": null,
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "NOT-04",
+      "title": "通知标记永久保存",
+      "source_prompt_numbers": [
+        117,
+        155,
+        428,
+        516,
+        532,
+        533
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#NOT-04",
+      "task5_role": "existing_domain_or_task6_acceptance",
+      "task5_evidence": null,
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "NOT-05",
+      "title": "装柜黄底与撤销",
+      "source_prompt_numbers": [
+        553,
+        554,
+        555,
+        557
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#NOT-05",
+      "task5_role": "existing_domain_or_task6_acceptance",
+      "task5_evidence": null,
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "NOT-06",
+      "title": "复制当日文本日期",
+      "source_prompt_numbers": [
+        559
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#NOT-06",
+      "task5_role": "existing_domain_or_task6_acceptance",
+      "task5_evidence": null,
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "NOT-07",
+      "title": "人工发送习惯",
+      "source_prompt_numbers": [
+        168,
+        169,
+        171
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#NOT-07",
+      "task5_role": "existing_domain_or_task6_acceptance",
+      "task5_evidence": null,
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "NOT-08",
+      "title": "文字复制可用",
+      "source_prompt_numbers": [
+        174,
+        271,
+        484,
+        485,
+        541
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#NOT-08",
+      "task5_role": "existing_domain_or_task6_acceptance",
+      "task5_evidence": null,
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "WH-01",
+      "title": "统一入库管理",
+      "source_prompt_numbers": [
+        165,
+        292,
+        396,
+        402,
+        408,
+        413,
+        415
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#WH-01",
+      "task5_role": "existing_domain_or_task6_acceptance",
+      "task5_evidence": null,
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "WH-02",
+      "title": "基础资料与运输类型",
+      "source_prompt_numbers": [
+        410,
+        423,
+        427,
+        436,
+        448,
+        489
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#WH-02",
+      "task5_role": "existing_domain_or_task6_acceptance",
+      "task5_evidence": null,
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "WH-03",
+      "title": "库房与手工输入",
+      "source_prompt_numbers": [
+        184,
+        190,
+        196,
+        414,
+        436
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#WH-03",
+      "task5_role": "existing_domain_or_task6_acceptance",
+      "task5_evidence": null,
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "WH-04",
+      "title": "多规格明细与体积",
+      "source_prompt_numbers": [
+        412,
+        427,
+        479
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#WH-04",
+      "task5_role": "existing_domain_or_task6_acceptance",
+      "task5_evidence": null,
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "WH-05",
+      "title": "货堆照片粘贴",
+      "source_prompt_numbers": [
+        480
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#WH-05",
+      "task5_role": "existing_domain_or_task6_acceptance",
+      "task5_evidence": null,
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "WH-06",
+      "title": "收据号唯一与断号预警",
+      "source_prompt_numbers": [
+        182,
+        429
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#WH-06",
+      "task5_role": "existing_domain_or_task6_acceptance",
+      "task5_evidence": null,
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "WH-07",
+      "title": "快递单号关联查货",
+      "source_prompt_numbers": [
+        430
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#WH-07",
+      "task5_role": "existing_domain_or_task6_acceptance",
+      "task5_evidence": null,
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "WH-08",
+      "title": "正报选项",
+      "source_prompt_numbers": [
+        433,
+        435
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#WH-08",
+      "task5_role": "existing_domain_or_task6_acceptance",
+      "task5_evidence": null,
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "WH-09",
+      "title": "筛选框与焦点",
+      "source_prompt_numbers": [
+        434,
+        436,
+        438,
+        439,
+        467,
+        471
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#WH-09",
+      "task5_role": "existing_domain_or_task6_acceptance",
+      "task5_evidence": null,
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "WH-10",
+      "title": "列宽与冻结",
+      "source_prompt_numbers": [
+        417,
+        437,
+        441,
+        442,
+        443,
+        445,
+        447,
+        493
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#WH-10",
+      "task5_role": "existing_domain_or_task6_acceptance",
+      "task5_evidence": null,
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "WH-11",
+      "title": "可见及全量Excel",
+      "source_prompt_numbers": [
+        440,
+        449
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#WH-11",
+      "task5_role": "existing_domain_or_task6_acceptance",
+      "task5_evidence": null,
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "WH-12",
+      "title": "入库行操作限制",
+      "source_prompt_numbers": [
+        467,
+        472,
+        496,
+        497,
+        501,
+        532
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#WH-12",
+      "task5_role": "existing_domain_or_task6_acceptance",
+      "task5_evidence": null,
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "WH-13",
+      "title": "中国仓分批出库",
+      "source_prompt_numbers": [
+        482,
+        487,
+        488
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#WH-13",
+      "task5_role": "existing_domain_or_task6_acceptance",
+      "task5_evidence": null,
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "WH-14",
+      "title": "改包压包与作废",
+      "source_prompt_numbers": [
+        481
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#WH-14",
+      "task5_role": "existing_domain_or_task6_acceptance",
+      "task5_evidence": null,
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "WH-15",
+      "title": "复核与主管权限",
+      "source_prompt_numbers": [
+        481,
+        483
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#WH-15",
+      "task5_role": "existing_domain_or_task6_acceptance",
+      "task5_evidence": null,
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "WH-16",
+      "title": "入库即节点",
+      "source_prompt_numbers": [
+        416,
+        419,
+        421
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#WH-16",
+      "task5_role": "existing_domain_or_task6_acceptance",
+      "task5_evidence": null,
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "WH-17",
+      "title": "中文品名自动译英文",
+      "source_prompt_numbers": [
+        478
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#WH-17",
+      "task5_role": "existing_domain_or_task6_acceptance",
+      "task5_evidence": null,
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "F6-01",
+      "title": "F6原Excel字段映射",
+      "source_prompt_numbers": [
+        178,
+        180,
+        181,
+        183,
+        184,
+        189,
+        190,
+        286
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#F6-01",
+      "task5_role": "migration_or_recovery_support",
+      "task5_evidence": "docs/development/migration-contract.md",
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "F6-02",
+      "title": "查询排序及文字复制",
+      "source_prompt_numbers": [
+        245,
+        281
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#F6-02",
+      "task5_role": "migration_or_recovery_support",
+      "task5_evidence": "docs/development/migration-contract.md",
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "F6-03",
+      "title": "前一日来货分析",
+      "source_prompt_numbers": [
+        472,
+        473
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#F6-03",
+      "task5_role": "migration_or_recovery_support",
+      "task5_evidence": "docs/development/migration-contract.md",
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "F6-04",
+      "title": "业务员业绩下钻",
+      "source_prompt_numbers": [
+        411,
+        458
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#F6-04",
+      "task5_role": "existing_domain_or_task6_acceptance",
+      "task5_evidence": null,
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "LABEL-01",
+      "title": "竖版标签尺寸",
+      "source_prompt_numbers": [
+        197,
+        198,
+        200,
+        204,
+        206
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#LABEL-01",
+      "task5_role": "existing_domain_or_task6_acceptance",
+      "task5_evidence": null,
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "LABEL-02",
+      "title": "标签抬头与字段",
+      "source_prompt_numbers": [
+        208,
+        209,
+        210,
+        211,
+        212,
+        213,
+        214,
+        215,
+        216,
+        217,
+        218,
+        219,
+        221,
+        224
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#LABEL-02",
+      "task5_role": "existing_domain_or_task6_acceptance",
+      "task5_evidence": null,
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "LABEL-03",
+      "title": "费用文字与千分位",
+      "source_prompt_numbers": [
+        208,
+        209,
+        222,
+        223,
+        253
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#LABEL-03",
+      "task5_role": "existing_domain_or_task6_acceptance",
+      "task5_evidence": null,
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "LABEL-04",
+      "title": "运输变化与确认标签",
+      "source_prompt_numbers": [
+        531,
+        532
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#LABEL-04",
+      "task5_role": "existing_domain_or_task6_acceptance",
+      "task5_evidence": null,
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "LABEL-05",
+      "title": "删除多余仓储展示",
+      "source_prompt_numbers": [
+        192,
+        207
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#LABEL-05",
+      "task5_role": "existing_domain_or_task6_acceptance",
+      "task5_evidence": null,
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "MBL-01",
+      "title": "MBL数据建设",
+      "source_prompt_numbers": [
+        462
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#MBL-01",
+      "task5_role": "existing_domain_or_task6_acceptance",
+      "task5_evidence": null,
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "TRACK-01",
+      "title": "按票件的全流程透明",
+      "source_prompt_numbers": [
+        133,
+        135,
+        264,
+        545
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#TRACK-01",
+      "task5_role": "existing_domain_or_task6_acceptance",
+      "task5_evidence": null,
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "TRACK-02",
+      "title": "双语客户跟踪",
+      "source_prompt_numbers": [
+        375,
+        377,
+        382,
+        383,
+        384
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#TRACK-02",
+      "task5_role": "existing_domain_or_task6_acceptance",
+      "task5_evidence": null,
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "TRACK-03",
+      "title": "后四位验证与柜号限制",
+      "source_prompt_numbers": [
+        401,
+        547,
+        549
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#TRACK-03",
+      "task5_role": "existing_domain_or_task6_acceptance",
+      "task5_evidence": null,
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "TRACK-04",
+      "title": "入库及快递查货",
+      "source_prompt_numbers": [
+        419,
+        430
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#TRACK-04",
+      "task5_role": "existing_domain_or_task6_acceptance",
+      "task5_evidence": null,
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "TRACK-05",
+      "title": "主分单同步与独立调整",
+      "source_prompt_numbers": [
+        545,
+        546,
+        548,
+        550,
+        551
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#TRACK-05",
+      "task5_role": "existing_domain_or_task6_acceptance",
+      "task5_evidence": null,
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "TRACK-06",
+      "title": "海空运时间线",
+      "source_prompt_numbers": [
+        422,
+        459,
+        467,
+        471
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#TRACK-06",
+      "task5_role": "existing_domain_or_task6_acceptance",
+      "task5_evidence": null,
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "TRACK-07",
+      "title": "暂停通用开放节点API",
+      "source_prompt_numbers": [
+        265,
+        266
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#TRACK-07",
+      "task5_role": "existing_domain_or_task6_acceptance",
+      "task5_evidence": null,
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "PORTAL-01",
+      "title": "手机号注册及自助资料",
+      "source_prompt_numbers": [
+        518
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#PORTAL-01",
+      "task5_role": "existing_domain_or_task6_acceptance",
+      "task5_evidence": null,
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "PORTAL-02",
+      "title": "导出正式客户箱单",
+      "source_prompt_numbers": [
+        303,
+        381,
+        386,
+        518
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#PORTAL-02",
+      "task5_role": "existing_domain_or_task6_acceptance",
+      "task5_evidence": null,
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "HOME-01",
+      "title": "打开先欢迎页",
+      "source_prompt_numbers": [
+        509,
+        517,
+        558,
+        561,
+        562,
+        570,
+        573,
+        574,
+        577
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#HOME-01",
+      "task5_role": "existing_domain_or_task6_acceptance",
+      "task5_evidence": null,
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "HOME-02",
+      "title": "三语首页",
+      "source_prompt_numbers": [
+        558
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#HOME-02",
+      "task5_role": "existing_domain_or_task6_acceptance",
+      "task5_evidence": null,
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "HOME-03",
+      "title": "六板块及EXPRESS位置",
+      "source_prompt_numbers": [
+        558,
+        567,
+        569
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#HOME-03",
+      "task5_role": "existing_domain_or_task6_acceptance",
+      "task5_evidence": null,
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "HOME-04",
+      "title": "中国及尼日利亚仓资料",
+      "source_prompt_numbers": [
+        558
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#HOME-04",
+      "task5_role": "migration_or_recovery_support",
+      "task5_evidence": "docs/development/migration-contract.md",
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "HOME-05",
+      "title": "宣传图完整及位置",
+      "source_prompt_numbers": [
+        563,
+        566,
+        569,
+        571
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#HOME-05",
+      "task5_role": "existing_domain_or_task6_acceptance",
+      "task5_evidence": null,
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "HOME-06",
+      "title": "客户查询卡片及热线",
+      "source_prompt_numbers": [
+        569,
+        575,
+        576
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#HOME-06",
+      "task5_role": "migration_or_recovery_support",
+      "task5_evidence": "docs/development/migration-contract.md",
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "INT-01",
+      "title": "统一项目及需求优先",
+      "source_prompt_numbers": [],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#INT-01",
+      "task5_role": "migration_or_recovery_support",
+      "task5_evidence": "docs/development/migration-contract.md",
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "INT-02",
+      "title": "110证据链复用",
+      "source_prompt_numbers": [],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#INT-02",
+      "task5_role": "migration_or_recovery_support",
+      "task5_evidence": "docs/development/migration-contract.md",
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "INT-03",
+      "title": "到账核验与核销分开",
+      "source_prompt_numbers": [],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#INT-03",
+      "task5_role": "migration_or_recovery_support",
+      "task5_evidence": "docs/development/migration-contract.md",
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "INT-04",
+      "title": "不扩大特殊差额规则",
+      "source_prompt_numbers": [],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#INT-04",
+      "task5_role": "migration_or_recovery_support",
+      "task5_evidence": "docs/development/migration-contract.md",
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "INT-05",
+      "title": "沿用发送与采集边界",
+      "source_prompt_numbers": [],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#INT-05",
+      "task5_role": "migration_or_recovery_support",
+      "task5_evidence": "docs/development/migration-contract.md",
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "INT-06",
+      "title": "旧人工核销不冒充银行验证",
+      "source_prompt_numbers": [],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#INT-06",
+      "task5_role": "migration_or_recovery_support",
+      "task5_evidence": "docs/development/migration-contract.md",
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "MIG-01",
+      "title": "全域回填和来源核对",
+      "source_prompt_numbers": [],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#MIG-01",
+      "task5_role": "migration_or_recovery_support",
+      "task5_evidence": "docs/development/migration-contract.md",
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "MIG-02",
+      "title": "幂等与异常保留",
+      "source_prompt_numbers": [],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#MIG-02",
+      "task5_role": "migration_or_recovery_support",
+      "task5_evidence": "docs/development/migration-contract.md",
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "MIG-03",
+      "title": "正式与测试隔离",
+      "source_prompt_numbers": [],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#MIG-03",
+      "task5_role": "migration_or_recovery_support",
+      "task5_evidence": "docs/development/migration-contract.md",
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    },
+    {
+      "requirement_id": "MIG-04",
+      "title": "完整包与文档",
+      "source_prompt_numbers": [
+        578
+      ],
+      "source_requirement": "docs/requirements/必须遵守的功能清单.md#MIG-04",
+      "task5_role": "migration_or_recovery_support",
+      "task5_evidence": "docs/development/migration-contract.md",
+      "whole_requirement_acceptance": "not_claimed_by_task5"
+    }
+  ],
+  "actual_source": {
+    "classification": "supplied_snapshot_not_production",
+    "archive_sha256": "4c47a5ffb612026bbc6944dc4729a6f7f5d07f2cf2df95c9a26b155f0c51fb40",
+    "member_sha256": "ddcb01c808de61b411c986c60ede84b96ee143eee31984f414b21f9189add904",
+    "version": "101908",
+    "controls": {
+      "parties": 439,
+      "shipments": 28,
+      "tickets": 964,
+      "bills": 619,
+      "slips": 60,
+      "ledger": 73,
+      "f6": 165,
+      "archive": 49,
+      "root_keys": 23,
+      "cash_created": 0,
+      "tokens_excluded": 39,
+      "files": 144,
+      "active_files": 48,
+      "historical_files": 96,
+      "unique_file_objects": 47,
+      "missing_modules": [
+        "logistics_whRecs",
+        "logistics_mbls",
+        "logistics_custs"
+      ],
+      "provided_warehouse_profiles": 8,
+      "public_contacts_present": true
+    },
+    "additional_controls": {
+      "missing_shipment_refs": 42,
+      "AR": 604,
+      "AP": 15,
+      "group_AR": 149,
+      "nonzero_discounts": 9,
+      "all_bills_NGN": true,
+      "distinct_receipts": 917,
+      "unknown_KG": 915,
+      "slips_approved": 57,
+      "slips_pending": 3,
+      "slips_unknown_original_currency": 16,
+      "slips_missing_uid": 55,
+      "slips_missing_approval_time": 57,
+      "F6_known_copy_time": 15,
+      "nonempty_dangling_party_refs": 12,
+      "blank_party_refs": 1,
+      "unavailable_party_links": 13,
+      "discount_field_present": 52
+    }
+  },
+  "actual_trial": {
+    "schema": "supplied_snapshot_final",
+    "first_created": 2397,
+    "second_created": 0,
+    "post_compat_created": 0,
+    "frozen_final_created": 0,
+    "frozen_final_verify": "verified",
+    "independent": {
+      "source_sha256": "ddcb01c808de61b411c986c60ede84b96ee143eee31984f414b21f9189add904",
+      "counts": {
+        "parties": 439,
+        "shipments": 28,
+        "tickets": 964,
+        "bills": 619,
+        "slips": 60,
+        "ledger": 73,
+        "f6": 165
+      },
+      "counts_match": true,
+      "money_status_match": true,
+      "quantities_match": true,
+      "source_references_preserved": true,
+      "f6_committed_copy_provenance_match": true,
+      "attachment_references": 144,
+      "unique_attachment_objects": 47,
+      "files_match": true,
+      "cash_created": 0,
+      "source_sessions_activated": 0,
+      "new_native_sessions": 1,
+      "archive_sha256": "4c47a5ffb612026bbc6944dc4729a6f7f5d07f2cf2df95c9a26b155f0c51fb40",
+      "verified": true
+    },
+    "runtime_http_counts": {
+      "health": "ok",
+      "counts": {
+        "parties": 439,
+        "shipments": 28,
+        "tickets": 964,
+        "bills": 619,
+        "f6": 165
+      },
+      "native_review_login": true,
+      "old_user_login": false,
+      "source": "supplied_snapshot",
+      "schema": "supplied_snapshot_final"
+    },
+    "native_review_identity_is_new": true,
+    "actual_archive_upload_bounds": {
+      "actual_archive_bytes": 30908012,
+      "dedicated_limit_bytes": 67108864,
+      "within_upload_limit": true,
+      "actual_archive_expansion_validation": true,
+      "member_sha256": "ddcb01c808de61b411c986c60ede84b96ee143eee31984f414b21f9189add904",
+      "source_copied": false
+    }
+  },
+  "actual_restore": {
+    "schema": "restore_task5_frozen_final",
+    "earlier_verified_schema": "restore_task5_final",
+    "revision": "f11000500005",
+    "verified": true,
+    "tables": 103,
+    "counts": {
+      "allocations": 0,
+      "app_settings": 2,
+      "arrival_settlements": 0,
+      "attachments": 144,
+      "audit_events": 1,
+      "bank_account_warehouses": 0,
+      "bank_accounts": 0,
+      "bank_claims": 0,
+      "bank_entries": 0,
+      "bank_files": 0,
+      "bank_matches": 0,
+      "bank_source_rows": 0,
+      "cargo_arrivals": 0,
+      "cargo_charge_components": 0,
+      "cargo_import_batches": 0,
+      "cargo_phone_history": 0,
+      "cargo_source_rows": 0,
+      "channel_actions": 0,
+      "channel_automation_events": 0,
+      "channel_automations": 0,
+      "channel_deliveries": 0,
+      "channel_messages": 0,
+      "channel_receipt_observations": 0,
+      "commands": 0,
+      "connection_events": 0,
+      "connection_operations": 0,
+      "connections": 0,
+      "cross_party_authorizations": 0,
+      "customer_identities": 0,
+      "customer_sessions": 0,
+      "delivery_receipts": 0,
+      "dialogue_files": 0,
+      "dialogue_focus": 0,
+      "dialogue_proposals": 0,
+      "dialogue_threads": 0,
+      "dialogue_turns": 0,
+      "discounts": 0,
+      "dispatch_batches": 0,
+      "document_export_members": 0,
+      "document_exports": 0,
+      "document_revisions": 0,
+      "document_templates": 0,
+      "evidence_cases": 0,
+      "evidence_images": 0,
+      "evidence_reviews": 0,
+      "finance_events": 0,
+      "grants": 0,
+      "invoice_adjustments": 0,
+      "invoices": 0,
+      "jobs": 0,
+      "legacy_archive": 49,
+      "legacy_bank_coverage": 0,
+      "legacy_bank_evidence": 0,
+      "legacy_bill_members": 934,
+      "legacy_bills": 619,
+      "legacy_f6": 165,
+      "legacy_parties": 439,
+      "legacy_payment_observations": 133,
+      "legacy_resolutions": 0,
+      "legacy_shipments": 28,
+      "legacy_tickets": 964,
+      "manufacturer_holds": 0,
+      "mbl_attachments": 0,
+      "mbl_records": 0,
+      "migration_batches": 1,
+      "migration_files": 144,
+      "migration_issues": 191,
+      "migration_source_maps": 122330,
+      "notification_copy_events": 0,
+      "notification_members": 0,
+      "notifications": 0,
+      "opening_balances": 0,
+      "outbox": 0,
+      "packing_documents": 0,
+      "parties": 0,
+      "party_categories": 0,
+      "party_phones": 0,
+      "party_warehouses": 0,
+      "payment_registrations": 0,
+      "payments": 0,
+      "phone_challenges": 0,
+      "physical_photos": 0,
+      "physical_releases": 0,
+      "price_cards": 0,
+      "public_attempts": 0,
+      "quote_snapshots": 0,
+      "receipt_reviews": 0,
+      "receipt_specs": 0,
+      "receipts": 0,
+      "recognition_jobs": 0,
+      "release_members": 0,
+      "release_orders": 0,
+      "sessions": 0,
+      "shipments": 0,
+      "stock_events": 0,
+      "ticket_attachments": 0,
+      "ticket_reviews": 0,
+      "tickets": 0,
+      "tracking_nodes": 0,
+      "translation_candidates": 0,
+      "users": 1,
+      "warehouse_scopes": 0,
+      "warehouses": 0
+    },
+    "table_hashes": {
+      "allocations": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "app_settings": "57b1eb9c4df7b903232203e4c58c6d7290b45faaeaa22eb6d5fff693d4248231",
+      "arrival_settlements": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "attachments": "6e9c894e6f06d13eb7b4a28949214d099e9424730ec9b18449cbdd27a08fa4c2",
+      "audit_events": "528e1bc55344b5918978adabe370e57cf80ae49f6fdc5bced30256a154bce1ec",
+      "bank_account_warehouses": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "bank_accounts": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "bank_claims": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "bank_entries": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "bank_files": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "bank_matches": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "bank_source_rows": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "cargo_arrivals": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "cargo_charge_components": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "cargo_import_batches": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "cargo_phone_history": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "cargo_source_rows": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "channel_actions": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "channel_automation_events": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "channel_automations": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "channel_deliveries": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "channel_messages": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "channel_receipt_observations": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "commands": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "connection_events": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "connection_operations": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "connections": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "cross_party_authorizations": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "customer_identities": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "customer_sessions": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "delivery_receipts": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "dialogue_files": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "dialogue_focus": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "dialogue_proposals": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "dialogue_threads": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "dialogue_turns": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "discounts": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "dispatch_batches": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "document_export_members": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "document_exports": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "document_revisions": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "document_templates": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "evidence_cases": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "evidence_images": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "evidence_reviews": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "finance_events": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "grants": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "invoice_adjustments": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "invoices": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "jobs": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "legacy_archive": "90792d4d05b9d2579a2c378c4bfe16d296ae909f66bf309d22e54468935b5767",
+      "legacy_bank_coverage": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "legacy_bank_evidence": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "legacy_bill_members": "d435add3781319f9afea8224819f2fbeab97adc22d106476e0eeb76812f75078",
+      "legacy_bills": "304e7a62ed58ecb1e37998b27b46a9f83309a460d008bbe174b683a0556ee53b",
+      "legacy_f6": "80aa104c58aa9f0930d3e9ad79088df6808f10f69a595b2bed19343d11f9698d",
+      "legacy_parties": "84c9f2a918622173f9bb54cbd44f1eb2d034657176890dd5769384f226c22b0d",
+      "legacy_payment_observations": "58ed6a33c574f272e4976480970e09de085c2f06cc358409506987736bfe56a7",
+      "legacy_resolutions": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "legacy_shipments": "e16e0fc09fcced0557d9f9f55f1ec97898d5d05077e21d0c6a2628b257138094",
+      "legacy_tickets": "c7a929c85d33612ce56aca989a99f6ec1103842d5b1bf896905f7400b8ea97ae",
+      "manufacturer_holds": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "mbl_attachments": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "mbl_records": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "migration_batches": "eb4c2ee14d7fe44191bc4da1994d14f6a949a084afb6351d88ae68e8dd741cfa",
+      "migration_files": "a9e1fa62be47b34767e863f6d6bf413379e251b22726c2ad922c30cd61198331",
+      "migration_issues": "178b1658b465ef2a308f89aa4a2e4a5d3db32e3479adc9c52b113579a6eda99e",
+      "migration_source_maps": "dd21cc19456a70c0fdba1b13db76c0482d5d6f9ba3f908df53ed7f5b0d7e11cd",
+      "notification_copy_events": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "notification_members": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "notifications": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "opening_balances": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "outbox": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "packing_documents": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "parties": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "party_categories": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "party_phones": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "party_warehouses": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "payment_registrations": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "payments": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "phone_challenges": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "physical_photos": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "physical_releases": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "price_cards": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "public_attempts": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "quote_snapshots": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "receipt_reviews": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "receipt_specs": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "receipts": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "recognition_jobs": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "release_members": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "release_orders": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "sessions": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "shipments": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "stock_events": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "ticket_attachments": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "ticket_reviews": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "tickets": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "tracking_nodes": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "translation_candidates": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "users": "3a97eeb588c747f9a16b3ab5da7d5f3fe765431fa4db3dff080e4916e79ed71d",
+      "warehouse_scopes": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "warehouses": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    "records_sha256": "b00775dc126f185d7b44bfd885b4ba095a3585b5ff200e9a2c72606f4da646d9",
+    "file_references": 144,
+    "unique_file_objects": 47,
+    "backup_before_native_review_login": true,
+    "authority": "disabled",
+    "team_archive": "not_archived"
+  },
+  "runtime_validation": {
+    "fresh_cli_started": true,
+    "caller_exited_before_probe": true,
+    "pid_matches": true,
+    "data_directory_matches": true,
+    "port_matches": true,
+    "sql_health": true,
+    "main_pid_unchanged": true,
+    "runtime_tool_sha256": "387cfd18fb3270ed4b27ae366ba3d5e45f60628a2c8b6bf795bffa7b41b4feb0",
+    "fresh_postmaster_pid": 46368,
+    "main_postmaster_pid": 19464,
+    "isolated_graceful_stop": true
+  },
+  "role_validation": {
+    "real_warehouse_limited_finance_reader_denied_global_legacy": true,
+    "nonadmin_explicit_global_reader_allowed": true,
+    "synthetic_schema_separate": true
+  },
+  "tests": {
+    "first_full": {
+      "passed": 267,
+      "failed": 1,
+      "reason": "old-schema native invoice queried later legacy table"
+    },
+    "compatibility_focused_passed": 20,
+    "namespace_and_old_schema_focused_passed": 2,
+    "pre_acl_full": {
+      "passed": 269,
+      "warnings": 1,
+      "seconds": "828.18"
+    },
+    "sqlite_acl_focused_passed": 4,
+    "sqlite_actual_cli": {
+      "cli_exit": 0,
+      "committed_wal_in_snapshot": true,
+      "source_bytes_unchanged": true,
+      "source_owner_acl_inheritance_unchanged": true,
+      "exported_rows": 1
+    },
+    "post_full_schema_guards_passed": 3,
+    "metadata": {
+      "head": "f11000500005",
+      "current": "f11000500005",
+      "metadata_matches": true,
+      "tables": 103
+    },
+    "compileall_exit": 0,
+    "pip_check": "No broken requirements found.",
+    "final_full": {
+      "passed": 271,
+      "warnings": 1,
+      "seconds": "847.60"
+    }
+  },
+  "unaccepted_inputs": [
+    "production_110_database_and_original_attachment_directory_not_supplied",
+    "actual_cargo_warehouse_and_physical_reference_confirmation",
+    "source_backed_group_financial_reconciliation_for_destructive_changes",
+    "external_team_destination_not_configured",
+    "external_account_transport_model_and_delivery_not_executed",
+    "Task6_UI_and_1y_5y_scale_acceptance"
+  ]
+}

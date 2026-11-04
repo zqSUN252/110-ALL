@@ -14,7 +14,7 @@ class Physical(Version):
     order_id:str
     ticket_id:str
     pieces:int=Field(gt=0)
-    kg:str
+    kg:str|None=None
     cbm:str
     occurred_at:str
     photo_ids:list[str]=Field(min_length=1,max_length=20)

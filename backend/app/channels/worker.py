@@ -25,6 +25,8 @@ def actor_now(db,identity):
 
 
 async def delivery_once(factory,settings,config=None,transport=None):
+    from app.migration.operations import worker_gate
+    worker_gate(factory,settings)
     environment=ChannelConfig.from_env()
     config=config or ChannelConfig.from_env()
     if not settings.sending_enabled: return {'status':'sending_disabled','called':False}
@@ -98,6 +100,8 @@ async def delivery_once(factory,settings,config=None,transport=None):
 
 
 async def media_once(factory,settings,operator_id,config=None,transport=None):
+    from app.migration.operations import worker_gate
+    worker_gate(factory,settings)
     environment=ChannelConfig.from_env()
     config=config or ChannelConfig.from_env()
     if not settings.collection_enabled: return {'status':'collection_paused','called':False}

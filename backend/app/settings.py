@@ -28,6 +28,7 @@ class Settings:
     document_font_regular: str | None = None
     document_font_bold: str | None = None
     document_font_chinese: str | None = None
+    writer_generation: str | None = None
 
 
 def load_settings() -> Settings:

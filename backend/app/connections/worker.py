@@ -25,6 +25,8 @@ def provider_ready(config):
 
 
 async def connection_once(factory,settings,config=None,transport=None):
+    from app.migration.operations import worker_gate
+    worker_gate(factory,settings)
     environment=ChannelConfig.from_env()
     config=config or ChannelConfig.from_env()
     if not settings.connection_control_enabled and not settings.connection_diagnostics_enabled:return {'status':'connection_disabled','called':False}
@@ -115,6 +117,8 @@ async def connection_once(factory,settings,config=None,transport=None):
 
 
 def monitor_once(factory,settings):
+    from app.migration.operations import worker_gate
+    worker_gate(factory,settings)
     """Local observation timers/outbox only. Never creates login or restarts unpaired accounts."""
     with factory() as db,db.begin():
         db.info['settings']=settings;config=ChannelConfig.from_env()

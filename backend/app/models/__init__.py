@@ -114,3 +114,5 @@ from .documents import (HoldFact, CargoPhoneHistory, ReleaseOrder, ReleaseMember
 from app.documents import hooks as _document_hooks
 from .assistant import (DialogueThread,DialogueTurn,DialogueFocus,DialogueFile,DialogueProposal,Connection,ConnectionOperation,ConnectionEvent,DeliveryReceipt,ChannelAutomation,ChannelAutomationEvent)
 from .assistant import ChannelReceiptObservation
+from .migration import (MigrationBatch, LegacyParty, LegacyShipment, LegacyTicket, LegacyBill, LegacyBillMember, LegacyPaymentObservation, LegacyF6, MigrationSourceMap, MigrationIssue, LegacyArchive, MigrationFile, LegacyResolution)
+from .migration import LegacyBankEvidence,LegacyBankCoverage

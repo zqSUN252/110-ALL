@@ -77,11 +77,12 @@ def ready(db,t):
 
 
 def projection(db,t,rows):
+    from .quantities import known_sum,complete as quantity_complete
     lines=components(db,t);priced=ready(db,t) and (not t.freight_usd or t.ngn_per_usd)
     cumulative={k:Decimal(0) for k in UNITS.values()};used=[Decimal('0.00') for c in lines];result=[]
     for a in rows:
-        for k in cumulative:cumulative[k]+=Decimal(getattr(a,k))
-        complete=all(cumulative[k]==getattr(t,k) for k in cumulative)
+        for k in cumulative:cumulative[k]=known_sum((cumulative[k],getattr(a,k)))
+        complete=quantity_complete(t,cumulative)
         parts=[];usd=ngn=None
         if priced:
             for i,line in enumerate(lines):

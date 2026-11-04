@@ -56,7 +56,7 @@ def unit_text(value):
 
 
 def formal_lines(data,kind='packing'):
-    lines=[]
+    lines=[];seen_invoices=set()
     for r in data['rows']:
         label=kind.startswith('label_');fee=kind=='label_fee'
         if label:lines.extend(['CARGO RECEIPT','MC STAR LOGISTICS / 广州铭鑫思达'])
@@ -73,8 +73,12 @@ def formal_lines(data,kind='packing'):
             usd=f"{Decimal(r['freight_usd']):,.2f}" if r['freight_usd'] is not None else 'TO BE CONFIRMED';ngn=f"{Decimal(r['clearing_ngn']):,.2f}" if r['clearing_ngn'] is not None else 'TO BE CONFIRMED'
             lines.append(f"Total cost: USD {usd} + NGN {ngn}")
             if not label:
-                lines.extend([f"Exchange Rate: {shown(r['ngn_per_usd'])}",f"Invoice Total (NGN): {shown(r['invoice_total_ngn'])}",f"Received (NGN): {shown(r['allocated_ngn'])}",f"Outstanding (NGN): {shown(r['outstanding_ngn'])}"])
-                if r['rounding_adjustment_ngn'] is not None and Decimal(r['rounding_adjustment_ngn'])!=0:lines.append(f"Rounding adjustment (NGN): {r['rounding_adjustment_ngn']}")
+                if r.get('invoice_id') in seen_invoices:
+                    lines.append(f"Shared invoice: {shown(r.get('invoice_reference'))}; amounts shown once")
+                else:
+                    lines.extend([f"Exchange Rate: {shown(r['ngn_per_usd'])}",f"Invoice Total (NGN): {shown(r['invoice_total_ngn'])}",f"Received (NGN): {shown(r.get('received_total_ngn',r['allocated_ngn']))}",f"Outstanding (NGN): {shown(r['outstanding_ngn'])}"])
+                    if r['rounding_adjustment_ngn'] is not None and Decimal(r['rounding_adjustment_ngn'])!=0:lines.append(f"Rounding adjustment (NGN): {r['rounding_adjustment_ngn']}")
+                    if r.get('invoice_id'):seen_invoices.add(r['invoice_id'])
         lines.append(f"Received Date: {shown(r['received_on'])}")
         lines.append('')
     if not kind.startswith('label_'):
@@ -162,8 +166,10 @@ def pdf(settings,lines,label=False,receipt=None):
     return content
 
 
-HEADERS=[('receipt','Receipt No.'),('container','Container / Waybill'),('mark','Client Mark'),('phone','Client Contact'),('item_en','Goods EN'),('item_zh','Goods ZH'),('destination','Destination Port'),('warehouse','Destination Warehouse'),('address','Address'),('transport','Transport'),('pieces','PCS'),('kg','KG'),('cbm','CBM'),('freight_usd','USD charges'),('clearing_ngn','NGN charges'),('ngn_per_usd','Exchange Rate'),('invoice_total_ngn','Invoice Total NGN'),('rounding_adjustment_ngn','Rounding adjustment NGN'),('allocated_ngn','Received NGN'),('outstanding_ngn','Outstanding NGN'),('charges','Actual Unit Charges')]
-NUMERIC={'pieces','kg','cbm','freight_usd','clearing_ngn','ngn_per_usd','invoice_total_ngn','rounding_adjustment_ngn','allocated_ngn','outstanding_ngn'}
+HEADERS=[('receipt','Receipt No.'),('container','Container / Waybill'),('mark','Client Mark'),('phone','Client Contact'),('item_en','Goods EN'),('item_zh','Goods ZH'),('destination','Destination Port'),('warehouse','Destination Warehouse'),('address','Address'),('transport','Transport'),('pieces','PCS'),('kg','KG'),('cbm','CBM'),('freight_usd','USD charges'),('clearing_ngn','NGN charges'),('ngn_per_usd','Exchange Rate'),('invoice_total_ngn','Invoice Total NGN'),('rounding_adjustment_ngn','Rounding adjustment NGN'),('received_total_ngn','Received NGN'),('historical_received_ngn','Historical received NGN'),('historical_bank_state','Historical bank status'),('outstanding_ngn','Outstanding NGN'),('charges','Actual Unit Charges')]
+NUMERIC={'pieces','kg','cbm','freight_usd','clearing_ngn','ngn_per_usd','invoice_total_ngn','rounding_adjustment_ngn','allocated_ngn','received_total_ngn','historical_received_ngn','outstanding_ngn'}
+SHARED_MONEY={'invoice_total_ngn','rounding_adjustment_ngn','received_total_ngn','historical_received_ngn','outstanding_ngn'}
+HEADERS.append(('invoice_reference','Shared invoice reference'))
 
 
 def literal(cell,value):
@@ -174,15 +180,19 @@ def literal(cell,value):
 def workbook(data):
     book=Workbook();book.remove(book.active)
     def table(name,rows):
-        sh=book.create_sheet(name);sh.append([label for _,label in HEADERS]);sh.freeze_panes='E2';sh.auto_filter.ref=f'A1:U{len(rows)+1}'
+        from openpyxl.utils import get_column_letter
+        sh=book.create_sheet(name);sh.append([label for _,label in HEADERS]);sh.freeze_panes='E2';sh.auto_filter.ref=f'A1:{get_column_letter(len(HEADERS))}{len(rows)+1}'
+        seen=set()
         for i,r in enumerate(rows,2):
             for j,(key,label) in enumerate(HEADERS,1):
                 v=r.get(key)
+                if key in SHARED_MONEY and r.get('invoice_id') in seen:v=None
                 if key=='charges':v='; '.join(f"{c['component']} {c['currency']} {unit_text(c['unit_price'])}/{c['unit']} / Total {c['currency']} {shown(c['amount'])}" for c in v)
                 elif key in NUMERIC:v=Decimal(str(v)) if v is not None else None
                 literal(sh.cell(i,j),v)
                 sh.cell(i,j).alignment=Alignment(wrap_text=True,vertical='top')
                 if key in NUMERIC:sh.cell(i,j).number_format='#,##0.00######'
+            if r.get('invoice_id'):seen.add(r['invoice_id'])
         from openpyxl.utils import get_column_letter
         for j in range(1,len(HEADERS)+1):sh.column_dimensions[get_column_letter(j)].width=20
         for c in sh[1]:c.font=Font(name='Ebrima',bold=True);c.fill=PatternFill('solid',fgColor='E7EBEE')
@@ -193,7 +203,7 @@ def workbook(data):
     for i,(port,rows) in enumerate(ports.items(),1):table((str(i)+' '+re.sub(r'[\[\]:*?/\\]','_',port))[:31],rows)
     # Per-customer sheets use exactly the same formal fields and order as PNG/PDF.
     groups={}
-    for r in data['rows']:groups.setdefault((r['shipment_id'],r['party_id'],r['phone'],r['mark']),[]).append(r)
+    for r in data['rows']:groups.setdefault(('invoice',r['invoice_id']) if r.get('invoice_id') else (r['shipment_id'],r['party_id'],r['phone'],r['mark']),[]).append(r)
     for i,rows in enumerate(groups.values(),1):
         sh=book.create_sheet('Customer '+str(i));sh.column_dimensions['A'].width=110
         logo=SheetImage(ASSETS/'logo.png');logo.width=180;logo.height=55;sh.add_image(logo,'A1');sh.row_dimensions[1].height=45
@@ -203,11 +213,16 @@ def workbook(data):
     for key,value in data['totals'].items():totals.append([{'freight_usd':'USD charges','clearing_ngn':'NGN charges'}.get(key,key),Decimal(value['value']) if value['value'] is not None else None,Decimal(value['known_subtotal']),value['pending_count']])
     output=BytesIO();book.save(output);content=output.getvalue();check=load_workbook(BytesIO(content),data_only=False)
     if check['Master'].max_row!=len(data['rows'])+1:raise DomainError('xlsx_verify','Workbook row readback mismatch',500)
+    seen=set()
     for i,r in enumerate(data['rows'],2):
         for j,(key,_) in enumerate(HEADERS,1):
             c=check['Master'].cell(i,j)
+            if key in SHARED_MONEY and r.get('invoice_id') in seen:
+                if c.value is not None:raise DomainError('xlsx_verify','Shared bill repeated in member row',500)
+                continue
             if key in NUMERIC and r.get(key) is not None and abs(Decimal(str(c.value))-Decimal(str(r[key])))>Decimal('.000001'):raise DomainError('xlsx_verify','Numeric amount readback mismatch',500)
             if key not in NUMERIC and c.data_type=='f':raise DomainError('xlsx_verify','Source text became a formula',500)
+        if r.get('invoice_id'):seen.add(r['invoice_id'])
     check.close();return content
 
 

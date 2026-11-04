@@ -135,7 +135,10 @@ def total(db, cls, field, **filters):
 def invoice_json(db, inv):
     allocated=total(db,Allocation,'amount_ngn',invoice_id=inv.id)
     discount=total(db,Discount,'amount_ngn',invoice_id=inv.id)
-    return record(inv) | json_value({'allocated_ngn':allocated,'discount_ngn':discount,'outstanding_ngn':inv.amount_ngn-discount-allocated})
+    from app.migration.service import historical_received
+    historical=historical_received(db,inv.id)
+    from app.migration.bank_evidence import bank_state
+    return record(inv) | json_value({'allocated_ngn':allocated,'historical_received_ngn':historical,'historical_bank_state':bank_state(db,inv.id,historical),'discount_ngn':discount,'outstanding_ngn':inv.amount_ngn-discount-allocated-historical})
 
 
 def payment_json(db,payment):
@@ -199,6 +202,8 @@ def set_party_membership(db,actor,p):
 
 @command('invoice.create','party_id warehouse_id scope kind reference amount_ngn charge_usd charge_ngn ngn_per_usd uploaded_on period source_key pricing rounding_basis')
 def create_invoice(db,actor,p):
+    if str(p.get('source_key') or '').startswith('legacy:'):
+        raise DomainError('reserved_source_namespace','Historical source links are created only by reviewed migration resolution')
     kind=p.get('kind','AR')
     if kind not in ('AR','AP'):
         raise DomainError('invalid_kind','Invoice kind must be AR or AP')
@@ -278,7 +283,7 @@ def allocate(db,actor,payment,rows,cross_party=None):
         if inv.scope!=payment.scope or inv.kind!=('AR' if payment.direction=='in' else 'AP') or inv.state!='open':
             raise DomainError('allocation_scope','Invoice and payment party, scope, direction or status differ')
         amount=decimal(row['amount_ngn'],positive=True)
-        due=inv.amount_ngn-total(db,Discount,'amount_ngn',invoice_id=inv.id)-total(db,Allocation,'amount_ngn',invoice_id=inv.id)
+        due=Decimal(invoice_json(db,inv)['outstanding_ngn'])
         if amount>due or amount>available:
             raise DomainError('over_allocation','Allocation exceeds payment balance or invoice outstanding',409)
         db.add(Allocation(payment_id=payment.id,invoice_id=inv.id,amount_ngn=amount,actor_id=actor.id))
@@ -354,7 +359,10 @@ def adjust_invoice(db,actor,p):
     if discounts!=old_discounts:require(actor,'finance.discount',inv.warehouse_id)
     if discounts>new: raise DomainError('discount_exceeds_price','Existing discounts exceed new price; explicit discount resolution required')
     allocated=total(db,Allocation,'amount_ngn',invoice_id=inv.id)
-    excess=max(ZERO,allocated+discounts-new)
+    from app.migration.service import historical_received,historical_discount
+    if new-discounts<historical_received(db,inv.id) or discounts<historical_discount(db,inv.id):
+        raise DomainError('historical_balance_review','Sourced historical received cannot become usable credit without a separate evidence resolution',409)
+    excess=max(ZERO,allocated+historical_received(db,inv.id)+discounts-new)
     preview=adjustment_preview(db,actor,inv.id,str(new),p.get('discount_total_ngn'),p.get('rounding_basis'))
     if p.get('preview')!=preview:
         raise DomainError('preview_changed','Financial impact changed',409,preview)
@@ -389,7 +397,12 @@ def adjust_invoice(db,actor,p):
 def adjustment_preview(db,actor,identity,amount_ngn,discount_total_ngn=None,rounding_basis=None):
     inv=locked(db,Invoice,identity); require(actor,'payables.manage' if inv.kind=='AP' else 'finance.adjust',inv.warehouse_id); new=decimal(amount_ngn)
     allocated=total(db,Allocation,'amount_ngn',invoice_id=inv.id); old_discounts=total(db,Discount,'amount_ngn',invoice_id=inv.id)
+    from app.migration.service import historical_received,historical_discount
+    historical=historical_received(db,inv.id)
     discounts=decimal(discount_total_ngn) if discount_total_ngn is not None else old_discounts
+    source_discount=historical_discount(db,inv.id)
+    historical_excess=max(ZERO,historical+max(discounts,source_discount)-new)
+    historical_review=historical_excess>0 or discounts<source_discount
     payment_ids=set(db.scalars(select(Allocation.payment_id).where(Allocation.invoice_id==inv.id)))
     payments=list(db.scalars(select(Payment).where(Payment.id.in_(payment_ids)))) if payment_ids else []
     for payment in payments:payment_access(db,actor,payment,'payables.manage' if inv.kind=='AP' else 'finance.adjust')
@@ -400,8 +413,9 @@ def adjustment_preview(db,actor,identity,amount_ngn,discount_total_ngn=None,roun
         from .rounding import validate_basis
         rounding,_=validate_basis(db,rounding_basis,new,invoice=inv)
     return json_value({'version':inv.version,'old_ngn':inv.amount_ngn,'new_ngn':new,'old_rounding_adjustment_ngn':inv.rounding_adjustment_ngn,'new_rounding_adjustment_ngn':rounding,'rounding_basis':rounding_basis,'original_payment_cash_ngn':raw_cash,'historical_credit_ngn':historical_credit,
-        'allocated_ngn':allocated,'old_discount_ngn':old_discounts,'discount_ngn':discounts,'return_to_balance_ngn':max(ZERO,allocated+discounts-new),
-        'outstanding_ngn':max(ZERO,new-discounts-allocated),'invalidate_unexecuted_instructions':True})
+        'allocated_ngn':allocated,'old_discount_ngn':old_discounts,'discount_ngn':discounts,'return_to_balance_ngn':ZERO if historical_review else min(allocated,max(ZERO,allocated+discounts+historical-new)),
+        'historical_received_ngn':historical,'historical_discount_ngn':source_discount,'historical_excess_ngn':historical_excess,'historical_review_required':historical_review,
+        'outstanding_ngn':max(ZERO,new-discounts-allocated-historical),'invalidate_unexecuted_instructions':True})
 
 
 @command('invoice.discount','id expected_version amount_ngn reason waiver')
@@ -409,7 +423,7 @@ def add_discount(db,actor,p):
     inv=access(db,actor,Invoice,p['id'],'finance.discount'); check_version(inv,p.get('expected_version'))
     if inv.kind!='AR':raise DomainError('invalid_kind','Customer discount applies to receivables only')
     amount=decimal(p['amount_ngn'],positive=True)
-    due=inv.amount_ngn-total(db,Discount,'amount_ngn',invoice_id=inv.id)-total(db,Allocation,'amount_ngn',invoice_id=inv.id)
+    due=Decimal(invoice_json(db,inv)['outstanding_ngn'])
     if amount>due or (p.get('waiver') and (amount!=due or amount>5000)):
         raise DomainError('invalid_discount','Discount exceeds outstanding or permitted tail waiver')
     db.add(Discount(invoice_id=inv.id,amount_ngn=amount,reason=p.get('reason'),actor_id=actor.id)); inv.version+=1
@@ -482,6 +496,8 @@ def payable_period(db,actor,warehouse_id,party_id,period,mode='live'):
     for invoice in invoices:require(actor,'payables.read',invoice.warehouse_id)
     for payment in payments:payment_access(db,actor,payment,'payables.read')
     billed=sum((i.amount_ngn for i in invoices),ZERO);paid=sum((p.amount_ngn for p in payments),ZERO)
+    from app.migration.service import historical_received
+    historical=sum((historical_received(db,i.id) for i in invoices),ZERO)
     discounts=sum((total(db,Discount,'amount_ngn',invoice_id=i.id) for i in invoices),ZERO)
-    return json_value({'party_id':party_id,'period':period,'billed_ngn':billed,'discount_ngn':discounts,'paid_ngn':paid,'balance_ngn':billed-discounts-paid,
+    return json_value({'party_id':party_id,'period':period,'billed_ngn':billed,'discount_ngn':discounts,'paid_ngn':paid,'historical_paid_ngn':historical,'balance_ngn':billed-discounts-paid-historical,
         'warehouse_ids':sorted({warehouse_id}|{i.warehouse_id for i in invoices}|{p.warehouse_id for p in payments})})

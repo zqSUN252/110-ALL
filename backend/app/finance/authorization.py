@@ -181,6 +181,11 @@ def source_assessment_access(db,actor,case,warehouse_id=None):
     claim=db.scalar(select(BankClaim).where(BankClaim.case_id==case.id,BankClaim.state!='released')) if case else None
     if claim:
         entry=get(db,BankEntry,claim.entry_id)
+        from app.models import LegacyBankEvidence,LegacyBankCoverage,LegacyBill
+        invoices=db.scalars(select(Invoice).join(LegacyBill,LegacyBill.native_id==Invoice.id).join(LegacyBankCoverage,LegacyBankCoverage.bill_id==LegacyBill.id).join(LegacyBankEvidence,LegacyBankEvidence.id==LegacyBankCoverage.evidence_id).where(LegacyBankEvidence.claim_id==claim.id))
+        for invoice in invoices:
+            require(actor,'bank.review',invoice.warehouse_id)
+            require(actor,'finance.read',invoice.warehouse_id)
         account_access(db,actor,get(db,BankAccount,entry.account_id),'bank.review',warehouse_id)
         if case.account_id:account_access(db,actor,get(db,BankAccount,case.account_id),'bank.review',warehouse_id)
         if claim.payment_id:payment_access(db,actor,get(db,Payment,claim.payment_id),'bank.review')
