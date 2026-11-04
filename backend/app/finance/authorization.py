@@ -86,6 +86,8 @@ def authorize(db,actor,name,p):
         from app.bank.service import attachment_for_actor
         for image in p.get('images',[]):
             attachment_for_actor(db,actor,image['attachment_id'])
+            if image.get('source_assessment') is not None:
+                source_assessment_access(db,actor,obj,warehouse)
             if image.get('message_id'):
                 message=get(db,ChannelMessage,image['message_id']);require(actor,'channels.read',message.warehouse_id)
                 if message.warehouse_id!=warehouse:raise DomainError('source_scope','Image message warehouse differs',403)
@@ -153,10 +155,36 @@ def authorize_response(db,actor,name,result):
                     for key in ('previous_account_id','account_id'):
                         account_id=review.get('fields',{}).get(key)
                         if account_id:account_access(db,actor,get(db,BankAccount,account_id),'bank.read',case.warehouse_id)
+        if name=='evidence.attach':
+            for review in result.get('reviews',[]):
+                fields=review.get('fields',{})
+                if review.get('action')=='source_assessment' and fields.get('claim_id') and fields.get('basis',{}).get('case_version')==result['version']-1:
+                    claim=get(db,BankClaim,fields['claim_id']);entry=get(db,BankEntry,claim.entry_id)
+                    account_access(db,actor,get(db,BankAccount,entry.account_id),'bank.review',case.warehouse_id)
+                    if claim.payment_id:payment_access(db,actor,get(db,Payment,claim.payment_id),'bank.review')
     if name=='bank.case.review' and result.get('claim'):
         claim=result['claim'];case=get(db,EvidenceCase,claim['case_id']);entry=get(db,BankEntry,claim['entry_id'])
         account_access(db,actor,get(db,BankAccount,entry.account_id),'bank.review',case.warehouse_id)
+    if name=='bank.case.match':
+        case=get(db,EvidenceCase,result['id'])
+        entries={candidate['bank']['id'] for candidate in result.get('candidates',[])}
+        if result.get('selected'):entries.add(result['selected']['id'])
+        for identity in entries:
+            entry=get(db,BankEntry,identity)
+            account_access(db,actor,get(db,BankAccount,entry.account_id),'bank.review',case.warehouse_id)
     if name in ('finance.export','bank.archive'):export_access(db,actor,name,result)
+
+
+def source_assessment_access(db,actor,case,warehouse_id=None):
+    warehouse_id=case.warehouse_id if case else warehouse_id
+    require(actor,'evidence.review',warehouse_id)
+    claim=db.scalar(select(BankClaim).where(BankClaim.case_id==case.id,BankClaim.state!='released')) if case else None
+    if claim:
+        entry=get(db,BankEntry,claim.entry_id)
+        account_access(db,actor,get(db,BankAccount,entry.account_id),'bank.review',warehouse_id)
+        if case.account_id:account_access(db,actor,get(db,BankAccount,case.account_id),'bank.review',warehouse_id)
+        if claim.payment_id:payment_access(db,actor,get(db,Payment,claim.payment_id),'bank.review')
+    return claim
 
 
 def export_access(db,actor,name,result):

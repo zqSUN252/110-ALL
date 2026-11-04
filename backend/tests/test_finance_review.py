@@ -356,3 +356,107 @@ def test_f7_cross_warehouse_export_replay_and_adjustment_preview_recheck_related
         from app.finance.authorization import export_file_access
         with pytest.raises(DomainError):export_file_access(db,Actor(who.id,{'finance.export'},{a}),db.get(Attachment,exported['id']))
         export_file_access(db,who,db.get(Attachment,exported['id']))
+
+
+@pytest.mark.parametrize('rebind',[True,False])
+def test_f7_match_snapshot_reauthorizes_old_account_after_rebind_or_clear(app,rebind):
+    with app.state.session_factory() as db,db.begin():
+        db.info['settings']=app.state.settings;admin=actor(db);wh,_=seed(db,admin)
+        account,entries=import_bank(db,admin,wh,[['2026-11-01',100000,0,'ALPHA SYNTHETIC','SYNTHETIC001']])
+        c=case(db,admin,wh,account);who=Actor(admin.id,{'bank.review'},{wh})
+        request={'id':c['id'],'expected_version':1,'idempotency_key':'original-match'}
+        original=bank.match_case(db,who,request);assert original['candidates'][0]['bank']['id']==entries[0].id
+        other=call(db,admin,bank.create_account,warehouse_id=wh,bank_name='Access',account_number='0000009999',currency='NGN') if rebind else None
+        call(db,admin,evidence.bind_account,id=c['id'],expected_version=1,account_id=other['id'] if other else None,reason='Explicit account correction')
+        assert bank.match_case(db,who,request)==original  # retained rights allow stale-version recovery
+        call(db,admin,bank.set_account_membership,id=account['id'],expected_version=2,warehouse_id=wh,active=False,source='Account access withdrawn')
+        with pytest.raises(DomainError):bank.match_case(db,who,request)
+
+
+@pytest.mark.parametrize('body,assessment,freeze',[
+    ('Receipt for the reviewed payment',None,False),
+    ('Another copy confirming the same transfer','corroborates',False),
+    ('This is the previous transfer dated 2026-10-31, not the current receipt',None,True),
+    ('Correction: actual transfer is 90000 on 2026-10-31','contradicts',True),
+    ('This may refer to a separate transfer','unknown',True),
+    ('RELATED: The shown transaction is the earlier payment',None,True),
+])
+def test_n1_same_pixels_source_meaning_controls_current_basis_not_historical_archive(app,monkeypatch,body,assessment,freeze):
+    from app.bank.archive import export_archive
+    from app.attachments import read_file
+    from app.models import Attachment
+    settings=replace(app.state.settings,collection_enabled=True)
+    with app.state.session_factory() as db,db.begin():
+        db.info['settings']=settings;who=actor(db);wh,party=seed(db,who);config=configure(monkeypatch,who,wh)
+        account,entries=import_bank(db,who,wh,[['2026-11-01',100000,0,'ALPHA SYNTHETIC','SYNTHETIC001']])
+        raw,sig=event(config,wh,source='initial-proof',body='Receipt for the reviewed payment',timestamp=int(utcnow().timestamp())-5)
+        m1=channels.intake(db,settings,raw,sig,'sha512',config);original_image=image(db,who)
+        fields={'amount':'100000','currency':'NGN','transaction_date':'2026-11-01','payer_name':'ALPHA SYNTHETIC','recipient_account':'0000001234','bank_name':'Access','transaction_reference':'SYNTHETIC001'}
+        c=call(db,who,evidence.create_case,warehouse_id=wh,account_id=account['id'],fields=fields,images=[{'attachment_id':original_image.id,'message_id':m1['id']}])
+        claim=call(db,who,bank.review_case,id=c['id'],expected_version=1,entry_id=entries[0].id,entry_version=1)['claim']
+        inv=call(db,who,finance.create_invoice,warehouse_id=wh,party_id=party,reference='SOURCE',amount_ngn='100000',uploaded_on='2026-11-01')
+        payment=call(db,who,finance.create_payment,warehouse_id=wh,party_id=party,amount='100000',currency='NGN')
+        call(db,who,finance.post_payment,id=payment['id'],expected_version=1,approval='bank',case_id=c['id'],case_version=2,allocations=[{'invoice_id':inv['id'],'expected_version':1,'amount_ngn':'100000'}])
+        book=Workbook();sheet=book.active;sheet.append(['编号','日期','Reference','付款人','说明','金额','汇率','人民币汇率','换算','人民币']);sheet['F24']=None
+        buf=BytesIO();book.save(buf);template=put_file(db,who,buf.getvalue(),'template.xlsx','application/vnd.openxmlformats-officedocument.spreadsheetml.sheet','user',who.id)
+        archive=call(db,who,export_archive,warehouse_id=wh,template_attachment_id=template.id,claims=[{'id':claim['id'],'expected_version':2}]);saved=read_file(settings,db.get(Attachment,archive['id']))
+        if body.startswith('RELATED:'):
+            raw,sig=event(config,wh,source='new-related-context',body=body)
+            channels.intake(db,settings,raw,sig,'sha512',config)
+            body='Receipt for the reviewed payment'
+        raw,sig=event(config,wh,source='new-proof-id',body=body)
+        m2=channels.intake(db,settings,raw,sig,'sha512',config);repeated_image=image(db,who);row={'attachment_id':repeated_image.id,'message_id':m2['id']}
+        if assessment:
+            preview=evidence.source_assessment_preview(db,who,c['id'],repeated_image.id,m2['id'])
+            row['source_assessment']={'verdict':assessment,'reason':'Human compared all transaction fields and the exact source text','fields':preview['fields'],'source_fingerprint':preview['source_fingerprint']}
+        result=call(db,who,evidence.attach_images,id=c['id'],expected_version=3,images=[row])
+        assert (db.get(BankClaim,claim['id']).state=='disputed') is freeze
+        assert db.get(BankClaim,claim['id']).entry_id==entries[0].id and db.get(BankClaim,claim['id']).payment_id==payment['id']
+        assert finance.get_payment(db,who,payment['id'])['allocated_ngn']=='100000.00'
+        assert read_file(settings,db.get(Attachment,archive['id']))==saved
+        assert len(result['images'])==2
+        if assessment or freeze:
+            reviewed=[review for review in result['reviews'] if review['action']=='source_assessment'][-1]
+            assert reviewed['fields']['image_id']==result['images'][-1]['id']
+            assert reviewed['fields']['basis']['message_id']==m2['id']
+            assert reviewed['fields']['verdict']==(assessment or 'unknown')
+        if freeze:
+            with pytest.raises(DomainError):call(db,who,export_archive,warehouse_id=wh,template_attachment_id=template.id,claims=[{'id':claim['id'],'expected_version':db.get(BankClaim,claim['id']).version}])
+        else:
+            assert call(db,who,export_archive,warehouse_id=wh,template_attachment_id=template.id,claims=[{'id':claim['id'],'expected_version':2}])['sent'] is False
+
+
+@pytest.mark.parametrize('invalid',['empty_fields','partial_fields','changed_fields','wrong_source','blank_reason','missing_review','missing_bank','stale_version'])
+def test_n1_source_assessment_requires_complete_bound_snapshot_and_review_rights(app,invalid):
+    with app.state.session_factory() as db,db.begin():
+        db.info['settings']=app.state.settings;admin=actor(db);wh,_=seed(db,admin)
+        account,entries=import_bank(db,admin,wh,[['2026-11-01',100000,0,'ALPHA SYNTHETIC','SYNTHETIC001']]);c=case(db,admin,wh,account)
+        claim=call(db,admin,bank.review_case,id=c['id'],expected_version=1,entry_id=entries[0].id,entry_version=1)['claim']
+        attachment=image(db,admin);preview=evidence.source_assessment_preview(db,admin,c['id'],attachment.id)
+        assessment={'verdict':'corroborates','reason':'All original transaction fields confirmed unchanged','fields':preview['fields'],'source_fingerprint':preview['source_fingerprint']}
+        caps={'evidence.write','evidence.read','evidence.review','bank.review'}
+        if invalid=='empty_fields':assessment['fields']={}
+        if invalid=='partial_fields':assessment['fields']={'bank_name':preview['fields']['bank_name']}
+        if invalid=='changed_fields':assessment['fields']={**preview['fields'],'amount':'1.00'}
+        if invalid=='wrong_source':assessment['source_fingerprint']='0'*64
+        if invalid=='blank_reason':assessment['reason']=' '
+        if invalid=='missing_review':caps.remove('evidence.review')
+        if invalid=='missing_bank':caps.remove('bank.review')
+        with pytest.raises(DomainError):
+            call(db,Actor(admin.id,caps,{wh}),evidence.attach_images,id=c['id'],expected_version=1 if invalid=='stale_version' else 2,images=[{'attachment_id':attachment.id,'source_assessment':assessment}])
+        assert db.get(BankClaim,claim['id']).state=='verified_unallocated'
+        assert db.get(EvidenceCase,c['id']).version==2
+
+
+def test_n1_http_complete_source_assessment_preserves_explicit_unknown_fields(app):
+    with app.state.session_factory() as db,db.begin():
+        db.info['settings']=app.state.settings;who=actor(db);wh,_=seed(db,who)
+        c=call(db,who,evidence.create_case,warehouse_id=wh,fields={'amount':'100','currency':'NGN'},images=[{'attachment_id':image(db,who).id}]);attachment=image(db,who)
+    with TestClient(app) as client:
+        login=client.post('/api/auth/login',json={'username':'admin','password':'synthetic-password-123'}).json()
+        preview=client.get('/api/evidence/'+c['id']+'/source-assessment-preview',params={'attachment_id':attachment.id})
+        assert preview.status_code==200;basis=preview.json();assert basis['fields']['transaction_date'] is None
+        response=client.post('/api/evidence/'+c['id']+'/images',headers={'X-CSRF-Token':login['csrf_token'],'Idempotency-Key':'assess-source-http'},json={
+            'expected_version':1,'images':[{'attachment_id':attachment.id,'source_assessment':{'verdict':'corroborates','reason':'Same original image; unknown date remains unknown','fields':basis['fields'],'source_fingerprint':basis['source_fingerprint']}}]})
+        assert response.status_code==200,response.text
+        assert response.json()['reviews'][-1]['fields']['basis']['fields']['transaction_date'] is None

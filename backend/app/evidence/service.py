@@ -42,26 +42,72 @@ def context_for_message(db,message,actor=None):
         'sender':message.sender_id,'reply_to_id':message.reply_to,'caption':message.body},related)
 
 
+def source_texts(context):
+    """Only substantive original text, never message IDs, timestamps or hashes.
+    Different wording is unknown until assessed; this does not infer semantics."""
+    texts=[context.get('source_message',{}).get('caption')]
+    texts.extend(row.get('body') for row in context.get('related_messages',[]))
+    return {' '.join(value.split()) for value in texts if isinstance(value,str) and value.strip()}
+
+
+def image_context(db,actor,case,message_id):
+    if not message_id:return {}
+    message=access(db,actor,ChannelMessage,message_id,'channels.read')
+    from app.channels.service import ChannelConfig
+    from app.channels.source import require_source
+    require_source(actor,message,ChannelConfig.from_env(),'channels.read')
+    if message.scope!=case.scope or message.warehouse_id!=case.warehouse_id:raise DomainError('scope_mismatch','Message and evidence scope differ')
+    return context_for_message(db,message,actor)
+
+
+def source_snapshot(case,attachment,message_id,context):
+    fields=json_value({key:getattr(case,key) for key in sorted(FIELDS)})
+    basis={'case_id':case.id,'case_version':case.version,'attachment_id':attachment.id,'image_sha256':attachment.sha256,
+        'message_id':message_id,'fields':fields,'source_texts':sorted(source_texts(context))}
+    return basis|{'source_fingerprint':hashlib.sha256(json.dumps(basis,sort_keys=True,separators=(',',':')).encode()).hexdigest(),'context':context}
+
+
+def source_assessment_preview(db,actor,identity,attachment_id,message_id=None):
+    case=access(db,actor,EvidenceCase,identity,'evidence.read')
+    from app.finance.authorization import case_read,source_assessment_access
+    case_read(db,actor,case);source_assessment_access(db,actor,case)
+    attachment=attachment_for_actor(db,actor,attachment_id)
+    return source_snapshot(case,attachment,message_id,image_context(db,actor,case,message_id))
+
+
 def add_images(db,actor,case,rows):
     if not isinstance(rows,list) or not 1<=len(rows)<=100: raise DomainError('images_required','Provide 1 to 100 evidence images')
-    known=set(db.scalars(select(Attachment.sha256).join(EvidenceImage,EvidenceImage.attachment_id==Attachment.id).where(EvidenceImage.case_id==case.id)))
+    known={}
+    for prior in db.scalars(select(EvidenceImage).where(EvidenceImage.case_id==case.id)):
+        known.setdefault(db.get(Attachment,prior.attachment_id).sha256,set()).update(source_texts(prior.context))
     basis_changed=False
     for row in rows:
-        if set(row)-{'attachment_id','source','message_id'}: raise DomainError('invalid_image','Unsupported evidence source fields')
+        if set(row)-{'attachment_id','source','message_id','source_assessment'}: raise DomainError('invalid_image','Unsupported evidence source fields')
         attachment=attachment_for_actor(db,actor,row['attachment_id'])
-        basis_changed=basis_changed or attachment.sha256 not in known
-        known.add(attachment.sha256)
         if attachment.media_type not in ('image/png','image/jpeg','image/webp'):
             raise DomainError('image_required','Evidence attachment must be an image')
-        context={}; message_id=row.get('message_id')
-        if message_id:
-            message=access(db,actor,ChannelMessage,message_id,'channels.read')
-            from app.channels.service import ChannelConfig
-            from app.channels.source import require_source
-            require_source(actor,message,ChannelConfig.from_env(),'channels.read')
-            if message.scope!=case.scope or message.warehouse_id!=case.warehouse_id: raise DomainError('scope_mismatch','Message and evidence scope differ')
-            context=context_for_message(db,message,actor)
-        db.add(EvidenceImage(case_id=case.id,attachment_id=attachment.id,source=row.get('source','manual_upload'),message_id=message_id,context=context))
+        message_id=row.get('message_id');context=image_context(db,actor,case,message_id)
+        new_image=attachment.sha256 not in known
+        new_text=bool(source_texts(context)-known.get(attachment.sha256,set()))
+        assessment=row.get('source_assessment');verdict='unknown' if new_text else 'unchanged';claim=None
+        snapshot=source_snapshot(case,attachment,message_id,context)
+        if assessment is not None:
+            from app.finance.authorization import source_assessment_access
+            claim=source_assessment_access(db,actor,case)
+            if not isinstance(assessment,dict) or set(assessment)!={'verdict','reason','fields','source_fingerprint'} or assessment.get('verdict') not in ('corroborates','contradicts','unknown'):
+                raise DomainError('invalid_source_assessment','Explicit source verdict, complete reviewed fields and bound preview required')
+            if not isinstance(assessment['reason'],str) or not assessment['reason'].strip():raise DomainError('reason_required','Source assessment requires a nonempty original-evidence reason')
+            if assessment['fields']!=snapshot['fields'] or assessment['source_fingerprint']!=snapshot['source_fingerprint']:
+                raise DomainError('source_assessment_changed','Complete reviewed transaction fields or bound source snapshot changed; reload the preview',409)
+            verdict=assessment['verdict']
+        basis_changed=basis_changed or new_image or verdict in ('unknown','contradicts')
+        image=EvidenceImage(case_id=case.id,attachment_id=attachment.id,source=row.get('source','manual_upload'),message_id=message_id,context=context)
+        db.add(image);db.flush()
+        if assessment is not None or (not new_image and new_text):
+            db.add(EvidenceReview(case_id=case.id,actor_id=actor.id,action='source_assessment',previous_version=case.version,
+                fields={'image_id':image.id,'verdict':verdict,'assessment_kind':'authorized_human' if assessment else 'unassessed_new_text',
+                    'claim_id':claim.id if claim else None,'basis':snapshot},reason=assessment['reason'] if assessment else 'New substantive source text has not been assessed; no semantic contradiction inferred'))
+        known.setdefault(attachment.sha256,set()).update(source_texts(context))
     return basis_changed
 
 

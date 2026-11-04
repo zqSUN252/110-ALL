@@ -177,10 +177,18 @@ class FieldsInput(Input):
     business_reference:str|None=None
 
 
+class SourceAssessmentInput(Input):
+    verdict:Literal['corroborates','contradicts','unknown']
+    reason:str=Field(min_length=1)
+    fields:FieldsInput
+    source_fingerprint:str=Field(min_length=64,max_length=64)
+
+
 class ImageInput(Input):
     attachment_id:str
     source:str='manual_upload'
     message_id:str|None=None
+    source_assessment:SourceAssessmentInput|None=None
 
 
 class EvidenceInput(Input):
@@ -318,6 +326,11 @@ def payment(id:str,db:Database,actor=Depends(get_actor)): return finance.get_pay
 
 @router.get('/evidence/{id}')
 def case(id:str,db:Database,actor=Depends(get_actor)): return evidence.get_case(db,actor,id)
+
+
+@router.get('/evidence/{id}/source-assessment-preview')
+def source_assessment_preview(id:str,attachment_id:str,db:Database,message_id:str|None=None,actor=Depends(get_actor)):
+    return evidence.source_assessment_preview(db,actor,id,attachment_id,message_id)
 
 
 @router.get('/bank/imports/{id}')
