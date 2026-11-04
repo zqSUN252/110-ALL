@@ -34,6 +34,14 @@ async def run_once(factory,settings,config=None,transport=None):
         try:
             if not user or not user.active: raise DomainError('forbidden','Inactive worker requester',403)
             require(who,'evidence.recognize',case.warehouse_id)
+            if image.message_id:
+                from app.models import ChannelMessage
+                from app.channels.service import ChannelConfig
+                from app.channels.source import require_source,context_authorized
+                message=db.get(ChannelMessage,image.message_id)
+                channel_config=ChannelConfig.from_env()
+                require_source(who,message,channel_config,'channels.read')
+                context_authorized(db,who,message,image.context,channel_config)
         except DomainError:
             job.state='blocked'; job.error_code='permission_revoked'; return {'status':'blocked','called':False}
         # Profile mismatch means new configuration requires an explicit new request.

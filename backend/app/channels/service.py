@@ -11,6 +11,7 @@ from sqlalchemy import select, text
 from app.common import DomainError, require, check_version
 from app.models import ChannelMessage, ChannelAction, Delivery, Job, Payment, EvidenceCase, utcnow
 from app.finance.service import command, access, record, locked
+from .source import require_source,same_boundary
 
 
 @dataclass(frozen=True)
@@ -67,6 +68,8 @@ def intake(db,settings,raw,signature,algorithm,config=None):
     db.execute(text('SELECT pg_advisory_xact_lock(:key)'),{'key':key})
     prior=db.scalar(select(ChannelMessage).where(ChannelMessage.instance==config.instance,ChannelMessage.session==session,ChannelMessage.source_id==identity))
     if prior:
+        if not (prior.generation==config.generation and prior.scope==config.scope and prior.warehouse_id==config.groups[group]):
+            raise DomainError('source_conflict','Previously accepted provenance cannot be rebound',409)
         if prior.body_hash!=digest: raise DomainError('source_conflict','Same source message has different body',409)
         return {'accepted':True,'id':prior.id,'duplicate':True}
     body=p.get('body')
@@ -81,15 +84,23 @@ def intake(db,settings,raw,signature,algorithm,config=None):
 
 
 def operator_message(db,actor,message_id,config):
-    msg=access(db,actor,ChannelMessage,message_id,'channels.act')
-    if config.operators.get(msg.sender_id)!=actor.id or msg.session!=config.assistant_session or msg.generation!=config.generation or config.groups.get(msg.group_id)!=msg.warehouse_id or msg.scope!=config.scope or msg.sent_at.timestamp()<config.since:
+    msg=db.get(ChannelMessage,message_id)
+    if not msg:raise DomainError('not_found','Source message not found',404)
+    require_source(actor,msg,config,'channels.act')
+    if config.operators.get(msg.sender_id)!=actor.id or msg.session!=config.assistant_session:
         raise DomainError('operator_not_authorized','Sender is not bound to this authorized operator/session',403)
     return msg
 
 
 def action_target(db,actor,msg,action,payload):
+    if action not in ('payment.post','evidence.review','bank.review'):raise DomainError('unsupported_action','Unsupported assistant action')
     model,cap=(Payment,'finance.post') if action=='payment.post' else (EvidenceCase,'evidence.review' if action=='evidence.review' else 'bank.review')
-    target=access(db,actor,model,payload.get('id'),'finance.post' if model is Payment else cap)
+    target=db.get(model,payload.get('id')) if payload.get('id') else None
+    if not target:raise DomainError('not_found','Action target not found',404)
+    if model is Payment:
+        from app.finance.access import payment_access
+        payment_access(db,actor,target,cap)
+    else:require(actor,cap,target.warehouse_id)
     if target.warehouse_id!=msg.warehouse_id or target.scope!=msg.scope:
         raise DomainError('action_scope','Message and business target must share warehouse and sample/live scope',403)
 
@@ -130,8 +141,8 @@ def execute_action(db,actor,p):
     config=ChannelConfig.from_env(); msg=operator_message(db,actor,p['message_id'],config)
     action=locked(db,ChannelAction,p['id']); check_version(action,p.get('expected_version'))
     if action.actor_id!=actor.id or action.used_at or action.expires_at<=utcnow(): raise DomainError('action_expired','Action expired, used, or belongs to another operator',409)
-    origin=db.get(ChannelMessage,action.message_id)
-    if origin.group_id!=msg.group_id or origin.session!=msg.session: raise DomainError('action_scope','Confirmation chat differs',403)
+    origin=operator_message(db,actor,action.message_id,config)
+    if not same_boundary(origin,msg): raise DomainError('action_scope','Confirmation source boundary differs',403)
     action_target(db,actor,msg,action.action,action.payload)
     match=re.fullmatch(r'/confirm ([a-f0-9-]{36}) ([a-f0-9]{64})',(msg.body or '').strip())
     if not match or match[1]!=action.id or not hmac.compare_digest(hashlib.sha256(match[2].encode()).hexdigest(),action.nonce_hash):

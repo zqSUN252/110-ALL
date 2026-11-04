@@ -9,7 +9,8 @@ from zoneinfo import ZoneInfo
 from sqlalchemy import select, func, text
 from app.common import DomainError, require, check_version, audit, run_command, json_value
 from app.models import (Warehouse, Party, Invoice, InvoiceAdjustment, Discount, Payment, Allocation,
-    OpeningBalance, BankClaim, EvidenceCase, FinanceEvent, utcnow)
+    OpeningBalance, BankClaim, EvidenceCase, FinanceEvent, PartyWarehouse, BankAccount, CrossPartyAuthorization, utcnow)
+from .access import party_member,account_access,payment_access,visible_payments
 
 ZERO = Decimal('0.00')
 
@@ -78,11 +79,12 @@ def command(name, fields):
             unknown=set(payload)-set(fields.split())-{'idempotency_key'}
             if unknown:
                 raise DomainError('unknown_fields','Unsupported command fields',422,{'fields':sorted(unknown)})
+            # Keep related-resource authorization stable until either fresh work
+            # or replay completes. Acquire the shared order guard before command
+            # key locks in every domain path, including nested channel actions.
+            db.execute(text('SELECT pg_advisory_xact_lock(110002)'))
             authorize_command(db,actor,name,payload)
             def apply():
-                # Consistent lock ordering across finance, evidence and bank commands.
-                # Short local-only commands; no network or workbook generation in this lock.
-                db.execute(text('SELECT pg_advisory_xact_lock(110002)'))
                 try:
                     result=fn(db,actor,payload)
                 except KeyError:
@@ -91,41 +93,17 @@ def command(name, fields):
                 result=json_value(result)
                 audit(db,actor,name,name.split('.')[0],result.get('id','batch'),None,result)
                 return result
-            return run_command(db,actor,name,payload.get('idempotency_key'),payload,apply)
+            result=run_command(db,actor,name,payload.get('idempotency_key'),payload,apply)
+            from .authorization import authorize_response
+            authorize_response(db,actor,name,result)
+            return result
         return wrapped
     return decorate
 
 
 def authorize_command(db,actor,name,p):
-    """Recheck access before returning a stored idempotent response, too."""
-    from app.models import BankAccount, BankFile, EvidenceCase, ChannelMessage, ChannelAction
-    rules={
-        'warehouse.create':('warehouses.manage',None), 'party.create':('parties.manage',None),
-        'invoice.create':('payables.manage' if p.get('kind')=='AP' else 'finance.invoice',None),
-        'invoice.adjust':('finance.adjust',Invoice), 'invoice.discount':('finance.discount',Invoice),
-        'payment.create':('finance.payment',None), 'payment.post':('finance.post',Payment),
-        'payment.attach_bank':('finance.post',Payment), 'payment.reverse':('finance.reverse',Payment),
-        'payable.pay':('payables.pay',None), 'opening.create':('finance.opening',None),
-        'bank.account.create':('bank.manage',None), 'bank.import.preview':('bank.import',BankAccount),
-        'bank.import.confirm':('bank.import',BankFile), 'bank.case.match':('bank.review',EvidenceCase),
-        'bank.case.review':('bank.review',EvidenceCase), 'bank.archive':('bank.export',None),
-        'finance.export':('finance.export',None),
-        'evidence.create':('evidence.write',None), 'evidence.attach':('evidence.write',EvidenceCase),
-        'evidence.review':('evidence.review',EvidenceCase), 'evidence.recognize':('evidence.recognize',EvidenceCase),
-        'channel.action.prepare':('channels.act',ChannelMessage), 'channel.action.execute':('channels.act',ChannelAction),
-        'channel.delivery.queue':('channels.send',None)}
-    capability,model=rules[name]; warehouse=p.get('warehouse_id')
-    if model:
-        identity=p.get('account_id') if name=='bank.import.preview' else p.get('message_id') if name=='channel.action.prepare' else p.get('id')
-        obj=db.get(model,identity) if identity else None
-        if not obj:raise DomainError('not_found','Record not found',404)
-        if isinstance(obj,BankFile):obj=db.get(BankAccount,obj.account_id)
-        if isinstance(obj,ChannelAction):
-            if obj.actor_id!=actor.id:raise DomainError('forbidden','Action belongs to another operator',403)
-            obj=db.get(ChannelMessage,obj.message_id)
-        warehouse=getattr(obj,'warehouse_id',None)
-        if isinstance(obj,Invoice) and obj.kind=='AP' and name=='invoice.adjust':capability='payables.manage'
-    require(actor,capability,warehouse)
+    from .authorization import authorize
+    authorize(db,actor,name,p)
 
 
 def locked(db, cls, identity):
@@ -137,7 +115,9 @@ def locked(db, cls, identity):
 
 def access(db, actor, cls, identity, capability, expected=None):
     obj=locked(db,cls,identity)
-    require(actor,capability,getattr(obj,'warehouse_id',None))
+    if isinstance(obj,BankAccount):account_access(db,actor,obj,capability)
+    elif isinstance(obj,Payment):payment_access(db,actor,obj,capability)
+    else:require(actor,capability,getattr(obj,'warehouse_id',None))
     if expected is not None:
         check_version(obj,expected)
     return obj
@@ -171,15 +151,13 @@ def get_invoice(db,actor,identity):
 
 def get_payment(db,actor,identity):
     payment=locked(db,Payment,identity)
-    require(actor,'payables.read' if payment.direction=='out' else 'finance.read',payment.warehouse_id)
+    payment_access(db,actor,payment,'payables.read' if payment.direction=='out' else 'finance.read')
     return payment_json(db,payment)
 
 
 def party_scope(db,actor,payload,cap):
     require(actor,cap,payload['warehouse_id'])
-    party=locked(db,Party,payload['party_id'])
-    if party.warehouse_id != payload['warehouse_id']:
-        raise DomainError('party_scope','Party belongs to another warehouse',403)
+    locked(db,Party,payload['party_id']); party_member(db,payload['party_id'],payload['warehouse_id'])
     return scope(payload.get('scope','live'))
 
 
@@ -195,7 +173,20 @@ def create_party(db,actor,p):
     require(actor,'parties.manage',p['warehouse_id'])
     locked(db,Warehouse,p['warehouse_id'])
     obj=Party(**{k:v for k,v in p.items() if k!='idempotency_key'})
-    db.add(obj); db.flush(); return record(obj)
+    db.add(obj); db.flush()
+    db.add(PartyWarehouse(party_id=obj.id,warehouse_id=obj.warehouse_id,source=p.get('source') or 'Explicit home warehouse on creation'))
+    db.flush(); return record(obj)
+
+
+@command('party.membership','id expected_version warehouse_id active source')
+def set_party_membership(db,actor,p):
+    party=access(db,actor,Party,p['id'],'parties.manage');check_version(party,p.get('expected_version'))
+    require(actor,'parties.manage',p['warehouse_id']);locked(db,Warehouse,p['warehouse_id'])
+    if not isinstance(p.get('active'),bool) or not str(p.get('source','')).strip():raise DomainError('membership_evidence','Explicit participation state and source required')
+    membership=db.scalar(select(PartyWarehouse).where(PartyWarehouse.party_id==party.id,PartyWarehouse.warehouse_id==p['warehouse_id']).with_for_update())
+    if membership:membership.active=p['active'];membership.source=p['source'];membership.version+=1
+    else:db.add(PartyWarehouse(party_id=party.id,warehouse_id=p['warehouse_id'],active=p['active'],source=p['source']))
+    party.version+=1;db.flush();return record(party)|{'memberships':[record(m) for m in db.scalars(select(PartyWarehouse).where(PartyWarehouse.party_id==party.id))]}
 
 
 @command('invoice.create','party_id warehouse_id scope kind reference amount_ngn charge_usd charge_ngn ngn_per_usd uploaded_on period source_key pricing')
@@ -243,30 +234,46 @@ def invalidate(db,invoice_id=None,payment_id=None,kind='invoice_changed'):
     db.add(FinanceEvent(invoice_id=invoice_id,payment_id=payment_id,kind=kind))
 
 
-def allocate(db,actor,payment,rows):
+def allocate(db,actor,payment,rows,cross_party=None):
     if not isinstance(rows,list) or not rows or len(rows)>200:
         raise DomainError('allocations_required','Explicit invoice allocations required, maximum 200')
     if len({r['invoice_id'] for r in rows})!=len(rows):
         raise DomainError('duplicate_invoice','Invoice appears twice in request')
     if payment.bank_state=='disputed':
         raise DomainError('payment_frozen','Resolve bank dispute before new allocation',409)
+    beneficiaries={r['invoice_id']:locked(db,Invoice,r['invoice_id']).party_id for r in rows}
+    different={iid:party for iid,party in beneficiaries.items() if party!=payment.party_id}
+    if different:
+        if not isinstance(cross_party,dict) or set(cross_party)!={'source','beneficiaries'} or not isinstance(cross_party.get('source'),str) or not cross_party['source'].strip():
+            raise DomainError('cross_party_confirmation','Explicit source-backed beneficiary authorization required')
+        authorized=cross_party.get('beneficiaries')
+        if not isinstance(authorized,list) or any(not isinstance(r,dict) or set(r)!={'invoice_id','party_id'} for r in authorized):raise DomainError('cross_party_confirmation','Select exact invoices and beneficiary identities')
+        if len(authorized)!=len(different) or {r['invoice_id']:r['party_id'] for r in authorized}!=different:
+            raise DomainError('cross_party_confirmation','Authorization must exactly match this command beneficiaries')
+        payment_access(db,actor,payment,'finance.cross_party')
+        for iid in different:require(actor,'finance.cross_party',db.get(Invoice,iid).warehouse_id)
+    elif cross_party is not None:raise DomainError('cross_party_confirmation','No different-party invoice needs this authorization')
     available=payment.amount_ngn-total(db,Allocation,'amount_ngn',payment_id=payment.id)
     for row in sorted(rows,key=lambda r:r['invoice_id']):
         if set(row)-{'invoice_id','expected_version','amount_ngn'}:
             raise DomainError('unknown_fields','Unsupported allocation fields',422)
         inv=access(db,actor,Invoice,row['invoice_id'],'payables.pay' if payment.direction=='out' else 'finance.post')
         check_version(inv,row.get('expected_version'))
-        if inv.scope!=payment.scope or inv.party_id!=payment.party_id or inv.warehouse_id!=payment.warehouse_id or inv.kind!=('AR' if payment.direction=='in' else 'AP') or inv.state!='open':
+        party_member(db,inv.party_id,inv.warehouse_id)
+        if inv.scope!=payment.scope or inv.kind!=('AR' if payment.direction=='in' else 'AP') or inv.state!='open':
             raise DomainError('allocation_scope','Invoice and payment party, scope, direction or status differ')
         amount=decimal(row['amount_ngn'],positive=True)
         due=inv.amount_ngn-total(db,Discount,'amount_ngn',invoice_id=inv.id)-total(db,Allocation,'amount_ngn',invoice_id=inv.id)
         if amount>due or amount>available:
             raise DomainError('over_allocation','Allocation exceeds payment balance or invoice outstanding',409)
         db.add(Allocation(payment_id=payment.id,invoice_id=inv.id,amount_ngn=amount,actor_id=actor.id))
+        if inv.id in different:
+            permission=CrossPartyAuthorization(payment_id=payment.id,invoice_id=inv.id,beneficiary_party_id=inv.party_id,amount_ngn=amount,source=cross_party['source'],actor_id=actor.id)
+            db.add(permission);db.flush();audit(db,actor,'payment.cross_party_authorized','cross_party_authorization',permission.id,None,record(permission))
         inv.version+=1; available-=amount; db.flush()
 
 
-@command('payment.post','id expected_version approval allocations case_id case_version')
+@command('payment.post','id expected_version approval allocations case_id case_version cross_party')
 def post_payment(db,actor,p):
     payment=access(db,actor,Payment,p['id'],'finance.post'); check_version(payment,p.get('expected_version'))
     if payment.direction!='in' or payment.state not in ('pending','posted'):
@@ -278,7 +285,7 @@ def post_payment(db,actor,p):
         if approval=='bank':
             bind_claim(db,actor,payment,p['case_id'],p.get('case_version'))
         payment.approval=approval; payment.approved_at=utcnow(); payment.approved_by=actor.id; payment.state='posted'
-    allocate(db,actor,payment,p['allocations']); payment.version+=1
+    allocate(db,actor,payment,p['allocations'],p.get('cross_party')); payment.version+=1
     return payment_json(db,payment)
 
 
@@ -289,8 +296,12 @@ def bind_claim(db,actor,payment,case_id,expected):
     if not claim or claim.state=='disputed' or claim.payment_id not in (None,payment.id):
         raise DomainError('claim_unavailable','Bank claim unavailable',409)
     from app.models import BankEntry
+    from app.bank.service import ensure_claim_current
     entry=locked(db,BankEntry,claim.entry_id)
-    if case.scope!=payment.scope or case.warehouse_id!=payment.warehouse_id or entry.currency!=payment.currency or entry.credit!=payment.amount or case.payment_id not in (None,payment.id):
+    require(actor,'finance.post',case.warehouse_id);require(actor,'bank.review',case.warehouse_id)
+    account_access(db,actor,db.get(BankAccount,entry.account_id),'bank.review',case.warehouse_id)
+    ensure_claim_current(db,claim)
+    if case.scope!=payment.scope or entry.currency!=payment.currency or entry.credit!=payment.amount or case.payment_id not in (None,payment.id):
         raise DomainError('evidence_mismatch','Bank cash, currency or evidence scope differ from payment')
     claim.payment_id=payment.id; claim.state='posted'; claim.version+=1
     case.payment_id=payment.id; case.version+=1; payment.bank_state='verified'
@@ -359,6 +370,7 @@ def adjustment_preview(db,actor,identity,amount_ngn,discount_total_ngn=None):
     discounts=decimal(discount_total_ngn) if discount_total_ngn is not None else old_discounts
     payment_ids=set(db.scalars(select(Allocation.payment_id).where(Allocation.invoice_id==inv.id)))
     payments=list(db.scalars(select(Payment).where(Payment.id.in_(payment_ids)))) if payment_ids else []
+    for payment in payments:payment_access(db,actor,payment,'payables.manage' if inv.kind=='AP' else 'finance.adjust')
     raw_cash=sum((p.amount_ngn for p in payments if p.approval!='opening'),ZERO)
     historical_credit=sum((p.amount_ngn for p in payments if p.approval=='opening'),ZERO)
     return json_value({'version':inv.version,'old_ngn':inv.amount_ngn,'new_ngn':new,'original_payment_cash_ngn':raw_cash,'historical_credit_ngn':historical_credit,
@@ -425,17 +437,25 @@ def totals(db,actor,warehouse_id,mode='live',on=None):
     zone=ZoneInfo(db.info.get('settings').business_timezone if db.info.get('settings') else 'Asia/Shanghai')
     selected=day(on) if on else datetime.now(zone).date()
     start=datetime.combine(selected,datetime.min.time(),zone); end=start+timedelta(days=1)
-    base=select(Payment).where(Payment.warehouse_id==warehouse_id,Payment.scope==mode,Payment.direction=='in',Payment.state=='posted')
+    all_rows=select(Payment).where(Payment.warehouse_id==warehouse_id,Payment.scope==mode,Payment.direction=='in',Payment.state=='posted')
+    base=visible_payments(all_rows,actor)
     current=base.where(Payment.approved_at>=start,Payment.approved_at<end)
     rows=list(db.scalars(current.order_by(Payment.id).limit(50)))
     amount=db.scalar(current.with_only_columns(func.coalesce(func.sum(Payment.amount_ngn),0))).quantize(Decimal('.01'))
     count=db.scalar(select(func.count()).select_from(current.subquery()))
-    unknown=db.scalar(select(func.count()).select_from(Payment).where(Payment.warehouse_id==warehouse_id,Payment.scope==mode,Payment.state=='posted',Payment.direction=='in',Payment.approved_at.is_(None)))
-    return json_value({'day':selected,'scope':mode,'today_ngn':amount,'payment_count':count,'unknown_approval_count':unknown,'payments':[payment_json(db,p) for p in rows], 'next':rows[-1].id if len(rows)==50 else None})
+    unknown=db.scalar(select(func.count()).select_from(base.where(Payment.approved_at.is_(None)).subquery()))
+    all_count=db.scalar(select(func.count()).select_from(all_rows.where(Payment.approved_at>=start,Payment.approved_at<end).subquery()))
+    return json_value({'day':selected,'scope':mode,'today_ngn':amount,'payment_count':count,'scope_limited':all_count!=count,'unknown_approval_count':unknown,'payments':[payment_json(db,p) for p in rows], 'next':rows[-1].id if len(rows)==50 else None})
 
 
 def payable_period(db,actor,warehouse_id,party_id,period,mode='live'):
     require(actor,'payables.read',warehouse_id); scope(mode)
-    billed=total(db,Invoice,'amount_ngn',warehouse_id=warehouse_id,party_id=party_id,scope=mode,kind='AP',period=period)
-    paid=total(db,Payment,'amount_ngn',warehouse_id=warehouse_id,party_id=party_id,scope=mode,direction='out',period=period,state='posted')
-    return json_value({'party_id':party_id,'period':period,'billed_ngn':billed,'paid_ngn':paid,'balance_ngn':billed-paid})
+    party_member(db,party_id,warehouse_id)
+    invoices=list(db.scalars(select(Invoice).where(Invoice.party_id==party_id,Invoice.scope==mode,Invoice.kind=='AP',Invoice.period==period)))
+    payments=list(db.scalars(select(Payment).where(Payment.party_id==party_id,Payment.scope==mode,Payment.direction=='out',Payment.period==period,Payment.state=='posted')))
+    for invoice in invoices:require(actor,'payables.read',invoice.warehouse_id)
+    for payment in payments:payment_access(db,actor,payment,'payables.read')
+    billed=sum((i.amount_ngn for i in invoices),ZERO);paid=sum((p.amount_ngn for p in payments),ZERO)
+    discounts=sum((total(db,Discount,'amount_ngn',invoice_id=i.id) for i in invoices),ZERO)
+    return json_value({'party_id':party_id,'period':period,'billed_ngn':billed,'discount_ngn':discounts,'paid_ngn':paid,'balance_ngn':billed-discounts-paid,
+        'warehouse_ids':sorted({warehouse_id}|{i.warehouse_id for i in invoices}|{p.warehouse_id for p in payments})})

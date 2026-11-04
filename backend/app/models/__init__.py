@@ -107,3 +107,4 @@ class Outbox(Record, Base):
     idempotency_key: Mapped[str] = mapped_column(String(200), unique=True, nullable=False)
 
 from .finance import (Warehouse, Party, Invoice, InvoiceAdjustment, Discount, Payment, Allocation, OpeningBalance, EvidenceCase, EvidenceImage, EvidenceReview, RecognitionJob, BankAccount, BankFile, BankEntry, BankSourceRow, BankClaim, BankMatch, ChannelMessage, ChannelAction, Delivery, FinanceEvent)
+from .finance import PartyWarehouse, BankAccountWarehouse, CrossPartyAuthorization

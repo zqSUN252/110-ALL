@@ -4,12 +4,13 @@ import hashlib
 import json
 from pathlib import Path
 from tempfile import TemporaryDirectory
-from sqlalchemy import select,func
+from sqlalchemy import select,func,or_,and_
 from app.common import DomainError, require, check_version, json_value
 from app.models import (Attachment, BankAccount, BankFile, BankSourceRow, BankEntry, BankClaim,
-    BankMatch, EvidenceCase, EvidenceImage, EvidenceReview, Payment, FinanceEvent)
+    BankMatch, EvidenceCase, EvidenceImage, EvidenceReview, Payment, FinanceEvent,BankAccountWarehouse,Warehouse)
 from app.attachments import read_file
 from app.finance.service import command, locked, access, record, scope, decimal, day
+from app.finance.access import account_access
 from . import parser, matching
 
 
@@ -23,7 +24,21 @@ def create_account(db,actor,p):
     values['account_number']=''.join(values['account_number'].split())
     if not values['bank_name'] or not values['account_number']:raise DomainError('account_identity_required','Explicit bank and account identity required')
     account=BankAccount(**values)
-    db.add(account); db.flush(); return record(account)
+    db.add(account); db.flush()
+    db.add(BankAccountWarehouse(account_id=account.id,warehouse_id=account.warehouse_id,source='Explicit home warehouse on account creation'))
+    db.flush();return record(account)
+
+
+@command('bank.account.membership','id expected_version warehouse_id active source')
+def set_account_membership(db,actor,p):
+    account=access(db,actor,BankAccount,p['id'],'bank.manage');check_version(account,p.get('expected_version'))
+    require(actor,'bank.manage',p['warehouse_id']);locked(db,Warehouse,p['warehouse_id'])
+    if not isinstance(p.get('active'),bool) or not isinstance(p.get('source'),str) or not p['source'].strip():raise DomainError('membership_evidence','Explicit account participation and evidence required')
+    member=db.scalar(select(BankAccountWarehouse).where(BankAccountWarehouse.account_id==account.id,BankAccountWarehouse.warehouse_id==p['warehouse_id']).with_for_update())
+    if member:member.active=p['active'];member.source=p['source'];member.version+=1
+    else:db.add(BankAccountWarehouse(account_id=account.id,warehouse_id=p['warehouse_id'],active=p['active'],source=p['source']))
+    account.version+=1;db.flush()
+    return record(account)|{'memberships':[record(m) for m in db.scalars(select(BankAccountWarehouse).where(BankAccountWarehouse.account_id==account.id))]}
 
 
 def attachment_for_actor(db,actor,identity):
@@ -81,8 +96,8 @@ def confirm_import(db,actor,p):
     if set(sheets)-known: raise DomainError('invalid_sheet','Unknown worksheet')
     trusted=p.get('trusted_reference',False)
     if type(trusted) is not bool: raise DomainError('invalid_mapping','trusted_reference must be boolean')
-    if trusted: require(actor,'bank.identity',account.warehouse_id)
-    count=0; conflicts=0
+    if trusted: account_access(db,actor,account,'bank.identity')
+    count=0; conflicts=0; changed_buckets=set()
     for row in db.scalars(select(BankSourceRow).where(BankSourceRow.file_id==file.id,BankSourceRow.sheet.in_(sheets)).order_by(BankSourceRow.sheet,BankSourceRow.row_number)):
         if not row.parsed: continue
         r=row.parsed; resolved,error=parser.date_value(r['raw_date'],order)
@@ -106,10 +121,25 @@ def confirm_import(db,actor,p):
             entry=BankEntry(account_id=account.id,currency=account.currency,credit=Decimal(r['credit']),debit=Decimal(r['debit']),transaction_date=day(resolved) if resolved else None,
                 trusted_id=trusted_id,reference=r['reference'],description=r['description'],fingerprint=fingerprint,issues=issues)
             db.add(entry); db.flush(); row.entry_id=entry.id
+            if entry.credit>0 and entry.debit==0:changed_buckets.add((entry.currency,entry.credit))
         count+=1
     if not count: raise DomainError('no_transactions','Selected worksheets contain no parsed transactions')
     file.mapping={**file.mapping,'sheets':sheets,'date_order':order,'trusted_reference':trusted}
     file.state='confirmed'; file.version+=1; account.revision+=1; account.version+=1
+    db.flush()
+    # Revalidate only existing claims for this changed account. No model calls,
+    # no cash reversal and no occupancy release. Known source observations do not
+    # change the typed bank-entry basis and therefore leave the owner intact.
+    affected=[]
+    for currency,amount in changed_buckets:
+        receipt_values=[amount,amount+Decimal('53.75')] if currency=='NGN' else [amount]
+        affected.append(or_(and_(BankEntry.currency==currency,BankEntry.credit==amount),and_(EvidenceCase.currency==currency,EvidenceCase.amount.in_(receipt_values))))
+    claims=select(BankClaim).join(BankEntry,BankEntry.id==BankClaim.entry_id).join(EvidenceCase,EvidenceCase.id==BankClaim.case_id).where(BankEntry.account_id==account.id,BankClaim.state.in_(['verified_unallocated','posted']),or_(*affected)).with_for_update() if affected else None
+    for claim in db.scalars(claims) if claims is not None else []:
+        case=locked(db,EvidenceCase,claim.case_id)
+        if not claim_basis_current(db,claim):
+            freeze_case(db,case,'bank_basis_changed');case.version+=1
+            db.add(EvidenceReview(case_id=case.id,actor_id=actor.id,action='bank_basis_changed',previous_version=case.version-1,fields={'bank_revision':account.revision,'import_id':file.id},reason='New bank evidence requires revalidation'))
     return record(file)|{'transaction_rows':count,'duplicate_candidates':conflicts,'account_version':account.version,'coverage':'unknown'}
 
 
@@ -148,6 +178,34 @@ def decision(db,case):
     return result
 
 
+def basis_hash(db,case,entry_id):
+    """The selected row plus complete relevant amount buckets, independent of new
+    observations of an already-known trusted entry or unrelated bank revisions."""
+    entries=select(BankEntry).where(BankEntry.account_id==case.account_id)
+    selected=db.get(BankEntry,entry_id)
+    amounts=[case.amount,selected.credit]
+    if case.amount is not None and case.currency=='NGN':amounts.append(case.amount-Decimal('53.75'))
+    entries=entries.where((BankEntry.id==entry_id)|((BankEntry.currency==case.currency)&BankEntry.credit.in_(amounts)&(BankEntry.credit>0)&(BankEntry.debit==0)))
+    rows=[{key:json_value(getattr(e,key)) for key in ('id','version','currency','credit','debit','transaction_date','trusted_id','reference','description','issues')} for e in db.scalars(entries.order_by(BankEntry.id))]
+    return hashlib.sha256(json.dumps(rows,sort_keys=True,separators=(',',':'),ensure_ascii=False).encode()).hexdigest()
+
+
+def record_basis(db,claim,case,entry,account):
+    claim.reviewed_entry_version=entry.version;claim.reviewed_bank_revision=account.revision
+    claim.reviewed_basis_hash=basis_hash(db,case,entry.id)
+
+
+def claim_basis_current(db,claim):
+    entry=db.get(BankEntry,claim.entry_id);case=db.get(EvidenceCase,claim.case_id)
+    return bool(case.account_id==entry.account_id and claim.reviewed_entry_version==entry.version
+        and claim.reviewed_basis_hash and claim.reviewed_basis_hash==basis_hash(db,case,entry.id))
+
+
+def ensure_claim_current(db,claim):
+    if claim.state not in ('verified_unallocated','posted') or not claim_basis_current(db,claim):
+        raise DomainError('bank_basis_changed','Bank verification is disputed or its reviewed basis changed; revalidate before posting or archiving',409)
+
+
 @command('bank.case.match','id expected_version')
 def match_case(db,actor,p):
     case=access(db,actor,EvidenceCase,p['id'],'bank.review'); check_version(case,p.get('expected_version'))
@@ -161,24 +219,34 @@ def match_case(db,actor,p):
 def review_case(db,actor,p):
     case=access(db,actor,EvidenceCase,p['id'],'bank.review'); check_version(case,p.get('expected_version'))
     action=p.get('action','confirm')
-    if action not in ('confirm','confirm_manual','defer','retract','release','resolve'): raise DomainError('invalid_action','Unsupported bank review action')
-    if action in ('release','resolve'):
+    if action not in ('confirm','confirm_manual','defer','retract','release','resolve','resolve_manual'): raise DomainError('invalid_action','Unsupported bank review action')
+    if action in ('release','resolve','resolve_manual'):
         require(actor,'bank.release' if action=='release' else 'bank.override',case.warehouse_id)
-        if not str(p.get('reason','')).strip():raise DomainError('reason_required','Claim release/resolution requires original evidence and reason')
+        if not isinstance(p.get('reason'),str) or not p['reason'].strip():raise DomainError('reason_required','Claim release/resolution requires original evidence and reason')
         claim=db.scalar(select(BankClaim).where(BankClaim.case_id==case.id,BankClaim.state!='released').with_for_update())
         if not claim:raise DomainError('claim_unavailable','No active claim',409)
         if action=='release':
             if claim.payment_id:raise DomainError('financial_reversal_required','Posted claim requires separate explicit payment reversal',409)
             claim.state='released'; case.state='pending'
         else:
-            result=decision(db,case)
-            if result.get('state')!='matched' or result['selected']['id']!=claim.entry_id:
-                raise DomainError('bank_review_required','Corrected case must uniquely match its original occupied entry',409,result)
+            entry=locked(db,BankEntry,claim.entry_id);account=locked(db,BankAccount,entry.account_id)
+            account_access(db,actor,account,'bank.review',case.warehouse_id)
+            if case.account_id!=account.id or case.scope!=account.scope or entry.currency!=case.currency or entry.credit<=0 or entry.debit!=0:
+                raise DomainError('bank_scope','Original bank direction/currency/account scope conflicts')
+            if action=='resolve_manual':
+                if p.get('entry_id')!=entry.id:raise DomainError('original_entry_required','Manual revalidation must explicitly select the occupied original entry')
+                check_version(entry,p.get('entry_version'))
+            else:
+                result=decision(db,case)
+                if result.get('state')!='matched' or result['selected']['id']!=claim.entry_id:
+                    raise DomainError('bank_review_required','Corrected case must uniquely match its original occupied entry',409,result)
             if claim.payment_id:
                 payment=locked(db,Payment,claim.payment_id)
                 if payment.state!='posted':raise DomainError('financial_review_required','Reversed payment cannot be restored through evidence',409)
+                if payment.currency!=entry.currency or payment.amount!=entry.credit:raise DomainError('cash_basis_changed','Changed original cash needs separate financial review',409)
                 payment.bank_state='verified'; payment.version+=1
             claim.state='posted' if claim.payment_id else 'verified_unallocated';case.state='bank_verified'
+            record_basis(db,claim,case,entry,account)
         claim.version+=1;case.version+=1
         db.add(EvidenceReview(case_id=case.id,actor_id=actor.id,action=action,previous_version=case.version-1,fields={'claim_id':claim.id},reason=p['reason']))
         return {'id':case.id,'version':case.version,'claim':record(claim),'payment_posted':False}
@@ -187,7 +255,8 @@ def review_case(db,actor,p):
         return record(case)
     entry=locked(db,BankEntry,p['entry_id']); check_version(entry,p.get('entry_version'))
     account=access(db,actor,BankAccount,entry.account_id,'bank.review')
-    if account.scope!=case.scope or account.warehouse_id!=case.warehouse_id or case.account_id!=account.id or entry.currency!=case.currency or entry.credit<=0 or entry.debit!=0:
+    account_access(db,actor,account,'bank.review',case.warehouse_id)
+    if account.scope!=case.scope or case.account_id!=account.id or entry.currency!=case.currency or entry.credit<=0 or entry.debit!=0:
         raise DomainError('bank_scope','Bank account, direction or scope conflict')
     if action=='confirm':
         result=decision(db,case)
@@ -201,6 +270,7 @@ def review_case(db,actor,p):
     if db.scalar(select(BankClaim.id).where(BankClaim.case_id==case.id,BankClaim.state!='released')):
         raise DomainError('case_claimed','Case already has an active bank claim',409)
     claim=BankClaim(entry_id=entry.id,case_id=case.id,state='verified_unallocated',reason=p.get('reason') or 'deterministic-exact-v2',actor_id=actor.id)
+    record_basis(db,claim,case,entry,account)
     db.add(claim); case.state='bank_verified'; case.version+=1
     db.add(EvidenceReview(case_id=case.id,actor_id=actor.id,action=action,previous_version=case.version-1,fields={'entry_id':entry.id},reason=p.get('reason')))
     db.flush(); return {'id':case.id,'version':case.version,'claim':record(claim),'payment_posted':False}

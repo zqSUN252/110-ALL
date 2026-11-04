@@ -10,7 +10,8 @@ from app.models import Delivery, ChannelMessage, Job, User, Grant, WarehouseScop
 from app.attachments import put_file
 from app.finance.service import locked
 from app.evidence.service import create_case
-from .service import ChannelConfig
+from .service import ChannelConfig,operator_message
+from .source import require_source,accepted_source
 
 
 def actor_now(db,identity):
@@ -33,6 +34,7 @@ async def delivery_once(factory,settings,config=None,transport=None):
             actor=actor_now(db,item.actor_id); require(actor,'channels.send')
             if item.session==config.main_session or item.session!=config.assistant_session or item.recipient not in config.recipients:
                 raise DomainError('forbidden','Delivery scope changed',403)
+            if item.message_id:operator_message(db,actor,item.message_id,config)
         except DomainError:
             item.state='blocked'; return {'id':item.id,'status':'blocked','called':False}
         item.state='sending'; item.lease_until=utcnow()+timedelta(minutes=5); item.version+=1
@@ -59,8 +61,10 @@ async def media_once(factory,settings,operator_id,config=None,transport=None):
         job=db.scalar(select(Job).where(Job.kind=='waha.media',Job.available_at<=utcnow(),or_(Job.status.in_(['pending','retry']),(Job.status=='running') & (Job.locked_at<utcnow()-timedelta(minutes=15)))).order_by(Job.created_at).with_for_update(skip_locked=True).limit(1))
         if not job:return {'status':'idle','called':False}
         msg=db.get(ChannelMessage,job.payload['message_id']); actor=actor_now(db,operator_id)
-        require(actor,'channels.collect',msg.warehouse_id); require(actor,'evidence.write',msg.warehouse_id); require(actor,'evidence.read',msg.warehouse_id)
-        if msg.generation!=config.generation or msg.session not in (config.capture_session,config.assistant_session) or msg.group_id not in config.groups or msg.sent_at.timestamp()<config.since:
+        try:
+            require_source(actor,msg,config,'channels.collect');require(actor,'channels.read',msg.warehouse_id)
+            require(actor,'evidence.write',msg.warehouse_id); require(actor,'evidence.read',msg.warehouse_id)
+        except DomainError:
             job.status='blocked'; return {'status':'blocked','called':False}
         job.status='running'; job.locked_at=utcnow(); job.attempts+=1; job.version+=1
         identity=job.id; lease=job.version; mid=msg.id; source_id=msg.source_id
@@ -92,7 +96,7 @@ async def media_once(factory,settings,operator_id,config=None,transport=None):
             job.status='retry' if job.attempts<3 else 'failed'; job.error_code=error; job.available_at=utcnow()+timedelta(minutes=5*job.attempts)
             return {'status':job.status,'called':True}
         msg=locked(db,ChannelMessage,mid); actor=actor_now(db,operator_id)
-        require(actor,'channels.collect',msg.warehouse_id)
+        require_source(actor,msg,config,'channels.collect')
         attachment=put_file(db,actor,bytes(content),'message-image',mime,'user',actor.id)
         result=create_case(db,actor,{'warehouse_id':msg.warehouse_id,'scope':msg.scope,'images':[{'attachment_id':attachment.id,'message_id':msg.id,'source':'waha'}],'idempotency_key':'waha-case:'+msg.id})
         msg.state='evidence_saved'; msg.version+=1; job.status='succeeded'; job.locked_at=None

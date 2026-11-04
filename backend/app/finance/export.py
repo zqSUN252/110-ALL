@@ -8,13 +8,18 @@ from app.models import Payment,Party,Invoice,Allocation
 from app.common import DomainError,require
 from app.attachments import put_file
 from .service import command,day,scope,record
+from .access import visible_payments
 
 
 @command('finance.export','warehouse_id scope on')
 def export_approved(db,actor,p):
     require(actor,'finance.export',p['warehouse_id']);mode=scope(p.get('scope','live'));selected=day(p['on'])
     zone=ZoneInfo(db.info['settings'].business_timezone);start=datetime.combine(selected,datetime.min.time(),zone);end=start+timedelta(days=1)
-    payments=list(db.scalars(select(Payment).where(Payment.warehouse_id==p['warehouse_id'],Payment.scope==mode,Payment.direction=='in',Payment.state=='posted',Payment.approved_at>=start,Payment.approved_at<end).order_by(Payment.approved_at,Payment.id)))
+    query=select(Payment).where(Payment.warehouse_id==p['warehouse_id'],Payment.scope==mode,Payment.direction=='in',Payment.state=='posted',Payment.approved_at>=start,Payment.approved_at<end)
+    from sqlalchemy import func
+    expected_count=db.scalar(select(func.count()).select_from(query.subquery()))
+    payments=list(db.scalars(visible_payments(query,actor).order_by(Payment.approved_at,Payment.id)))
+    if len(payments)!=expected_count:raise DomainError('export_scope_incomplete','Some merged payments involve warehouses outside current authorization; use an authorized full-scope exporter',403)
     if len(payments)>5000:raise DomainError('export_size','Split the export into smaller daily scopes')
     book=Workbook();sheet=book.active;sheet.title='Approved payments'
     sheet.append(['Payment ID','Customer','Receipt references','Approval date','Payment date','Original currency','Original amount','NGN amount','Approval method','Bank evidence'])
@@ -38,4 +43,4 @@ def export_approved(db,actor,p):
             raise DomainError('export_validation_failed','Payment export typed readback differs')
     finally:checked.close()
     attachment=put_file(db,actor,content,'approved-payments.xlsx','application/vnd.openxmlformats-officedocument.spreadsheetml.sheet','finance_export',p['warehouse_id'])
-    return {'id':attachment.id,'file':record(attachment),'count':len(payments),'amount_ngn':str(amount),'day':selected.isoformat(),'scope':mode,'round_trip_verified':True}
+    return {'id':attachment.id,'file':record(attachment),'source_payment_ids':[p.id for p in payments],'count':len(payments),'amount_ngn':str(amount),'day':selected.isoformat(),'scope':mode,'round_trip_verified':True}

@@ -5,7 +5,8 @@ from app.common import DomainError, require, check_version
 from app.models import BankClaim, BankEntry, BankAccount, EvidenceCase, Payment
 from app.attachments import put_file, read_file
 from app.finance.service import command, locked, record
-from .service import attachment_for_actor
+from .service import attachment_for_actor,ensure_claim_current
+from app.finance.access import account_access
 from .archive_writer import write_archive, inspect_template, MIME
 
 
@@ -21,7 +22,9 @@ def export_archive(db,actor,p):
     for selection in p['claims']:
         claim=locked(db,BankClaim,selection['id']); check_version(claim,selection.get('expected_version'))
         entry=locked(db,BankEntry,claim.entry_id); account=locked(db,BankAccount,entry.account_id); case=locked(db,EvidenceCase,claim.case_id)
-        if account.warehouse_id!=p['warehouse_id']: raise DomainError('forbidden','Bank archive warehouse differs',403)
+        if case.warehouse_id!=p['warehouse_id']: raise DomainError('forbidden','Evidence archive warehouse differs',403)
+        account_access(db,actor,account,'bank.export',case.warehouse_id)
+        ensure_claim_current(db,claim)
         if claim.id in ids:raise DomainError('duplicate_claim','Claim appears twice')
         ids.add(claim.id); modes.add(account.scope)
         if claim.state not in ('verified_unallocated','posted') or entry.currency!='NGN' or entry.transaction_date is None:
@@ -38,4 +41,4 @@ def export_archive(db,actor,p):
         try: report=write_archive(source,records,output,p.get('label',''))
         except ValueError:raise DomainError('archive_validation_failed','Archive template/typed readback validation failed') from None
         attachment=put_file(db,actor,output.read_bytes(),'bank-archive.xlsx',MIME,'bank_archive',p['warehouse_id'])
-    return {'id':attachment.id,'file':record(attachment),'template_sha256':template.sha256,'scope':next(iter(modes)),**report,'sent':False}
+    return {'id':attachment.id,'file':record(attachment),'source_claim_ids':sorted(ids),'template_sha256':template.sha256,'scope':next(iter(modes)),**report,'sent':False}

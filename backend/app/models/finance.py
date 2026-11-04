@@ -28,6 +28,15 @@ class Party(Record, Base):
     source: Mapped[str | None] = col(Text)
 
 
+class PartyWarehouse(Record, Base):
+    __tablename__ = 'party_warehouses'
+    __table_args__ = (UniqueConstraint('party_id','warehouse_id'),)
+    party_id: Mapped[str] = col(ForeignKey('parties.id'), index=True)
+    warehouse_id: Mapped[str] = col(ForeignKey('warehouses.id'), index=True)
+    active: Mapped[bool] = col(Boolean,default=True)
+    source: Mapped[str] = col(Text)
+
+
 class Invoice(Record, Base):
     __tablename__ = 'invoices'
     __table_args__ = (CheckConstraint("amount_ngn >= 0"), Index('ix_invoice_scope_party', 'warehouse_id', 'scope', 'party_id', 'kind', 'due_on'))
@@ -98,6 +107,17 @@ class Allocation(Record, Base):
     amount_ngn: Mapped[Decimal] = col(Money)
     reverses_id: Mapped[str | None] = col(ForeignKey('allocations.id'))
     reason: Mapped[str | None] = col(Text)
+    actor_id: Mapped[str] = col(ForeignKey('users.id'))
+
+
+class CrossPartyAuthorization(Record, Base):
+    __tablename__ = 'cross_party_authorizations'
+    __table_args__ = (CheckConstraint('amount_ngn > 0'),)
+    payment_id: Mapped[str] = col(ForeignKey('payments.id'),index=True)
+    invoice_id: Mapped[str] = col(ForeignKey('invoices.id'))
+    beneficiary_party_id: Mapped[str] = col(ForeignKey('parties.id'))
+    amount_ngn: Mapped[Decimal] = col(Money)
+    source: Mapped[str] = col(Text)
     actor_id: Mapped[str] = col(ForeignKey('users.id'))
 
 
@@ -179,6 +199,15 @@ class BankAccount(Record, Base):
     revision: Mapped[int] = col(Integer, default=0)
 
 
+class BankAccountWarehouse(Record, Base):
+    __tablename__ = 'bank_account_warehouses'
+    __table_args__ = (UniqueConstraint('account_id','warehouse_id'),)
+    account_id: Mapped[str] = col(ForeignKey('bank_accounts.id'),index=True)
+    warehouse_id: Mapped[str] = col(ForeignKey('warehouses.id'),index=True)
+    active: Mapped[bool] = col(Boolean,default=True)
+    source: Mapped[str] = col(Text)
+
+
 class BankFile(Record, Base):
     __tablename__ = 'bank_files'
     __table_args__ = (UniqueConstraint('account_id','sha256'),)
@@ -224,6 +253,9 @@ class BankClaim(Record, Base):
     state: Mapped[str] = col(String(30))
     reason: Mapped[str] = col(Text)
     actor_id: Mapped[str] = col(ForeignKey('users.id'))
+    reviewed_entry_version: Mapped[int | None] = col(Integer)
+    reviewed_bank_revision: Mapped[int | None] = col(Integer)
+    reviewed_basis_hash: Mapped[str | None] = col(String(64))
 
 
 class BankMatch(Record, Base):

@@ -13,7 +13,8 @@ from app.bank import service as bank
 from app.bank.archive import export_archive
 from app.evidence import service as evidence
 from app.channels import service as channels
-from app.models import Invoice, Payment, EvidenceCase, BankFile, BankAccount, Attachment, EvidenceImage, RecognitionJob,Party,Warehouse
+from app.models import Invoice, Payment, EvidenceCase, BankFile, BankAccount, Attachment, EvidenceImage, RecognitionJob,Party,Warehouse,PartyWarehouse,BankAccountWarehouse
+from app.finance.access import visible_payments,account_access
 from app.attachments import read_file
 
 router=APIRouter(prefix='/api')
@@ -84,11 +85,22 @@ class AllocationInput(Input):
     amount_ngn:str
 
 
+class BeneficiaryInput(Input):
+    invoice_id:str
+    party_id:str
+
+
+class CrossPartyInput(Input):
+    source:str=Field(min_length=1)
+    beneficiaries:list[BeneficiaryInput]=Field(min_length=1,max_length=200)
+
+
 class PostInput(Version):
     approval:Literal['manual','bank']='manual'
     allocations:list[AllocationInput]=Field(min_length=1,max_length=200)
     case_id:str|None=None
     case_version:int|None=None
+    cross_party:CrossPartyInput|None=None
 
 
 class AdjustInput(Version):
@@ -185,6 +197,17 @@ class ImagesInput(Version):
     images:list[ImageInput]=Field(min_length=1,max_length=100)
 
 
+class BindAccountInput(Version):
+    account_id:str|None
+    reason:str=Field(min_length=1)
+
+
+class MembershipInput(Version):
+    warehouse_id:str
+    active:bool
+    source:str=Field(min_length=1)
+
+
 class ReviewInput(Version):
     fields:FieldsInput=Field(default_factory=FieldsInput)
     action:Literal['correct','defer','retract']='correct'
@@ -194,7 +217,7 @@ class ReviewInput(Version):
 class BankReviewInput(Version):
     entry_id:str|None=None
     entry_version:int|None=None
-    action:Literal['confirm','confirm_manual','defer','retract','release','resolve']='confirm'
+    action:Literal['confirm','confirm_manual','defer','retract','release','resolve','resolve_manual']='confirm'
     reason:str|None=None
 
 
@@ -234,14 +257,27 @@ class ExportInput(Input):
     on:str
 
 
+def command_payload(model):
+    # Defaults are retained, but explicit null is distinct from omitted optional
+    # fields, recursively (especially manual evidence corrections).
+    result={}
+    for name in type(model).model_fields:
+        value=getattr(model,name)
+        if value is None and name not in model.model_fields_set:continue
+        if isinstance(value,BaseModel):value=command_payload(value)
+        elif isinstance(value,list):value=[command_payload(v) if isinstance(v,BaseModel) else v for v in value]
+        result[name]=value
+    return result
+
+
 def mutation(path,model,handler):
     if '{id}' in path:
         def endpoint(id:str,payload,request:Request,db:Database,actor=Depends(mutate)):
-            body=payload.model_dump(exclude_none=True)
+            body=command_payload(payload)
             return handler(db,actor,{**body,'id':id,'idempotency_key':request.headers.get('Idempotency-Key')})
     else:
         def endpoint(payload,request:Request,db:Database,actor=Depends(mutate)):
-            body=payload.model_dump(exclude_none=True)
+            body=command_payload(payload)
             return handler(db,actor,{**body,'idempotency_key':request.headers.get('Idempotency-Key')})
     endpoint.__annotations__['payload']=model
     endpoint.__name__=handler.__module__.replace('.','_')+'_'+handler.__name__
@@ -250,6 +286,8 @@ def mutation(path,model,handler):
 
 for path,model,handler in [
     ('/warehouses',WarehouseInput,finance.create_warehouse),('/parties',PartyInput,finance.create_party),
+    ('/parties/{id}/warehouses',MembershipInput,finance.set_party_membership),
+    ('/bank/accounts/{id}/warehouses',MembershipInput,bank.set_account_membership),
     ('/invoices',InvoiceInput,finance.create_invoice),('/invoices/{id}/adjust',AdjustInput,finance.adjust_invoice),
     ('/invoices/{id}/discounts',DiscountInput,finance.add_discount),('/payments',PaymentInput,finance.create_payment),
     ('/payments/{id}/post',PostInput,finance.post_payment),('/payments/{id}/reverse',ReverseInput,finance.reverse_payment),
@@ -259,6 +297,7 @@ for path,model,handler in [
     ('/bank/cases/{id}/match',Version,bank.match_case),('/bank/cases/{id}/review',BankReviewInput,bank.review_case),
     ('/evidence',EvidenceInput,evidence.create_case),('/evidence/{id}/images',ImagesInput,evidence.attach_images),
     ('/evidence/{id}/review',ReviewInput,evidence.review_case),('/evidence/{id}/recognize',Version,evidence.recognize),
+    ('/evidence/{id}/bank-account',BindAccountInput,evidence.bind_account),
     ('/channels/actions',ActionInput,channels.prepare_action),('/channels/actions/{id}/execute',ExecuteInput,channels.execute_action),
     ('/channels/deliveries',DeliveryInput,channels.queue_delivery),('/bank/archives',ArchiveInput,export_archive),
     ('/finance/exports/approved',ExportInput,export_approved)]: mutation(path,model,handler)
@@ -300,9 +339,12 @@ def records(kind:str,warehouse_id:str,db:Database,scope:str='live',after:str|Non
     choices={'invoices':(Invoice,'finance.read'),'payments':(Payment,'finance.read'),'payables':(Invoice,'payables.read'),'payable-payments':(Payment,'payables.read'),'evidence':(EvidenceCase,'evidence.read'),'bank-accounts':(BankAccount,'bank.read')}
     if kind not in choices: raise DomainError('not_found','Unknown record collection',404)
     model,cap=choices[kind]; require(actor,cap,warehouse_id); finance.scope(scope)
-    query=select(model).where(model.warehouse_id==warehouse_id,model.scope==scope)
+    query=select(model).where(model.scope==scope)
+    if model is BankAccount:
+        query=query.join(BankAccountWarehouse,BankAccountWarehouse.account_id==BankAccount.id).where(BankAccountWarehouse.warehouse_id==warehouse_id,BankAccountWarehouse.active.is_(True))
+    else:query=query.where(model.warehouse_id==warehouse_id)
     if model is Invoice:query=query.where(model.kind=='AP' if kind=='payables' else 'AR')
-    if model is Payment:query=query.where(model.direction=='out' if kind=='payable-payments' else 'in')
+    if model is Payment:query=visible_payments(query.where(model.direction=='out' if kind=='payable-payments' else 'in'),actor)
     if party_id and model in (Invoice,Payment):query=query.where(model.party_id==party_id)
     if after: query=query.where(model.id>after)
     rows=list(db.scalars(query.order_by(model.id).limit(min(max(limit,1),200))))
@@ -313,7 +355,7 @@ def records(kind:str,warehouse_id:str,db:Database,scope:str='live',after:str|Non
 @router.get('/parties')
 def parties(warehouse_id:str,db:Database,after:str|None=None,limit:int=50,actor=Depends(get_actor)):
     require(actor,'parties.read',warehouse_id)
-    query=select(Party).where(Party.warehouse_id==warehouse_id)
+    query=select(Party).join(PartyWarehouse,PartyWarehouse.party_id==Party.id).where(PartyWarehouse.warehouse_id==warehouse_id,PartyWarehouse.active.is_(True))
     if after:query=query.where(Party.id>after)
     rows=list(db.scalars(query.order_by(Party.id).limit(min(max(limit,1),200))))
     return {'items':[finance.record(row) for row in rows],'next':rows[-1].id if rows else None}
@@ -330,7 +372,8 @@ def warehouses(db:Database,actor=Depends(get_actor)):
 @router.get('/evidence-jobs/{id}')
 def evidence_job(id:str,db:Database,actor=Depends(get_actor)):
     job=finance.locked(db,RecognitionJob,id); image=db.get(EvidenceImage,job.image_id)
-    finance.access(db,actor,EvidenceCase,image.case_id,'evidence.read')
+    from app.finance.authorization import case_read
+    case_read(db,actor,finance.access(db,actor,EvidenceCase,image.case_id,'evidence.read'))
     return finance.record(job)
 
 
@@ -340,9 +383,10 @@ def domain_file(id:str,db:Database,actor=Depends(get_actor)):
     case=db.scalar(select(EvidenceCase).join(EvidenceImage,EvidenceImage.case_id==EvidenceCase.id).where(EvidenceImage.attachment_id==id))
     file=db.scalar(select(BankFile).where(BankFile.attachment_id==id))
     if case: require(actor,'evidence.read',case.warehouse_id)
-    elif file: require(actor,'bank.read',db.get(BankAccount,file.account_id).warehouse_id)
-    elif attachment.owner_type=='bank_archive': require(actor,'bank.export',attachment.owner_id)
-    elif attachment.owner_type=='finance_export': require(actor,'finance.export',attachment.owner_id)
+    elif file: account_access(db,actor,db.get(BankAccount,file.account_id),'bank.read')
+    elif attachment.owner_type in ('bank_archive','finance_export'):
+        from app.finance.authorization import export_file_access
+        export_file_access(db,actor,attachment)
     else: raise DomainError('forbidden','No authorized domain attachment relation',403)
     return Response(read_file(db.info['settings'],attachment),media_type=attachment.media_type,
         headers={'Content-Disposition':'attachment','Cache-Control':'no-store','X-Content-Type-Options':'nosniff'})
