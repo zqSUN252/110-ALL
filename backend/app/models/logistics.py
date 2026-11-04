@@ -143,7 +143,7 @@ class QuoteSnapshot(Record,Base):
     unit_price:Mapped[Decimal]=col(Money)
     quantity:Mapped[Decimal]=col(Quantity)
     charge_usd:Mapped[Decimal]=col(Money)
-    charge_ngn:Mapped[Decimal]=col(Money)
+    charge_ngn:Mapped[Decimal|None]=col(Money)
     ngn_per_usd:Mapped[Decimal|None]=col(Quantity)
     amount_ngn:Mapped[Decimal|None]=col(Money)
     basis:Mapped[dict]=col(JSONB)
@@ -238,6 +238,9 @@ class CargoSourceRow(Record,Base):
     provenance:Mapped[dict]=col(JSONB)
     issues:Mapped[list]=col(JSONB)
     eligible:Mapped[bool]=col(Boolean)
+    disposition:Mapped[str]=col(String(16),default='pending')
+    exclusion_reason:Mapped[str|None]=col(Text)
+    reviewed_by:Mapped[str|None]=col(ForeignKey('users.id'))
     receipt:Mapped[str|None]=col(String(200))
     mark:Mapped[str|None]=col(String(300))
     item:Mapped[str|None]=col(Text)
@@ -277,6 +280,28 @@ class Arrival(Record,Base):
     freight_usd:Mapped[Decimal|None]=col(Money)
     clearing_ngn:Mapped[Decimal|None]=col(Money)
     actor_id:Mapped[str]=col(ForeignKey('users.id'))
+    source:Mapped[str]=col(Text)
+    charge_basis:Mapped[list|None]=col(JSONB)
+
+
+class CargoChargeComponent(Record,Base):
+    """Immutable source-charge lines; a revision replaces the effective set, never history."""
+    __tablename__='cargo_charge_components'
+    __table_args__=(
+        CheckConstraint('(quote_id IS NULL) <> (ticket_id IS NULL)'),
+        CheckConstraint("component IN ('freight','clearing') AND currency IN ('USD','NGN') AND unit IN ('PCS','KG','CBM')"),
+        CheckConstraint('amount >= 0'),
+        UniqueConstraint('ticket_id','ticket_version','position'),
+        UniqueConstraint('quote_id','position'),
+    )
+    quote_id:Mapped[str|None]=col(ForeignKey('quote_snapshots.id'))
+    ticket_id:Mapped[str|None]=col(ForeignKey('tickets.id'))
+    ticket_version:Mapped[int|None]=col(Integer)
+    position:Mapped[int]=col(Integer)
+    component:Mapped[str]=col(String(12))
+    currency:Mapped[str]=col(String(6))
+    unit:Mapped[str]=col(String(6))
+    amount:Mapped[Decimal|None]=col(Money)
     source:Mapped[str]=col(Text)
 
 

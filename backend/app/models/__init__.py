@@ -109,4 +109,4 @@ class Outbox(Record, Base):
 from .finance import (Warehouse, Party, Invoice, InvoiceAdjustment, Discount, Payment, Allocation, OpeningBalance, EvidenceCase, EvidenceImage, EvidenceReview, RecognitionJob, BankAccount, BankFile, BankEntry, BankSourceRow, BankClaim, BankMatch, ChannelMessage, ChannelAction, Delivery, FinanceEvent)
 from .finance import PartyWarehouse, BankAccountWarehouse, CrossPartyAuthorization
 
-from .logistics import (PartyCategory, PartyPhone, Receipt, ReceiptSpec, StockEvent, ReceiptReview, TranslationCandidate, PriceCard, QuoteSnapshot, Shipment, DispatchBatch, PackingDocument, ImportBatch, Ticket, CargoSourceRow, DocumentRevision, Arrival, TicketAttachment, TicketReview, ArrivalSettlement)
+from .logistics import (PartyCategory, PartyPhone, Receipt, ReceiptSpec, StockEvent, ReceiptReview, TranslationCandidate, PriceCard, QuoteSnapshot, Shipment, DispatchBatch, PackingDocument, ImportBatch, Ticket, CargoSourceRow, DocumentRevision, Arrival, TicketAttachment, TicketReview, ArrivalSettlement, CargoChargeComponent)

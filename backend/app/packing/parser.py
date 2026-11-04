@@ -129,6 +129,7 @@ def parse(content,overrides=None):
             for k in ('freight_usd','clearing_ngn'):
                 if result.get(k) is not None:
                     basis=mapping[k].get('basis')
+                    result['provenance'][k]['quantity_basis']=basis
                     if basis not in ('total','KG','PCS','CBM'):result[k]=None;result['issues'].append(k+'_basis_unconfirmed')
                     elif basis!='total':
                         quantity=result.get({'KG':'kg','PCS':'pieces','CBM':'cbm'}[basis])

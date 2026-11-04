@@ -7,21 +7,23 @@ from app.models import Ticket,ArrivalSettlement
 def cargo_basis(db,ticket):
     from app.packing.service import arrival_projection,charges,invoice_amount
     from app.finance.service import settle
+    from app.packing import allocation
     values=charges(db,ticket);projection=arrival_projection(db,ticket)
-    if values is None or not projection:raise DomainError('rounding_basis','Actual priced arrivals required for settlement allocation')
-    full_usd,full_ngn=values;control=invoice_amount(full_usd,full_ngn,ticket.ngn_per_usd)
+    if values is None or not projection or any(usd is None or ngn is None for _,usd,ngn in projection):raise DomainError('rounding_basis','Actual priced arrivals required for settlement allocation')
+    full_usd,full_ngn=values;control,_=allocation.settlement_control_and_quota(db,ticket,{'pieces':0,'kg':Decimal(0),'cbm':Decimal(0)})
     result=[];settled=Decimal('0.00');quantities={'pieces':0,'kg':Decimal(0),'cbm':Decimal(0)}
     for arrival,usd,ngn in projection:
         for key in quantities:quantities[key]+=getattr(arrival,key)
         complete=all(quantities[key]==getattr(ticket,key) for key in quantities)
         native=invoice_amount(usd,ngn,ticket.ngn_per_usd)
         if settled>control:raise DomainError('rounding_allocation','Prior allocation exceeds original charge control',409)
-        amount=control-settled if complete else min(native,control-settled)
+        _,quota=allocation.settlement_control_and_quota(db,ticket,quantities)
+        amount=control-settled if complete else min(native,control-settled,max(Decimal(0),quota-settled))
         settled+=amount
         result.append({'arrival_id':arrival.id,'arrival_version':arrival.version,'freight_usd':usd,'charge_ngn':ngn,'settled_ngn':amount})
     usd=sum((row['freight_usd'] for row in result),Decimal('0.00'));ngn=sum((row['charge_ngn'] for row in result),Decimal('0.00'))
     difference=settled-invoice_amount(usd,ngn,ticket.ngn_per_usd)
-    return json_value({'ticket_id':ticket.id,'ticket_version':ticket.version,'warehouse_id':ticket.warehouse_id,'party_id':ticket.party_id,'original_total_ngn':control,'charge_usd':usd,'charge_ngn':ngn,'ngn_per_usd':ticket.ngn_per_usd,'amount_ngn':settled,'rounding_adjustment_ngn':difference,'arrivals':result})
+    return json_value({'ticket_id':ticket.id,'ticket_version':ticket.version,'warehouse_id':ticket.warehouse_id,'party_id':ticket.party_id,'original_total_ngn':control,'charge_usd':usd,'charge_ngn':ngn,'ngn_per_usd':ticket.ngn_per_usd,'amount_ngn':settled,'rounding_adjustment_ngn':difference,'source_quantities':{key:getattr(ticket,key) for key in ('pieces','kg','cbm')},'components':allocation.components(db,ticket),'arrivals':result})
 
 
 def validate_basis(db,basis,amount,invoice=None,payload=None):

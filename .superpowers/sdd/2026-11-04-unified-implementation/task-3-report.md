@@ -117,3 +117,13 @@ Only positively identified agent-owned test/diagnostic Python processes were req
 - XLSX artifacts are structurally opened/read back, but no real user browser, WPS second-machine check, exact print layout, WhatsApp/WeChat paste, production concurrency/capacity or backup/restore exercise is claimed.
 
 Final delivery commit is supplied in the parent-facing result; the detailed callable/HTTP/schema and requirement mapping is in `docs/development/logistics-contract.md`.
+
+## Task 3 independent-review fix round 1
+
+Review baseline: `3260cbf4563b233a7ce0b976ed13d69cd8a0325f`; findings I1–I8 are addressed in the fix commit containing this addendum. Exact RED/GREEN chronology, migration evidence and final commit handoff are recorded in `task-3-fix-1-report.md`. Earlier 116/8-test claims above remain historical and are not relabeled as evidence for the reviewed fix.
+
+The fix adds immutable typed charge-component revisions and real PCS/KG/CBM allocation, source-bound nonnegative component/NGN cumulative quotas, SEA NULL clearing propagation, read/action checks on previews, protected revision-history projection and original financial-source checks, native receipt relationship authorization including old replay sources, explicit F6 row dispositions and reasoned replacement exclusions. Historical AR with unknown units or pre-component allocation proof remains unchanged on new actual arrival. Explicit basis resolution requires current ticket version and complete finance preview even for the same amount, retains original invoice/cash/allocation identities, and writes new source proof/version/audit.
+
+Frozen head is `c11000300005`; actual migration/check reported no new operations. Original file/production/external validation limits remain unchanged. Parent's implementation-progress/reference/conflict documents are not included. Final suite result and final source commit SHA are provided in the fix report/handoff after completion.
+
+Final fix-round verification: **145 passed, 1 warning, 400.99s** on the final business source; frozen migration/check head `c11000300005`, empty-schema roundtrip and nonempty evidence guards passed, compileall/pip/cached-diff checks passed. Detailed RED/GREEN sequence is preserved in the fix report.

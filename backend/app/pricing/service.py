@@ -1,7 +1,7 @@
 from decimal import Decimal,ROUND_HALF_UP
 from sqlalchemy import select
 from app.common import DomainError,require,check_version
-from app.models import PriceCard,QuoteSnapshot,Receipt
+from app.models import PriceCard,QuoteSnapshot,Receipt,CargoChargeComponent
 from app.finance.service import decimal,day,record,settle
 from app.cargo.commands import command,enum,port,object_access,fields,bump
 
@@ -59,12 +59,20 @@ def build_quote(db,r,manual=None,fx=None,persist=True):
     if raw_quantity is None:return None
     quantity=Decimal(str(raw_quantity));amount=(price*quantity).quantize(Decimal('.01'),rounding=ROUND_HALF_UP)
     usd=amount if currency=='USD' else Decimal('0.00');ngn=amount if currency=='NGN' else Decimal('0.00')
-    if card and card.transport=='SEA' and card.clearing_per_cbm_ngn is not None:ngn+=(card.clearing_per_cbm_ngn*r.cbm).quantize(Decimal('.01'),rounding=ROUND_HALF_UP)
+    lines=[dict(component='freight',currency=currency,unit=unit,amount=amount,source=card.source if card else manual.get('source') or 'Explicit manual quote')]
+    if card and card.transport=='SEA':
+        clearing=(card.clearing_per_cbm_ngn*r.cbm).quantize(Decimal('.01'),rounding=ROUND_HALF_UP) if card.clearing_per_cbm_ngn is not None and r.cbm is not None else None
+        ngn=ngn+clearing if clearing is not None else None
+        lines.append(dict(component='clearing',currency='NGN',unit='CBM',amount=clearing,source=card.source))
+    elif currency=='USD':lines.append(dict(component='clearing',currency='NGN',unit=unit,amount=Decimal('0.00'),source='Explicit all-in/single-currency quote'))
     rate=decimal(fx['rate'],6,True) if usd and fx.get('direction')=='NGN_PER_USD' else None
     if fx and usd:settle(usd,'USD',fx)
-    total=(settle(usd,'USD',{'direction':'NGN_PER_USD','rate':str(rate)})+ngn) if rate else ngn if not usd else None
+    total=((settle(usd,'USD',{'direction':'NGN_PER_USD','rate':str(rate)})+ngn) if rate else ngn if not usd else None) if ngn is not None else None
     q=QuoteSnapshot(warehouse_id=r.warehouse_id,card_id=card.id if card else None,manual=manual is not None,unit=unit,currency=currency,unit_price=price,quantity=quantity,charge_usd=usd,charge_ngn=ngn,ngn_per_usd=rate,amount_ngn=total,basis={'selection':basis,'transport':r.transport,'origin':r.origin,'goods_class':r.goods_class,'destination':r.destination,'received_on':str(r.received_on)})
-    if persist:db.add(q);db.flush()
+    q._charge_components=lines
+    if persist:
+        db.add(q);db.flush()
+        db.add_all([CargoChargeComponent(quote_id=q.id,position=i,**line) for i,line in enumerate(lines)]);db.flush()
     return q
 
 

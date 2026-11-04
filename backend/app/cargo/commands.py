@@ -39,8 +39,25 @@ def member(db,actor,party_id,warehouse_id,capability):
 def object_access(db,actor,cls,identity,capability,expected=None):
     obj=locked(db,cls,identity)
     require(actor,capability,getattr(obj,'warehouse_id',obj.id if cls is Warehouse else None))
+    if cls is Ticket and obj.native_receipt_id:
+        object_access(db,actor,Receipt,obj.native_receipt_id,'cargo.read')
     if expected is not None:check_version(obj,expected)
     return obj
+
+
+def preview_access(db,actor,cls,identity,capability):
+    obj=object_access(db,actor,cls,identity,capability)
+    require(actor,capability.split('.')[0]+'.read',getattr(obj,'warehouse_id',None))
+    return obj
+
+
+def native_link(db,actor,warehouse_id,identity,receipt=None,party_id=None,transport=None):
+    if not identity:return
+    native=object_access(db,actor,Receipt,identity,'cargo.read')
+    if native.warehouse_id!=warehouse_id:raise DomainError('receipt_scope','Native receipt belongs to another warehouse',403)
+    if native.state!='active' or (receipt is not None and native.reference!=receipt) or (party_id and native.party_id and party_id!=native.party_id) or (transport and native.transport not in ('WAREHOUSE',transport)):
+        raise DomainError('receipt_identity','Native receipt must be active and match known receipt, party and transport',409)
+    return native
 
 
 def scope_record(db,actor,value,capability):
@@ -48,6 +65,8 @@ def scope_record(db,actor,value,capability):
     if isinstance(value,list):
         for child in value:scope_record(db,actor,child,capability)
     elif isinstance(value,dict):
+        for key in ('native_receipt_id','previous_native_receipt_id'):
+            if value.get(key):object_access(db,actor,Receipt,value[key],'cargo.read')
         if value.get('warehouse_id'):require(actor,capability,value['warehouse_id'])
         for key,cls in [('receipt_id',Receipt),('shipment_id',Shipment),('document_id',PackingDocument),('ticket_id',Ticket),('batch_id',ImportBatch)]:
             if value.get(key):

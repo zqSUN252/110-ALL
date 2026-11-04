@@ -102,7 +102,16 @@ class ShipmentCreate(ShipmentFields):
 class ShipmentPatch(ShipmentFields,Version):finance_preview:dict|None=None
 
 
+class ChargeComponent(Input):
+    component:Literal['freight','clearing']
+    currency:Literal['USD','NGN']
+    unit:Literal['PCS','KG','CBM']
+    amount:str|None
+    source:str=Field(min_length=1)
+
+
 class TicketFields(Input):
+    charge_components:list[ChargeComponent]|None=None
     party_id:str|None=None
     native_receipt_id:str|None=None
     receipt:str|None=None
@@ -189,6 +198,7 @@ class ImportCommit(Version):
 
 
 class Replace(Version):
+    excluded_rows:list[dict]=Field(default_factory=list)
     batch_id:str
     mapping:list[dict]=Field(min_length=1,max_length=30000)
     preview:dict

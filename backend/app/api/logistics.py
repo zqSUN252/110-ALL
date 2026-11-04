@@ -82,6 +82,10 @@ def document_list(db:Database,limit:int=50,offset:int=0,shipment_id:str|None=Non
 def document(id:str,db:Database,actor=Depends(get_actor)):return packing.get_document(db,actor,id)
 
 
+@router.get('/packing/documents/{id}/history')
+def document_history(id:str,db:Database,actor=Depends(get_actor)):return packing.get_document_history(db,actor,id)
+
+
 @router.get('/packing/documents/{id}/groups')
 def groups(id:str,db:Database,actor=Depends(get_actor)):return packing.document_groups(db,actor,id)
 
@@ -97,7 +101,7 @@ def document_recover_preview(id:str,db:Database,actor=Depends(get_actor)):return
 @router.post('/packing/documents/{id}/replacement-preview')
 def replacement_preview(id:str,db:Database,payload:dict=Body(...),actor=Depends(mutate)):
     from app.cargo.commands import fields
-    fields(payload,'batch_id mapping');return imports.replacement_preview(db,actor,id,payload['batch_id'],payload['mapping'])
+    fields(payload,'batch_id mapping excluded_rows');return imports.replacement_preview(db,actor,id,payload['batch_id'],payload['mapping'],payload.get('excluded_rows'))
 
 
 @router.get('/tickets')

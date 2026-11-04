@@ -4,14 +4,15 @@ from sqlalchemy import select,func
 from app.common import DomainError,require,check_version,json_value
 from app.models import (PackingDocument,Ticket,Shipment,Arrival,Invoice,QuoteSnapshot,TicketAttachment,TicketReview,Attachment,DocumentRevision,CargoSourceRow,ImportBatch)
 from app.finance import service as finance
+from . import allocation
 from app.finance.access import payment_access
-from app.cargo.commands import command,object_access,member,enum,port,integer,fields,bump,visible
+from app.cargo.commands import command,object_access,preview_access,native_link,member,enum,port,integer,fields,bump,visible
 
-TICKET_FIELDS='party_id native_receipt_id receipt mark item_zh item_en contact_raw phone_normalized phone_confirmed address destination destination_warehouse_id transport origin goods_class received_on pieces kg cbm freight_usd clearing_ngn ngn_per_usd'
+TICKET_FIELDS='party_id native_receipt_id receipt mark item_zh item_en contact_raw phone_normalized phone_confirmed address destination destination_warehouse_id transport origin goods_class received_on pieces kg cbm freight_usd clearing_ngn ngn_per_usd charge_components'
 
 
 def ticket_values(p):
-    out={k:v for k,v in p.items() if k in TICKET_FIELDS.split()}
+    out={k:v for k,v in p.items() if k in TICKET_FIELDS.split() and k!='charge_components'}
     for key in ('kg','cbm','ngn_per_usd'):
         if key in out:out[key]=finance.decimal(out[key],6,key=='ngn_per_usd') if out[key] is not None else None
     for key in ('freight_usd','clearing_ngn'):
@@ -27,7 +28,7 @@ def ticket_values(p):
 
 def ticket_json(db,t):
     arrivals=[finance.record(a)|{'effective_freight_usd':str(usd) if usd is not None else None,'effective_clearing_ngn':str(ngn) if ngn is not None else None} for a,usd,ngn in arrival_projection(db,t)]
-    return finance.record(t)|{'arrivals':arrivals,'arrived':{'pieces':sum(a['pieces'] for a in arrivals),'kg':f"{sum((Decimal(a['kg']) for a in arrivals),Decimal(0)):.6f}",'cbm':f"{sum((Decimal(a['cbm']) for a in arrivals),Decimal(0)):.6f}"},
+    return finance.record(t)|{'charge_components':allocation.components(db,t),'arrivals':arrivals,'arrived':{'pieces':sum(a['pieces'] for a in arrivals),'kg':f"{sum((Decimal(a['kg']) for a in arrivals),Decimal(0)):.6f}",'cbm':f"{sum((Decimal(a['cbm']) for a in arrivals),Decimal(0)):.6f}"},
         'attachments':[finance.record(a) for a in db.scalars(select(TicketAttachment).where(TicketAttachment.ticket_id==t.id))],
         'quote':finance.record(db.get(QuoteSnapshot,t.quote_id)) if t.quote_id else None,'actual_release_at':None}
 
@@ -40,7 +41,39 @@ def get_ticket(db,actor,identity):
 
 def document_json(db,d):
     return finance.record(d)|{'tickets':[ticket_json(db,t) for t in db.scalars(select(Ticket).where(Ticket.document_id==d.id).order_by(Ticket.position,Ticket.id))],
-        'revisions':[finance.record(r) for r in db.scalars(select(DocumentRevision).where(DocumentRevision.document_id==d.id).order_by(DocumentRevision.created_at,DocumentRevision.id))]}
+        'revisions':[logistics_history(finance.record(r)) for r in db.scalars(select(DocumentRevision).where(DocumentRevision.document_id==d.id).order_by(DocumentRevision.created_at,DocumentRevision.id))]}
+
+
+def logistics_history(value):
+    if isinstance(value,list):return [logistics_history(v) for v in value]
+    if isinstance(value,dict):return {k:logistics_history(v) for k,v in value.items() if k not in ('finance_preview','financial_sources')}
+    return value
+
+
+def financial_sources(db,t):
+    from app.models import Payment,Allocation
+    from app.finance.access import payment_warehouses
+    if not t.invoice_id:return None
+    payments=list(db.scalars(select(Payment).join(Allocation,Allocation.payment_id==Payment.id).where(Allocation.invoice_id==t.invoice_id).distinct()))
+    return {'invoice_id':t.invoice_id,'warehouse_ids':sorted({t.warehouse_id}|{w for p in payments for w in payment_warehouses(db,p)}),'payment_ids':[p.id for p in payments]}
+
+
+def get_document_history(db,actor,identity):
+    from app.models import Payment
+    d=object_access(db,actor,PackingDocument,identity,'packing.read')
+    revisions=list(db.scalars(select(DocumentRevision).where(DocumentRevision.document_id==d.id).order_by(DocumentRevision.created_at,DocumentRevision.id)))
+    for revision in revisions:
+        for change in revision.difference.get('changes',[]):
+            if not change.get('finance_preview'):continue
+            sources=change.get('financial_sources')
+            if not sources:
+                # Prior revisions still retain stable ticket IDs after split.
+                t=finance.locked(db,Ticket,change['ticket_id']);sources=financial_sources(db,t)
+            if not sources:raise DomainError('history_source','Protected historical sources require resolution',403)
+            for warehouse in sources['warehouse_ids']:require(actor,'finance.read',warehouse)
+            finance.get_invoice(db,actor,sources['invoice_id'])
+            for payment_id in sources['payment_ids']:payment_access(db,actor,finance.locked(db,Payment,payment_id),'finance.read')
+    return [finance.record(r) for r in revisions]
 
 
 def get_document(db,actor,identity):
@@ -64,17 +97,16 @@ def new_ticket(db,actor,d,p,allow_unresolved=False):
     data.setdefault('transport',s.transport);data.setdefault('origin',s.origin)
     if data['transport']!=s.transport:raise DomainError('transport_mismatch','Ticket and shipment transport differ')
     if not allow_unresolved and any(data.get(k) is None for k in ('receipt','pieces','kg','cbm')):raise DomainError('quantities_missing','Explicit receipt, pieces, gross KG and CBM required; imported unknowns remain pending')
-    if data.get('native_receipt_id'):
-        from app.models import Receipt
-        r=object_access(db,actor,Receipt,data['native_receipt_id'],'cargo.read')
-        if r.warehouse_id!=d.warehouse_id:raise DomainError('receipt_scope','Native receipt belongs to another warehouse',403)
+    native_link(db,actor,d.warehouse_id,data.get('native_receipt_id'),data.get('receipt'),data.get('party_id'),data.get('transport'))
     position=(db.scalar(select(func.max(Ticket.position)).where(Ticket.document_id==d.id)) or 0)+1
     t=Ticket(document_id=d.id,warehouse_id=d.warehouse_id,position=position,**data)
     db.add(t);db.flush()
+    q=None
     if t.freight_usd is None and t.clearing_ngn is None:
         from app.pricing.service import refresh_quote
         q=refresh_quote(db,t)
         if q:t.freight_usd=q.charge_usd;t.clearing_ngn=q.charge_ngn;t.ngn_per_usd=q.ngn_per_usd
+    allocation.revise(db,t,p,q)
     d.version+=1;return t
 
 
@@ -98,31 +130,21 @@ def invoice_amount(usd,ngn,rate):
 def financial_access(db,actor,t,adjust=True):
     if not t.invoice_id:return
     inv=finance.locked(db,Invoice,t.invoice_id)
+    require(actor,'finance.read',inv.warehouse_id)
     require(actor,'finance.adjust' if adjust else 'finance.read',inv.warehouse_id)
     from app.models import Payment,Allocation
-    for pay in db.scalars(select(Payment).join(Allocation,Allocation.payment_id==Payment.id).where(Allocation.invoice_id==inv.id).distinct()):payment_access(db,actor,pay,'finance.adjust' if adjust else 'finance.read')
+    for pay in db.scalars(select(Payment).join(Allocation,Allocation.payment_id==Payment.id).where(Allocation.invoice_id==inv.id).distinct()):
+        payment_access(db,actor,pay,'finance.read');payment_access(db,actor,pay,'finance.adjust' if adjust else 'finance.read')
 
 
 def arrival_projection(db,t):
     rows=list(db.scalars(select(Arrival).where(Arrival.ticket_id==t.id).order_by(Arrival.created_at,Arrival.id)))
-    values=charges(db,t);result=[];used_usd=used_ngn=Decimal('0.00');quantities={'pieces':0,'kg':Decimal(0),'cbm':Decimal(0)}
-    for a in rows:
-        for k in quantities:quantities[k]+=getattr(a,k)
-        complete=all(quantities[k]==getattr(t,k) for k in quantities)
-        usd=ngn=None
-        if values:
-            total_usd,total_ngn=values;basis='kg' if t.transport in ('AIR','EXPRESS') else 'cbm';denominator=getattr(t,basis)
-            if not complete and denominator<=0:raise DomainError('arrival_basis','Nonzero mass/volume required for partial arrival')
-            usd=total_usd-used_usd if complete else (total_usd*getattr(a,basis)/denominator).quantize(Decimal('.01'),rounding=ROUND_HALF_UP)
-            ngn=total_ngn-used_ngn if complete else (total_ngn*getattr(a,basis)/denominator).quantize(Decimal('.01'),rounding=ROUND_HALF_UP)
-            used_usd+=usd;used_ngn+=ngn
-        result.append((a,usd,ngn))
-    return result
+    return [(a,usd,ngn) for a,usd,ngn,_ in allocation.projection(db,t,rows)]
 
 
 def arrived_charges(db,t):
     projection=arrival_projection(db,t)
-    if not projection or charges(db,t) is None:return None
+    if not projection or charges(db,t) is None or any(usd is None or ngn is None for _,usd,ngn in projection):return None
     return sum((usd for _,usd,_ in projection),Decimal('0.00')),sum((ngn for _,_,ngn in projection),Decimal('0.00'))
 
 
@@ -130,8 +152,8 @@ def sync_invoice(db,actor,t,p,automatic_arrival=False):
     if automatic_arrival and t.invoice_id:
         financial_access(db,actor,t)
         historical=finance.locked(db,Invoice,t.invoice_id)
-        if not (historical.pricing or {}).get('arrival_allocation'):
-            return  # Known historical AR survives unknown component decomposition.
+        if not (historical.pricing or {}).get('arrival_allocation') or not allocation.ready(db,t):
+            return  # Historical AR, including pre-component allocation proofs, stays authoritative until review.
     values=arrived_charges(db,t)
     basis=None
     if values is not None:
@@ -150,7 +172,9 @@ def sync_invoice(db,actor,t,p,automatic_arrival=False):
             # new arrival eligibility must never silently shrink or rebuild it.
             if previous is None:return
             if inv.amount_ngn!=Decimal(previous['amount_ngn']) or inv.rounding_adjustment_ngn!=Decimal(previous['rounding_adjustment_ngn']):raise DomainError('invoice_basis_changed','Invoice was edited independently; review cargo/financial difference before automatic arrival repricing',409)
-        if inv.amount_ngn!=amount or inv.charge_usd!=usd or inv.charge_ngn!=ngn or inv.rounding_adjustment_ngn!=(Decimal(basis['rounding_adjustment_ngn']) if basis else Decimal(0)):
+        prior_basis=(inv.pricing or {}).get('arrival_allocation') or {}
+        source_changed=basis is not None and any(prior_basis.get(key)!=basis.get(key) for key in ('components','source_quantities','ngn_per_usd','original_total_ngn','arrivals'))
+        if source_changed or inv.amount_ngn!=amount or inv.charge_usd!=usd or inv.charge_ngn!=ngn or inv.rounding_adjustment_ngn!=(Decimal(basis['rounding_adjustment_ngn']) if basis else Decimal(0)):
             preview=finance.adjustment_preview(db,actor,inv.id,str(amount),p.get('discount_total_ngn'),basis) if automatic_arrival else p.get('finance_preview')
             payload=dict(id=inv.id,expected_version=inv.version,amount_ngn=str(amount),reason=p.get('reason') or 'Arrival share of original explicit cargo bill',preview=preview,charge_usd=str(usd),charge_ngn=str(ngn),idempotency_key=p['idempotency_key']+':invoice')
             if usd:payload['ngn_per_usd']=str(t.ngn_per_usd)
@@ -171,6 +195,9 @@ def edit_ticket(db,actor,t,p):
     if 'party_id' in p:
         member(db,actor,p['party_id'],t.warehouse_id,'packing.manage')
         if t.invoice_id and p['party_id']!=t.party_id:raise DomainError('financial_party','A billed ticket requires explicit financial ownership resolution',409)
+    native_link(db,actor,t.warehouse_id,t.native_receipt_id)
+    native_link(db,actor,t.warehouse_id,p.get('native_receipt_id',t.native_receipt_id),p.get('receipt',t.receipt),p.get('party_id',t.party_id),p.get('transport',t.transport))
+    q=None
     for k,v in ticket_values(p).items():setattr(t,k,v)
     if t.transport!=db.get(Shipment,db.get(PackingDocument,t.document_id).shipment_id).transport:raise DomainError('transport_mismatch','Ticket and shipment transport differ')
     existing=list(db.scalars(select(Arrival).where(Arrival.ticket_id==t.id)))
@@ -184,7 +211,7 @@ def edit_ticket(db,actor,t,p):
             t.quote_id=q.id;t.freight_usd=q.charge_usd;t.clearing_ngn=q.charge_ngn;t.ngn_per_usd=q.ngn_per_usd
         elif any(k in p for k in ('destination','origin','goods_class','received_on','transport')):
             t.quote_id=None;t.freight_usd=None;t.clearing_ngn=None
-    bump(t);sync_invoice(db,actor,t,p)
+    bump(t);allocation.revise(db,t,p,q);sync_invoice(db,actor,t,p)
 
 
 def ticket_change_preview(db,actor,identity,changes):
@@ -193,9 +220,10 @@ def ticket_change_preview(db,actor,identity,changes):
     from app.pricing.service import build_quote
     from app.finance.rounding import cargo_basis
     db.execute(text('SELECT pg_advisory_xact_lock(110002)'))
-    t=object_access(db,actor,Ticket,identity,'packing.manage');financial_access(db,actor,t)
+    t=preview_access(db,actor,Ticket,identity,'packing.manage');financial_access(db,actor,t)
     fields(changes,TICKET_FIELDS+' manual fx discount_total_ngn')
     proposed=SimpleNamespace(**{c.name:getattr(t,c.name) for c in t.__table__.columns})
+    native_link(db,actor,t.warehouse_id,changes.get('native_receipt_id',t.native_receipt_id),changes.get('receipt',t.receipt),changes.get('party_id',t.party_id),changes.get('transport',t.transport))
     for key,value in ticket_values(changes).items():setattr(proposed,key,value)
     proposed.version=t.version+1
     pricing_change='manual' in changes or (not any(k in changes for k in ('freight_usd','clearing_ngn')) and any(k in changes for k in ('destination','origin','goods_class','received_on','transport','pieces','kg','cbm')))
@@ -206,6 +234,7 @@ def ticket_change_preview(db,actor,identity,changes):
         fx=changes.get('fx') or ({'direction':'NGN_PER_USD','rate':str(old.ngn_per_usd)} if old and old.ngn_per_usd else None)
         quote=build_quote(db,proposed,manual,fx,persist=False)
         proposed.freight_usd=quote.charge_usd if quote else None;proposed.clearing_ngn=quote.charge_ngn if quote else None;proposed.ngn_per_usd=quote.ngn_per_usd if quote else None
+    allocation.revise(db,proposed,changes,quote,persist=False)
     impact=None
     if t.invoice_id:
         values=charges(db,proposed)
@@ -219,13 +248,13 @@ def ticket_change_preview(db,actor,identity,changes):
 
 @command('ticket.update','id expected_version manual fx finance_preview discount_total_ngn reason '+TICKET_FIELDS,'packing.manage',Ticket,financial=True)
 def update_ticket(db,actor,p):
-    t=object_access(db,actor,Ticket,p['id'],'packing.manage');check_version(t,p.get('expected_version'));edit_ticket(db,actor,t,p)
-    d=finance.locked(db,PackingDocument,t.document_id);d.version+=1;db.flush();return ticket_json(db,t)
+    t=preview_access(db,actor,Ticket,p['id'],'packing.manage');check_version(t,p.get('expected_version'));previous_native=t.native_receipt_id;edit_ticket(db,actor,t,p)
+    d=finance.locked(db,PackingDocument,t.document_id);d.version+=1;db.flush();return ticket_json(db,t)|{'previous_native_receipt_id':previous_native}
 
 
 @command('ticket.arrive','id expected_version pieces kg cbm occurred_on source mode','packing.arrive',Ticket,financial=True)
 def arrive(db,actor,p):
-    t=object_access(db,actor,Ticket,p['id'],'packing.arrive');check_version(t,p.get('expected_version'))
+    t=preview_access(db,actor,Ticket,p['id'],'packing.arrive');check_version(t,p.get('expected_version'))
     d=finance.locked(db,PackingDocument,t.document_id)
     if t.state!='active' or d.state!='active':raise DomainError('ticket_void','Cannot arrive void cargo',409)
     if any(getattr(t,k) is None for k in ('receipt','pieces','kg','cbm')):raise DomainError('quantities_unresolved','Confirm original receipt and missing quantities before recording arrival',409)
@@ -237,14 +266,11 @@ def arrive(db,actor,p):
     if any(sums[k]+quantity[k]>getattr(t,k) for k in quantity):raise DomainError('arrival_remaining','Arrival exceeds remaining quantity',409)
     complete=all(sums[k]+quantity[k]==getattr(t,k) for k in quantity)
     if sums['pieces']+quantity['pieces']==t.pieces and not complete:raise DomainError('arrival_remainder','Final pieces must consume exact remaining KG/CBM')
-    usd=ngn=None;values=charges(db,t)
-    if values:
-        total_usd,total_ngn=values;basis='kg' if mode=='air' else 'cbm';denom=getattr(t,basis)
-        if not complete and denom<=0:raise DomainError('arrival_basis','Partial arrival needs nonzero mass/volume')
-        usd=total_usd-sum((u or Decimal(0) for _,u,_ in prior),Decimal(0)) if complete else (total_usd*quantity[basis]/denom).quantize(Decimal('.01'),rounding=ROUND_HALF_UP)
-        ngn=total_ngn-sum((n or Decimal(0) for _,_,n in prior),Decimal(0)) if complete else (total_ngn*quantity[basis]/denom).quantize(Decimal('.01'),rounding=ROUND_HALF_UP)
+    from types import SimpleNamespace
+    incoming=SimpleNamespace(**quantity)
+    _,usd,ngn,charge_basis=allocation.projection(db,t,rows+[incoming])[-1]
     if not str(p.get('source','')).strip():raise DomainError('arrival_source','Actual arrival source required')
-    db.add(Arrival(ticket_id=t.id,occurred_on=finance.day(p['occurred_on']),**quantity,freight_usd=usd,clearing_ngn=ngn,actor_id=actor.id,source=p['source']));db.flush()
+    db.add(Arrival(ticket_id=t.id,occurred_on=finance.day(p['occurred_on']),**quantity,freight_usd=usd,clearing_ngn=ngn,charge_basis=charge_basis,actor_id=actor.id,source=p['source']));db.flush()
     bump(t);sync_invoice(db,actor,t,p,automatic_arrival=True);d.version+=1
     shipment=finance.locked(db,Shipment,d.shipment_id)
     shipment.state='partly_arrived'
@@ -256,26 +282,26 @@ def arrive(db,actor,p):
 @command('ticket.attach','id expected_version attachment_id','packing.manage',Ticket)
 def attach_ticket(db,actor,p):
     from app.bank.service import attachment_for_actor
-    t=object_access(db,actor,Ticket,p['id'],'packing.manage');check_version(t,p.get('expected_version'))
+    t=preview_access(db,actor,Ticket,p['id'],'packing.manage');check_version(t,p.get('expected_version'))
     a=attachment_for_actor(db,actor,p['attachment_id'])
     db.add(TicketAttachment(ticket_id=t.id,attachment_id=a.id));bump(t);db.flush();return ticket_json(db,t)
 
 
 @command('ticket.review','id expected_version decision','packing.review',Ticket)
 def review_ticket(db,actor,p):
-    t=object_access(db,actor,Ticket,p['id'],'packing.review');check_version(t,p.get('expected_version'))
+    t=preview_access(db,actor,Ticket,p['id'],'packing.review');check_version(t,p.get('expected_version'))
     decision=enum(p.get('decision','approved'),('approved','rejected'),'decision')
     db.add(TicketReview(ticket_id=t.id,target_version=t.version,decision=decision,actor_id=actor.id));t.review_state=decision;t.version+=1;db.flush();return ticket_json(db,t)
 
 
 @command('document.split','id expected_version ticket_ids reference','packing.manage',PackingDocument,financial=True)
 def split_document(db,actor,p):
-    d=object_access(db,actor,PackingDocument,p['id'],'packing.manage');check_version(d,p.get('expected_version'))
+    d=preview_access(db,actor,PackingDocument,p['id'],'packing.manage');check_version(d,p.get('expected_version'))
     ids=p['ticket_ids']
     if d.state!='active' or not isinstance(ids,list) or not ids or len(set(ids))!=len(ids):raise DomainError('split_selection','Select distinct tickets in active document')
     tickets=[]
     for identity in sorted(ids):
-        t=object_access(db,actor,Ticket,identity,'packing.manage');financial_access(db,actor,t)
+        t=preview_access(db,actor,Ticket,identity,'packing.manage');financial_access(db,actor,t)
         if t.document_id!=d.id or t.state!='active':raise DomainError('split_membership','Selected ticket not active in this document',409)
         tickets.append(t)
     child=PackingDocument(shipment_id=d.shipment_id,warehouse_id=d.warehouse_id,reference=p['reference'],uploaded_on=d.uploaded_on,parent_id=d.id)
@@ -291,7 +317,7 @@ def void_preview(db,actor,identity):
     # Read preview follows the same guard ordering as mutations.
     from sqlalchemy import text
     db.execute(text('SELECT pg_advisory_xact_lock(110002)'))
-    d=object_access(db,actor,PackingDocument,identity,'packing.manage');rows=[]
+    d=preview_access(db,actor,PackingDocument,identity,'packing.manage');rows=[]
     for t in db.scalars(select(Ticket).where(Ticket.document_id==d.id).order_by(Ticket.id)):
         financial_access(db,actor,t)
         impact=finance.adjustment_preview(db,actor,t.invoice_id,'0','0') if t.invoice_id else None
@@ -302,14 +328,14 @@ def void_preview(db,actor,identity):
 def ticket_void_preview(db,actor,identity):
     from sqlalchemy import text
     db.execute(text('SELECT pg_advisory_xact_lock(110002)'))
-    t=object_access(db,actor,Ticket,identity,'packing.manage');require(actor,'packing.read',t.warehouse_id);financial_access(db,actor,t)
+    t=preview_access(db,actor,Ticket,identity,'packing.manage');require(actor,'packing.read',t.warehouse_id);financial_access(db,actor,t)
     impact=finance.adjustment_preview(db,actor,t.invoice_id,'0','0') if t.invoice_id else None
     return {'id':t.id,'version':t.version,'document_id':t.document_id,'invoice_id':t.invoice_id,'finance_preview':impact}
 
 
 @command('ticket.void','id expected_version preview reason','packing.manage',Ticket,financial=True)
 def void_ticket(db,actor,p):
-    t=object_access(db,actor,Ticket,p['id'],'packing.manage');check_version(t,p.get('expected_version'))
+    t=preview_access(db,actor,Ticket,p['id'],'packing.manage');check_version(t,p.get('expected_version'))
     preview=ticket_void_preview(db,actor,t.id)
     if p.get('preview')!=preview:raise DomainError('preview_changed','Ticket financial relationships changed',409,preview)
     if t.state!='active' or not str(p.get('reason','')).strip():raise DomainError('void_basis','Active ticket and explicit reason required')
@@ -323,7 +349,7 @@ def void_ticket(db,actor,p):
 
 @command('document.void','id expected_version preview reason','packing.manage',PackingDocument,financial=True)
 def void_document(db,actor,p):
-    d=object_access(db,actor,PackingDocument,p['id'],'packing.manage');check_version(d,p.get('expected_version'))
+    d=preview_access(db,actor,PackingDocument,p['id'],'packing.manage');check_version(d,p.get('expected_version'))
     current=void_preview(db,actor,d.id)
     if p.get('preview')!=current:raise DomainError('preview_changed','Document financial relationships changed',409,current)
     if not str(p.get('reason','')).strip():raise DomainError('reason_required','Explicit cancellation reason required')
@@ -340,7 +366,7 @@ def void_document(db,actor,p):
 def recover_preview(db,actor,identity):
     from sqlalchemy import text
     db.execute(text('SELECT pg_advisory_xact_lock(110002)'))
-    d=object_access(db,actor,PackingDocument,identity,'packing.manage');rows=[]
+    d=preview_access(db,actor,PackingDocument,identity,'packing.manage');rows=[]
     for t in db.scalars(select(Ticket).where(Ticket.document_id==d.id).order_by(Ticket.id)):
         preview=ticket_change_preview(db,actor,t.id,{}) if t.invoice_id else None
         rows.append({'ticket_id':t.id,'version':t.version,'invoice_id':t.invoice_id,'finance_preview':preview['finance_preview'] if preview else None})
@@ -349,7 +375,7 @@ def recover_preview(db,actor,identity):
 
 @command('document.recover','id expected_version reason preview','packing.manage',PackingDocument,financial=True)
 def recover_document(db,actor,p):
-    d=object_access(db,actor,PackingDocument,p['id'],'packing.manage');check_version(d,p.get('expected_version'))
+    d=preview_access(db,actor,PackingDocument,p['id'],'packing.manage');check_version(d,p.get('expected_version'))
     if d.state!='void' or not str(p.get('reason','')).strip():raise DomainError('recover_basis','Void document and recovery reason required')
     preview=recover_preview(db,actor,d.id)
     if p.get('preview')!=preview:raise DomainError('preview_changed','Review financial restoration before recovery',409,preview)

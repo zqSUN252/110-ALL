@@ -4,7 +4,7 @@ from app.models import ImportBatch,CargoSourceRow,PackingDocument,DocumentRevisi
 from app.finance import service as finance
 from app.bank.service import attachment_for_actor
 from app.attachments import read_file
-from app.cargo.commands import command,object_access,enum,fields,visible
+from app.cargo.commands import command,object_access,preview_access,native_link,enum,fields,visible
 from .parser import parse
 from . import service
 
@@ -33,6 +33,20 @@ def preview_import(db,actor,p):
     return persist(db,actor,p)
 
 
+def exclusions(rows,eligible,selected):
+    if not isinstance(rows,list) or any(not isinstance(x,dict) or set(x)!={'row_id','reason'} or not isinstance(x['reason'],str) or not x['reason'].strip() for x in rows):raise DomainError('exclude_reason','Explicit reasons required for excluded source cargo')
+    ids=[x['row_id'] for x in rows]
+    if len(set(ids))!=len(ids) or eligible!=selected|set(ids) or selected&set(ids):raise DomainError('source_coverage','Every eligible original row must be selected once or explicitly excluded once')
+    return rows
+
+
+def dispositions(db,actor,b,selected,excluded):
+    reasons={row['row_id']:row['reason'] for row in excluded}
+    for row in db.scalars(select(CargoSourceRow).where(CargoSourceRow.batch_id==b.id,CargoSourceRow.eligible.is_(True))):
+        row.disposition='selected' if row.id in selected else 'excluded'
+        row.exclusion_reason=reasons.get(row.id);row.reviewed_by=actor.id;row.version+=1
+
+
 def selected_rows(db,b,selection):
     all_rows={r.id:r for r in db.scalars(select(CargoSourceRow).where(CargoSourceRow.batch_id==b.id).order_by(CargoSourceRow.position))}
     if not isinstance(selection,list) or not selection or len({r['row_id'] for r in selection})!=len(selection):raise DomainError('import_selection','Explicit unique source rows required')
@@ -44,6 +58,16 @@ def selected_rows(db,b,selection):
         changes=item.get('values',{});fields(changes,service.TICKET_FIELDS)
         data={k:getattr(r,k) for k in ('receipt','mark','contact_raw','destination','address','received_on','pieces','kg','cbm','freight_usd','clearing_ngn')}
         data['item_zh']=r.item
+        # Only explicit unit headers establish a source quantity basis; total-only stays pending.
+        if 'charge_components' not in changes:
+            source_lines=[]
+            for key,currency,kind in [('freight_usd','USD','freight'),('clearing_ngn','NGN','clearing')]:
+                basis=r.provenance.get(key,{}).get('quantity_basis')
+                if basis in ('PCS','KG','CBM'):
+                    source_lines.append(dict(component=kind,currency=currency,unit=basis,amount=str(data[key]) if data[key] is not None else None,source=f'Source row {r.id} header basis'))
+                elif data[key] not in (None,0):break
+            else:
+                if source_lines and service.allocation.totals(source_lines)==(data['freight_usd'],data['clearing_ngn']):data['charge_components']=source_lines
         data.update(changes)
         if item.get('native_receipt_id'):data['native_receipt_id']=item['native_receipt_id']
         result.append((r,data))
@@ -56,9 +80,8 @@ def commit_import(db,actor,p):
     if b.status!='preview':raise DomainError('already_imported','Preview already committed',409)
     rows=selected_rows(db,b,p['selection'])
     eligible=set(db.scalars(select(CargoSourceRow.id).where(CargoSourceRow.batch_id==b.id,CargoSourceRow.eligible.is_(True))))
-    excluded=p.get('excluded_rows',[])
-    if any(set(x)!={'row_id','reason'} or not str(x['reason']).strip() for x in excluded):raise DomainError('exclude_reason','Explicit reasons required for excluded source cargo')
-    if eligible!={r.id for r,_ in rows}|{r['row_id'] for r in excluded} or {r.id for r,_ in rows}&{r['row_id'] for r in excluded}:raise DomainError('source_coverage','Every eligible original row must be selected or explicitly excluded')
+    excluded=exclusions(p.get('excluded_rows',[]),eligible,{r.id for r,_ in rows})
+    dispositions(db,actor,b,{r.id for r,_ in rows},excluded)
     if b.kind=='f6':
         # External observations do not manufacture another physical inbound event.
         for r,data in rows:
@@ -70,7 +93,7 @@ def commit_import(db,actor,p):
             for key,value in converted.items():setattr(r,'item' if key=='item_zh' else key,value)
             if requested:r.provenance=r.provenance|{'manual_correction':{'actor_id':actor.id,'original_values':json_value(before),'confirmed_values':json_value(converted)}};r.version+=1
             if data.get('native_receipt_id'):
-                native=object_access(db,actor,Receipt,data['native_receipt_id'],'cargo.read')
+                native=native_link(db,actor,b.warehouse_id,data['native_receipt_id'],data.get('receipt'))
                 if native.warehouse_id!=b.warehouse_id:raise DomainError('receipt_scope','Native receipt warehouse differs',403)
                 r.native_receipt_id=native.id
         b.status='committed';b.version+=1;db.flush();return batch_json(db,b)
@@ -85,10 +108,10 @@ def commit_import(db,actor,p):
     db.flush();return service.document_json(db,d)|{'import_id':b.id}
 
 
-def replacement_preview(db,actor,identity,batch_id,mapping):
+def replacement_preview(db,actor,identity,batch_id,mapping,excluded_rows=None):
     from sqlalchemy import text
     db.execute(text('SELECT pg_advisory_xact_lock(110002)'))
-    d=object_access(db,actor,PackingDocument,identity,'packing.manage');b=object_access(db,actor,ImportBatch,batch_id,'packing.import')
+    d=preview_access(db,actor,PackingDocument,identity,'packing.manage');b=preview_access(db,actor,ImportBatch,batch_id,'packing.import')
     if d.warehouse_id!=b.warehouse_id or b.kind!='packing' or b.status!='preview':raise DomainError('replacement_scope','Preview must be unused packing source in same warehouse')
     if not isinstance(mapping,list) or not mapping:raise DomainError('mapping_required','Explicit old/new row identity mapping required')
     source={r.id:r for r in db.scalars(select(CargoSourceRow).where(CargoSourceRow.batch_id==b.id,CargoSourceRow.eligible.is_(True)))}
@@ -102,39 +125,46 @@ def replacement_preview(db,actor,identity,batch_id,mapping):
         mapped_source.add(rid)
         if tid:mapped_tickets.add(tid)
         r=source[rid];t=tickets.get(tid);data=selected_rows(db,b,[{'row_id':rid,'values':row.get('values',{})}])[0][1]
+        supplied_components=data.get('charge_components')
         data=service.ticket_values(data)
-        old={k:finance.record(t)[k] for k in data} if t else None
+        if supplied_components is not None:data['charge_components']=supplied_components
+        if t:native_link(db,actor,t.warehouse_id,t.native_receipt_id)
+        native_link(db,actor,d.warehouse_id,data.get('native_receipt_id',t.native_receipt_id if t else None),data.get('receipt'),data.get('party_id',t.party_id if t else None),data.get('transport',t.transport if t else None))
+        old={k:(service.allocation.components(db,t) if k=='charge_components' else finance.record(t)[k]) for k in data} if t else None
         impact=None
         if t and t.invoice_id:
             service.financial_access(db,actor,t)
             usd=data.get('freight_usd',t.freight_usd);ngn=data.get('clearing_ngn',t.clearing_ngn);rate=data.get('ngn_per_usd',t.ngn_per_usd)
-            if usd is None and ngn is None:raise DomainError('replacement_price','Billed ticket needs explicit reviewed charges')
+            if usd is None or ngn is None:raise DomainError('replacement_price','Billed ticket needs explicit reviewed charges')
             if usd and not rate:raise DomainError('fx_missing','Explicit settlement rate required')
             from types import SimpleNamespace
             from app.finance.rounding import cargo_basis
             proposed=SimpleNamespace(**{c.name:getattr(t,c.name) for c in t.__table__.columns})
             for k,v in data.items():setattr(proposed,k,v)
             proposed.version=t.version+1
+            service.allocation.revise(db,proposed,data,persist=False)
             if db.scalar(select(service.Arrival.id).where(service.Arrival.ticket_id==t.id)):
                 basis=cargo_basis(db,proposed)
                 impact=finance.adjustment_preview(db,actor,t.invoice_id,basis['amount_ngn'],row.get('discount_total_ngn'))
                 impact['new_rounding_adjustment_ngn']=basis['rounding_adjustment_ngn'];impact['rounding_basis']=basis
             else:impact=finance.adjustment_preview(db,actor,t.invoice_id,str(service.invoice_amount(usd or Decimal(0),ngn or Decimal(0),rate)),row.get('discount_total_ngn'))
-        changes.append({'row_id':rid,'ticket_id':tid,'ticket_version':t.version if t else None,'old':old,'new':json_value(data),'finance_preview':impact,'discount_total_ngn':row.get('discount_total_ngn')})
-    if mapped_source!=set(source) or mapped_tickets!=set(tickets):raise DomainError('mapping_coverage','All new eligible rows and existing active tickets must map explicitly; void removed tickets separately with reviewed financial impact')
-    return {'id':d.id,'version':d.version,'batch_id':b.id,'batch_version':b.version,'changes':changes}
+        changes.append({'row_id':rid,'ticket_id':tid,'ticket_version':t.version if t else None,'old':old,'new':json_value(data),'finance_preview':impact,'financial_sources':service.financial_sources(db,t) if t else None,'discount_total_ngn':row.get('discount_total_ngn')})
+    excluded=exclusions(excluded_rows or [],set(source),mapped_source)
+    if mapped_tickets!=set(tickets):raise DomainError('mapping_coverage','All new eligible rows and existing active tickets must map explicitly; void removed tickets separately with reviewed financial impact')
+    return {'id':d.id,'version':d.version,'batch_id':b.id,'batch_version':b.version,'changes':changes,'excluded_rows':excluded}
 
 
 from decimal import Decimal,ROUND_HALF_UP
 
 
-@command('document.replace','id expected_version batch_id mapping preview reason','packing.manage',PackingDocument,financial=True)
+@command('document.replace','id expected_version batch_id mapping excluded_rows preview reason','packing.manage',PackingDocument,financial=True)
 def replace_document(db,actor,p):
     d=object_access(db,actor,PackingDocument,p['id'],'packing.manage');check_version(d,p.get('expected_version'))
-    preview=replacement_preview(db,actor,d.id,p['batch_id'],p['mapping'])
+    preview=replacement_preview(db,actor,d.id,p['batch_id'],p['mapping'],p.get('excluded_rows'))
     if preview!=p.get('preview'):raise DomainError('preview_changed','Replacement difference changed',409,preview)
     if not str(p.get('reason','')).strip():raise DomainError('reason_required','Replacement reason required')
     b=finance.locked(db,ImportBatch,p['batch_id'])
+    dispositions(db,actor,b,{c['row_id'] for c in preview['changes']},preview['excluded_rows'])
     for change in preview['changes']:
         data=dict(change['new'])
         if change['ticket_id']:
@@ -153,7 +183,7 @@ def list_f6(db,actor,warehouse_id=None,query=None,sort='receipt',limit=50,offset
     require(actor,'cargo.read')
     enum(sort,('receipt','received_on','destination','mark'),'sort')
     if not 1<=limit<=200 or offset<0:raise DomainError('pagination','Limit 1..200 required')
-    q=select(CargoSourceRow).join(ImportBatch,ImportBatch.id==CargoSourceRow.batch_id).where(ImportBatch.kind=='f6',ImportBatch.status=='committed',CargoSourceRow.eligible.is_(True))
+    q=select(CargoSourceRow).join(ImportBatch,ImportBatch.id==CargoSourceRow.batch_id).where(ImportBatch.kind=='f6',ImportBatch.status=='committed',CargoSourceRow.disposition=='selected')
     q=visible(q,ImportBatch,actor)
     if warehouse_id:require(actor,'cargo.read',warehouse_id);q=q.where(ImportBatch.warehouse_id==warehouse_id)
     if query:q=q.where(CargoSourceRow.receipt.icontains(query,autoescape=True))

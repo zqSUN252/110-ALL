@@ -47,7 +47,7 @@ def make_document(db,actor,wh,party,transport='AIR'):
     from app.packing import service as packing
     s=call(db,actor,shipping.create_shipment,warehouse_id=wh,reference='Synthetic',transport=transport,origin='GZ')
     d=call(db,actor,packing.create_document,shipment_id=s['id'],reference='Synthetic document',uploaded_on='2026-11-01')
-    t=call(db,actor,packing.create_ticket,document_id=d['id'],receipt='SYN1',party_id=party,transport=transport,origin='GZ',pieces=3,kg='3',cbm='1',freight_usd='1',clearing_ngn='0',ngn_per_usd='1500')
+    t=call(db,actor,packing.create_ticket,document_id=d['id'],receipt='SYN1',party_id=party,transport=transport,origin='GZ',pieces=3,kg='3',cbm='1',freight_usd='1',clearing_ngn='0',ngn_per_usd='1500',charge_components=[dict(component='freight',currency='USD',unit='KG' if transport=='AIR' else 'CBM',amount='1',source='Reviewed synthetic freight'),dict(component='clearing',currency='NGN',unit='CBM',amount='0',source='Reviewed synthetic no clearing')])
     return d,t
 
 
