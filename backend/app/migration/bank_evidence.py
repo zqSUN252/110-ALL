@@ -37,10 +37,21 @@ def check_access(db,actor,p):
 def detail(db,actor,identity):
     row=locked(db,LegacyBankEvidence,identity)
     members=list(db.scalars(select(LegacyBankCoverage).where(LegacyBankCoverage.evidence_id==row.id)))
-    check_access(db,actor,{'claim_id':row.claim_id,'control_owner_party_id':row.control_owner_party_id,'members':[{'bill_id':m.bill_id} for m in members],'cross_party':row.cross_party})
+    read_access(db,actor,row)
     claim=db.get(BankClaim,row.claim_id)
     current=row.state=='linked' and claim.state=='historical_bound' and claim_basis_current(db,claim)
     return record(row)|{'current_state':'linked' if current else 'disputed','members':[record(m) for m in members],'new_cash_created':False}
+
+
+def read_access(db,actor,row):
+    # Historical beneficiary facts remain readable after an explicit current-owner
+    # correction; reading does not rebind them to the new owner.
+    require(actor,'legacy.global_read');require(actor,'finance.read')
+    claim=locked(db,BankClaim,row.claim_id);case=locked(db,EvidenceCase,claim.case_id)
+    account=locked(db,BankAccount,row.account_id)
+    require(actor,'evidence.read',case.warehouse_id);account_access(db,actor,account,'bank.read',case.warehouse_id)
+    for invoice in db.scalars(select(Invoice).join(LegacyBill,LegacyBill.native_id==Invoice.id).join(LegacyBankCoverage,LegacyBankCoverage.bill_id==LegacyBill.id).where(LegacyBankCoverage.evidence_id==row.id)):
+        require(actor,'finance.read',invoice.warehouse_id);account_access(db,actor,account,'bank.read',invoice.warehouse_id)
 
 
 def preview(db,actor,p):
@@ -98,4 +109,5 @@ def bank_state(db,invoice_id,historical):
     rows=list(db.execute(select(LegacyBankEvidence,LegacyBankCoverage).join(LegacyBankCoverage,LegacyBankCoverage.evidence_id==LegacyBankEvidence.id).join(LegacyBill,LegacyBill.id==LegacyBankCoverage.bill_id).where(LegacyBill.native_id==invoice_id)))
     if not rows:return 'unknown' if historical else None
     if any(h.state!='linked' or (claim:=db.get(BankClaim,h.claim_id)).state!='historical_bound' or not claim_basis_current(db,claim) for h,m in rows):return 'disputed'
+    if historical==0:return 'frozen_source_evidence'
     return 'linked' if sum((m.amount_ngn for h,m in rows),Decimal(0))==historical else 'partially_linked'

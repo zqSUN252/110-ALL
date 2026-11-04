@@ -22,7 +22,7 @@ def prepared(app,two=False):
     with app.state.session_factory() as db,db.begin():
         db.info['settings']=app.state.settings;who=actor(db);wh,party=seed(db,who);members=[]
         for bill in db.scalars(select(LegacyBill)):
-            res=resolve_bill(db,who,bill.id,{'expected_version':1,'warehouse_id':wh,'party_id':party,'source':'confirmed original control owner','idempotency_key':bill.id})
+            res=resolve_bill(db,who,bill.id,{'uploaded_on':'2026-01-01','dates_source':'synthetic actual upload and original due-date evidence','expected_version':1,'warehouse_id':wh,'party_id':party,'source':'confirmed original control owner','idempotency_key':bill.id})
             members.append({'bill_id':bill.id,'expected_version':bill.version,'invoice_version':1,'amount_ngn':'40' if two else '80','source':'explicit original source relation'})
         account=BankAccount(warehouse_id=wh,scope='live',currency='NGN',bank_name='SYNTHETIC',account_number='SYNTHETIC');db.add(account);db.flush();db.add(BankAccountWarehouse(account_id=account.id,warehouse_id=wh,source='confirmed owner'))
         entry=BankEntry(account_id=account.id,currency='NGN',credit=80,debit=0,transaction_date=date(2026,1,1),reference='SYNTHETIC',description='synthetic original',fingerprint='a'*64,issues=[]);db.add(entry)

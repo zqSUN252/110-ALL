@@ -65,7 +65,7 @@ def test_consistent110_native_occupied_claim_and_history_do_not_replay(app,tmp_p
         original=sample_source();bills=json.loads(original['data']['logistics_bills']);bills[0].update(received=100,discount=0);original['data']['logistics_bills']=json.dumps(bills)
         parsed=parse_source(json.dumps(original).encode());apply_source(db,who,parsed,plan_source(parsed,'mcstar-cross-source','synthetic'))
         bill=db.scalar(select(LegacyBill));party=db.scalar(select(Party))
-        resolve_bill(db,who,bill.id,{'expected_version':1,'warehouse_id':warehouse,'party_id':party.id,'source':'explicit same historical transaction','idempotency_key':'old-control'})
+        resolve_bill(db,who,bill.id,{'uploaded_on':'2026-01-01','dates_source':'synthetic actual upload and original due-date evidence','expected_version':1,'warehouse_id':warehouse,'party_id':party.id,'source':'explicit same historical transaction','idempotency_key':'old-control'})
         from app.migration.bank_evidence import preview,bind
         payload={'claim_id':claim.id,'claim_version':claim.version,'case_version':original_case.version,'entry_version':original_entry.version,'account_version':account.version,'control_owner_party_id':party.id,'members':[{'bill_id':bill.id,'expected_version':bill.version,'invoice_version':1,'amount_ngn':'100','source':'explicit source identity'}],'reason':'same old source transaction','source':'synthetic dual-source owner evidence'}
         bind(db,who,payload|{'preview':preview(db,who,payload),'idempotency_key':'cross-source-proof'})

@@ -40,6 +40,11 @@ def backup(settings,destination):
     with engine.connect() as connection,connection.begin():
         connection.execute(text('SET TRANSACTION READ ONLY'))
         revision=connection.execute(text('SELECT version_num FROM alembic_version')).scalar_one()
+        from app.migration.operations import fact_snapshot
+        writer=connection.execute(text("SELECT version,value FROM app_settings WHERE key='migration.writer'")).mappings().first()
+        source_checkpoint={'schema':connection.execute(text('SELECT current_schema()')).scalar_one(),
+            'cutoff':connection.execute(text('SELECT transaction_timestamp()')).scalar_one().isoformat(),
+            'writer':{'version':writer['version'],'value':writer['value']} if writer else {'version':0,'value':None},'facts':fact_snapshot(connection)}
         for name,table in sorted(Base.metadata.tables.items()):
             table_rows[name]=[] if name in EXCLUDED else [json_value(inert(name,dict(row))) for row in connection.execute(select(table).order_by(table.c.id)).mappings()]
         # DB transaction is a read snapshot, not the global financial guard.
@@ -57,6 +62,7 @@ def backup(settings,destination):
     body=json.dumps(table_rows,ensure_ascii=False,separators=(',',':')).encode()
     (destination/'records.json').write_bytes(body)
     manifest={'format':1,'revision':revision,'records_sha256':hashlib.sha256(body).hexdigest(),'counts':{k:len(v) for k,v in table_rows.items()},'table_hashes':{k:digest(v) for k,v in table_rows.items()},'files':files,'excluded_authority':sorted(EXCLUDED),'credentials':'reset_required','external_work':'paused','team_archive':'not_archived'}
+    manifest['source_checkpoint']=source_checkpoint
     (destination/'manifest.json').write_text(json.dumps(manifest),encoding='utf-8')
     return manifest
 
@@ -127,8 +133,18 @@ def restore(settings,bundle):
             actual=[json_value(dict(r)) for r in connection.execute(select(table).order_by(table.c.id)).mappings()]
             verified &= digest(actual)==manifest['table_hashes'][name]
         if not verified:raise ValueError('Restored control readback mismatch')
+        # Runtime fencing is added only after exact source table/hash verification.
+        # These two explicit operational rows are not source business records.
+        from app.models import AppSetting,utcnow
+        from uuid import uuid4
+        now=utcnow()
+        for key,value in [('migration.writer',{'state':'frozen','generation':None,'source':'verified isolated restore'}),
+            ('migration.restore_gate',{'state':'needs_reconciliation','restore_verified':True,'manifest_hash':digest(manifest),'records_sha256':manifest['records_sha256'],'source_schema':(manifest.get('source_checkpoint') or {}).get('schema')})]:
+            existing=connection.execute(select(AppSetting.id).where(AppSetting.key==key)).scalar()
+            if existing:connection.execute(AppSetting.__table__.update().where(AppSetting.id==existing).values(value=value,updated_at=now))
+            else:connection.execute(AppSetting.__table__.insert().values(id=str(uuid4()),version=1,created_at=now,updated_at=now,key=key,value=value))
     engine.dispose()
-    return {'verified':True,'counts':manifest['counts'],'files':len(manifest['files']),'authority':'disabled','revision':manifest['revision']}
+    return {'verified':True,'counts':manifest['counts'],'files':len(manifest['files']),'authority':'disabled','revision':manifest['revision'],'runtime_fence':'frozen','runtime_control_keys':['migration.writer','migration.restore_gate']}
 
 
 def archive_team(bundle,adapter=None):

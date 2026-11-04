@@ -353,6 +353,8 @@ def unallocate(db,actor,inv,amount,reason,payment_id=None):
 @command('invoice.adjust','id expected_version amount_ngn reason pricing preview discount_total_ngn charge_usd charge_ngn ngn_per_usd rounding_basis')
 def adjust_invoice(db,actor,p):
     inv=locked(db,Invoice,p['id']); require(actor,'payables.manage' if inv.kind=='AP' else 'finance.adjust',inv.warehouse_id); check_version(inv,p.get('expected_version'))
+    if (inv.source_key or '').startswith('legacy:') and db.info.get('legacy_group_revision')!=inv.id:
+        raise DomainError('legacy_group_review','Use the versioned whole-group revision for historical source controls and cargo facts',409)
     before=invoice_json(db,inv); new=decimal(p['amount_ngn'])
     old_discounts=total(db,Discount,'amount_ngn',invoice_id=inv.id)
     discounts=decimal(p['discount_total_ngn']) if 'discount_total_ngn' in p else old_discounts
@@ -492,12 +494,16 @@ def payable_period(db,actor,warehouse_id,party_id,period,mode='live'):
     require(actor,'payables.read',warehouse_id); scope(mode)
     party_member(db,party_id,warehouse_id)
     invoices=list(db.scalars(select(Invoice).where(Invoice.party_id==party_id,Invoice.scope==mode,Invoice.kind=='AP',Invoice.period==period)))
+    unknown=list(db.scalars(select(Invoice).where(Invoice.party_id==party_id,Invoice.scope==mode,Invoice.kind=='AP',Invoice.period.is_(None),Invoice.state!='void')))
     payments=list(db.scalars(select(Payment).where(Payment.party_id==party_id,Payment.scope==mode,Payment.direction=='out',Payment.period==period,Payment.state=='posted')))
     for invoice in invoices:require(actor,'payables.read',invoice.warehouse_id)
+    for invoice in unknown:require(actor,'payables.read',invoice.warehouse_id)
     for payment in payments:payment_access(db,actor,payment,'payables.read')
     billed=sum((i.amount_ngn for i in invoices),ZERO);paid=sum((p.amount_ngn for p in payments),ZERO)
     from app.migration.service import historical_received
     historical=sum((historical_received(db,i.id) for i in invoices),ZERO)
     discounts=sum((total(db,Discount,'amount_ngn',invoice_id=i.id) for i in invoices),ZERO)
     return json_value({'party_id':party_id,'period':period,'billed_ngn':billed,'discount_ngn':discounts,'paid_ngn':paid,'historical_paid_ngn':historical,'balance_ngn':billed-discounts-paid-historical,
+        'unknown_period_count':len(unknown),'unknown_period_invoice_ids':[i.id for i in unknown],
+        'unknown_period_billed_ngn':sum((i.amount_ngn for i in unknown),ZERO),'unknown_period_historical_paid_ngn':sum((historical_received(db,i.id) for i in unknown),ZERO),
         'warehouse_ids':sorted({warehouse_id}|{i.warehouse_id for i in invoices}|{p.warehouse_id for p in payments})})

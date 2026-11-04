@@ -119,6 +119,10 @@ def confirm_import(db,actor,p):
             row.entry_id=existing.id
         else:
             duplicates=list(db.scalars(select(BankEntry).where(BankEntry.account_id==account.id,BankEntry.fingerprint==fingerprint).with_for_update()))
+            from .identity import equivalent,legacy
+            observed=BankEntry(account_id=account.id,currency=account.currency,credit=Decimal(r['credit']),debit=Decimal(r['debit']),transaction_date=day(resolved) if resolved else None,reference=r['reference'],description=r['description'])
+            for candidate in db.scalars(select(BankEntry).where(BankEntry.account_id==account.id,BankEntry.currency==account.currency,BankEntry.credit==observed.credit,BankEntry.debit==observed.debit)):
+                if candidate not in duplicates and legacy(db,candidate) and equivalent(candidate,observed):duplicates.append(candidate)
             if duplicates:
                 issues.append('possible_cross_file_duplicate'); conflicts+=1
                 for duplicate in duplicates:
@@ -203,6 +207,9 @@ def record_basis(db,claim,case,entry,account):
 
 def claim_basis_current(db,claim):
     entry=db.get(BankEntry,claim.entry_id);case=db.get(EvidenceCase,claim.case_id)
+    from .identity import guard_claim
+    try:guard_claim(db,entry)
+    except DomainError:return False
     return bool(case.account_id==entry.account_id and claim.reviewed_entry_version==entry.version
         and claim.reviewed_basis_hash and claim.reviewed_basis_hash==basis_hash(db,case,entry.id))
 
@@ -239,6 +246,8 @@ def review_case(db,actor,p):
             claim.state='released'; case.state='pending'
         else:
             entry=locked(db,BankEntry,claim.entry_id);account=locked(db,BankAccount,entry.account_id)
+            from .identity import guard_claim
+            guard_claim(db,entry)
             account_access(db,actor,account,'bank.review',case.warehouse_id)
             if case.account_id!=account.id or case.scope!=account.scope or entry.currency!=case.currency or entry.credit<=0 or entry.debit!=0:
                 raise DomainError('bank_scope','Original bank direction/currency/account scope conflicts')
@@ -263,8 +272,8 @@ def review_case(db,actor,p):
         freeze_case(db,case,action); case.version+=1
         return record(case)
     entry=locked(db,BankEntry,p['entry_id']); check_version(entry,p.get('entry_version'))
-    if 'legacy_occupied_identity_conflict' in (entry.issues or []):
-        raise DomainError('legacy_identity_review','Historical occupied transaction identity must be adjudicated before another claim',409)
+    from .identity import guard_claim
+    guard_claim(db,entry)
     account=access(db,actor,BankAccount,entry.account_id,'bank.review')
     account_access(db,actor,account,'bank.review',case.warehouse_id)
     if account.scope!=case.scope or case.account_id!=account.id or entry.currency!=case.currency or entry.credit<=0 or entry.debit!=0:

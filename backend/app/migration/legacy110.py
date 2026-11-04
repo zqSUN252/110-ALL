@@ -153,6 +153,8 @@ def apply_native(db, actor, source, plan):
         cid,raw=owners[0];entry=entries.get(rid);case=cases.get(cid)
         if not entry or not case or case.account_id!=entry.account_id:raise DomainError('claim_mapping_conflict','Claim ownership/account mapping conflicts')
         if db.scalar(select(BankClaim.id).where(BankClaim.case_id==case.id,BankClaim.state!='released')):raise DomainError('claim_conflict','Multiple active source rows require explicit reconciliation')
+        from app.bank.identity import guard_claim
+        guard_claim(db,entry)
         claim=BankClaim(entry_id=entry.id,case_id=case.id,state='disputed',reason='Historical occupied source; current evidence revalidation required',actor_id=technical.id)
         db.add(claim);case.state='disputed';db.flush()
         db.add(EvidenceReview(case_id=case.id,actor_id=technical.id,action='legacy_import',previous_version=case.version,fields={'original_claim':raw,'batch_id':batch.id},reason='Original actor is source text, not current authorization'))

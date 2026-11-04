@@ -11,7 +11,7 @@ from sqlalchemy.engine import make_url
 ROOT=Path(__file__).resolve().parents[2]
 sys.path.insert(0,str(ROOT/'backend'))
 from app.migration.source import parse_source
-from app.migration.service import plan_source,apply_source,verify_source,importer
+from app.migration.service import plan_source,apply_source,verify_source,importer,upgrade_mapping
 from app.common import Actor,json_value
 from app.settings import load_settings
 from app.db import make_engine,session_factory
@@ -29,11 +29,13 @@ def read_archive(path):
 
 def main():
     parser=argparse.ArgumentParser()
-    parser.add_argument('action',choices=['inventory','stage','reconcile','plan','apply','verify'])
+    parser.add_argument('action',choices=['inventory','stage','reconcile','plan','apply','verify','mapping-upgrade'])
     parser.add_argument('--archive',required=True)
     parser.add_argument('--dataset',required=True)
     parser.add_argument('--schema',default='supplied_snapshot')
     parser.add_argument('--plan')
+    parser.add_argument('--expected-plan-hash')
+    parser.add_argument('--source')
     args=parser.parse_args()
     if not __import__('re').fullmatch(r'(supplied|migration)_[a-z0-9_]+',args.schema):raise ValueError('Owned isolated schema required')
     settings=load_settings();output=settings.private_root/'migration'/args.schema;protect_private_root(output)
@@ -62,7 +64,9 @@ def main():
     engine=make_engine(profile.database_url)
     with session_factory(engine)() as db,db.begin():
         db.info['settings']=profile
-        if args.action=='apply':
+        if args.action=='mapping-upgrade':
+            system=importer(db);result=upgrade_mapping(db,Actor(system.id,{'*'},set()),parsed,plan,args.expected_plan_hash,args.source)
+        elif args.action=='apply':
             system=importer(db);actor=Actor(system.id,{'*'},set())
             result=apply_source(db,actor,parsed,plan,{'archive_sha256':archive_sha,'archive_path':str(Path(args.archive).resolve()),'member':'mcstar_pkg/data/data.json'})
         else:

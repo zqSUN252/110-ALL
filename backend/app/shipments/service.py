@@ -19,7 +19,8 @@ def shipment_values(p):
 
 def clearing_sync(db,actor,s,p):
     from app.models import LegacyBill,LegacyShipment
-    legacy=db.scalar(select(LegacyBill).join(LegacyShipment,LegacyShipment.id==LegacyBill.shipment_id).where(LegacyShipment.native_id==s.id,LegacyBill.kind=='AP'))
+    from sqlalchemy import and_,or_
+    legacy=db.scalar(select(LegacyBill).join(LegacyShipment,and_(LegacyShipment.dataset==LegacyBill.dataset,or_(LegacyShipment.id==LegacyBill.shipment_id,and_(LegacyBill.shipment_id.is_(None),LegacyBill.relation_state!='confirmed_membership',LegacyShipment.source_no==LegacyBill.source_shipment_ref)))).where(LegacyShipment.native_id==s.id,LegacyBill.kind=='AP'))
     if legacy:
         if {'clearing_party_id','clearing_amount_ngn','clearing_on'}.intersection(p):
             raise DomainError('legacy_payable_review','Historical payable requires explicit shared control reconciliation',409)

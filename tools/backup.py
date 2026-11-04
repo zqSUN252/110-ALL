@@ -9,7 +9,7 @@ from sqlalchemy import text,select
 ROOT=Path(__file__).resolve().parents[1];sys.path.insert(0,str(ROOT/'backend'))
 from app.settings import load_settings
 from app.migration.backup import backup,restore,archive_team
-from app.migration.operations import incremental,materialize,DirectoryArchive,cutover,backout_plan
+from app.migration.operations import incremental,materialize,DirectoryArchive,cutover,backout_plan,checkpoint,backout_restore
 from app.migration.service import importer
 from app.db import make_engine,session_factory
 from app.common import Actor
@@ -17,8 +17,9 @@ from datetime import datetime
 
 
 def main():
-    p=argparse.ArgumentParser();p.add_argument('action',choices=['backup','restore','incremental','materialize','archive','cutover','freeze','backout-plan'])
+    p=argparse.ArgumentParser();p.add_argument('action',choices=['backup','restore','incremental','materialize','archive','cutover','freeze','checkpoint','backout-plan','backout-restore'])
     p.add_argument('--path');p.add_argument('--base');p.add_argument('--current');p.add_argument('--schema');p.add_argument('--team-directory');p.add_argument('--generation');p.add_argument('--source');p.add_argument('--expected-version',type=int,default=0);p.add_argument('--after')
+    p.add_argument('--checkpoint-id');p.add_argument('--plan');p.add_argument('--drained',action='store_true')
     a=p.parse_args();settings=load_settings()
     if a.action=='backup':
         m=backup(settings,a.path);result={k:m[k] for k in ('revision','counts','records_sha256','team_archive')}
@@ -32,11 +33,27 @@ def main():
     elif a.action=='incremental':result=incremental(a.base,a.current,a.path)
     elif a.action=='materialize':result=materialize(a.base,a.current,a.path)
     elif a.action=='archive':result=archive_team(a.path,DirectoryArchive(a.team_directory) if a.team_directory else None)
+    elif a.action=='backout-restore':
+        plan=json.loads(Path(a.plan).read_text('utf-8'))
+        result=backout_restore(settings,a.path,a.checkpoint_id,a.expected_version,plan,a.schema,a.drained)
     else:
         engine=make_engine(settings.database_url)
         with session_factory(engine)() as db,db.begin():
             db.info['settings']=settings
-            if a.action=='backout-plan':result=backout_plan(db,datetime.fromisoformat(a.after))
+            if a.action=='backout-plan':
+                from app.models import RecoveryCheckpoint
+                point=db.get(RecoveryCheckpoint,a.checkpoint_id) if a.checkpoint_id else None
+                result=backout_plan(db,point.cutoff if point else datetime.fromisoformat(a.after),a.checkpoint_id)
+                if a.plan:
+                    from app.private_storage import protect_private_root
+                    output=Path(a.plan).resolve()
+                    if not output.is_relative_to(settings.private_root.resolve()) or output.exists():raise ValueError('New owned private plan path required')
+                    protect_private_root(output.parent);output.write_text(json.dumps(result),encoding='utf-8')
+                    result={k:result[k] for k in ('state','plan_hash','new_events','overwrite_allowed')}
+            elif a.action=='checkpoint':
+                from app.migration.backup import read_bundle
+                manifest,_=read_bundle(a.path);technical=importer(db)
+                result=checkpoint(db,Actor(technical.id,{'*'},set()),a.source,'checkpoint:'+manifest['records_sha256'],manifest)
             else:
                 technical=importer(db);result=cutover(db,Actor(technical.id,{'*'},set()),a.expected_version,a.generation,a.source,a.action=='cutover')
         engine.dispose()

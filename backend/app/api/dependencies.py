@@ -17,7 +17,7 @@ def get_db(request: Request):
         db.info['settings'] = request.app.state.settings
         # One request, one transaction; services never commit independently.
         with db.begin():
-            if request.method not in ('GET','HEAD','OPTIONS') and not request.url.path.startswith('/api/auth/'):
+            if request.method not in ('GET','HEAD','OPTIONS') and not request.url.path.startswith('/api/auth/') and request.url.path!='/api/webhooks/waha':
                 from app.migration.operations import writer_gate
                 writer_gate(db)
             yield db

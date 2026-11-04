@@ -76,7 +76,7 @@ def test_native_resolution_preserves_shared_invoice_and_historical_received(app)
         party=Party(warehouse_id=w.id,name='Confirmed fixture party');db.add(party);db.flush()
         db.add(PartyWarehouse(party_id=party.id,warehouse_id=w.id,source='fixture source',active=True));db.flush()
         bill=db.scalar(select(LegacyBill))
-        result=resolve_bill(db,actor,bill.id,{'expected_version':bill.version,'party_id':party.id,'warehouse_id':w.id,'source':'explicit source owner identity confirmation','idempotency_key':'resolve'})
+        result=resolve_bill(db,actor,bill.id,{'uploaded_on':'2026-01-01','dates_source':'synthetic actual upload and original due-date evidence','expected_version':bill.version,'party_id':party.id,'warehouse_id':w.id,'source':'explicit source owner identity confirmation','idempotency_key':'resolve'})
         inv=db.get(Invoice,result['native_id'])
         assert invoice_json(db,inv)['outstanding_ngn']=='55.00'
         assert db.scalar(select(__import__('sqlalchemy').func.count()).select_from(Payment))==0
@@ -127,7 +127,7 @@ def test_resolved_sea_group_preserves_null_kg_and_one_invoice(app):
         party=Party(name='Confirmed fixture',warehouse_id=w.id);db.add(party);db.flush()
         db.add(PartyWarehouse(party_id=party.id,warehouse_id=w.id,source='explicit fixture'));db.flush()
         bill=db.scalar(select(LegacyBill));ship=db.scalar(select(LegacyShipment))
-        resolve_bill(db,actor,bill.id,{'expected_version':1,'party_id':party.id,'warehouse_id':w.id,'source':'source identity confirmed','idempotency_key':'r-bill'})
+        resolve_bill(db,actor,bill.id,{'uploaded_on':'2026-01-01','dates_source':'synthetic actual upload and original due-date evidence','expected_version':1,'party_id':party.id,'warehouse_id':w.id,'source':'source identity confirmed','idempotency_key':'r-bill'})
         resolve_shipment(db,actor,ship.id,{'expected_version':1,'warehouse_id':w.id,'source':'source warehouse confirmed','uploaded_on':'2026-01-01','physical_reference':None,'idempotency_key':'r-ship'})
         tickets=list(db.scalars(select(Ticket)))
         assert len(tickets)==2 and all(t.kg is None for t in tickets)
@@ -287,7 +287,7 @@ def test_sea_unknown_kg_actual_batches_export_and_pickup_remain_unknown(app):
         w=Warehouse(name='Confirmed fixture');db.add(w);db.flush()
         party=Party(name='Confirmed fixture',warehouse_id=w.id);db.add(party);db.flush();db.add(PartyWarehouse(party_id=party.id,warehouse_id=w.id,source='fixture'));db.flush()
         bill=db.scalar(select(LegacyBill));ship=db.scalar(select(LegacyShipment))
-        resolve_bill(db,actor,bill.id,{'expected_version':1,'party_id':party.id,'warehouse_id':w.id,'source':'confirmed source','idempotency_key':'bill'})
+        resolve_bill(db,actor,bill.id,{'uploaded_on':'2026-01-01','dates_source':'synthetic actual upload and original due-date evidence','expected_version':1,'party_id':party.id,'warehouse_id':w.id,'source':'confirmed source','idempotency_key':'bill'})
         resolve_shipment(db,actor,ship.id,{'expected_version':1,'warehouse_id':w.id,'source':'confirmed source','uploaded_on':'2026-01-01','idempotency_key':'ship'})
         destination=Warehouse(name='Confirmed destination only');db.add(destination);db.flush()
         t=db.scalar(select(Ticket));t.destination_warehouse_id=destination.id
@@ -321,6 +321,7 @@ def test_sea_unknown_kg_actual_batches_export_and_pickup_remain_unknown(app):
         picked=call(db,destination_actor,release.physical_release,order_id=order['id'],expected_version=1,ticket_id=t.id,pieces=1,kg=None,cbm='.5',occurred_at='2026-01-04T10:00:00+08:00',photo_ids=[photo.id])
         assert picked['kg'] is None
         projection=release.eligible_order(db,destination_actor,order['id'])
+        assert projection['members'][0]['covered_kg']=={'value':None,'known_subtotal':'8.000000','pending_count':1}
         assert 'historical_received_ngn' not in json.dumps(projection) and 'basis_hash' not in json.dumps(projection)
         remain=projection['members'][0]['remaining']
         assert remain['kg'] is None and Decimal(remain['cbm'])==Decimal('.5')
@@ -338,7 +339,7 @@ def test_new_cash_allocation_and_reversal_preserve_old_received(app):
     with app.state.session_factory() as db,db.begin():
         actor=Actor(db.scalar(select(User.id).where(User.username=='admin')),{'*'},set())
         w=Warehouse(name='confirmed fixture');db.add(w);db.flush();party=Party(warehouse_id=w.id,name='confirmed fixture');db.add(party);db.flush();db.add(PartyWarehouse(party_id=party.id,warehouse_id=w.id,source='fixture'));db.flush()
-        old=db.scalar(select(LegacyBill));resolved=resolve_bill(db,actor,old.id,{'expected_version':1,'warehouse_id':w.id,'party_id':party.id,'source':'confirmed source','idempotency_key':'resolve'})
+        old=db.scalar(select(LegacyBill));resolved=resolve_bill(db,actor,old.id,{'uploaded_on':'2026-01-01','dates_source':'synthetic actual upload and original due-date evidence','expected_version':1,'warehouse_id':w.id,'party_id':party.id,'source':'confirmed source','idempotency_key':'resolve'})
         inv=db.get(Invoice,resolved['native_id'])
         pay=call(db,actor,finance.create_payment,warehouse_id=w.id,party_id=party.id,amount='30',currency='NGN',paid_on='2026-11-04')
         with pytest.raises(DomainError,match='exceeds'):
@@ -380,7 +381,7 @@ def test_historical_discount_excess_is_frozen_not_returned_cash(app):
     source['data']['logistics_bills']=json.dumps(bills);applied(app,source)
     with app.state.session_factory() as db,db.begin():
         who=actor(db);warehouse,party=seed(db,who);bill=db.scalar(select(LegacyBill))
-        result=resolve_bill(db,who,bill.id,{'expected_version':1,'warehouse_id':warehouse,'party_id':party,'source':'confirmed source','idempotency_key':'resolve-discount'})
+        result=resolve_bill(db,who,bill.id,{'uploaded_on':'2026-01-01','dates_source':'synthetic actual upload and original due-date evidence','expected_version':1,'warehouse_id':warehouse,'party_id':party,'source':'confirmed source','idempotency_key':'resolve-discount'})
         inv=db.get(Invoice,result['native_id'])
         preview=finance.adjustment_preview(db,who,inv.id,'90')
         assert preview['historical_review_required'] is True

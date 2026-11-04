@@ -54,6 +54,11 @@ def intake(db,settings,raw,signature,algorithm,config=None):
     if envelope.get('event') in ('message.ack','message.ack.group'):
         from .receipts import observe_receipt
         return observe_receipt(db,envelope,config)
+    # The exact webhook route defers its writer fence until after bounded body,
+    # HMAC and envelope validation. Only existing-boundary receipt observations
+    # may persist during freeze; no message/action/session-control path bypasses.
+    from app.migration.operations import writer_gate
+    writer_gate(db)
     if envelope.get('event')=='session.status':
         from app.models import Connection
         from app.connections.service import observe,current

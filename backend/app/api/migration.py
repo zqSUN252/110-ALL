@@ -31,6 +31,8 @@ class SourceApply(BaseModel):
     model_config=ConfigDict(extra='forbid')
     dataset:str=Field(min_length=1,max_length=120)
     plan_hash:str=Field(pattern='^[0-9a-f]{64}$')
+    mapping_upgrade_from:str|None=Field(default=None,pattern='^[0-9a-f]{64}$')
+    mapping_source:str|None=None
 
 
 @router.post('/migration/sources/{identity}/apply')
@@ -76,6 +78,96 @@ class BillResolution(BaseModel):
     party_id:str
     warehouse_id:str
     source:str=Field(min_length=1,max_length=2000)
+    period:str|None=None
+    uploaded_on:str|None=None
+    due_on:str|None=None
+    dates_source:str|None=Field(default=None,max_length=2000)
+
+
+class PeriodResolution(BaseModel):
+    model_config=ConfigDict(extra='forbid')
+    expected_version:int=Field(ge=1)
+    invoice_version:int=Field(ge=1)
+    period:str
+    source:str=Field(min_length=1,max_length=2000)
+
+
+class MemberResolution(BaseModel):
+    model_config=ConfigDict(extra='forbid')
+    expected_version:int=Field(ge=1)
+    ticket_ids:list[str]=Field(max_length=2000)
+    member_versions:dict[str,int]
+    standalone:bool=False
+    shipment_id:str|None=None
+    shipment_version:int|None=Field(default=None,ge=1)
+    source:str=Field(min_length=1,max_length=2000)
+    reason:str=Field(min_length=1,max_length=2000)
+
+
+class GroupMember(BaseModel):
+    model_config=ConfigDict(extra='forbid')
+    ticket_id:str
+    expected_version:int=Field(ge=1)
+    changes:dict=Field(default_factory=dict)
+
+
+class GroupRevision(BaseModel):
+    model_config=ConfigDict(extra='forbid')
+    expected_version:int=Field(ge=1)
+    invoice_version:int=Field(ge=1)
+    application_version:int=Field(ge=1)
+    action:str
+    members:list[GroupMember]=Field(max_length=2000)
+    party_id:str|None=None
+    owner_evidence:dict|None=None
+    amount_ngn:str|None=None
+    discount_total_ngn:str|None=None
+    discount_source:str|None=None
+    refund_new_allocations:bool=False
+    source:str=Field(min_length=1,max_length=2000)
+    reason:str=Field(min_length=1,max_length=2000)
+    preview:dict|None=None
+
+
+@router.post('/legacy/bills/{identity}/group-preview')
+def group_preview(identity:str,payload:GroupRevision,db:Database,actor=Depends(mutate)):
+    from app.migration.group_revision import preview
+    return preview(db,actor,identity,payload.model_dump(exclude_none=True))
+
+
+@router.post('/legacy/bills/{identity}/group-confirm')
+def group_confirm(identity:str,payload:GroupRevision,request:Request,db:Database,actor=Depends(mutate)):
+    from app.migration.group_revision import confirm
+    return confirm(db,actor,identity,payload.model_dump(exclude_none=True)|{'idempotency_key':request.headers.get('Idempotency-Key')})
+
+
+@router.post('/legacy/bills/{identity}/members')
+def resolve_members(identity:str,payload:MemberResolution,request:Request,db:Database,actor=Depends(mutate)):
+    return service.resolve_members(db,actor,identity,payload.model_dump()|{'idempotency_key':request.headers.get('Idempotency-Key')})
+
+
+class BankIdentityResolution(BaseModel):
+    model_config=ConfigDict(extra='forbid')
+    left_id:str
+    right_id:str
+    left_version:int=Field(ge=1)
+    right_version:int=Field(ge=1)
+    account_version:int=Field(ge=1)
+    expected_version:int=Field(default=0,ge=0)
+    decision:str
+    source:str=Field(min_length=1,max_length=2000)
+    reason:str=Field(min_length=1,max_length=2000)
+
+
+@router.post('/legacy/bank-identities/adjudicate')
+def bank_identity(payload:BankIdentityResolution,request:Request,db:Database,actor=Depends(mutate)):
+    from app.bank.identity import adjudicate
+    return adjudicate(db,actor,payload.model_dump()|{'idempotency_key':request.headers.get('Idempotency-Key')})
+
+
+@router.post('/legacy/bills/{identity}/period')
+def resolve_period(identity:str,payload:PeriodResolution,request:Request,db:Database,actor=Depends(mutate)):
+    return service.resolve_period(db,actor,identity,payload.model_dump()|{'idempotency_key':request.headers.get('Idempotency-Key')})
 
 
 class ShipmentResolution(BaseModel):

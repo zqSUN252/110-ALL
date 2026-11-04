@@ -17,7 +17,7 @@ def test_new_revisions_refuse_loss_of_source_time_unknown_kg_shared_bill_and_bat
         who=actor(db);wh,party=seed(db,who)
         observation=db.scalar(select(LegacyPaymentObservation));observation.approval_time_basis='source_recorded_unverified'
         bill=db.scalar(select(LegacyBill));ship=db.scalar(select(LegacyShipment))
-        resolve_bill(db,who,bill.id,{'expected_version':1,'warehouse_id':wh,'party_id':party,'source':'synthetic','idempotency_key':'bill'})
+        resolve_bill(db,who,bill.id,{'uploaded_on':'2026-01-01','dates_source':'synthetic actual upload and original due-date evidence','expected_version':1,'warehouse_id':wh,'party_id':party,'source':'synthetic','idempotency_key':'bill'})
         resolve_shipment(db,who,ship.id,{'expected_version':1,'warehouse_id':wh,'uploaded_on':'2026-01-01','source':'synthetic','idempotency_key':'ship'})
         ticket=db.scalar(select(Ticket));arrival=Arrival(ticket_id=ticket.id,occurred_on=date(2026,1,1),pieces=1,kg=None,cbm='.5',actor_id=who.id,source='synthetic actual observation');db.add(arrival)
     with pytest.raises(RuntimeError,match='approval time'):command.downgrade(config,'f11000500003')

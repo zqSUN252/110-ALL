@@ -20,7 +20,7 @@ def stable(dataset,kind,key):return str(uuid5(NAMESPACE_URL,f'mcstar:{dataset}:{
 def plan_source(parsed,dataset,classification):
     if not dataset or len(dataset)>120:raise DomainError('dataset_required','Specify stable dataset namespace')
     if classification not in ('supplied_snapshot','synthetic'):raise DomainError('source_not_authorized','QA/history/unknown source cannot enter operational dataset')
-    plan={'dataset':dataset,'classification':classification,'sha256':parsed['sha256'],'source_version':parsed['source_version'],'controls':parsed['controls'],'configuration_hash':parsed.get('configuration',{}).get('digest'),'issues_hash':digest(parsed['issues']),'mapping_hash':digest(parsed['maps']),'files_hash':digest([{k:v for k,v in f.items() if k!='bytes'} for f in parsed['files']]),'parser_version':1}
+    plan={'dataset':dataset,'classification':classification,'sha256':parsed['sha256'],'source_version':parsed['source_version'],'controls':parsed['controls'],'configuration_hash':parsed.get('configuration',{}).get('digest'),'issues_hash':digest(parsed['issues']),'mapping_hash':digest(parsed['maps']),'files_hash':digest([{k:v for k,v in f.items() if k!='bytes'} for f in parsed['files']]),'parser_version':2}
     return plan|{'plan_hash':digest(plan)}
 
 
@@ -77,15 +77,10 @@ def apply_source(db,actor,parsed,plan,source_reference=None):
             obj=MODELS[kind](**values);db.add(obj);objects[kind][key]=obj;count+=1
         db.flush()
     for bill in objects['bills'].values():
-        keys=bill.raw.get('ticketKeys') or ([bill.raw['ticketKey']] if bill.raw.get('ticketKey') else [])
-        members=[t for t in objects['tickets'].values() if t.shipment_id==bill.shipment_id and t.receipt in keys]
-        found={t.receipt for t in members}
-        if keys and set(keys)<=found:
-            # Owning source recalc filters ALL matching rows by receipt membership.
-            bill.relation_state='declared_membership'
-            for t in members:db.add(LegacyBillMember(bill_id=bill.id,ticket_id=t.id,source=bill.pointer+'/ticketKeys'))
-        elif bill.kind=='AP' and bill.shipment_id:bill.relation_state='declared_shipment'
-        else:db.add(MigrationIssue(batch_id=batch.id,pointer=bill.pointer,code='bill_relation_unresolved'))
+        members,state=relation_candidates(db,bill)
+        bill.relation_state=state
+        for t in members:db.add(LegacyBillMember(bill_id=bill.id,ticket_id=t.id,source=bill.pointer+'/ticketKeys'))
+        if state=='pending':db.add(MigrationIssue(batch_id=batch.id,pointer=bill.pointer,code='bill_relation_unresolved'))
     from app.attachments import put_file
     for file in parsed['files']:
         attachment=put_file(db,technical,file['bytes'],file['name'],file['media_type'],'legacy_batch',batch.id)
@@ -117,10 +112,112 @@ def legacy_access(actor,financial=False):
     if financial:require(actor,'finance.read')
 
 
+def relation_candidates(db,bill):
+    keys=bill.raw.get('ticketKeys') or ([bill.raw['ticketKey']] if bill.raw.get('ticketKey') else [])
+    ships=list(db.scalars(select(LegacyShipment).where(LegacyShipment.dataset==bill.dataset,LegacyShipment.state!='tombstoned',LegacyShipment.source_no==bill.source_shipment_ref))) if bill.source_shipment_ref else []
+    ids=[bill.shipment_id] if bill.shipment_id else [s.id for s in ships]
+    members=list(db.scalars(select(LegacyTicket).where(LegacyTicket.shipment_id.in_(ids),LegacyTicket.receipt.in_(keys)))) if keys and ids else []
+    complete=bool(keys) and bill.shipment_id is not None and set(keys)<={t.receipt for t in members}
+    state='declared_membership' if complete else 'declared_shipment' if bill.kind=='AP' and bill.shipment_id and not keys else 'pending'
+    return members,state
+
+
+def upgrade_mapping(db,actor,parsed,plan,expected_plan_hash,source):
+    require(actor,'*')
+    if not str(source or '').strip() or plan!=plan_source(parsed,plan['dataset'],plan['classification']):raise DomainError('mapping_review_required','Reviewed parser-v2 plan and source required')
+    db.execute(text('SELECT pg_advisory_xact_lock(:key)'),{'key':int(digest(plan['dataset'])[:15],16)})
+    batch=db.scalar(select(MigrationBatch).where(MigrationBatch.dataset==plan['dataset'],MigrationBatch.sha256==parsed['sha256']).with_for_update())
+    if not batch or batch.state!='applied':raise DomainError('batch_unavailable','Applied original batch required',409)
+    if batch.plan_hash==plan['plan_hash']:return {'batch_id':batch.id,'added_members':0,'state':'mapping_verified'}
+    if batch.plan_hash!=expected_plan_hash:raise DomainError('stale_plan','Original reviewed mapping changed',409)
+    added=0
+    for bill in db.scalars(select(LegacyBill).where(LegacyBill.batch_id==batch.id)):
+        if bill.relation_state=='confirmed_membership':continue  # Explicit reviewed exclusions remain authoritative.
+        members,state=relation_candidates(db,bill)
+        existing=set(db.scalars(select(LegacyBillMember.ticket_id).where(LegacyBillMember.bill_id==bill.id)))
+        for t in members:
+            if t.id not in existing:
+                db.add(LegacyBillMember(bill_id=bill.id,ticket_id=t.id,source=bill.pointer+'/ticketKeys:parser-v2-candidate'));added+=1
+                if t.native_id:
+                    native=db.get(Ticket,t.native_id)
+                    if native.invoice_id and native.invoice_id!=bill.native_id:
+                        db.add(MigrationIssue(batch_id=batch.id,pointer=t.pointer,code='existing_native_invoice_relation_conflict'))
+        if bill.relation_state!='confirmed_membership':bill.relation_state=state
+        bill.version+=1
+    previous=batch.plan_hash;batch.plan_hash=plan['plan_hash'];batch.version+=1
+    audit(db,actor,'migration.mapping_upgraded','migration_batch',batch.id,{'plan_hash':previous},{'plan_hash':batch.plan_hash,'parser_version':2,'added_members':added,'source':source})
+    db.flush();return {'batch_id':batch.id,'added_members':added,'state':'mapping_verified'}
+
+
+def resolve_members(db,actor,identity,payload):
+    from app.finance.service import locked
+    require(actor,'legacy.resolve');legacy_access(actor,True)
+    db.execute(text('SELECT pg_advisory_xact_lock(110002)'))
+    bill=locked(db,LegacyBill,identity)
+    ap_ship=None
+    if bill.kind=='AP':
+        from sqlalchemy import or_
+        candidate_ships=list(db.scalars(select(LegacyShipment).where(LegacyShipment.dataset==bill.dataset,or_(LegacyShipment.id==bill.shipment_id,LegacyShipment.source_no==bill.source_shipment_ref))))
+        if payload.get('shipment_id'):
+            ap_ship=locked(db,LegacyShipment,payload['shipment_id']);candidate_ships.append(ap_ship)
+        for source_ship in candidate_ships:
+            if source_ship.native_id:
+                native=locked(db,Shipment,source_ship.native_id)
+                for capability in ('shipments.manage','payables.manage','finance.read'):require(actor,capability,native.warehouse_id)
+    authorized_ids=set(payload.get('ticket_ids') or [])|set(db.scalars(select(LegacyBillMember.ticket_id).where(LegacyBillMember.bill_id==bill.id)))
+    for source_identity in authorized_ids:
+        source_ticket=locked(db,LegacyTicket,source_identity)
+        if source_ticket.native_id:
+            ticket=locked(db,Ticket,source_ticket.native_id)
+            require(actor,'packing.manage',ticket.warehouse_id);require(actor,'finance.adjust',ticket.warehouse_id)
+    def apply():
+        check_version(bill,payload.get('expected_version'))
+        if bill.native_id:raise DomainError('legacy_group_review','Use complete group revision for already linked invoice membership',409)
+        if not str(payload.get('source','')).strip() or not str(payload.get('reason','')).strip():raise DomainError('source_required','Complete membership identity evidence and excluded-key reason required')
+        ids=payload.get('ticket_ids')
+        standalone=payload.get('standalone') is True
+        if not isinstance(ids,list) or (not ids and not standalone and not ap_ship) or len(set(ids))!=len(ids):raise DomainError('group_members','Explicit complete distinct rows or evidenced standalone bill required')
+        if standalone and (ids or ap_ship):raise DomainError('group_members','Standalone has no shipment or ticket membership')
+        if bill.kind=='AP':
+            if not ap_ship and not standalone:raise DomainError('payable_shipment_required','Explicit source shipment/version or evidenced standalone payable required')
+            if ap_ship:
+                check_version(ap_ship,payload.get('shipment_version'))
+                if ap_ship.dataset!=bill.dataset or ap_ship.state=='tombstoned':raise DomainError('source_scope','AP shipment source differs or is tombstoned')
+                if ap_ship.native_id and db.get(Shipment,ap_ship.native_id).clearing_invoice_id:raise DomainError('existing_native_invoice','Source shipment already has a payable; reconcile it first',409)
+        elif payload.get('shipment_id') or payload.get('shipment_version'):raise DomainError('group_members','Shipment selection applies to AP source resolution')
+        selected=[locked(db,LegacyTicket,i) for i in ids]
+        for t in selected:
+            check_version(t,payload.get('member_versions',{}).get(t.id))
+            if t.dataset!=bill.dataset:raise DomainError('source_scope','Member source dataset differs')
+            if ap_ship and t.shipment_id!=ap_ship.id:raise DomainError('source_scope','AP members must belong to the explicitly selected source shipment')
+            if t.native_id:
+                native=locked(db,Ticket,t.native_id);require(actor,'packing.manage',native.warehouse_id);require(actor,'finance.adjust',native.warehouse_id)
+                if bill.kind=='AR' and native.invoice_id:raise DomainError('existing_native_invoice','Existing native bill must be reconciled before membership confirmation',409)
+        before=list(db.scalars(select(LegacyBillMember).where(LegacyBillMember.bill_id==bill.id)))
+        for m in before:
+            old=db.get(LegacyTicket,m.ticket_id)
+            if old.native_id:
+                native=db.get(Ticket,old.native_id)
+                require(actor,'packing.manage',native.warehouse_id);require(actor,'finance.adjust',native.warehouse_id)
+                if bill.kind=='AR' and native.invoice_id:raise DomainError('existing_native_invoice','Covered native bill must be reconciled before changing reservation',409)
+        old_ids=[m.ticket_id for m in before]
+        old_ship=bill.shipment_id
+        if bill.kind=='AP':bill.shipment_id=ap_ship.id if ap_ship else None
+        for m in before:db.delete(m)
+        db.flush()
+        for t in selected:db.add(LegacyBillMember(bill_id=bill.id,ticket_id=t.id,source=payload['source']))
+        bill.relation_state='confirmed_membership';bill.version+=1
+        db.add(LegacyResolution(entity_type='bill_members',entity_id=bill.id,source_version=bill.version-1,actor_id=actor.id,source=payload['source'],links={'before':old_ids,'after':ids,'reason':payload['reason'],'original_declared_keys':bill.raw.get('ticketKeys'),'previous_shipment_id':old_ship,'shipment_id':bill.shipment_id,'shipment_version':ap_ship.version if ap_ship else None,'standalone':standalone,'original_shipment_ref':bill.source_shipment_ref}))
+        audit(db,actor,'legacy.members_resolved','legacy_bill',bill.id,{'members':old_ids},{'members':ids,'source':payload['source']})
+        db.flush();return {'id':bill.id,'version':bill.version,'relation_state':bill.relation_state,'members':ids}
+    return run_command(db,actor,'legacy.resolve_members',payload.get('idempotency_key'),{'id':identity,**payload},apply)
+
+
 def historical_received(db,invoice_id):
     invoice=db.get(Invoice,invoice_id)
     if not invoice or not (invoice.source_key or '').startswith('legacy:'):return Decimal('0.00')
-    value=db.scalar(select(LegacyBill.received).where(LegacyBill.native_id==invoice_id))
+    from app.models import LegacyBillApplication
+    value=db.scalar(select(LegacyBillApplication.applied_received).join(LegacyBill,LegacyBill.id==LegacyBillApplication.bill_id).where(LegacyBill.native_id==invoice_id))
     if value is None:raise DomainError('legacy_control_missing','Historical invoice is missing its required typed source control',409)
     return value.quantize(Decimal('.01'))
 
@@ -128,7 +225,8 @@ def historical_received(db,invoice_id):
 def historical_discount(db,invoice_id):
     invoice=db.get(Invoice,invoice_id)
     if not invoice or not (invoice.source_key or '').startswith('legacy:'):return Decimal('0.00')
-    value=db.scalar(select(LegacyBill.discount).where(LegacyBill.native_id==invoice_id))
+    from app.models import LegacyBillApplication
+    value=db.scalar(select(LegacyBillApplication.applied_discount).join(LegacyBill,LegacyBill.id==LegacyBillApplication.bill_id).where(LegacyBill.native_id==invoice_id))
     if value is None:raise DomainError('legacy_control_missing','Historical invoice is missing its required typed source control',409)
     return value.quantize(Decimal('.01'))
 
@@ -165,32 +263,68 @@ def resolve_bill(db,actor,identity,payload):
         check_version(obj,payload.get('expected_version'))
         if obj.native_id or obj.state=='tombstoned':raise DomainError('legacy_state','Already resolved or tombstoned',409)
         if not str(payload.get('source','')).strip():raise DomainError('source_required','Source evidence required')
+        if obj.relation_state=='pending':raise DomainError('legacy_group_review','Complete source bill relationships must be confirmed before native linkage',409)
         if obj.currency!='NGN' or any(v!=v.quantize(Decimal('.01')) for v in (obj.amount,obj.received,obj.discount)):
             raise DomainError('legacy_money_review','Currency or subcent control requires explicit review',409)
         if obj.received+obj.discount>obj.amount:raise DomainError('legacy_money_review','Source balance conflict requires explicit review',409)
-        # Original dates only. No import-day substitution for an absent business date.
-        uploaded=day(obj.raw['date']) if obj.raw.get('date') else None
-        due=day(obj.raw['dueDate']) if obj.raw.get('dueDate') else None
+        # A bill's source date is not proof of its actual upload date.
+        uploaded=day(payload['uploaded_on']) if payload.get('uploaded_on') else day(obj.raw['date']) if obj.kind=='AP' and obj.raw.get('date') else None
+        due=day(payload.get('due_on') or obj.raw['dueDate']) if payload.get('due_on') or obj.raw.get('dueDate') else None
         if uploaded is None or due is None:raise DomainError('legacy_dates_required','Confirm original upload/due dates before native resolution',409)
+        dates_source=payload.get('dates_source') or (obj.pointer+'/date + /dueDate' if obj.kind=='AP' and not payload.get('uploaded_on') and not payload.get('due_on') else None)
+        if not str(dates_source or '').strip():raise DomainError('legacy_dates_required','Actual business date evidence required',409)
+        if due<uploaded:raise DomainError('legacy_dates_required','Due date cannot precede actual upload date')
         inv=Invoice(warehouse_id=payload['warehouse_id'],party_id=payload['party_id'],scope='live',kind=obj.kind,reference=obj.reference,
-            amount_ngn=obj.amount,uploaded_on=uploaded,due_on=due,source_key='legacy:'+obj.id,pricing={'legacy_control_id':obj.id,'bank_state':'unknown'},state='open')
+            amount_ngn=obj.amount,uploaded_on=uploaded,due_on=due,source_key='legacy:'+obj.id,pricing={'legacy_control_id':obj.id,'bank_state':'unknown','date_semantics':'original_bill_date' if obj.kind=='AP' else 'confirmed_actual_upload'},state='open')
+        if payload.get('period') is not None:
+            if obj.kind!='AP':raise DomainError('invalid_kind','Settlement period applies to AP')
+            require(actor,'payables.manage',inv.warehouse_id)
+            inv.period=checked_period(payload['period'])
         db.add(inv);db.flush();obj.native_id=inv.id;obj.state='resolved';obj.version+=1
+        from app.models import LegacyBillApplication
+        db.add(LegacyBillApplication(bill_id=obj.id,historical_owner_party_id=inv.party_id,applied_received=obj.received,applied_discount=obj.discount,state='active'));db.flush()
         if obj.kind=='AP' and obj.shipment_id:
             source_ship=db.get(LegacyShipment,obj.shipment_id)
             if source_ship.native_id:
                 ship=db.get(Shipment,source_ship.native_id)
                 if ship.clearing_invoice_id or ship.warehouse_id!=inv.warehouse_id:raise DomainError('legacy_relation_conflict','Existing payable or warehouse conflicts',409)
                 ship.clearing_invoice_id=inv.id;ship.clearing_party_id=inv.party_id;ship.clearing_amount_ngn=obj.amount;ship.clearing_on=uploaded;ship.version+=1
-        for legacy in db.scalars(select(LegacyTicket).join(LegacyBillMember,LegacyBillMember.ticket_id==LegacyTicket.id).where(LegacyBillMember.bill_id==obj.id)):
+        for legacy in db.scalars(select(LegacyTicket).join(LegacyBillMember,LegacyBillMember.ticket_id==LegacyTicket.id).where(LegacyBillMember.bill_id==obj.id)) if obj.kind=='AR' else []:
             if legacy.native_id:
                 ticket=db.get(Ticket,legacy.native_id)
                 if ticket.warehouse_id!=inv.warehouse_id or ticket.invoice_id:raise DomainError('legacy_relation_conflict','Native cargo ownership or invoice conflicts',409)
                 ticket.invoice_id=inv.id;ticket.party_id=inv.party_id;ticket.version+=1
         if obj.discount:db.add(Discount(invoice_id=inv.id,amount_ngn=obj.discount,reason='Sourced historical discount',actor_id=actor.id))
-        db.add(LegacyResolution(entity_type='bill',entity_id=obj.id,source_version=obj.version-1,actor_id=actor.id,source=payload['source'],links={'invoice_id':inv.id,'party_id':inv.party_id,'warehouse_id':inv.warehouse_id}))
+        db.add(LegacyResolution(entity_type='bill',entity_id=obj.id,source_version=obj.version-1,actor_id=actor.id,source=payload['source'],links={'invoice_id':inv.id,'party_id':inv.party_id,'warehouse_id':inv.warehouse_id,'uploaded_on':str(uploaded),'due_on':str(due),'dates_source':dates_source,'date_semantics':inv.pricing['date_semantics']}))
         audit(db,actor,'legacy.bill_resolved','legacy_bill',obj.id,None,{'native_id':inv.id,'source':payload['source']})
         db.flush();return {'id':obj.id,'version':obj.version,'native_id':inv.id,'invoice':invoice_json(db,inv)}
     return run_command(db,actor,'legacy.resolve_bill',payload.get('idempotency_key'),{'id':identity,**payload},apply)
+
+
+def checked_period(value):
+    import re
+    if not isinstance(value,str) or not re.fullmatch(r'\d{4}-(0[1-9]|1[0-2])',value):
+        raise DomainError('period_required','Explicit YYYY-MM settlement period required')
+    return value
+
+
+def resolve_period(db,actor,identity,payload):
+    from app.finance.service import locked,invalidate
+    require(actor,'legacy.resolve');legacy_access(actor,True)
+    db.execute(text('SELECT pg_advisory_xact_lock(110002)'))
+    bill=locked(db,LegacyBill,identity)
+    if bill.kind!='AP' or not bill.native_id:raise DomainError('legacy_period_state','Resolve native AP ownership first',409)
+    invoice=locked(db,Invoice,bill.native_id)
+    for cap in ('finance.read','payables.manage'):require(actor,cap,invoice.warehouse_id)
+    def apply():
+        check_version(bill,payload.get('expected_version'));check_version(invoice,payload.get('invoice_version'))
+        if not str(payload.get('source','')).strip():raise DomainError('source_required','Settlement-period evidence required')
+        before=invoice.period;invoice.period=checked_period(payload.get('period'));invoice.version+=1;bill.version+=1
+        db.add(LegacyResolution(entity_type='bill_period',entity_id=bill.id,source_version=bill.version-1,actor_id=actor.id,source=payload['source'],links={'invoice_id':invoice.id,'old_period':before,'period':invoice.period}))
+        invalidate(db,invoice_id=invoice.id)
+        audit(db,actor,'legacy.period_resolved','invoice',invoice.id,{'period':before},{'period':invoice.period,'source':payload['source']})
+        db.flush();return {'id':bill.id,'version':bill.version,'invoice_version':invoice.version,'period':invoice.period}
+    return run_command(db,actor,'legacy.resolve_period',payload.get('idempotency_key'),{'id':identity,**payload},apply)
 
 
 def resolve_shipment(db,actor,identity,payload):
@@ -218,7 +352,7 @@ def resolve_shipment(db,actor,identity,payload):
         for source in db.scalars(select(LegacyTicket).where(LegacyTicket.shipment_id==obj.id).order_by(LegacyTicket.position)):
             if any(v is not None and v!=v.quantize(Decimal('.01')) for v in (source.freight_usd,source.clearing_ngn)):
                 raise DomainError('legacy_money_review','Ticket source subcent charge requires explicit review',409)
-            bills=list(db.scalars(select(LegacyBill).join(LegacyBillMember,LegacyBillMember.bill_id==LegacyBill.id).where(LegacyBillMember.ticket_id==source.id)))
+            bills=list(db.scalars(select(LegacyBill).join(LegacyBillMember,LegacyBillMember.bill_id==LegacyBill.id).where(LegacyBillMember.ticket_id==source.id,LegacyBill.kind=='AR')))
             resolved=[db.get(Invoice,b.native_id) for b in bills if b.native_id]
             if len(resolved)>1 or any(i.warehouse_id!=s.warehouse_id for i in resolved):raise DomainError('legacy_relation_conflict','Multiple invoice or warehouse conflict requires review',409)
             inv=resolved[0] if resolved else None
@@ -238,13 +372,18 @@ def resolve_shipment(db,actor,identity,payload):
 
 
 def ticket_legacy_bills(db,ticket_id):
-    return list(db.scalars(select(LegacyBill).join(LegacyBillMember,LegacyBillMember.bill_id==LegacyBill.id).join(LegacyTicket,LegacyTicket.id==LegacyBillMember.ticket_id).where(LegacyTicket.native_id==ticket_id)))
+    return list(db.scalars(select(LegacyBill).join(LegacyBillMember,LegacyBillMember.bill_id==LegacyBill.id).join(LegacyTicket,LegacyTicket.id==LegacyBillMember.ticket_id).where(LegacyTicket.native_id==ticket_id,LegacyBill.kind=='AR')))
 
 
 def guard_legacy_ticket(db,ticket_id,changes=None,destructive=False):
     bills=ticket_legacy_bills(db,ticket_id)
     financial={'pieces','kg','cbm','freight_usd','clearing_ngn','ngn_per_usd','manual','fx','repricing','charge_components','discount_total_ngn','party_id'}
-    if bills and (destructive or financial.intersection(changes or {})):
+    changed=financial.intersection(changes or {})
+    if bills and changed:
+        from app.packing.service import ticket_values
+        ticket=db.get(Ticket,ticket_id);normalized=ticket_values(changes)
+        changed={key for key in changed if key not in normalized or getattr(ticket,key)!=normalized[key]}
+    if bills and (destructive or changed):
         raise DomainError('legacy_group_review','Historical group bill requires a separate group financial resolution',409)
     return bool(bills)
 
@@ -294,6 +433,15 @@ def legacy_detail(db,actor,kind,identity):
     # Raw logistics can include fees; financial fields require finance.read too.
     require(actor,'finance.read')
     value['issues']=[record(i) for i in db.scalars(select(MigrationIssue).where(MigrationIssue.batch_id==row.batch_id,MigrationIssue.pointer.startswith(row.pointer)))]
+    if kind=='bills':
+        value['members']=[record(m) for m in db.scalars(select(LegacyBillMember).where(LegacyBillMember.bill_id==row.id))]
+        invoice=db.get(Invoice,row.native_id) if row.native_id else None
+        if invoice and ('*' in actor.capabilities or invoice.warehouse_id in actor.warehouse_ids):
+            from app.models import LegacyBillApplication
+            application=db.scalar(select(LegacyBillApplication).where(LegacyBillApplication.bill_id==row.id))
+            value['application']=record(application) if application else None
+            value['invoice']=invoice_json(db,invoice)
+            value['period_state']='confirmed' if invoice.period else 'pending' if invoice.kind=='AP' else 'not_applicable'
     return value
 
 
@@ -312,4 +460,15 @@ def verify_source(db,parsed,batch_id):
     from app.models import Attachment
     by_pointer={f.pointer:db.get(Attachment,f.attachment_id) for f in files}
     files_ok=all(f['pointer'] in by_pointer and __import__('hashlib').sha256(read_file(db.info['settings'],by_pointer[f['pointer']])).hexdigest()==f['sha256'] for f in parsed['files'])
-    return {'counts':counts,'counts_match':all(counts[k]==parsed['controls'][k] for k in counts),'money_status_match':money,'files_match':files_ok and len(files)==len(parsed['files']),'source_sha256':parsed['sha256'],'state':'verified' if money and files_ok and all(counts[k]==parsed['controls'][k] for k in counts) else 'failed'}
+    relations_ok=True;edge_count=0
+    for bill in actual.values():
+        members=set(db.scalars(select(LegacyBillMember.ticket_id).where(LegacyBillMember.bill_id==bill.id)));edge_count+=len(members)
+        if bill.relation_state=='confirmed_membership':
+            proof=db.scalar(select(LegacyResolution).where(LegacyResolution.entity_type=='bill_members',LegacyResolution.entity_id==bill.id).order_by(LegacyResolution.created_at.desc()).limit(1))
+            relations_ok &= bool(proof) and members==set(proof.links['after'])
+            if bill.kind=='AP':relations_ok &= bool(proof) and bill.shipment_id==proof.links.get('shipment_id')
+        else:
+            expected,state=relation_candidates(db,bill)
+            relations_ok &= members=={t.id for t in expected} and bill.relation_state==state
+    files_ok &= len(files)==len(parsed['files'])
+    return {'counts':counts,'counts_match':all(counts[k]==parsed['controls'][k] for k in counts),'money_status_match':money,'files_match':files_ok,'relation_members':edge_count,'relations_match':relations_ok,'parser_version':2,'source_sha256':parsed['sha256'],'state':'verified' if money and files_ok and relations_ok and all(counts[k]==parsed['controls'][k] for k in counts) else 'failed'}

@@ -129,9 +129,10 @@ def eligible_order(db,actor,identity):
         from app.tracking.service import warehouse_arrivals
         actual=warehouse_arrivals(db,t)
         arrived={k:known_sum(getattr(a,k) for a in actual) for k in ('pieces','kg','cbm')}
-        if t.kg is None:arrived['kg']=None
         used=physical_totals(db,t.id)
-        result.append({'ticket_id':t.id,'receipt':t.receipt,'destination_warehouse_id':t.destination_warehouse_id,'remaining':{k:quantity_remaining(arrived[k],used[k]) for k in used}})
+        result.append({'ticket_id':t.id,'receipt':t.receipt,'destination_warehouse_id':t.destination_warehouse_id,
+            'covered_kg':{'value':arrived['kg'],'known_subtotal':sum((a.kg for a in actual if a.kg is not None),Decimal(0)),'pending_count':sum(a.kg is None for a in actual)},
+            'original_kg':t.kg,'remaining':{k:quantity_remaining(arrived[k],used[k]) for k in used}})
     if not result:raise DomainError('forbidden','No authorized destination members',403)
     return json_value({'id':order.id,'version':order.version,'eligible':valid,'members':result})
 

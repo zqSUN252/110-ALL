@@ -8,6 +8,49 @@ from app.db import Base
 from app.models import Record
 
 
+class BankIdentityDecision(Record, Base):
+    __tablename__='bank_identity_decisions'
+    __table_args__=(UniqueConstraint('left_id','right_id'),)
+    left_id:Mapped[str]=col(ForeignKey('bank_entries.id'))
+    right_id:Mapped[str]=col(ForeignKey('bank_entries.id'))
+    decision:Mapped[str]=col(String(20))
+    basis:Mapped[dict]=col(JSONB)
+    actor_id:Mapped[str]=col(ForeignKey('users.id'))
+    source:Mapped[str]=col(Text)
+    reason:Mapped[str]=col(Text)
+
+
+class LegacyBillApplication(Record, Base):
+    __tablename__='legacy_bill_applications'
+    bill_id:Mapped[str]=col(ForeignKey('legacy_bills.id'),unique=True)
+    historical_owner_party_id:Mapped[str]=col(ForeignKey('parties.id'))
+    applied_received:Mapped[Decimal]=col(Numeric(20,2))
+    applied_discount:Mapped[Decimal]=col(Numeric(20,2))
+    state:Mapped[str]=col(String(30),default='active')
+
+
+class LegacyGroupRevision(Record, Base):
+    __tablename__='legacy_group_revisions'
+    bill_id:Mapped[str]=col(ForeignKey('legacy_bills.id'),index=True)
+    actor_id:Mapped[str]=col(ForeignKey('users.id'))
+    action:Mapped[str]=col(String(30))
+    source:Mapped[str]=col(Text)
+    reason:Mapped[str]=col(Text)
+    before:Mapped[dict]=col(JSONB)
+    after:Mapped[dict]=col(JSONB)
+    preview:Mapped[dict]=col(JSONB)
+
+
+class RecoveryCheckpoint(Record, Base):
+    __tablename__='recovery_checkpoints'
+    actor_id:Mapped[str]=col(ForeignKey('users.id'))
+    source:Mapped[str]=col(Text)
+    cutoff:Mapped[datetime]=col(DateTime(timezone=True))
+    state:Mapped[str]=col(String(30),default='captured')
+    facts:Mapped[dict]=col(JSONB)
+    writer:Mapped[dict]=col(JSONB)
+
+
 class MigrationBatch(Record, Base):
     __tablename__ = 'migration_batches'
     __table_args__ = (UniqueConstraint('dataset','sha256'),)
