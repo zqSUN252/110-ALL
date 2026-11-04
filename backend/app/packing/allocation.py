@@ -69,6 +69,7 @@ def revise(db,t,p,quote=None,persist=True):
 
 
 def ready(db,t):
+    if t.pricing_authority=='review':return False
     lines=components(db,t)
     if not lines:return False
     values=totals(lines)

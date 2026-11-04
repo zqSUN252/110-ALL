@@ -4,7 +4,7 @@ from app.models import ImportBatch,CargoSourceRow,PackingDocument,DocumentRevisi
 from app.finance import service as finance
 from app.bank.service import attachment_for_actor
 from app.attachments import read_file
-from app.cargo.commands import command,object_access,preview_access,native_link,enum,fields,visible
+from app.cargo.commands import command,object_access,preview_access,native_link,native_change,enum,fields,visible
 from .parser import parse
 from . import service
 
@@ -128,8 +128,8 @@ def replacement_preview(db,actor,identity,batch_id,mapping,excluded_rows=None):
         supplied_components=data.get('charge_components')
         data=service.ticket_values(data)
         if supplied_components is not None:data['charge_components']=supplied_components
-        if t:native_link(db,actor,t.warehouse_id,t.native_receipt_id)
-        native_link(db,actor,d.warehouse_id,data.get('native_receipt_id',t.native_receipt_id if t else None),data.get('receipt'),data.get('party_id',t.party_id if t else None),data.get('transport',t.transport if t else None))
+        if t:native_change(db,actor,t,data)
+        else:native_link(db,actor,d.warehouse_id,data.get('native_receipt_id'),data.get('receipt'),data.get('party_id'),data.get('transport'))
         old={k:(service.allocation.components(db,t) if k=='charge_components' else finance.record(t)[k]) for k in data} if t else None
         impact=None
         if t and t.invoice_id:
@@ -142,7 +142,8 @@ def replacement_preview(db,actor,identity,batch_id,mapping,excluded_rows=None):
             proposed=SimpleNamespace(**{c.name:getattr(t,c.name) for c in t.__table__.columns})
             for k,v in data.items():setattr(proposed,k,v)
             proposed.version=t.version+1
-            service.allocation.revise(db,proposed,data,persist=False)
+            quote=service.pricing.apply(db,proposed,data,service.pricing.snapshot(t),persist=False)
+            service.allocation.revise(db,proposed,data,quote,persist=False)
             if db.scalar(select(service.Arrival.id).where(service.Arrival.ticket_id==t.id)):
                 basis=cargo_basis(db,proposed)
                 impact=finance.adjustment_preview(db,actor,t.invoice_id,basis['amount_ngn'],row.get('discount_total_ngn'))

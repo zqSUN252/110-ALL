@@ -60,6 +60,16 @@ def native_link(db,actor,warehouse_id,identity,receipt=None,party_id=None,transp
     return native
 
 
+def native_change(db,actor,ticket,changes):
+    """Old evidence requires access, not suitability for a new assignment."""
+    if ticket.native_receipt_id:object_access(db,actor,Receipt,ticket.native_receipt_id,'cargo.read')
+    target=changes.get('native_receipt_id',ticket.native_receipt_id)
+    identity_fields=('receipt','party_id','transport')
+    assigning='native_receipt_id' in changes or any(changes.get(k,getattr(ticket,k))!=getattr(ticket,k) for k in identity_fields)
+    if target and assigning:
+        native_link(db,actor,ticket.warehouse_id,target,*(changes.get(k,getattr(ticket,k)) for k in identity_fields))
+
+
 def scope_record(db,actor,value,capability):
     """Recheck current graph plus the original returned warehouse facts on every replay."""
     if isinstance(value,list):

@@ -145,6 +145,7 @@ class TicketCreate(TicketFields):
 
 
 class TicketPatch(TicketFields,Version):
+    repricing:Literal['retain_totals','quote']|None=None
     manual:dict|None=None
     fx:dict|None=None
     finance_preview:dict|None=None

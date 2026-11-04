@@ -195,7 +195,7 @@ class ImportBatch(Record,Base):
 
 class Ticket(Record,Base):
     __tablename__='tickets'
-    __table_args__=(CheckConstraint('pieces >= 0 AND kg >= 0 AND cbm >= 0'),)
+    __table_args__=(CheckConstraint('pieces >= 0 AND kg >= 0 AND cbm >= 0'),CheckConstraint("pricing_authority IN ('quote','totals','pending','review')",name='ck_ticket_pricing_authority'),)
     document_id:Mapped[str]=col(ForeignKey('packing_documents.id'),index=True)
     warehouse_id:Mapped[str]=col(ForeignKey('warehouses.id'))
     party_id:Mapped[str|None]=col(ForeignKey('parties.id'))
@@ -221,6 +221,7 @@ class Ticket(Record,Base):
     freight_usd:Mapped[Decimal|None]=col(Money)
     clearing_ngn:Mapped[Decimal|None]=col(Money)
     ngn_per_usd:Mapped[Decimal|None]=col(Quantity)
+    pricing_authority:Mapped[str]=col(String(12),default='pending')
     quote_id:Mapped[str|None]=col(ForeignKey('quote_snapshots.id'))
     invoice_id:Mapped[str|None]=col(ForeignKey('invoices.id'),unique=True)
     state:Mapped[str]=col(String(20),default='active')

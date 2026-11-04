@@ -280,7 +280,11 @@ def test_review_migration_preserves_component_and_exclusion_evidence(app,kind):
     from app.models import CargoChargeComponent,CargoSourceRow
     with app.state.session_factory() as db,db.begin():
         db.info['settings']=app.state.settings;actor=who(db);wh,party=seed(db,actor)
-        if kind=='component':make_document(db,actor,wh,party)
+        if kind=='component':
+            # Quote-owned evidence reaches the c5 guard without a ticket triggering c6 first.
+            from app.cargo import service as cargo
+            receipt=call(db,actor,cargo.create_receipt,**receipt_payload(wh,party))
+            call(db,actor,pricing.quote_receipt,id=receipt['id'],expected_version=1,manual={'unit_price':'1','currency':'USD','unit':'KG'})
         else:
             b=source_batch(db,actor,wh,'f6',True);rows=[r for r in b['rows'] if r['eligible']]
             call(db,actor,imports.commit_import,id=b['id'],expected_version=1,selection=[{'row_id':rows[0]['id']}],excluded_rows=[{'row_id':rows[1]['id'],'reason':'Reviewed duplicate'}])
