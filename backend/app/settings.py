@@ -17,6 +17,8 @@ class Settings:
     summaries_enabled: bool = False
     model_calls_enabled: bool = False
     sending_enabled: bool = False
+    connection_control_enabled: bool = False
+    connection_diagnostics_enabled: bool = False
     main_account_read_only: bool = True
     session_hours: int = 12
     max_attachment_bytes: int = 20 * 1024 * 1024

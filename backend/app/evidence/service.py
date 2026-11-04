@@ -33,8 +33,8 @@ def context_for_message(db,message,actor=None):
     linked=list(db.scalars(select(ChannelMessage).where(ChannelMessage.instance==message.instance,ChannelMessage.session==message.session,
         ChannelMessage.group_id==message.group_id,ChannelMessage.scope==message.scope,ChannelMessage.warehouse_id==message.warehouse_id,
         ChannelMessage.generation==message.generation,ChannelMessage.sent_at>=message.sent_at-timedelta(hours=1),
-        ChannelMessage.sent_at<=message.sent_at+timedelta(minutes=15),ChannelMessage.body.is_not(None)).order_by(ChannelMessage.sent_at,ChannelMessage.id).limit(24)))
-    linked=[m for m in linked if accepted_source(m,config)]
+        ChannelMessage.sent_at<=message.sent_at+timedelta(minutes=15),ChannelMessage.body.is_not(None),ChannelMessage.origin_state=='human').order_by(ChannelMessage.sent_at,ChannelMessage.id).limit(24)))
+    linked=[m for m in linked if accepted_source(m,config) and not (m.body or '').lstrip().startswith('/confirm ')]
     if actor:
         for m in linked:require(actor,'channels.read',m.warehouse_id)
     related=[{'id':m.id,'message_id':m.source_id,'body':m.body[:8000],'relation':'explicit_reply' if m.source_id==message.reply_to or m.reply_to==message.source_id else 'nearby_unconfirmed'} for m in linked if m.id!=message.id]
@@ -141,7 +141,7 @@ def attach_images(db,actor,p):
 def review_case(db,actor,p):
     case=access(db,actor,EvidenceCase,p['id'],'evidence.review'); check_version(case,p.get('expected_version'))
     action=p.get('action','correct')
-    if action not in ('correct','defer','retract'): raise DomainError('invalid_action','Unsupported evidence action')
+    if action not in ('correct','defer','retract','reject'): raise DomainError('invalid_action','Unsupported evidence action')
     fields=p.get('fields',{}); set_fields(case,fields)
     case.manual_fields=sorted(set(case.manual_fields)|set(fields))
     freeze_case(db,case,action)

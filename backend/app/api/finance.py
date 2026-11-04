@@ -220,7 +220,7 @@ class MembershipInput(Version):
 
 class ReviewInput(Version):
     fields:FieldsInput=Field(default_factory=FieldsInput)
-    action:Literal['correct','defer','retract']='correct'
+    action:Literal['correct','defer','retract','reject']='correct'
     reason:str|None=None
 
 

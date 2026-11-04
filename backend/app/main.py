@@ -12,6 +12,7 @@ from app.api.finance import router as finance_router
 from app.api.logistics import router as logistics_router
 from app.api.customer import router as customer_router
 from app.api.documents import router as document_router
+from app.api.assistant import router as assistant_router
 
 
 def create_app(settings=None):
@@ -48,4 +49,5 @@ def create_app(settings=None):
     application.include_router(logistics_router)
     application.include_router(customer_router)
     application.include_router(document_router)
+    application.include_router(assistant_router)
     return application

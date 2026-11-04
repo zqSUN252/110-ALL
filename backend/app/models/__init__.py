@@ -112,3 +112,5 @@ from .finance import PartyWarehouse, BankAccountWarehouse, CrossPartyAuthorizati
 from .logistics import (PartyCategory, PartyPhone, Receipt, ReceiptSpec, StockEvent, ReceiptReview, TranslationCandidate, PriceCard, QuoteSnapshot, Shipment, DispatchBatch, PackingDocument, ImportBatch, Ticket, CargoSourceRow, DocumentRevision, Arrival, TicketAttachment, TicketReview, ArrivalSettlement, CargoChargeComponent)
 from .documents import (HoldFact, CargoPhoneHistory, ReleaseOrder, ReleaseMember, PhysicalRelease, PhysicalPhoto, PaymentRegistration, Notification, NotificationMember, CopyEvent, TrackingNode, DocumentExport, ExportMember, MBLRecord, MBLAttachment, DocumentTemplate, CustomerIdentity, CustomerSession, PhoneChallenge, PublicAttempt)
 from app.documents import hooks as _document_hooks
+from .assistant import (DialogueThread,DialogueTurn,DialogueFocus,DialogueFile,DialogueProposal,Connection,ConnectionOperation,ConnectionEvent,DeliveryReceipt,ChannelAutomation,ChannelAutomationEvent)
+from .assistant import ChannelReceiptObservation

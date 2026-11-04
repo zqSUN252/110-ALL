@@ -12,11 +12,16 @@ from .archive_writer import write_archive, inspect_template, MIME
 
 @command('bank.archive','warehouse_id template_attachment_id claims label')
 def export_archive(db,actor,p):
+    snapshot=archive_snapshot(db,actor,p)
+    template=attachment_for_actor(db,actor,p['template_attachment_id'])
+    content,mime,report=render_snapshot(db.info['settings'],read_file(db.info['settings'],template),snapshot)
+    attachment=put_file(db,actor,content,'bank-archive.xlsx',mime,'bank_archive',p['warehouse_id'])
+    return {'id':attachment.id,'file':record(attachment),'source_claim_ids':snapshot['source_claim_ids'],'template_sha256':template.sha256,'scope':snapshot['scope'],**report,'sent':False}
+
+
+def archive_snapshot(db,actor,p):
     require(actor,'bank.export',p['warehouse_id'])
     template=attachment_for_actor(db,actor,p['template_attachment_id'])
-    original=read_file(db.info['settings'],template)
-    try:inspect_template(original)
-    except (ValueError,KeyError):raise DomainError('invalid_template','Original NGN archive template is invalid') from None
     if not isinstance(p['claims'],list) or not 1<=len(p['claims'])<=5000: raise DomainError('invalid_selection','Select 1 to 5000 claims')
     records=[]; modes=set(); ids=set()
     for selection in p['claims']:
@@ -36,9 +41,14 @@ def export_archive(db,actor,p):
             'fx_ngn_usd':str(payment.ngn_per_usd) if payment and payment.ngn_per_usd else None,
             'fx_cny_usd':str(payment.cny_per_usd) if payment and payment.cny_per_usd else None})
     if len(modes)>1:raise DomainError('scope_mismatch','Sample and live archives must be separate')
-    with TemporaryDirectory(dir=db.info['settings'].private_root) as folder:
+    return {'records':records,'source_claim_ids':sorted(ids),'template_sha256':template.sha256,'scope':next(iter(modes)),'label':p.get('label','')}
+
+
+def render_snapshot(settings,original,snapshot):
+    try:inspect_template(original)
+    except (ValueError,KeyError):raise DomainError('invalid_template','Original NGN archive template is invalid') from None
+    with TemporaryDirectory(dir=settings.private_root) as folder:
         source=Path(folder)/'template.xlsx'; output=Path(folder)/'archive.xlsx'; source.write_bytes(original)
-        try: report=write_archive(source,records,output,p.get('label',''))
+        try:report=write_archive(source,snapshot['records'],output,snapshot['label'])
         except ValueError:raise DomainError('archive_validation_failed','Archive template/typed readback validation failed') from None
-        attachment=put_file(db,actor,output.read_bytes(),'bank-archive.xlsx',MIME,'bank_archive',p['warehouse_id'])
-    return {'id':attachment.id,'file':record(attachment),'source_claim_ids':sorted(ids),'template_sha256':template.sha256,'scope':next(iter(modes)),**report,'sent':False}
+        return output.read_bytes(),MIME,report

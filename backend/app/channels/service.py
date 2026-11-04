@@ -19,6 +19,7 @@ class ChannelConfig:
     webhook_key: str = field(default='',repr=False)
     api_key: str = field(default='',repr=False)
     base_url: str = field(default='',repr=False)
+    webhook_url: str = field(default='',repr=False)
     instance: str = ''
     generation: str = ''
     capture_session: str = ''
@@ -29,12 +30,13 @@ class ChannelConfig:
     groups: dict = field(default_factory=dict)  # explicit chat -> warehouse mapping
     operators: dict = field(default_factory=dict)  # source sender -> user id
     recipients: tuple = ()
+    owners: dict = field(default_factory=dict)  # deployment-trusted session -> account JID
 
     @classmethod
     def from_env(cls):
         prefix='MCSTAR_WAHA_'
         values={k:os.environ[prefix+k.upper()] for k in cls.__dataclass_fields__ if prefix+k.upper() in os.environ}
-        for key in ('groups','operators','recipients'):
+        for key in ('groups','operators','recipients','owners'):
             if key in values: values[key]=json.loads(values[key])
         if 'since' in values: values['since']=int(values['since'])
         return cls(**values)
@@ -46,6 +48,22 @@ def intake(db,settings,raw,signature,algorithm,config=None):
     if not config.webhook_key: raise DomainError('channel_unconfigured','Webhook signing key unavailable',503)
     expected=hmac.new(config.webhook_key.encode(),raw,'sha512').hexdigest()
     if algorithm!='sha512' or not hmac.compare_digest(signature,expected): raise DomainError('invalid_signature','Invalid webhook signature',401)
+    try: envelope=json.loads(raw)
+    except (ValueError,TypeError):raise DomainError('invalid_event','Malformed event') from None
+    if not isinstance(envelope,dict):raise DomainError('invalid_event','Event must be an object')
+    if envelope.get('event') in ('message.ack','message.ack.group'):
+        from .receipts import observe_receipt
+        return observe_receipt(db,envelope,config)
+    if envelope.get('event')=='session.status':
+        from app.models import Connection
+        from app.connections.service import observe,current
+        row=db.scalar(select(Connection).where(Connection.session==envelope.get('session')).with_for_update())
+        if not row or not current(row,config):return {'accepted':False,'reason':'connection_boundary'}
+        payload=envelope.get('payload') or {}
+        if not isinstance(payload,dict):raise DomainError('invalid_event','Status payload must be an object')
+        me=payload.get('me')
+        observe(db,row,payload.get('status','UNKNOWN'),max(row.request_revision,row.observation_revision)+1,me.get('id') if isinstance(me,dict) else None)
+        return {'accepted':True,'id':row.id}
     if not settings.collection_enabled: return {'accepted':False,'reason':'collection_paused'}
     if not config.generation or not config.instance or config.since<=0 or config.scope not in ('sample','live'):
         raise DomainError('channel_unconfigured','Explicit instance/generation/start and scope required',503)
@@ -56,10 +74,13 @@ def intake(db,settings,raw,signature,algorithm,config=None):
     except (ValueError,TypeError,KeyError,OverflowError): raise DomainError('invalid_event','Malformed message event') from None
     if session not in (config.capture_session,config.assistant_session): return {'accepted':False,'reason':'session_out_of_scope'}
     if event.get('event') not in ('message','message.any'): return {'accepted':False,'reason':'not_message'}
-    if p.get('fromMe') or p.get('isBot'): return {'accepted':False,'reason':'bot_loop'}
     if sent.timestamp()<config.since or sent>utcnow()+timedelta(minutes=5): return {'accepted':False,'reason':'outside_capture_window'}
-    group=p.get('from'); sender=p.get('participant') or group
+    groups=[g for g in (p.get('from'),p.get('to')) if g in config.groups]
+    if len(set(groups))>1:return {'accepted':False,'reason':'ambiguous_chat'}
+    group=groups[0] if groups else p.get('to') if p.get('fromMe') else p.get('from')
     if group not in config.groups: return {'accepted':False,'reason':'group_out_of_scope'}
+    from .origin import classify
+    sender,origin=classify(db,config,session,group,p,event)
     identity=p.get('id')
     if not isinstance(identity,str) or not 1<=len(identity)<=250 or not isinstance(sender,str): raise DomainError('invalid_identity','Stable source message identity required')
     digest=hashlib.sha256(json.dumps(p,sort_keys=True,separators=(',',':'),ensure_ascii=False).encode()).hexdigest()
@@ -74,11 +95,14 @@ def intake(db,settings,raw,signature,algorithm,config=None):
         return {'accepted':True,'id':prior.id,'duplicate':True}
     body=p.get('body')
     if body is not None and (not isinstance(body,str) or len(body)>16000): raise DomainError('invalid_body','Message text too large')
+    if p.get('replyTo') is not None and (not isinstance(p['replyTo'],str) or len(p['replyTo'])>250):raise DomainError('invalid_identity','Reply identity must be a bounded provider message ID')
     msg=ChannelMessage(instance=config.instance,session=session,source_id=identity,group_id=group,sender_id=sender,
         sent_at=sent,warehouse_id=config.groups[group],scope=config.scope,generation=config.generation,body=body,
-        reply_to=p.get('replyTo'),media_id=identity if p.get('hasMedia') else None,body_hash=digest,state='media_pending' if p.get('hasMedia') else 'received')
+        reply_to=p.get('replyTo'),media_id=identity if p.get('hasMedia') else None,body_hash=digest,
+        from_me=bool(p.get('fromMe')),origin_state=origin,
+        state='origin_held' if origin=='held' else 'bot_ignored' if origin=='bot' else 'media_pending' if p.get('hasMedia') else 'received')
     db.add(msg); db.flush()
-    if msg.media_id:
+    if msg.media_id and origin=='human':
         db.add(Job(kind='waha.media',payload={'message_id':msg.id},idempotency_key='waha.media:'+msg.id))
     return {'accepted':True,'id':msg.id,'duplicate':False,'state':msg.state}
 
@@ -87,6 +111,7 @@ def operator_message(db,actor,message_id,config):
     msg=db.get(ChannelMessage,message_id)
     if not msg:raise DomainError('not_found','Source message not found',404)
     require_source(actor,msg,config,'channels.act')
+    if msg.origin_state!='human':raise DomainError('origin_held','Message origin is not confirmed human',409)
     if config.operators.get(msg.sender_id)!=actor.id or msg.session!=config.assistant_session:
         raise DomainError('operator_not_authorized','Sender is not bound to this authorized operator/session',403)
     return msg
@@ -166,5 +191,5 @@ def queue_delivery(db,actor,p):
         raise DomainError('send_scope','Main identity is read-only; approved assistant and target required',403)
     if p.get('message_id'): operator_message(db,actor,p['message_id'],config)
     if not isinstance(p['text'],str) or not 1<=len(p['text'])<=8000: raise DomainError('invalid_body','Delivery text invalid')
-    item=Delivery(actor_id=actor.id,session=p['session'],recipient=p['recipient'],text=p['text'],message_id=p.get('message_id'))
+    item=Delivery(actor_id=actor.id,session=p['session'],recipient=p['recipient'],text=p['text'],message_id=p.get('message_id'),boundary={'instance':config.instance,'generation':config.generation,'assistant_session':config.assistant_session,'since':config.since,'scope':config.scope})
     db.add(item); db.flush(); return {'id':item.id,'state':item.state,'version':item.version}

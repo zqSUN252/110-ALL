@@ -49,8 +49,14 @@ def attachment_for_actor(db,actor,identity):
 
 
 def parsed_file(db,attachment):
+    cached=db.info.get('bank_preparsed',{}).get(attachment.id)
+    if cached and cached[0]==attachment.sha256:return cached[1]
     content=read_file(db.info['settings'],attachment)
-    with TemporaryDirectory(dir=db.info['settings'].private_root) as directory:
+    return parse_bytes(db.info['settings'],content)
+
+
+def parse_bytes(settings,content):
+    with TemporaryDirectory(dir=settings.private_root) as directory:
         path=Path(directory)/('original.xls' if content[:8]==bytes.fromhex('d0cf11e0a1b11ae1') else 'original.xlsx')
         path.write_bytes(content)
         try:

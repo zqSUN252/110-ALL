@@ -284,6 +284,9 @@ class ChannelMessage(Record, Base):
     media_id: Mapped[str | None] = col(String(250))
     body_hash: Mapped[str] = col(String(64))
     state: Mapped[str] = col(String(30))
+    from_me: Mapped[bool] = col(Boolean,default=False)
+    origin_state: Mapped[str] = col(String(30),default='human')
+    attachment_id: Mapped[str | None] = col(ForeignKey('attachments.id'))
 
 
 class ChannelAction(Record, Base):
@@ -307,6 +310,8 @@ class Delivery(Record, Base):
     state: Mapped[str] = col(String(30), default='pending')
     lease_until: Mapped[datetime | None] = col(DateTime(timezone=True))
     receipt: Mapped[str | None] = col(String(500))
+    boundary: Mapped[dict | None] = col(JSONB)
+    artifact_id: Mapped[str | None] = col(ForeignKey('dialogue_files.id'))
 
 
 class FinanceEvent(Record, Base):

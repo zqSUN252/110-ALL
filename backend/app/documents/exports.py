@@ -104,13 +104,19 @@ def status(db,identity,actor=None,customer=None):
     return {'id':e.id,'version':e.version,'job_id':j.id,'status':j.status,'error_code':j.error_code,'format':e.format,'kind':e.kind,'ready':j.status=='completed' and bool(e.attachment_id)}
 
 
-def download(db,settings,identity,actor=None,customer=None):
+def download_attachment(db,identity,actor=None,customer=None):
     e=locked(db,DocumentExport,identity);objects=authorize_export(db,e,actor,customer)
     # Preserve generation date for source comparison; midnight alone does not revoke a formal file.
     current=current_data(db,e,objects)
     if fingerprint(current)!=e.source_fingerprint:raise DomainError('stale_export','Source changed; request a new export',409)
     if not e.attachment_id or db.get(Job,e.job_id).status!='completed':raise DomainError('export_pending','Export is not ready',409)
-    a=locked(db,Attachment,e.attachment_id);return read_file(settings,a),a.media_type
+    a=locked(db,Attachment,e.attachment_id)
+    if a.owner_type!='document_export' or a.owner_id!=e.id:raise DomainError('file_scope','Export artifact owner changed',403)
+    return a
+
+
+def download(db,settings,identity,actor=None,customer=None):
+    a=download_attachment(db,identity,actor,customer);return read_file(settings,a),a.media_type
 
 
 def export_once(settings,factory):
