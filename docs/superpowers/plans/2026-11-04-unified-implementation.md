@@ -33,7 +33,7 @@
 - 包根`backend/app`；`app.db.Base`, `make_engine(url)`, `session_factory(engine)`；PG环境由`MCSTAR_DATABASE_URL`或受控本地配置提供。
 - `app.models`显式导出实体（Task1定义统一模型，可按identity/logistics/finance/evidence/documents分文件）。业务核心不能只用通用JSON实体存储。
 - `app.common.Actor(id, capabilities, warehouse_ids)`、`require(actor, capability, warehouse_id=None)`、`DomainError(code, message, status=400, details=None)`。
-- 所有命令服务`service(db: Session, actor: Actor, payload: dict) -> dict`，不自行commit；路由包裹`with db.begin()`。版本字段`version`，请求字段`expected_version`。金额响应为字符串。
+- 所有命令服务`service(db: Session, actor: Actor, payload: dict) -> dict`，不自行commit；HTTP路由统一使用`app.api.dependencies.Database`，它以function-scope拥有唯一事务并在发送成功响应前提交；禁止嵌套`db.begin()`。非HTTP调用者用`with db.begin()`。版本字段`version`，请求字段`expected_version`。金额响应为字符串。
 - `app.common.audit(db, actor, action, entity_type, entity_id, before, after)`与`run_command(db, actor, command, key, payload, handler)`；后者同事务存请求哈希/结果，重复同键同体返回同结果，异体409。
 - 路由模块导出`router`，由`app.main.create_app(settings)`装配；依赖`app.api.dependencies.get_db/get_actor/mutate`（mutate校验CSRF）。`settings`含DB、私有根目录、功能开关、Cookie与业务时区。所有内部路由`/api`，公开入口专门投影。
 - 文件服务`app.attachments.put_file(db, actor, content, filename, media_type, owner_type, owner_id)->Attachment`及`read_file(settings,attachment)`；目标在私有根，哈希校验，禁止任意路径/URL读取。
@@ -43,12 +43,12 @@
 
 **Files:** `backend/pyproject.toml`, `backend/app/{settings,db,common,attachments,main,cli}.py`, `backend/app/models/`, `backend/app/api/{dependencies,identity}.py`, `backend/migrations/`, `tools/dev_runtime.py`, `backend/tests/conftest.py`, `backend/tests/test_foundation.py`, `deploy/`基础。
 
-**Interfaces:** 产生上述共享接口；实体覆盖用户/能力/会话/单位/仓库/收据/规格/货物行/出运/箱单版本/库存事件/价目/应收应付/款项分配/历史余额/银行/证据/claim/通知/节点/控货/信用/实放/单证/迁移/队列/审计。关系与金额必须强类型，JSON只用于来源原文、配置、候选、事件快照等。
+**Interfaces:** 产生上述共享接口；本任务实体为用户/能力/仓库范围/会话/审计/幂等命令/附件/配置/持久任务与outbox。财务、单位、仓库、物流、文档及迁移领域的强类型模型由Tasks2–5随实际服务增加并固定Alembic迁移，避免提前猜字段。JSON只用于来源原文、配置、候选、事件快照等，不能作通用业务行存储。
 
-- [ ] RED：API匿名业务拒绝，低权限不能写，陈旧版本409，同幂等键异体409；原始附件只能受权取回。先运行失败证据。
-- [ ] 建项目隔离venv，锁定依赖；启动独立本机PG17集群（不是已有服务），口令随机保存private，不输出；create_app健康检查、结构迁移、单次受控管理员创建，禁止默认账号/公开bootstrap。
-- [ ] GREEN：真实PG/HTTP测试通过；CLI可启动、迁移、设置管理员；不启动模型/WAHA。记录精确模型字段供后任务引用。
-- [ ] 运行当前全套并提交；报告产生接口/依赖/运行方式。
+- [x] RED：API匿名业务拒绝，低权限不能写，陈旧版本409，同幂等键异体409；原始附件只能受权取回。先运行失败证据。
+- [x] 建项目隔离venv，锁定依赖；启动独立本机PG17集群（不是已有服务），口令随机保存private，不输出；create_app健康检查、结构迁移、单次受控管理员创建，禁止默认账号/公开bootstrap。
+- [x] GREEN：真实PG/HTTP测试通过；CLI可启动、迁移、设置管理员；不启动模型/WAHA。记录精确模型字段供后任务引用。
+- [x] 运行当前全套并提交；报告产生接口/依赖/运行方式。19 passed；四项审阅问题修复后Approved。
 
 ### Task 2: 精确财务、110证据核对与双入口服务
 
