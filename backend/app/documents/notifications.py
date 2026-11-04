@@ -20,10 +20,13 @@ def credit_debt(db,actor,rows):
 
 
 def _charge_lines(r):
+    # A notice's payable total belongs to the existing invoice. For partial
+    # arrivals its billed currency/components differ from the full-ticket quote.
+    if r.get('invoice_id') and 'arrival_view' in r:r=dict(r,**r['arrival_view'])
     canonical=all((c['component'],c['currency'],c['unit']) in (('freight','USD','CBM'),('clearing','NGN','CBM')) for c in r['charges'])
     if r['transport']=='SEA' and canonical:
         usd=r['freight_usd'];fx=r['ngn_per_usd']
-        converted=(Decimal(usd)*Decimal(fx)).quantize(Decimal('.01')) if usd is not None and fx is not None else None
+        converted=finance.settle(usd,'USD',{'direction':'NGN_PER_USD','rate':fx}) if usd is not None and fx is not None else None
         lines=[f"Freight: US${shown(usd)} ×{shown(fx)} = ₦{shown(converted)}",f"Clearance Fee: ₦{shown(r['clearing_ngn'])}"]
     else:
         lines=[f"{c['currency']} {shown(c['unit_price'])} PER {c['unit']} × {shown(c['quantity'])} = {c['currency']} {shown(c['amount'])}" for c in r['charges'] if c['amount'] is None or Decimal(c['amount'])!=0]
@@ -34,10 +37,10 @@ def _charge_lines(r):
 
 def text_body(db,kind,data,order=None):
     rows=[dict(r,**r.get('arrival_view',{})) if kind in ('arrival','hold') else r for r in data['rows']];cfg=data['profile'];date=data['generated_on'];out=[]
-    for r in rows:
+    for index,r in enumerate(rows):
         receipts=shown(r['receipt']);mark=shown(r['mark']);contact=shown(r['phone']);warehouse=shown(r['warehouse']);container=shown(r['container']);goods=' / '.join(v for v in (r['item_zh'],r['item_en']) if v) or 'TO BE CONFIRMED'
         if kind=='receipt':
-            price=rates(db,[r]);dest=shown(r['destination'])
+            price=data['rate_dependencies'][index];dest=shown(r['destination'])
             arrangement=f"We will arrange the shipment to {dest}\nand keep you updated on the progress." if r['destination'] else 'Destination: TO BE CONFIRMED. Shipment destination awaits your confirmation.'
             out.append(f'''Dear “{mark}”,
 Your {r['transport']} cargo (**Receipt No. {receipts}**,
@@ -110,7 +113,7 @@ Thanks for your support.
 📞 TEL: *{shown(cfg.get('customer_care_contact'))}* (Customer Care)
 🌐 Self-service tracking website: *{shown(cfg.get('tracking_domain'))}*''')
         elif kind=='rates':
-            price=rates(db,[r]);out.append(f"💰 CHARGING STANDARD — {price['heading']}\n"+'\n'.join(price['lines']))
+            price=data['rate_dependencies'][index];out.append(f"💰 CHARGING STANDARD — {price['heading']}\n"+'\n'.join(price['lines']))
     if kind in ('hold','remove_hold','release'):
         groups={}
         for r in rows:groups.setdefault((r['destination_warehouse_id'],r['container']),[]).append(r)
@@ -216,6 +219,7 @@ def render(db,actor,p):
         if kind=='remove_hold' and (held['active'] or not any(h['state']=='removed' for h in held['facts'])):raise DomainError('hold_state','No valid current removal; cancellation cannot assert hold removed',409)
         if kind=='receipt' and obj.received_on is None:raise DomainError('receipt_date','Actual received date required',409)
     data=packing_projection(db,objects)
+    if kind in ('rates','receipt'):data['rate_dependencies']=[rates(db,[r]) for r in data['rows']]
     if order and order.mode=='credit':data['credit_debt']=credit_debt(db,actor,data['rows'])
     body=text_body(db,kind,data,order)
     n=Notification(kind=kind,template_version=VERSIONS[kind],actor_id=actor.id,generated_on=today(db),timezone=db.info['settings'].business_timezone,body=body,source_snapshot=data,order_id=order.id if order else None)
@@ -238,6 +242,7 @@ def current_generation(db,actor,n):
     # Rebuild in the generation's original order and compare all displayed facts.
     indexed={o.id:o for o in objects};objects=[indexed[r['id']] for r in n.source_snapshot['rows']]
     current=packing_projection(db,objects);current['generated_on']=n.source_snapshot['generated_on']
+    if n.kind in ('rates','receipt'):current['rate_dependencies']=[rates(db,[r]) for r in current['rows']]
     if 'credit_debt' in n.source_snapshot:current['credit_debt']=credit_debt(db,actor,current['rows'])
     if fingerprint(current)!=fingerprint(n.source_snapshot):raise DomainError('stale_generation','Current source changed; generate fresh content',409)
     if n.order_id and not release._current(db,db.get(ReleaseOrder,n.order_id))[0]:raise DomainError('stale_release','Instruction no longer current',409)
@@ -268,8 +273,9 @@ def cancel_copy(db,actor,p):
     return {'id':c.id,'version':c.version,'notification_id':c.notification_id,'ticket_ids':[m.ticket_id for m in members if m.ticket_id],'receipt_ids':[m.receipt_id for m in members if m.receipt_id],'cancelled':True}
 
 
-def marks(db,ticket_ids):
-    result={i:[] for i in ticket_ids}
-    for m,n,c in db.execute(select(NotificationMember,Notification,CopyEvent).join(Notification,Notification.id==NotificationMember.notification_id).join(CopyEvent,CopyEvent.notification_id==Notification.id).where(NotificationMember.ticket_id.in_(ticket_ids),CopyEvent.cancelled_at.is_(None))):
-        result[m.ticket_id].append({'copy_id':c.id,'version':c.version,'kind':n.kind,'copied_at':c.created_at.isoformat(),'actor_id':c.actor_id,'label':'📦已通知装柜 ✕' if n.kind=='loading' else '已复制通知','background':'yellow' if n.kind=='loading' else None,'foreground':'black' if n.kind=='loading' else None})
+def marks(db,source_ids,source_type='ticket'):
+    column={'ticket':NotificationMember.ticket_id,'receipt':NotificationMember.receipt_id}[source_type]
+    result={i:[] for i in source_ids}
+    for m,n,c in db.execute(select(NotificationMember,Notification,CopyEvent).join(Notification,Notification.id==NotificationMember.notification_id).join(CopyEvent,CopyEvent.notification_id==Notification.id).where(column.in_(source_ids),CopyEvent.cancelled_at.is_(None)).order_by(CopyEvent.created_at,CopyEvent.id)):
+        result[getattr(m,column.key)].append({'copy_id':c.id,'version':c.version,'kind':n.kind,'copied_at':c.created_at.isoformat(),'actor_id':c.actor_id,'label':'📦已通知装柜 ✕' if n.kind=='loading' else '已复制通知','background':'yellow' if n.kind=='loading' else None,'foreground':'black' if n.kind=='loading' else None})
     return result

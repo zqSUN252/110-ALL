@@ -51,6 +51,10 @@ def _font_for(char,fonts,bold=False):
     raise DomainError('missing_glyph','Configured fonts do not contain all document characters',503)
 
 
+def unit_text(value):
+    return f"{Decimal(value):,.6f}".rstrip('0').rstrip('.') if value is not None else 'TO BE CONFIRMED'
+
+
 def formal_lines(data,kind='packing'):
     lines=[]
     for r in data['rows']:
@@ -62,7 +66,7 @@ def formal_lines(data,kind='packing'):
         if fee or not label:
             for c in r['charges']:
                 name='Freight' if c['component']=='freight' else 'Clearing'
-                unit=f"{Decimal(c['unit_price']):,.6f}".rstrip('0').rstrip('.') if c['unit_price'] is not None else 'TO BE CONFIRMED'
+                unit=unit_text(c['unit_price'])
                 amount=f"{Decimal(c['amount']):,.2f}" if c['amount'] is not None else 'TO BE CONFIRMED'
                 if label:lines.extend([f"{name}: {c['currency']} {amount}",f"Rate: {c['currency']} {unit} PER {c['unit']}"])
                 else:lines.append(f"{name}: {c['currency']} {unit} PER {c['unit']} / Total {c['currency']} {amount}")
@@ -158,7 +162,7 @@ def pdf(settings,lines,label=False,receipt=None):
     return content
 
 
-HEADERS=[('receipt','Receipt No.'),('container','Container / Waybill'),('mark','Client Mark'),('phone','Client Contact'),('item_en','Goods EN'),('item_zh','Goods ZH'),('destination','Destination Port'),('warehouse','Destination Warehouse'),('address','Address'),('transport','Transport'),('pieces','PCS'),('kg','KG'),('cbm','CBM'),('freight_usd','Freight USD'),('clearing_ngn','Clearing NGN'),('ngn_per_usd','Exchange Rate'),('invoice_total_ngn','Invoice Total NGN'),('rounding_adjustment_ngn','Rounding adjustment NGN'),('allocated_ngn','Received NGN'),('outstanding_ngn','Outstanding NGN'),('charges','Actual Unit Charges')]
+HEADERS=[('receipt','Receipt No.'),('container','Container / Waybill'),('mark','Client Mark'),('phone','Client Contact'),('item_en','Goods EN'),('item_zh','Goods ZH'),('destination','Destination Port'),('warehouse','Destination Warehouse'),('address','Address'),('transport','Transport'),('pieces','PCS'),('kg','KG'),('cbm','CBM'),('freight_usd','USD charges'),('clearing_ngn','NGN charges'),('ngn_per_usd','Exchange Rate'),('invoice_total_ngn','Invoice Total NGN'),('rounding_adjustment_ngn','Rounding adjustment NGN'),('allocated_ngn','Received NGN'),('outstanding_ngn','Outstanding NGN'),('charges','Actual Unit Charges')]
 NUMERIC={'pieces','kg','cbm','freight_usd','clearing_ngn','ngn_per_usd','invoice_total_ngn','rounding_adjustment_ngn','allocated_ngn','outstanding_ngn'}
 
 
@@ -174,7 +178,7 @@ def workbook(data):
         for i,r in enumerate(rows,2):
             for j,(key,label) in enumerate(HEADERS,1):
                 v=r.get(key)
-                if key=='charges':v='; '.join(f"{c['component']} {c['currency']} {shown(c['unit_price'])}/{c['unit']}" for c in v)
+                if key=='charges':v='; '.join(f"{c['component']} {c['currency']} {unit_text(c['unit_price'])}/{c['unit']} / Total {c['currency']} {shown(c['amount'])}" for c in v)
                 elif key in NUMERIC:v=Decimal(str(v)) if v is not None else None
                 literal(sh.cell(i,j),v)
                 sh.cell(i,j).alignment=Alignment(wrap_text=True,vertical='top')
@@ -196,7 +200,7 @@ def workbook(data):
         subset=dict(data,rows=rows,totals={})
         for index,line in enumerate(formal_lines(subset),2):literal(sh.cell(index,1),line);sh.cell(index,1).font=Font(name='Ebrima',size=11,bold=index in (2,3));sh.cell(index,1).alignment=Alignment(wrap_text=True)
     totals=book.create_sheet('Totals');totals.append(['Field','Complete total','Known subtotal','Pending source count'])
-    for key,value in data['totals'].items():totals.append([key,Decimal(value['value']) if value['value'] is not None else None,Decimal(value['known_subtotal']),value['pending_count']])
+    for key,value in data['totals'].items():totals.append([{'freight_usd':'USD charges','clearing_ngn':'NGN charges'}.get(key,key),Decimal(value['value']) if value['value'] is not None else None,Decimal(value['known_subtotal']),value['pending_count']])
     output=BytesIO();book.save(output);content=output.getvalue();check=load_workbook(BytesIO(content),data_only=False)
     if check['Master'].max_row!=len(data['rows'])+1:raise DomainError('xlsx_verify','Workbook row readback mismatch',500)
     for i,r in enumerate(data['rows'],2):

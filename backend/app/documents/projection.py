@@ -88,4 +88,6 @@ def rates(db,rows):
     lines=[]
     for c in cards:
         lines.append(f"{c.destination} | {c.transport} / {c.origin} / {c.goods_class} | {c.currency} {c.unit_price:,.2f} PER {c.unit}"+(f" | Clearing NGN {c.clearing_per_cbm_ngn:,.2f} PER CBM" if c.clearing_per_cbm_ngn is not None else '')+f" | {c.valid_from} — {c.valid_to}")
-    return {'heading':PENDING if unknown else ', '.join(sorted(destinations)),'lines':lines or ['No applicable effective price card — TO BE CONFIRMED'],'cards':[record(c) for c in cards]}
+    selection={'on':on.isoformat(),'mode':'full_reference' if unknown else 'applicable',
+        'sources':[{key:r.get(key) for key in ('source_type','id','destination','transport','origin','goods_class')} for r in rows]}
+    return {'selection':selection,'heading':PENDING if unknown else ', '.join(sorted(destinations)),'lines':lines or ['No applicable effective price card — TO BE CONFIRMED'],'cards':[record(c) for c in cards]}

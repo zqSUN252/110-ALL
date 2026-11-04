@@ -94,6 +94,14 @@ def notification_marks(id:str,db:Database,actor=Depends(get_actor)):
     return notifications.marks(db,[id])[id]
 
 
+@router.get('/receipts/{id}/notification-marks')
+def receipt_notification_marks(id:str,db:Database,actor=Depends(get_actor)):
+    from app.models import Receipt
+    from app.finance.service import locked
+    receipt=locked(db,Receipt,id);require(actor,'documents.read',receipt.warehouse_id)
+    return notifications.marks(db,[id],source_type='receipt')[id]
+
+
 @router.get('/tickets/{id}/timeline')
 def timeline(id:str,db:Database,actor=Depends(get_actor)):return tracking.internal_timeline(db,actor,id)
 

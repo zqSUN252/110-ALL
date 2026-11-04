@@ -11,7 +11,14 @@ from .rendering import render_artifact
 
 
 def members(db,e):
-    return [locked(db,Ticket if m.ticket_id else Receipt,m.ticket_id or m.receipt_id) for m in db.scalars(select(ExportMember).where(ExportMember.export_id==e.id).order_by(ExportMember.id))]
+    # The immutable projection is the selection order, including pre-fix jobs.
+    # Random member UUIDs never define business row order.
+    saved=list(db.scalars(select(ExportMember).where(ExportMember.export_id==e.id)))
+    indexed={('ticket' if m.ticket_id else 'receipt',m.ticket_id or m.receipt_id):m for m in saved}
+    keys=[(r['source_type'],r['id']) for r in e.source_snapshot.get('rows',[])]
+    if len(saved)!=len(indexed) or len(keys)!=len(set(keys)) or set(keys)!=set(indexed):
+        raise DomainError('stale_export','Saved export membership changed; request a new export',409)
+    return [locked(db,Ticket if kind=='ticket' else Receipt,identity) for kind,identity in keys]
 
 
 def refresh_actor(db,uid):
