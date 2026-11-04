@@ -358,8 +358,8 @@ def records(kind:str,warehouse_id:str,db:Database,scope:str='live',after:str|Non
     if model is BankAccount:
         query=query.join(BankAccountWarehouse,BankAccountWarehouse.account_id==BankAccount.id).where(BankAccountWarehouse.warehouse_id==warehouse_id,BankAccountWarehouse.active.is_(True))
     else:query=query.where(model.warehouse_id==warehouse_id)
-    if model is Invoice:query=query.where(model.kind=='AP' if kind=='payables' else 'AR')
-    if model is Payment:query=visible_payments(query.where(model.direction=='out' if kind=='payable-payments' else 'in'),actor)
+    if model is Invoice:query=query.where(model.kind==('AP' if kind=='payables' else 'AR'))
+    if model is Payment:query=visible_payments(query.where(model.direction==('out' if kind=='payable-payments' else 'in')),actor)
     if party_id and model in (Invoice,Payment):query=query.where(model.party_id==party_id)
     if after: query=query.where(model.id>after)
     rows=list(db.scalars(query.order_by(model.id).limit(min(max(limit,1),200))))

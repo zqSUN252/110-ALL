@@ -42,6 +42,20 @@ def documents(request:Request,db:Database,limit:int=50,offset:int=0):
     return customer.documents(db,customer.session(db,request),limit,offset)
 
 
+@router.get('/customer/session')
+def customer_session(request:Request,db:Database):
+    import hmac,hashlib
+    from sqlalchemy import select
+    from app.models import CustomerSession
+    from app.api.dependencies import token_hash
+    if request.headers.get('Sec-Fetch-Site')=='cross-site':return failure('csrf','Same-site session recovery required',403)
+    customer.session(db,request)
+    token=request.cookies['mcstar_customer'];csrf=hmac.new(token.encode(),b'mcstar-customer-csrf-v1',hashlib.sha256).hexdigest()
+    session=db.scalar(select(CustomerSession).where(CustomerSession.token_hash==token_hash(token)))
+    session.csrf_hash=token_hash(csrf)
+    return JSONResponse({'verified':True,'csrf_token':csrf},headers={'Cache-Control':'private, no-store'})
+
+
 @router.post('/customer/logout')
 def logout(request:Request,db:Database):
     from sqlalchemy import select
@@ -58,5 +72,13 @@ def logout(request:Request,db:Database):
 @router.get('/public/profile')
 def public_profile(db:Database):
     from app.documents.projection import profile
+    from app.models import AppSetting
+    from sqlalchemy import select
     values=profile(db)
-    return {k.removeprefix('public_'):v for k,v in values.items() if k.startswith('public_')}
+    result={k.removeprefix('public_'):v for k,v in values.items() if k in ('public_company_name','public_hotline','public_openshipment','public_address','public_website')}
+    home=db.scalar(select(AppSetting).where(AppSetting.key=='public.home'))
+    if home:
+        result.update({k:v for k,v in home.value.items() if k in ('warehouses','hotline','openshipment')})
+        for key in ('hero_large','hero_small'):
+            if home.value.get(key): result[key]='/api/public/assets/'+key
+    return result

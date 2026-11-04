@@ -1,8 +1,7 @@
 {
-  "task": 5,
-  "status": "DONE_WITH_CONCERNS",
-  "implementation_base": "7cc1c00e30fe961b8e11f8d1393d7cd9d912823b",
-  "schema_head": "f11000500006",
+  "task": 6,
+  "status": "IMPLEMENTED_LOCAL_CHECKS_COMPLETE_REVIEW_PENDING",
+  "schema_head": "g11000600002",
   "requirements_total": 146,
   "requirements": [
     {
@@ -15,7 +14,21 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#SYS-01",
       "task5_role": "existing_domain_or_task6_acceptance",
       "task5_evidence": null,
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "欢迎、工作台、正式单证均使用MC STAR LOGISTICS及原Logo。",
+      "implementation_files": [
+        "web/src/App.tsx",
+        "web/src/ui.tsx",
+        "backend/app/api/workspace.py"
+      ],
+      "ui_entry": "工作台/全局查找/账号管理/公告/备份",
+      "covering_domain_tests": [
+        "backend/tests/test_foundation.py",
+        "backend/tests/test_foundation_review.py",
+        "backend/tests/test_workspace.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "SYS-02",
@@ -27,7 +40,21 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#SYS-02",
       "task5_role": "existing_domain_or_task6_acceptance",
       "task5_evidence": null,
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "内部语言切换、字段/状态/错误词典；英文仓库新建与入库录入浏览器验证，完整所有字段人工语言验收未声称。",
+      "implementation_files": [
+        "web/src/App.tsx",
+        "web/src/ui.tsx",
+        "backend/app/api/workspace.py"
+      ],
+      "ui_entry": "工作台/全局查找/账号管理/公告/备份",
+      "covering_domain_tests": [
+        "backend/tests/test_foundation.py",
+        "backend/tests/test_foundation_review.py",
+        "backend/tests/test_workspace.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "SYS-03",
@@ -43,7 +70,21 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#SYS-03",
       "task5_role": "migration_or_recovery_support",
       "task5_evidence": "docs/development/migration-contract.md",
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "按能力显示导航；API逐请求校验actor/仓库/版本/幂等；同浏览器切换低权限及撤权清草稿。",
+      "implementation_files": [
+        "web/src/App.tsx",
+        "web/src/ui.tsx",
+        "backend/app/api/workspace.py"
+      ],
+      "ui_entry": "工作台/全局查找/账号管理/公告/备份",
+      "covering_domain_tests": [
+        "backend/tests/test_foundation.py",
+        "backend/tests/test_foundation_review.py",
+        "backend/tests/test_workspace.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "SYS-04",
@@ -67,7 +108,21 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#SYS-04",
       "task5_role": "migration_or_recovery_support",
       "task5_evidence": "docs/development/migration-contract.md",
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "每账号独立HttpOnly会话；刷新恢复CSRF，不覆盖其他会话。",
+      "implementation_files": [
+        "web/src/App.tsx",
+        "web/src/ui.tsx",
+        "backend/app/api/workspace.py"
+      ],
+      "ui_entry": "工作台/全局查找/账号管理/公告/备份",
+      "covering_domain_tests": [
+        "backend/tests/test_foundation.py",
+        "backend/tests/test_foundation_review.py",
+        "backend/tests/test_workspace.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "SYS-05",
@@ -92,7 +147,21 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#SYS-05",
       "task5_role": "migration_or_recovery_support",
       "task5_evidence": "docs/development/migration-contract.md",
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "共享PostgreSQL事实与原件存储；多个授权HTTP会话读写同一记录，非浏览器整库同步。",
+      "implementation_files": [
+        "web/src/App.tsx",
+        "web/src/ui.tsx",
+        "backend/app/api/workspace.py"
+      ],
+      "ui_entry": "工作台/全局查找/账号管理/公告/备份",
+      "covering_domain_tests": [
+        "backend/tests/test_foundation.py",
+        "backend/tests/test_foundation_review.py",
+        "backend/tests/test_workspace.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "SYS-06",
@@ -117,7 +186,21 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#SYS-06",
       "task5_role": "existing_domain_or_task6_acceptance",
       "task5_evidence": null,
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "挂载式页面保留筛选、焦点、详情与脏值；退出/撤权清空旧actor状态；409及离线保留输入。",
+      "implementation_files": [
+        "web/src/App.tsx",
+        "web/src/ui.tsx",
+        "backend/app/api/workspace.py"
+      ],
+      "ui_entry": "工作台/全局查找/账号管理/公告/备份",
+      "covering_domain_tests": [
+        "backend/tests/test_foundation.py",
+        "backend/tests/test_foundation_review.py",
+        "backend/tests/test_workspace.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "SYS-07",
@@ -128,7 +211,21 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#SYS-07",
       "task5_role": "migration_or_recovery_support",
       "task5_evidence": "docs/development/migration-contract.md",
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "每项服务端命令同事务审计；管理页查询审计与责任人。",
+      "implementation_files": [
+        "web/src/App.tsx",
+        "web/src/ui.tsx",
+        "backend/app/api/workspace.py"
+      ],
+      "ui_entry": "工作台/全局查找/账号管理/公告/备份",
+      "covering_domain_tests": [
+        "backend/tests/test_foundation.py",
+        "backend/tests/test_foundation_review.py",
+        "backend/tests/test_workspace.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "SYS-08",
@@ -145,7 +242,21 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#SYS-08",
       "task5_role": "existing_domain_or_task6_acceptance",
       "task5_evidence": null,
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "全局授权模糊查找票件/客户/收据/出运/账款；精确链接打开详情。",
+      "implementation_files": [
+        "web/src/App.tsx",
+        "web/src/ui.tsx",
+        "backend/app/api/workspace.py"
+      ],
+      "ui_entry": "工作台/全局查找/账号管理/公告/备份",
+      "covering_domain_tests": [
+        "backend/tests/test_foundation.py",
+        "backend/tests/test_foundation_review.py",
+        "backend/tests/test_workspace.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "SYS-09",
@@ -170,7 +281,21 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#SYS-09",
       "task5_role": "migration_or_recovery_support",
       "task5_evidence": "docs/development/migration-contract.md",
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "独立PG17、真实25k/125k和10会话实测；启动和包重建单列；PG18生产环境未验收。",
+      "implementation_files": [
+        "web/src/App.tsx",
+        "web/src/ui.tsx",
+        "backend/app/api/workspace.py"
+      ],
+      "ui_entry": "工作台/全局查找/账号管理/公告/备份",
+      "covering_domain_tests": [
+        "backend/tests/test_foundation.py",
+        "backend/tests/test_foundation_review.py",
+        "backend/tests/test_workspace.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "SYS-10",
@@ -189,7 +314,21 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#SYS-10",
       "task5_role": "existing_domain_or_task6_acceptance",
       "task5_evidence": null,
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "共享DataTable横滚与同步浮动滚动条；390px保留字段和可达性。",
+      "implementation_files": [
+        "web/src/App.tsx",
+        "web/src/ui.tsx",
+        "backend/app/api/workspace.py"
+      ],
+      "ui_entry": "工作台/全局查找/账号管理/公告/备份",
+      "covering_domain_tests": [
+        "backend/tests/test_foundation.py",
+        "backend/tests/test_foundation_review.py",
+        "backend/tests/test_workspace.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "SYS-11",
@@ -209,7 +348,21 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#SYS-11",
       "task5_role": "migration_or_recovery_support",
       "task5_evidence": "docs/development/migration-contract.md",
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "未知KG/电话/汇率/原始资源保留未知；不填假默认客户与收费事实。",
+      "implementation_files": [
+        "web/src/App.tsx",
+        "web/src/ui.tsx",
+        "backend/app/api/workspace.py"
+      ],
+      "ui_entry": "工作台/全局查找/账号管理/公告/备份",
+      "covering_domain_tests": [
+        "backend/tests/test_foundation.py",
+        "backend/tests/test_foundation_review.py",
+        "backend/tests/test_workspace.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "SYS-12",
@@ -221,7 +374,21 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#SYS-12",
       "task5_role": "migration_or_recovery_support",
       "task5_evidence": "docs/development/migration-contract.md",
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "external_input_or_environment_pending",
+      "implementation": "受权资料原件/模板、版本及团队归档适配器；实际团队空间未配置。",
+      "implementation_files": [
+        "web/src/App.tsx",
+        "web/src/ui.tsx",
+        "backend/app/api/workspace.py"
+      ],
+      "ui_entry": "工作台/全局查找/账号管理/公告/备份",
+      "covering_domain_tests": [
+        "backend/tests/test_foundation.py",
+        "backend/tests/test_foundation_review.py",
+        "backend/tests/test_workspace.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": "团队空间实际归档服务未配置"
     },
     {
       "requirement_id": "SYS-13",
@@ -253,7 +420,21 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#SYS-13",
       "task5_role": "migration_or_recovery_support",
       "task5_evidence": "docs/development/migration-contract.md",
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "管理页备份任务、全模块format1流式备份/校验恢复、空库与只读恢复栅栏。",
+      "implementation_files": [
+        "web/src/App.tsx",
+        "web/src/ui.tsx",
+        "backend/app/api/workspace.py"
+      ],
+      "ui_entry": "工作台/全局查找/账号管理/公告/备份",
+      "covering_domain_tests": [
+        "backend/tests/test_foundation.py",
+        "backend/tests/test_foundation_review.py",
+        "backend/tests/test_workspace.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "SYS-14",
@@ -267,7 +448,21 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#SYS-14",
       "task5_role": "existing_domain_or_task6_acceptance",
       "task5_evidence": null,
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "独立账号/语言/公告按钮；公告版本化新增修改撤回，手机导航折叠不遮账号。",
+      "implementation_files": [
+        "web/src/App.tsx",
+        "web/src/ui.tsx",
+        "backend/app/api/workspace.py"
+      ],
+      "ui_entry": "工作台/全局查找/账号管理/公告/备份",
+      "covering_domain_tests": [
+        "backend/tests/test_foundation.py",
+        "backend/tests/test_foundation_review.py",
+        "backend/tests/test_workspace.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "SYS-15",
@@ -284,7 +479,21 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#SYS-15",
       "task5_role": "existing_domain_or_task6_acceptance",
       "task5_evidence": null,
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "操作部、单证部、财务、110、资料、管理按最终归属导航。",
+      "implementation_files": [
+        "web/src/App.tsx",
+        "web/src/ui.tsx",
+        "backend/app/api/workspace.py"
+      ],
+      "ui_entry": "工作台/全局查找/账号管理/公告/备份",
+      "covering_domain_tests": [
+        "backend/tests/test_foundation.py",
+        "backend/tests/test_foundation_review.py",
+        "backend/tests/test_workspace.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "SYS-16",
@@ -299,7 +508,21 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#SYS-16",
       "task5_role": "existing_domain_or_task6_acceptance",
       "task5_evidence": null,
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "external_input_or_environment_pending",
+      "implementation": "原Logo副本和蓝品牌；入库/PL字段顺序固定，模板按已取得依据生成。",
+      "implementation_files": [
+        "web/src/App.tsx",
+        "web/src/ui.tsx",
+        "backend/app/api/workspace.py"
+      ],
+      "ui_entry": "工作台/全局查找/账号管理/公告/备份",
+      "covering_domain_tests": [
+        "backend/tests/test_foundation.py",
+        "backend/tests/test_foundation_review.py",
+        "backend/tests/test_workspace.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": "精确模板543/24原图未取得"
     },
     {
       "requirement_id": "SYS-17",
@@ -320,7 +543,21 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#SYS-17",
       "task5_role": "existing_domain_or_task6_acceptance",
       "task5_evidence": null,
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "external_input_or_environment_pending",
+      "implementation": "本机127.0.0.1入口已运行；正式域名、TLS与HTTPS部署尚未取得环境验收。",
+      "implementation_files": [
+        "web/src/App.tsx",
+        "web/src/ui.tsx",
+        "backend/app/api/workspace.py"
+      ],
+      "ui_entry": "工作台/全局查找/账号管理/公告/备份",
+      "covering_domain_tests": [
+        "backend/tests/test_foundation.py",
+        "backend/tests/test_foundation_review.py",
+        "backend/tests/test_workspace.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": "正式域名/TLS/HTTPS未部署"
     },
     {
       "requirement_id": "SHIP-01",
@@ -338,7 +575,20 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#SHIP-01",
       "task5_role": "migration_or_recovery_support",
       "task5_evidence": "docs/development/migration-contract.md",
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "出运单表单SEA/AIR/EXPRESS及独立状态命令，保留库存/放货分离。",
+      "implementation_files": [
+        "web/src/catalog.ts",
+        "web/src/workflows.tsx",
+        "backend/app/packing/service.py"
+      ],
+      "ui_entry": "出运管理/PACKING LIST",
+      "covering_domain_tests": [
+        "backend/tests/test_packing.py",
+        "backend/tests/test_logistics.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "SHIP-02",
@@ -350,7 +600,20 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#SHIP-02",
       "task5_role": "migration_or_recovery_support",
       "task5_evidence": "docs/development/migration-contract.md",
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "出运单清关日期、成本账单方与应付联动，不猜成本方。",
+      "implementation_files": [
+        "web/src/catalog.ts",
+        "web/src/workflows.tsx",
+        "backend/app/packing/service.py"
+      ],
+      "ui_entry": "出运管理/PACKING LIST",
+      "covering_domain_tests": [
+        "backend/tests/test_packing.py",
+        "backend/tests/test_logistics.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "SHIP-03",
@@ -361,7 +624,20 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#SHIP-03",
       "task5_role": "existing_domain_or_task6_acceptance",
       "task5_evidence": null,
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "单据关联已确认客户及仓库成员资格；收据到票件原生链接。",
+      "implementation_files": [
+        "web/src/catalog.ts",
+        "web/src/workflows.tsx",
+        "backend/app/packing/service.py"
+      ],
+      "ui_entry": "出运管理/PACKING LIST",
+      "covering_domain_tests": [
+        "backend/tests/test_packing.py",
+        "backend/tests/test_logistics.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "SHIP-04",
@@ -375,7 +651,20 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#SHIP-04",
       "task5_role": "migration_or_recovery_support",
       "task5_evidence": "docs/development/migration-contract.md",
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "票件报价与应收生成分离；真实分批到货后产生对应AR。",
+      "implementation_files": [
+        "web/src/catalog.ts",
+        "web/src/workflows.tsx",
+        "backend/app/packing/service.py"
+      ],
+      "ui_entry": "出运管理/PACKING LIST",
+      "covering_domain_tests": [
+        "backend/tests/test_packing.py",
+        "backend/tests/test_logistics.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "SHIP-05",
@@ -387,7 +676,20 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#SHIP-05",
       "task5_role": "migration_or_recovery_support",
       "task5_evidence": "docs/development/migration-contract.md",
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "作废命令显示关系及版本，保留原文与既有财务证据，禁止级联抹除。",
+      "implementation_files": [
+        "web/src/catalog.ts",
+        "web/src/workflows.tsx",
+        "backend/app/packing/service.py"
+      ],
+      "ui_entry": "出运管理/PACKING LIST",
+      "covering_domain_tests": [
+        "backend/tests/test_packing.py",
+        "backend/tests/test_logistics.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "SHIP-06",
@@ -398,7 +700,20 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#SHIP-06",
       "task5_role": "migration_or_recovery_support",
       "task5_evidence": "docs/development/migration-contract.md",
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "主箱单/文档与多个票件关系；票件编辑和整组历史变更预览确认。",
+      "implementation_files": [
+        "web/src/catalog.ts",
+        "web/src/workflows.tsx",
+        "backend/app/packing/service.py"
+      ],
+      "ui_entry": "出运管理/PACKING LIST",
+      "covering_domain_tests": [
+        "backend/tests/test_packing.py",
+        "backend/tests/test_logistics.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "SHIP-07",
@@ -409,7 +724,20 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#SHIP-07",
       "task5_role": "migration_or_recovery_support",
       "task5_evidence": "docs/development/migration-contract.md",
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "AIR/EXPRESS专用分批到货表单，件/KG/CBM独立累计。",
+      "implementation_files": [
+        "web/src/catalog.ts",
+        "web/src/workflows.tsx",
+        "backend/app/packing/service.py"
+      ],
+      "ui_entry": "出运管理/PACKING LIST",
+      "covering_domain_tests": [
+        "backend/tests/test_packing.py",
+        "backend/tests/test_logistics.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "SHIP-08",
@@ -422,7 +750,20 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#SHIP-08",
       "task5_role": "migration_or_recovery_support",
       "task5_evidence": "docs/development/migration-contract.md",
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "AIR到货行操作与标记；SEA不显示空运分批动作。",
+      "implementation_files": [
+        "web/src/catalog.ts",
+        "web/src/workflows.tsx",
+        "backend/app/packing/service.py"
+      ],
+      "ui_entry": "出运管理/PACKING LIST",
+      "covering_domain_tests": [
+        "backend/tests/test_packing.py",
+        "backend/tests/test_logistics.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "PL-01",
@@ -434,7 +775,21 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#PL-01",
       "task5_role": "existing_domain_or_task6_acceptance",
       "task5_evidence": null,
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "每份上传文件独立附件和PackingDocument，保留文件哈希及原行位置。",
+      "implementation_files": [
+        "web/src/Operations.tsx",
+        "web/src/workflows.tsx",
+        "backend/app/packing"
+      ],
+      "ui_entry": "箱单文档/箱单与F6导入/PACKING LIST",
+      "covering_domain_tests": [
+        "backend/tests/test_packing.py",
+        "backend/tests/test_logistics_review.py",
+        "backend/tests/test_logistics_review_2.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "PL-02",
@@ -455,7 +810,21 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#PL-02",
       "task5_role": "existing_domain_or_task6_acceptance",
       "task5_evidence": null,
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "箱单/F6导入页上传、选sheet、列映射、预览及确认，英文原值不改写。",
+      "implementation_files": [
+        "web/src/Operations.tsx",
+        "web/src/workflows.tsx",
+        "backend/app/packing"
+      ],
+      "ui_entry": "箱单文档/箱单与F6导入/PACKING LIST",
+      "covering_domain_tests": [
+        "backend/tests/test_packing.py",
+        "backend/tests/test_logistics_review.py",
+        "backend/tests/test_logistics_review_2.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "PL-03",
@@ -466,7 +835,21 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#PL-03",
       "task5_role": "migration_or_recovery_support",
       "task5_evidence": "docs/development/migration-contract.md",
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "导入原行、原列及明细位置保留；不按同号直接合并。",
+      "implementation_files": [
+        "web/src/Operations.tsx",
+        "web/src/workflows.tsx",
+        "backend/app/packing"
+      ],
+      "ui_entry": "箱单文档/箱单与F6导入/PACKING LIST",
+      "covering_domain_tests": [
+        "backend/tests/test_packing.py",
+        "backend/tests/test_logistics_review.py",
+        "backend/tests/test_logistics_review_2.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "PL-04",
@@ -486,7 +869,21 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#PL-04",
       "task5_role": "existing_domain_or_task6_acceptance",
       "task5_evidence": null,
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "USD/NGN分项和单位严格Decimal解析；歧义必须人工核对。",
+      "implementation_files": [
+        "web/src/Operations.tsx",
+        "web/src/workflows.tsx",
+        "backend/app/packing"
+      ],
+      "ui_entry": "箱单文档/箱单与F6导入/PACKING LIST",
+      "covering_domain_tests": [
+        "backend/tests/test_packing.py",
+        "backend/tests/test_logistics_review.py",
+        "backend/tests/test_logistics_review_2.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "PL-05",
@@ -499,7 +896,21 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#PL-05",
       "task5_role": "existing_domain_or_task6_acceptance",
       "task5_evidence": null,
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "contact_raw与确认号码分离，ON HOLD原文不被电话标准化覆盖。",
+      "implementation_files": [
+        "web/src/Operations.tsx",
+        "web/src/workflows.tsx",
+        "backend/app/packing"
+      ],
+      "ui_entry": "箱单文档/箱单与F6导入/PACKING LIST",
+      "covering_domain_tests": [
+        "backend/tests/test_packing.py",
+        "backend/tests/test_logistics_review.py",
+        "backend/tests/test_logistics_review_2.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "PL-06",
@@ -528,7 +939,21 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#PL-06",
       "task5_role": "existing_domain_or_task6_acceptance",
       "task5_evidence": null,
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "票件目的港/目的仓来自该票显式字段，不能以主单覆盖。",
+      "implementation_files": [
+        "web/src/Operations.tsx",
+        "web/src/workflows.tsx",
+        "backend/app/packing"
+      ],
+      "ui_entry": "箱单文档/箱单与F6导入/PACKING LIST",
+      "covering_domain_tests": [
+        "backend/tests/test_packing.py",
+        "backend/tests/test_logistics_review.py",
+        "backend/tests/test_logistics_review_2.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "PL-07",
@@ -545,7 +970,21 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#PL-07",
       "task5_role": "migration_or_recovery_support",
       "task5_evidence": "docs/development/migration-contract.md",
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "票件专用编辑表单、报价影响预览、版本确认。",
+      "implementation_files": [
+        "web/src/Operations.tsx",
+        "web/src/workflows.tsx",
+        "backend/app/packing"
+      ],
+      "ui_entry": "箱单文档/箱单与F6导入/PACKING LIST",
+      "covering_domain_tests": [
+        "backend/tests/test_packing.py",
+        "backend/tests/test_logistics_review.py",
+        "backend/tests/test_logistics_review_2.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "PL-08",
@@ -556,7 +995,21 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#PL-08",
       "task5_role": "existing_domain_or_task6_acceptance",
       "task5_evidence": null,
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "改港使用当前费率/人工计价权限，财务预览后确认，旧指令失效。",
+      "implementation_files": [
+        "web/src/Operations.tsx",
+        "web/src/workflows.tsx",
+        "backend/app/packing"
+      ],
+      "ui_entry": "箱单文档/箱单与F6导入/PACKING LIST",
+      "covering_domain_tests": [
+        "backend/tests/test_packing.py",
+        "backend/tests/test_logistics_review.py",
+        "backend/tests/test_logistics_review_2.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "PL-09",
@@ -571,7 +1024,21 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#PL-09",
       "task5_role": "migration_or_recovery_support",
       "task5_evidence": "docs/development/migration-contract.md",
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "文件替换映射/完整变更预览；已收款、历史核销和原附件保留。",
+      "implementation_files": [
+        "web/src/Operations.tsx",
+        "web/src/workflows.tsx",
+        "backend/app/packing"
+      ],
+      "ui_entry": "箱单文档/箱单与F6导入/PACKING LIST",
+      "covering_domain_tests": [
+        "backend/tests/test_packing.py",
+        "backend/tests/test_logistics_review.py",
+        "backend/tests/test_logistics_review_2.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "PL-10",
@@ -585,7 +1052,21 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#PL-10",
       "task5_role": "existing_domain_or_task6_acceptance",
       "task5_evidence": null,
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "价卡有效日期/始发地/运输及原行顺序；保存报价版本快照。",
+      "implementation_files": [
+        "web/src/Operations.tsx",
+        "web/src/workflows.tsx",
+        "backend/app/packing"
+      ],
+      "ui_entry": "箱单文档/箱单与F6导入/PACKING LIST",
+      "covering_domain_tests": [
+        "backend/tests/test_packing.py",
+        "backend/tests/test_logistics_review.py",
+        "backend/tests/test_logistics_review_2.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "PL-11",
@@ -602,7 +1083,21 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#PL-11",
       "task5_role": "migration_or_recovery_support",
       "task5_evidence": "docs/development/migration-contract.md",
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "绑定原件和实际MIME原图/PDF查看及授权下载，不以重绘件冒充原件。",
+      "implementation_files": [
+        "web/src/Operations.tsx",
+        "web/src/workflows.tsx",
+        "backend/app/packing"
+      ],
+      "ui_entry": "箱单文档/箱单与F6导入/PACKING LIST",
+      "covering_domain_tests": [
+        "backend/tests/test_packing.py",
+        "backend/tests/test_logistics_review.py",
+        "backend/tests/test_logistics_review_2.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "RATE-01",
@@ -620,7 +1115,19 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#RATE-01",
       "task5_role": "existing_domain_or_task6_acceptance",
       "task5_evidence": null,
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "价卡SEA/AIR/EXPRESS、目的港/计价单位/日期表单。",
+      "implementation_files": [
+        "web/src/catalog.ts",
+        "backend/app/pricing"
+      ],
+      "ui_entry": "收费标准",
+      "covering_domain_tests": [
+        "backend/tests/test_finance.py",
+        "backend/tests/test_logistics.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "RATE-02",
@@ -634,7 +1141,19 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#RATE-02",
       "task5_role": "existing_domain_or_task6_acceptance",
       "task5_evidence": null,
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "币种、明确结算方向及汇率；金额后端Decimal，浏览器仅显示字符串。",
+      "implementation_files": [
+        "web/src/catalog.ts",
+        "backend/app/pricing"
+      ],
+      "ui_entry": "收费标准",
+      "covering_domain_tests": [
+        "backend/tests/test_finance.py",
+        "backend/tests/test_logistics.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "RATE-03",
@@ -651,7 +1170,19 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#RATE-03",
       "task5_role": "existing_domain_or_task6_acceptance",
       "task5_evidence": null,
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "AIR全包价保留来源和计价单位，禁止默认补造。",
+      "implementation_files": [
+        "web/src/catalog.ts",
+        "backend/app/pricing"
+      ],
+      "ui_entry": "收费标准",
+      "covering_domain_tests": [
+        "backend/tests/test_finance.py",
+        "backend/tests/test_logistics.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "RATE-04",
@@ -662,7 +1193,19 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#RATE-04",
       "task5_role": "existing_domain_or_task6_acceptance",
       "task5_evidence": null,
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "PCS/KG/CBM与NGN/USD真实组件保留，按单位计算而非统一乘KG。",
+      "implementation_files": [
+        "web/src/catalog.ts",
+        "backend/app/pricing"
+      ],
+      "ui_entry": "收费标准",
+      "covering_domain_tests": [
+        "backend/tests/test_finance.py",
+        "backend/tests/test_logistics.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "RATE-05",
@@ -674,7 +1217,19 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#RATE-05",
       "task5_role": "existing_domain_or_task6_acceptance",
       "task5_evidence": null,
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "价卡通知只用相应报价快照，变价使旧图片签名过期。",
+      "implementation_files": [
+        "web/src/catalog.ts",
+        "backend/app/pricing"
+      ],
+      "ui_entry": "收费标准",
+      "covering_domain_tests": [
+        "backend/tests/test_finance.py",
+        "backend/tests/test_logistics.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "DOC-01",
@@ -691,7 +1246,20 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#DOC-01",
       "task5_role": "existing_domain_or_task6_acceptance",
       "task5_evidence": null,
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "external_input_or_environment_pending",
+      "implementation": "正式客户箱单共用projection及PDF/XLSX/PNG任务。",
+      "implementation_files": [
+        "web/src/workflows.tsx",
+        "web/src/ExportJob.tsx",
+        "backend/app/documents"
+      ],
+      "ui_entry": "单证资料与模板/导出/通知",
+      "covering_domain_tests": [
+        "backend/tests/test_documents.py",
+        "backend/tests/test_documents_review.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": "精确模板截图缺失"
     },
     {
       "requirement_id": "DOC-02",
@@ -707,7 +1275,20 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#DOC-02",
       "task5_role": "existing_domain_or_task6_acceptance",
       "task5_evidence": null,
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "正式生成件使用原Logo及确认公司抬头。",
+      "implementation_files": [
+        "web/src/workflows.tsx",
+        "web/src/ExportJob.tsx",
+        "backend/app/documents"
+      ],
+      "ui_entry": "单证资料与模板/导出/通知",
+      "covering_domain_tests": [
+        "backend/tests/test_documents.py",
+        "backend/tests/test_documents_review.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "DOC-03",
@@ -724,7 +1305,20 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#DOC-03",
       "task5_role": "existing_domain_or_task6_acceptance",
       "task5_evidence": null,
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "海运/空运标题和字段按运输类型投影；原模板缺图项单列。",
+      "implementation_files": [
+        "web/src/workflows.tsx",
+        "web/src/ExportJob.tsx",
+        "backend/app/documents"
+      ],
+      "ui_entry": "单证资料与模板/导出/通知",
+      "covering_domain_tests": [
+        "backend/tests/test_documents.py",
+        "backend/tests/test_documents_review.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "DOC-04",
@@ -735,7 +1329,20 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#DOC-04",
       "task5_role": "existing_domain_or_task6_acceptance",
       "task5_evidence": null,
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "海运清关单价及真实费用单位显示，不伪造按CBM费率。",
+      "implementation_files": [
+        "web/src/workflows.tsx",
+        "web/src/ExportJob.tsx",
+        "backend/app/documents"
+      ],
+      "ui_entry": "单证资料与模板/导出/通知",
+      "covering_domain_tests": [
+        "backend/tests/test_documents.py",
+        "backend/tests/test_documents_review.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "DOC-05",
@@ -759,7 +1366,20 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#DOC-05",
       "task5_role": "existing_domain_or_task6_acceptance",
       "task5_evidence": null,
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "external_input_or_environment_pending",
+      "implementation": "预生成真实PNG Blob与ClipboardItem；失败不标记、不替代打印。",
+      "implementation_files": [
+        "web/src/workflows.tsx",
+        "web/src/ExportJob.tsx",
+        "backend/app/documents"
+      ],
+      "ui_entry": "单证资料与模板/导出/通知",
+      "covering_domain_tests": [
+        "backend/tests/test_documents.py",
+        "backend/tests/test_documents_review.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": "真实微信/WhatsApp粘贴未测试"
     },
     {
       "requirement_id": "DOC-06",
@@ -771,7 +1391,20 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#DOC-06",
       "task5_role": "existing_domain_or_task6_acceptance",
       "task5_evidence": null,
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "导出选中票/当前筛选/全量各有明确入口与后台授权。",
+      "implementation_files": [
+        "web/src/workflows.tsx",
+        "web/src/ExportJob.tsx",
+        "backend/app/documents"
+      ],
+      "ui_entry": "单证资料与模板/导出/通知",
+      "covering_domain_tests": [
+        "backend/tests/test_documents.py",
+        "backend/tests/test_documents_review.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "DOC-07",
@@ -784,7 +1417,20 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#DOC-07",
       "task5_role": "existing_domain_or_task6_acceptance",
       "task5_evidence": null,
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "external_input_or_environment_pending",
+      "implementation": "客户XLSX保留正式模板、字段、金额类型；精确截图543/24仍缺。",
+      "implementation_files": [
+        "web/src/workflows.tsx",
+        "web/src/ExportJob.tsx",
+        "backend/app/documents"
+      ],
+      "ui_entry": "单证资料与模板/导出/通知",
+      "covering_domain_tests": [
+        "backend/tests/test_documents.py",
+        "backend/tests/test_documents_review.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": "原截图543/24缺失，不能声明像素同版"
     },
     {
       "requirement_id": "DOC-08",
@@ -795,7 +1441,20 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#DOC-08",
       "task5_role": "existing_domain_or_task6_acceptance",
       "task5_evidence": null,
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "PL保留原字段、费用、联系、到货和复核列，宽表不压缩丢列。",
+      "implementation_files": [
+        "web/src/workflows.tsx",
+        "web/src/ExportJob.tsx",
+        "backend/app/documents"
+      ],
+      "ui_entry": "单证资料与模板/导出/通知",
+      "covering_domain_tests": [
+        "backend/tests/test_documents.py",
+        "backend/tests/test_documents_review.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "DOC-09",
@@ -813,7 +1472,20 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#DOC-09",
       "task5_role": "existing_domain_or_task6_acceptance",
       "task5_evidence": null,
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "PL冻结到电话、拖动列宽；390选择列和电话不遮挡。",
+      "implementation_files": [
+        "web/src/workflows.tsx",
+        "web/src/ExportJob.tsx",
+        "backend/app/documents"
+      ],
+      "ui_entry": "单证资料与模板/导出/通知",
+      "covering_domain_tests": [
+        "backend/tests/test_documents.py",
+        "backend/tests/test_documents_review.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "DOC-10",
@@ -826,7 +1498,20 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#DOC-10",
       "task5_role": "existing_domain_or_task6_acceptance",
       "task5_evidence": null,
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "正式多票客户箱单按选择顺序合并展示，不复制组账金额。",
+      "implementation_files": [
+        "web/src/workflows.tsx",
+        "web/src/ExportJob.tsx",
+        "backend/app/documents"
+      ],
+      "ui_entry": "单证资料与模板/导出/通知",
+      "covering_domain_tests": [
+        "backend/tests/test_documents.py",
+        "backend/tests/test_documents_review.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "DOC-11",
@@ -838,7 +1523,20 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#DOC-11",
       "task5_role": "existing_domain_or_task6_acceptance",
       "task5_evidence": null,
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "external_input_or_environment_pending",
+      "implementation": "MBL/BO/SI/SO/DN专用模板与原件绑定；缺真实模板明确拒绝伪造。",
+      "implementation_files": [
+        "web/src/workflows.tsx",
+        "web/src/ExportJob.tsx",
+        "backend/app/documents"
+      ],
+      "ui_entry": "单证资料与模板/导出/通知",
+      "covering_domain_tests": [
+        "backend/tests/test_documents.py",
+        "backend/tests/test_documents_review.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": "部分原业务模板尚未提供"
     },
     {
       "requirement_id": "AR-01",
@@ -852,7 +1550,22 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#AR-01",
       "task5_role": "existing_domain_or_task6_acceptance",
       "task5_evidence": null,
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "原生票/历史完整组对应一金融身份，USD与NGN按明确汇率合并。",
+      "implementation_files": [
+        "web/src/EntityPage.tsx",
+        "web/src/PartyLedger.tsx",
+        "backend/app/api/workspace.py",
+        "backend/app/finance"
+      ],
+      "ui_entry": "应收账款/客户账款",
+      "covering_domain_tests": [
+        "backend/tests/test_finance.py",
+        "backend/tests/test_finance_review.py",
+        "backend/tests/test_workspace.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "AR-02",
@@ -864,7 +1577,22 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#AR-02",
       "task5_role": "existing_domain_or_task6_acceptance",
       "task5_evidence": null,
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "服务端授权范围总计覆盖全部页；客户账款及名下运单联动。",
+      "implementation_files": [
+        "web/src/EntityPage.tsx",
+        "web/src/PartyLedger.tsx",
+        "backend/app/api/workspace.py",
+        "backend/app/finance"
+      ],
+      "ui_entry": "应收账款/客户账款",
+      "covering_domain_tests": [
+        "backend/tests/test_finance.py",
+        "backend/tests/test_finance_review.py",
+        "backend/tests/test_workspace.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "AR-03",
@@ -881,7 +1609,22 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#AR-03",
       "task5_role": "existing_domain_or_task6_acceptance",
       "task5_evidence": null,
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "不展示费用项目列；无登记付款红，部分付款且已有放货/信用黄。",
+      "implementation_files": [
+        "web/src/EntityPage.tsx",
+        "web/src/PartyLedger.tsx",
+        "backend/app/api/workspace.py",
+        "backend/app/finance"
+      ],
+      "ui_entry": "应收账款/客户账款",
+      "covering_domain_tests": [
+        "backend/tests/test_finance.py",
+        "backend/tests/test_finance_review.py",
+        "backend/tests/test_workspace.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "AR-04",
@@ -895,7 +1638,22 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#AR-04",
       "task5_role": "existing_domain_or_task6_acceptance",
       "task5_evidence": null,
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "账单/客户/运单/收据关系点击打开精确记录，列表上下文保留。",
+      "implementation_files": [
+        "web/src/EntityPage.tsx",
+        "web/src/PartyLedger.tsx",
+        "backend/app/api/workspace.py",
+        "backend/app/finance"
+      ],
+      "ui_entry": "应收账款/客户账款",
+      "covering_domain_tests": [
+        "backend/tests/test_finance.py",
+        "backend/tests/test_finance_review.py",
+        "backend/tests/test_workspace.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "AR-05",
@@ -908,7 +1666,22 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#AR-05",
       "task5_role": "existing_domain_or_task6_acceptance",
       "task5_evidence": null,
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "未付款/部分/已结清筛选使用服务端余额，不按当前页推算。",
+      "implementation_files": [
+        "web/src/EntityPage.tsx",
+        "web/src/PartyLedger.tsx",
+        "backend/app/api/workspace.py",
+        "backend/app/finance"
+      ],
+      "ui_entry": "应收账款/客户账款",
+      "covering_domain_tests": [
+        "backend/tests/test_finance.py",
+        "backend/tests/test_finance_review.py",
+        "backend/tests/test_workspace.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "AR-06",
@@ -919,7 +1692,22 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#AR-06",
       "task5_role": "migration_or_recovery_support",
       "task5_evidence": "docs/development/migration-contract.md",
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "实际上传/到期字段，历史缺失来源日须显式确认，不能用今天补。",
+      "implementation_files": [
+        "web/src/EntityPage.tsx",
+        "web/src/PartyLedger.tsx",
+        "backend/app/api/workspace.py",
+        "backend/app/finance"
+      ],
+      "ui_entry": "应收账款/客户账款",
+      "covering_domain_tests": [
+        "backend/tests/test_finance.py",
+        "backend/tests/test_finance_review.py",
+        "backend/tests/test_workspace.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "AR-07",
@@ -933,7 +1721,22 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#AR-07",
       "task5_role": "migration_or_recovery_support",
       "task5_evidence": "docs/development/migration-contract.md",
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "单账减免及整组历史修订预览/确认，原因遵守可选规则。",
+      "implementation_files": [
+        "web/src/EntityPage.tsx",
+        "web/src/PartyLedger.tsx",
+        "backend/app/api/workspace.py",
+        "backend/app/finance"
+      ],
+      "ui_entry": "应收账款/客户账款",
+      "covering_domain_tests": [
+        "backend/tests/test_finance.py",
+        "backend/tests/test_finance_review.py",
+        "backend/tests/test_workspace.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "AR-08",
@@ -944,7 +1747,22 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#AR-08",
       "task5_role": "existing_domain_or_task6_acceptance",
       "task5_evidence": null,
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "仅业务允许范围小额尾款规则；不扩大到银行核验差额。",
+      "implementation_files": [
+        "web/src/EntityPage.tsx",
+        "web/src/PartyLedger.tsx",
+        "backend/app/api/workspace.py",
+        "backend/app/finance"
+      ],
+      "ui_entry": "应收账款/客户账款",
+      "covering_domain_tests": [
+        "backend/tests/test_finance.py",
+        "backend/tests/test_finance_review.py",
+        "backend/tests/test_workspace.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "AR-09",
@@ -959,7 +1777,22 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#AR-09",
       "task5_role": "migration_or_recovery_support",
       "task5_evidence": "docs/development/migration-contract.md",
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "一款多账/多款一账分配、撤销及跨方影响预览，Decimal守恒。",
+      "implementation_files": [
+        "web/src/EntityPage.tsx",
+        "web/src/PartyLedger.tsx",
+        "backend/app/api/workspace.py",
+        "backend/app/finance"
+      ],
+      "ui_entry": "应收账款/客户账款",
+      "covering_domain_tests": [
+        "backend/tests/test_finance.py",
+        "backend/tests/test_finance_review.py",
+        "backend/tests/test_workspace.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "AR-10",
@@ -974,7 +1807,22 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#AR-10",
       "task5_role": "migration_or_recovery_support",
       "task5_evidence": "docs/development/migration-contract.md",
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "票件改价预览旧新余额和冲回分配，实收不丢，旧指令不可复用。",
+      "implementation_files": [
+        "web/src/EntityPage.tsx",
+        "web/src/PartyLedger.tsx",
+        "backend/app/api/workspace.py",
+        "backend/app/finance"
+      ],
+      "ui_entry": "应收账款/客户账款",
+      "covering_domain_tests": [
+        "backend/tests/test_finance.py",
+        "backend/tests/test_finance_review.py",
+        "backend/tests/test_workspace.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "AP-01",
@@ -986,7 +1834,20 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#AP-01",
       "task5_role": "migration_or_recovery_support",
       "task5_evidence": "docs/development/migration-contract.md",
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "应付原账单/核销/出运引用与手工付款分开；无货AP不要求虚构货物。",
+      "implementation_files": [
+        "web/src/catalog.ts",
+        "web/src/Reports.tsx",
+        "backend/app/finance"
+      ],
+      "ui_entry": "按账单方结算/账单方周期结算",
+      "covering_domain_tests": [
+        "backend/tests/test_finance.py",
+        "backend/tests/test_permissions.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "AP-02",
@@ -999,7 +1860,20 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#AP-02",
       "task5_role": "migration_or_recovery_support",
       "task5_evidence": "docs/development/migration-contract.md",
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "账单方/已确认周期查询及付款，来源账单日与AR上传日区分。",
+      "implementation_files": [
+        "web/src/catalog.ts",
+        "web/src/Reports.tsx",
+        "backend/app/finance"
+      ],
+      "ui_entry": "按账单方结算/账单方周期结算",
+      "covering_domain_tests": [
+        "backend/tests/test_finance.py",
+        "backend/tests/test_permissions.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "AP-03",
@@ -1011,7 +1885,20 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#AP-03",
       "task5_role": "migration_or_recovery_support",
       "task5_evidence": "docs/development/migration-contract.md",
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "应付查询/编辑/导出独立权限，PDF/XLSX真实任务。",
+      "implementation_files": [
+        "web/src/catalog.ts",
+        "web/src/Reports.tsx",
+        "backend/app/finance"
+      ],
+      "ui_entry": "按账单方结算/账单方周期结算",
+      "covering_domain_tests": [
+        "backend/tests/test_finance.py",
+        "backend/tests/test_permissions.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "PARTY-01",
@@ -1023,7 +1910,20 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#PARTY-01",
       "task5_role": "migration_or_recovery_support",
       "task5_evidence": "docs/development/migration-contract.md",
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "客户/账单方分类及多类别成员管理。",
+      "implementation_files": [
+        "web/src/ContactLinks.tsx",
+        "web/src/catalog.ts",
+        "backend/app/warehouses/masters.py"
+      ],
+      "ui_entry": "客户与账单方/仓库资料",
+      "covering_domain_tests": [
+        "backend/tests/test_logistics.py",
+        "backend/tests/test_permissions.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "PARTY-02",
@@ -1043,7 +1943,20 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#PARTY-02",
       "task5_role": "migration_or_recovery_support",
       "task5_evidence": "docs/development/migration-contract.md",
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "原始电话、标准号码、来源及历史记录保留，修改需依据。",
+      "implementation_files": [
+        "web/src/ContactLinks.tsx",
+        "web/src/catalog.ts",
+        "backend/app/warehouses/masters.py"
+      ],
+      "ui_entry": "客户与账单方/仓库资料",
+      "covering_domain_tests": [
+        "backend/tests/test_logistics.py",
+        "backend/tests/test_permissions.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "PARTY-03",
@@ -1063,7 +1976,20 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#PARTY-03",
       "task5_role": "migration_or_recovery_support",
       "task5_evidence": "docs/development/migration-contract.md",
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "external_input_or_environment_pending",
+      "implementation": "仓库目录可配置真实仓库；缺失五仓及空运仓资料不造样例。",
+      "implementation_files": [
+        "web/src/ContactLinks.tsx",
+        "web/src/catalog.ts",
+        "backend/app/warehouses/masters.py"
+      ],
+      "ui_entry": "客户与账单方/仓库资料",
+      "covering_domain_tests": [
+        "backend/tests/test_logistics.py",
+        "backend/tests/test_permissions.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": "缺失真实仓库资料未补造"
     },
     {
       "requirement_id": "PARTY-04",
@@ -1074,7 +2000,20 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#PARTY-04",
       "task5_role": "existing_domain_or_task6_acceptance",
       "task5_evidence": null,
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "有效带显式国际区号且有来源的电话生成wa.me链接；多号码保留原文并明确选择，无自动消息。",
+      "implementation_files": [
+        "web/src/ContactLinks.tsx",
+        "web/src/catalog.ts",
+        "backend/app/warehouses/masters.py"
+      ],
+      "ui_entry": "客户与账单方/仓库资料",
+      "covering_domain_tests": [
+        "backend/tests/test_logistics.py",
+        "backend/tests/test_permissions.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "PAY-01",
@@ -1090,7 +2029,23 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#PAY-01",
       "task5_role": "existing_domain_or_task6_acceptance",
       "task5_evidence": null,
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "文件上传及剪贴板原图入口，原始字节及哈希保存。",
+      "implementation_files": [
+        "web/src/workflows.tsx",
+        "web/src/Operations.tsx",
+        "backend/app/bank",
+        "backend/app/evidence",
+        "backend/app/finance"
+      ],
+      "ui_entry": "水单审核/收款与核销/今日核销/银行核验归档",
+      "covering_domain_tests": [
+        "backend/tests/test_evidence.py",
+        "backend/tests/test_finance.py",
+        "backend/tests/test_finance_review.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "PAY-02",
@@ -1104,7 +2059,23 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#PAY-02",
       "task5_role": "existing_domain_or_task6_acceptance",
       "task5_evidence": null,
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "多张证据图片逐图来源、人工核对、识别候选、银行确定性匹配和审核。",
+      "implementation_files": [
+        "web/src/workflows.tsx",
+        "web/src/Operations.tsx",
+        "backend/app/bank",
+        "backend/app/evidence",
+        "backend/app/finance"
+      ],
+      "ui_entry": "水单审核/收款与核销/今日核销/银行核验归档",
+      "covering_domain_tests": [
+        "backend/tests/test_evidence.py",
+        "backend/tests/test_finance.py",
+        "backend/tests/test_finance_review.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "PAY-03",
@@ -1118,7 +2089,23 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#PAY-03",
       "task5_role": "existing_domain_or_task6_acceptance",
       "task5_evidence": null,
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "external_input_or_environment_pending",
+      "implementation": "识别金额/币种/交易日候选需核对；模型未配置时明确暂停，人工字段可用。",
+      "implementation_files": [
+        "web/src/workflows.tsx",
+        "web/src/Operations.tsx",
+        "backend/app/bank",
+        "backend/app/evidence",
+        "backend/app/finance"
+      ],
+      "ui_entry": "水单审核/收款与核销/今日核销/银行核验归档",
+      "covering_domain_tests": [
+        "backend/tests/test_evidence.py",
+        "backend/tests/test_finance.py",
+        "backend/tests/test_finance_review.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": "真实OCR模型与准确率未验收"
     },
     {
       "requirement_id": "PAY-04",
@@ -1132,7 +2119,23 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#PAY-04",
       "task5_role": "existing_domain_or_task6_acceptance",
       "task5_evidence": null,
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "案件创建即在水单列表可见，不把待审图片当已收款。",
+      "implementation_files": [
+        "web/src/workflows.tsx",
+        "web/src/Operations.tsx",
+        "backend/app/bank",
+        "backend/app/evidence",
+        "backend/app/finance"
+      ],
+      "ui_entry": "水单审核/收款与核销/今日核销/银行核验归档",
+      "covering_domain_tests": [
+        "backend/tests/test_evidence.py",
+        "backend/tests/test_finance.py",
+        "backend/tests/test_finance_review.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "PAY-05",
@@ -1156,7 +2159,23 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#PAY-05",
       "task5_role": "migration_or_recovery_support",
       "task5_evidence": "docs/development/migration-contract.md",
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "银行占用/复核版本持久化，与付款入账独立；重试幂等。",
+      "implementation_files": [
+        "web/src/workflows.tsx",
+        "web/src/Operations.tsx",
+        "backend/app/bank",
+        "backend/app/evidence",
+        "backend/app/finance"
+      ],
+      "ui_entry": "水单审核/收款与核销/今日核销/银行核验归档",
+      "covering_domain_tests": [
+        "backend/tests/test_evidence.py",
+        "backend/tests/test_finance.py",
+        "backend/tests/test_finance_review.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "PAY-06",
@@ -1169,7 +2188,23 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#PAY-06",
       "task5_role": "migration_or_recovery_support",
       "task5_evidence": "docs/development/migration-contract.md",
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "Payment/Allocation独立身份，不以收据号或日期金额去重。",
+      "implementation_files": [
+        "web/src/workflows.tsx",
+        "web/src/Operations.tsx",
+        "backend/app/bank",
+        "backend/app/evidence",
+        "backend/app/finance"
+      ],
+      "ui_entry": "水单审核/收款与核销/今日核销/银行核验归档",
+      "covering_domain_tests": [
+        "backend/tests/test_evidence.py",
+        "backend/tests/test_finance.py",
+        "backend/tests/test_finance_review.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "PAY-07",
@@ -1183,7 +2218,23 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#PAY-07",
       "task5_role": "migration_or_recovery_support",
       "task5_evidence": "docs/development/migration-contract.md",
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "审核预览确认后保留详情/原件与后续核销动作，失败不假成功。",
+      "implementation_files": [
+        "web/src/workflows.tsx",
+        "web/src/Operations.tsx",
+        "backend/app/bank",
+        "backend/app/evidence",
+        "backend/app/finance"
+      ],
+      "ui_entry": "水单审核/收款与核销/今日核销/银行核验归档",
+      "covering_domain_tests": [
+        "backend/tests/test_evidence.py",
+        "backend/tests/test_finance.py",
+        "backend/tests/test_finance_review.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "PAY-08",
@@ -1198,7 +2249,23 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#PAY-08",
       "task5_role": "migration_or_recovery_support",
       "task5_evidence": "docs/development/migration-contract.md",
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "今日核销以正式approved_at和业务时区查询，旧日期不冒充今天。",
+      "implementation_files": [
+        "web/src/workflows.tsx",
+        "web/src/Operations.tsx",
+        "backend/app/bank",
+        "backend/app/evidence",
+        "backend/app/finance"
+      ],
+      "ui_entry": "水单审核/收款与核销/今日核销/银行核验归档",
+      "covering_domain_tests": [
+        "backend/tests/test_evidence.py",
+        "backend/tests/test_finance.py",
+        "backend/tests/test_finance_review.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "PAY-09",
@@ -1210,7 +2277,23 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#PAY-09",
       "task5_role": "existing_domain_or_task6_acceptance",
       "task5_evidence": null,
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "银行核验归档/核销XLSX授权导出，原始行和真实金额保留。",
+      "implementation_files": [
+        "web/src/workflows.tsx",
+        "web/src/Operations.tsx",
+        "backend/app/bank",
+        "backend/app/evidence",
+        "backend/app/finance"
+      ],
+      "ui_entry": "水单审核/收款与核销/今日核销/银行核验归档",
+      "covering_domain_tests": [
+        "backend/tests/test_evidence.py",
+        "backend/tests/test_finance.py",
+        "backend/tests/test_finance_review.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "REL-01",
@@ -1231,7 +2314,20 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#REL-01",
       "task5_role": "existing_domain_or_task6_acceptance",
       "task5_evidence": null,
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "放货指令文字和PNG单独复制及持久化标记，实际提货另记。",
+      "implementation_files": [
+        "web/src/HoldReview.tsx",
+        "web/src/workflows.tsx",
+        "backend/app/documents/release.py"
+      ],
+      "ui_entry": "厂家控货/目的仓实际提货",
+      "covering_domain_tests": [
+        "backend/tests/test_documents.py",
+        "backend/tests/test_tracking.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "REL-02",
@@ -1248,7 +2344,20 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#REL-02",
       "task5_role": "existing_domain_or_task6_acceptance",
       "task5_evidence": null,
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "有授权的信用放货命令和审核依据，不能伪造已付款。",
+      "implementation_files": [
+        "web/src/HoldReview.tsx",
+        "web/src/workflows.tsx",
+        "backend/app/documents/release.py"
+      ],
+      "ui_entry": "厂家控货/目的仓实际提货",
+      "covering_domain_tests": [
+        "backend/tests/test_documents.py",
+        "backend/tests/test_tracking.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "REL-03",
@@ -1265,7 +2374,20 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#REL-03",
       "task5_role": "migration_or_recovery_support",
       "task5_evidence": "docs/development/migration-contract.md",
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "通知标题使用实际目的仓配置，未确认仓不可补造。",
+      "implementation_files": [
+        "web/src/HoldReview.tsx",
+        "web/src/workflows.tsx",
+        "backend/app/documents/release.py"
+      ],
+      "ui_entry": "厂家控货/目的仓实际提货",
+      "covering_domain_tests": [
+        "backend/tests/test_documents.py",
+        "backend/tests/test_tracking.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "REL-04",
@@ -1279,7 +2401,20 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#REL-04",
       "task5_role": "existing_domain_or_task6_acceptance",
       "task5_evidence": null,
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "厂家控货解除按指定票和来源确认，电话与解除事实独立。",
+      "implementation_files": [
+        "web/src/HoldReview.tsx",
+        "web/src/workflows.tsx",
+        "backend/app/documents/release.py"
+      ],
+      "ui_entry": "厂家控货/目的仓实际提货",
+      "covering_domain_tests": [
+        "backend/tests/test_documents.py",
+        "backend/tests/test_tracking.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "REL-05",
@@ -1291,7 +2426,20 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#REL-05",
       "task5_role": "existing_domain_or_task6_acceptance",
       "task5_evidence": null,
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "控货通知要求实际清关及目的仓确认，不以账款到港自动READY。",
+      "implementation_files": [
+        "web/src/HoldReview.tsx",
+        "web/src/workflows.tsx",
+        "backend/app/documents/release.py"
+      ],
+      "ui_entry": "厂家控货/目的仓实际提货",
+      "covering_domain_tests": [
+        "backend/tests/test_documents.py",
+        "backend/tests/test_tracking.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "REL-06",
@@ -1305,7 +2453,20 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#REL-06",
       "task5_role": "existing_domain_or_task6_acceptance",
       "task5_evidence": null,
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "明确解除时间/原文/取消状态，历史证据保留。",
+      "implementation_files": [
+        "web/src/HoldReview.tsx",
+        "web/src/workflows.tsx",
+        "backend/app/documents/release.py"
+      ],
+      "ui_entry": "厂家控货/目的仓实际提货",
+      "covering_domain_tests": [
+        "backend/tests/test_documents.py",
+        "backend/tests/test_tracking.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "REL-07",
@@ -1317,7 +2478,20 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#REL-07",
       "task5_role": "existing_domain_or_task6_acceptance",
       "task5_evidence": null,
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "主管撤销解控需版本与权限，不移除原控货事实。",
+      "implementation_files": [
+        "web/src/HoldReview.tsx",
+        "web/src/workflows.tsx",
+        "backend/app/documents/release.py"
+      ],
+      "ui_entry": "厂家控货/目的仓实际提货",
+      "covering_domain_tests": [
+        "backend/tests/test_documents.py",
+        "backend/tests/test_tracking.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "REL-08",
@@ -1333,7 +2507,20 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#REL-08",
       "task5_role": "migration_or_recovery_support",
       "task5_evidence": "docs/development/migration-contract.md",
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "PhysicalRelease独立库存余量及原件，指令、付款或中国出库不生成实放。",
+      "implementation_files": [
+        "web/src/HoldReview.tsx",
+        "web/src/workflows.tsx",
+        "backend/app/documents/release.py"
+      ],
+      "ui_entry": "厂家控货/目的仓实际提货",
+      "covering_domain_tests": [
+        "backend/tests/test_documents.py",
+        "backend/tests/test_tracking.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "NOT-01",
@@ -1349,7 +2536,19 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#NOT-01",
       "task5_role": "existing_domain_or_task6_acceptance",
       "task5_evidence": null,
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "最新到货通知按确认日期/仓/原始票据与可用数量投影。",
+      "implementation_files": [
+        "web/src/workflows.tsx",
+        "backend/app/documents/notifications.py"
+      ],
+      "ui_entry": "收货通知/装柜通知/放货通知/控货通知",
+      "covering_domain_tests": [
+        "backend/tests/test_documents.py",
+        "backend/tests/test_documents_review.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "NOT-02",
@@ -1364,7 +2563,19 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#NOT-02",
       "task5_role": "existing_domain_or_task6_acceptance",
       "task5_evidence": null,
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "收货通知使用当前收据与CBM，签名核对旧版本不可复制标记。",
+      "implementation_files": [
+        "web/src/workflows.tsx",
+        "backend/app/documents/notifications.py"
+      ],
+      "ui_entry": "收货通知/装柜通知/放货通知/控货通知",
+      "covering_domain_tests": [
+        "backend/tests/test_documents.py",
+        "backend/tests/test_documents_review.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "NOT-03",
@@ -1375,7 +2586,19 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#NOT-03",
       "task5_role": "existing_domain_or_task6_acceptance",
       "task5_evidence": null,
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "PL行内只装柜通知；中国仓出库走明确批次。",
+      "implementation_files": [
+        "web/src/workflows.tsx",
+        "backend/app/documents/notifications.py"
+      ],
+      "ui_entry": "收货通知/装柜通知/放货通知/控货通知",
+      "covering_domain_tests": [
+        "backend/tests/test_documents.py",
+        "backend/tests/test_documents_review.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "NOT-04",
@@ -1391,7 +2614,19 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#NOT-04",
       "task5_role": "existing_domain_or_task6_acceptance",
       "task5_evidence": null,
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "复制成功保存对应业务版本的持久标记；浏览器复制失败不记成功。",
+      "implementation_files": [
+        "web/src/workflows.tsx",
+        "backend/app/documents/notifications.py"
+      ],
+      "ui_entry": "收货通知/装柜通知/放货通知/控货通知",
+      "covering_domain_tests": [
+        "backend/tests/test_documents.py",
+        "backend/tests/test_documents_review.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "NOT-05",
@@ -1405,7 +2640,19 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#NOT-05",
       "task5_role": "existing_domain_or_task6_acceptance",
       "task5_evidence": null,
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "装柜黄底黑字与主管撤销命令，独立于AR黄色条件。",
+      "implementation_files": [
+        "web/src/workflows.tsx",
+        "backend/app/documents/notifications.py"
+      ],
+      "ui_entry": "收货通知/装柜通知/放货通知/控货通知",
+      "covering_domain_tests": [
+        "backend/tests/test_documents.py",
+        "backend/tests/test_documents_review.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "NOT-06",
@@ -1416,7 +2663,19 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#NOT-06",
       "task5_role": "existing_domain_or_task6_acceptance",
       "task5_evidence": null,
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "复制日期签名每日刷新，旧图片重核；不以创建时间冒充当前日期。",
+      "implementation_files": [
+        "web/src/workflows.tsx",
+        "backend/app/documents/notifications.py"
+      ],
+      "ui_entry": "收货通知/装柜通知/放货通知/控货通知",
+      "covering_domain_tests": [
+        "backend/tests/test_documents.py",
+        "backend/tests/test_documents_review.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "NOT-07",
@@ -1429,7 +2688,19 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#NOT-07",
       "task5_role": "existing_domain_or_task6_acceptance",
       "task5_evidence": null,
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "external_input_or_environment_pending",
+      "implementation": "图片/文字准备供人员明确复制，默认发送与采集关闭。",
+      "implementation_files": [
+        "web/src/workflows.tsx",
+        "backend/app/documents/notifications.py"
+      ],
+      "ui_entry": "收货通知/装柜通知/放货通知/控货通知",
+      "covering_domain_tests": [
+        "backend/tests/test_documents.py",
+        "backend/tests/test_documents_review.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": "真实客户端投递未测试"
     },
     {
       "requirement_id": "NOT-08",
@@ -1444,7 +2715,19 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#NOT-08",
       "task5_role": "existing_domain_or_task6_acceptance",
       "task5_evidence": null,
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "external_input_or_environment_pending",
+      "implementation": "实际navigator.clipboard.writeText成功后记录事件，失败显示错误并保留内容。",
+      "implementation_files": [
+        "web/src/workflows.tsx",
+        "backend/app/documents/notifications.py"
+      ],
+      "ui_entry": "收货通知/装柜通知/放货通知/控货通知",
+      "covering_domain_tests": [
+        "backend/tests/test_documents.py",
+        "backend/tests/test_documents_review.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": "真实客户端粘贴未测试"
     },
     {
       "requirement_id": "WH-01",
@@ -1461,7 +2744,22 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#WH-01",
       "task5_role": "existing_domain_or_task6_acceptance",
       "task5_evidence": null,
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "统一入库列表、专用创建/编辑/复核/原件/通知/导出。",
+      "implementation_files": [
+        "web/src/catalog.ts",
+        "web/src/workflows.tsx",
+        "web/src/Operations.tsx",
+        "backend/app/cargo",
+        "backend/app/warehouses"
+      ],
+      "ui_entry": "入库管理/中国仓批次出库",
+      "covering_domain_tests": [
+        "backend/tests/test_logistics.py",
+        "backend/tests/test_logistics_review.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "WH-02",
@@ -1477,7 +2775,22 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#WH-02",
       "task5_role": "existing_domain_or_task6_acceptance",
       "task5_evidence": null,
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "所属仓、客户、运输、货物及电话字段保留；服务端范围校验。",
+      "implementation_files": [
+        "web/src/catalog.ts",
+        "web/src/workflows.tsx",
+        "web/src/Operations.tsx",
+        "backend/app/cargo",
+        "backend/app/warehouses"
+      ],
+      "ui_entry": "入库管理/中国仓批次出库",
+      "covering_domain_tests": [
+        "backend/tests/test_logistics.py",
+        "backend/tests/test_logistics_review.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "WH-03",
@@ -1492,7 +2805,22 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#WH-03",
       "task5_role": "existing_domain_or_task6_acceptance",
       "task5_evidence": null,
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "库房/库序和目的仓独立，允许规定字段手工输入。",
+      "implementation_files": [
+        "web/src/catalog.ts",
+        "web/src/workflows.tsx",
+        "web/src/Operations.tsx",
+        "backend/app/cargo",
+        "backend/app/warehouses"
+      ],
+      "ui_entry": "入库管理/中国仓批次出库",
+      "covering_domain_tests": [
+        "backend/tests/test_logistics.py",
+        "backend/tests/test_logistics_review.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "WH-04",
@@ -1505,7 +2833,22 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#WH-04",
       "task5_role": "existing_domain_or_task6_acceptance",
       "task5_evidence": null,
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "多规格长宽高单位/件/KG，后端精确CBM累计，不能前端伪造合计。",
+      "implementation_files": [
+        "web/src/catalog.ts",
+        "web/src/workflows.tsx",
+        "web/src/Operations.tsx",
+        "backend/app/cargo",
+        "backend/app/warehouses"
+      ],
+      "ui_entry": "入库管理/中国仓批次出库",
+      "covering_domain_tests": [
+        "backend/tests/test_logistics.py",
+        "backend/tests/test_logistics_review.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "WH-05",
@@ -1516,7 +2859,22 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#WH-05",
       "task5_role": "existing_domain_or_task6_acceptance",
       "task5_evidence": null,
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "货堆原图上传/剪贴板保存并绑定对应收据，查看下载权限校验。",
+      "implementation_files": [
+        "web/src/catalog.ts",
+        "web/src/workflows.tsx",
+        "web/src/Operations.tsx",
+        "backend/app/cargo",
+        "backend/app/warehouses"
+      ],
+      "ui_entry": "入库管理/中国仓批次出库",
+      "covering_domain_tests": [
+        "backend/tests/test_logistics.py",
+        "backend/tests/test_logistics_review.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "WH-06",
@@ -1528,7 +2886,22 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#WH-06",
       "task5_role": "existing_domain_or_task6_acceptance",
       "task5_evidence": null,
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "仓/系列/序号唯一，断号查询；合法同号历史原行不抹除。",
+      "implementation_files": [
+        "web/src/catalog.ts",
+        "web/src/workflows.tsx",
+        "web/src/Operations.tsx",
+        "backend/app/cargo",
+        "backend/app/warehouses"
+      ],
+      "ui_entry": "入库管理/中国仓批次出库",
+      "covering_domain_tests": [
+        "backend/tests/test_logistics.py",
+        "backend/tests/test_logistics_review.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "WH-07",
@@ -1539,7 +2912,22 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#WH-07",
       "task5_role": "existing_domain_or_task6_acceptance",
       "task5_evidence": null,
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "快递公司及单号关联入库，客户尾号查货逐条授权。",
+      "implementation_files": [
+        "web/src/catalog.ts",
+        "web/src/workflows.tsx",
+        "web/src/Operations.tsx",
+        "backend/app/cargo",
+        "backend/app/warehouses"
+      ],
+      "ui_entry": "入库管理/中国仓批次出库",
+      "covering_domain_tests": [
+        "backend/tests/test_logistics.py",
+        "backend/tests/test_logistics_review.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "WH-08",
@@ -1551,7 +2939,22 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#WH-08",
       "task5_role": "existing_domain_or_task6_acceptance",
       "task5_evidence": null,
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "正报明确是/否/未知字段，原值保留。",
+      "implementation_files": [
+        "web/src/catalog.ts",
+        "web/src/workflows.tsx",
+        "web/src/Operations.tsx",
+        "backend/app/cargo",
+        "backend/app/warehouses"
+      ],
+      "ui_entry": "入库管理/中国仓批次出库",
+      "covering_domain_tests": [
+        "backend/tests/test_logistics.py",
+        "backend/tests/test_logistics_review.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "WH-09",
@@ -1567,7 +2970,22 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#WH-09",
       "task5_role": "existing_domain_or_task6_acceptance",
       "task5_evidence": null,
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "受控筛选输入延迟查询、响应序号拒绝旧结果，焦点/脏值保持。",
+      "implementation_files": [
+        "web/src/catalog.ts",
+        "web/src/workflows.tsx",
+        "web/src/Operations.tsx",
+        "backend/app/cargo",
+        "backend/app/warehouses"
+      ],
+      "ui_entry": "入库管理/中国仓批次出库",
+      "covering_domain_tests": [
+        "backend/tests/test_logistics.py",
+        "backend/tests/test_logistics_review.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "WH-10",
@@ -1585,7 +3003,22 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#WH-10",
       "task5_role": "existing_domain_or_task6_acceptance",
       "task5_evidence": null,
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "前四业务列冻结，拖列宽与横滚，不改变用户字段顺序。",
+      "implementation_files": [
+        "web/src/catalog.ts",
+        "web/src/workflows.tsx",
+        "web/src/Operations.tsx",
+        "backend/app/cargo",
+        "backend/app/warehouses"
+      ],
+      "ui_entry": "入库管理/中国仓批次出库",
+      "covering_domain_tests": [
+        "backend/tests/test_logistics.py",
+        "backend/tests/test_logistics_review.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "WH-11",
@@ -1597,7 +3030,22 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#WH-11",
       "task5_role": "existing_domain_or_task6_acceptance",
       "task5_evidence": null,
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "可见/全量真实XLSX异步任务；125001行实际文件回读。",
+      "implementation_files": [
+        "web/src/catalog.ts",
+        "web/src/workflows.tsx",
+        "web/src/Operations.tsx",
+        "backend/app/cargo",
+        "backend/app/warehouses"
+      ],
+      "ui_entry": "入库管理/中国仓批次出库",
+      "covering_domain_tests": [
+        "backend/tests/test_logistics.py",
+        "backend/tests/test_logistics_review.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "WH-12",
@@ -1613,7 +3061,22 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#WH-12",
       "task5_role": "existing_domain_or_task6_acceptance",
       "task5_evidence": null,
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "行内仅收货通知/收费/普通/确认标签，出库不放行内快捷按钮。",
+      "implementation_files": [
+        "web/src/catalog.ts",
+        "web/src/workflows.tsx",
+        "web/src/Operations.tsx",
+        "backend/app/cargo",
+        "backend/app/warehouses"
+      ],
+      "ui_entry": "入库管理/中国仓批次出库",
+      "covering_domain_tests": [
+        "backend/tests/test_logistics.py",
+        "backend/tests/test_logistics_review.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "WH-13",
@@ -1626,7 +3089,22 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#WH-13",
       "task5_role": "existing_domain_or_task6_acceptance",
       "task5_evidence": null,
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "出运批次选择收据与实际数量；并发不能超出余量，不自动目的仓放货。",
+      "implementation_files": [
+        "web/src/catalog.ts",
+        "web/src/workflows.tsx",
+        "web/src/Operations.tsx",
+        "backend/app/cargo",
+        "backend/app/warehouses"
+      ],
+      "ui_entry": "入库管理/中国仓批次出库",
+      "covering_domain_tests": [
+        "backend/tests/test_logistics.py",
+        "backend/tests/test_logistics_review.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "WH-14",
@@ -1637,7 +3115,22 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#WH-14",
       "task5_role": "existing_domain_or_task6_acceptance",
       "task5_evidence": null,
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "改包压包保留旧规格修订与库存事实，明确作废不可整表覆盖。",
+      "implementation_files": [
+        "web/src/catalog.ts",
+        "web/src/workflows.tsx",
+        "web/src/Operations.tsx",
+        "backend/app/cargo",
+        "backend/app/warehouses"
+      ],
+      "ui_entry": "入库管理/中国仓批次出库",
+      "covering_domain_tests": [
+        "backend/tests/test_logistics.py",
+        "backend/tests/test_logistics_review.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "WH-15",
@@ -1649,7 +3142,22 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#WH-15",
       "task5_role": "existing_domain_or_task6_acceptance",
       "task5_evidence": null,
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "主管复核绑定版本，后续变更使旧复核过期；操作员不能越权。",
+      "implementation_files": [
+        "web/src/catalog.ts",
+        "web/src/workflows.tsx",
+        "web/src/Operations.tsx",
+        "backend/app/cargo",
+        "backend/app/warehouses"
+      ],
+      "ui_entry": "入库管理/中国仓批次出库",
+      "covering_domain_tests": [
+        "backend/tests/test_logistics.py",
+        "backend/tests/test_logistics_review.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "WH-16",
@@ -1662,7 +3170,22 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#WH-16",
       "task5_role": "existing_domain_or_task6_acceptance",
       "task5_evidence": null,
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "入库事实直接进入查货时间线，不能反推不存在的运输节点。",
+      "implementation_files": [
+        "web/src/catalog.ts",
+        "web/src/workflows.tsx",
+        "web/src/Operations.tsx",
+        "backend/app/cargo",
+        "backend/app/warehouses"
+      ],
+      "ui_entry": "入库管理/中国仓批次出库",
+      "covering_domain_tests": [
+        "backend/tests/test_logistics.py",
+        "backend/tests/test_logistics_review.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "WH-17",
@@ -1673,7 +3196,22 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#WH-17",
       "task5_role": "existing_domain_or_task6_acceptance",
       "task5_evidence": null,
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "external_input_or_environment_pending",
+      "implementation": "翻译任务及候选版本确认，迟到结果不覆盖人工英文；付费模型保持关闭。",
+      "implementation_files": [
+        "web/src/catalog.ts",
+        "web/src/workflows.tsx",
+        "web/src/Operations.tsx",
+        "backend/app/cargo",
+        "backend/app/warehouses"
+      ],
+      "ui_entry": "入库管理/中国仓批次出库",
+      "covering_domain_tests": [
+        "backend/tests/test_logistics.py",
+        "backend/tests/test_logistics_review.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": "实际付费翻译模型未开启"
     },
     {
       "requirement_id": "F6-01",
@@ -1691,7 +3229,20 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#F6-01",
       "task5_role": "migration_or_recovery_support",
       "task5_evidence": "docs/development/migration-contract.md",
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "F6导入sheet/列映射、原行保留和修订，不重复计入真实库存。",
+      "implementation_files": [
+        "web/src/Operations.tsx",
+        "web/src/Reports.tsx",
+        "backend/app/warehouses"
+      ],
+      "ui_entry": "F6仓储数据分析/入库分析与库存导出",
+      "covering_domain_tests": [
+        "backend/tests/test_logistics.py",
+        "backend/tests/test_logistics_review.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "F6-02",
@@ -1703,7 +3254,20 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#F6-02",
       "task5_role": "migration_or_recovery_support",
       "task5_evidence": "docs/development/migration-contract.md",
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "F6查询、排序、选择行文字复制使用真实浏览器API。",
+      "implementation_files": [
+        "web/src/Operations.tsx",
+        "web/src/Reports.tsx",
+        "backend/app/warehouses"
+      ],
+      "ui_entry": "F6仓储数据分析/入库分析与库存导出",
+      "covering_domain_tests": [
+        "backend/tests/test_logistics.py",
+        "backend/tests/test_logistics_review.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "F6-03",
@@ -1715,7 +3279,20 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#F6-03",
       "task5_role": "migration_or_recovery_support",
       "task5_evidence": "docs/development/migration-contract.md",
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "指定前一日/目的港来货分析按授权原生入库统计。",
+      "implementation_files": [
+        "web/src/Operations.tsx",
+        "web/src/Reports.tsx",
+        "backend/app/warehouses"
+      ],
+      "ui_entry": "F6仓储数据分析/入库分析与库存导出",
+      "covering_domain_tests": [
+        "backend/tests/test_logistics.py",
+        "backend/tests/test_logistics_review.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "F6-04",
@@ -1727,7 +3304,20 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#F6-04",
       "task5_role": "existing_domain_or_task6_acceptance",
       "task5_evidence": null,
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "按业务员分析及下钻，排除MC规则作用于业务员而非收据前缀。",
+      "implementation_files": [
+        "web/src/Operations.tsx",
+        "web/src/Reports.tsx",
+        "backend/app/warehouses"
+      ],
+      "ui_entry": "F6仓储数据分析/入库分析与库存导出",
+      "covering_domain_tests": [
+        "backend/tests/test_logistics.py",
+        "backend/tests/test_logistics_review.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "LABEL-01",
@@ -1742,7 +3332,19 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#LABEL-01",
       "task5_role": "existing_domain_or_task6_acceptance",
       "task5_evidence": null,
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "external_input_or_environment_pending",
+      "implementation": "76×130竖版标签生成，物理打印尺寸仍需真实打印验收。",
+      "implementation_files": [
+        "web/src/workflows.tsx",
+        "backend/app/documents/rendering.py"
+      ],
+      "ui_entry": "入库普通/收费/确认标签",
+      "covering_domain_tests": [
+        "backend/tests/test_documents.py",
+        "backend/tests/test_documents_review.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": "真实打印机与纸张尺寸未验收"
     },
     {
       "requirement_id": "LABEL-02",
@@ -1766,7 +3368,19 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#LABEL-02",
       "task5_role": "existing_domain_or_task6_acceptance",
       "task5_evidence": null,
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "external_input_or_environment_pending",
+      "implementation": "普通/收费/确认标签使用实际抬头和字段，原图不足部分不宣称像素一致。",
+      "implementation_files": [
+        "web/src/workflows.tsx",
+        "backend/app/documents/rendering.py"
+      ],
+      "ui_entry": "入库普通/收费/确认标签",
+      "covering_domain_tests": [
+        "backend/tests/test_documents.py",
+        "backend/tests/test_documents_review.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": "部分原标签截图未提供"
     },
     {
       "requirement_id": "LABEL-03",
@@ -1781,7 +3395,19 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#LABEL-03",
       "task5_role": "existing_domain_or_task6_acceptance",
       "task5_evidence": null,
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "费用类型、币种和千分位按真实计价组件渲染。",
+      "implementation_files": [
+        "web/src/workflows.tsx",
+        "backend/app/documents/rendering.py"
+      ],
+      "ui_entry": "入库普通/收费/确认标签",
+      "covering_domain_tests": [
+        "backend/tests/test_documents.py",
+        "backend/tests/test_documents_review.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "LABEL-04",
@@ -1793,7 +3419,19 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#LABEL-04",
       "task5_role": "existing_domain_or_task6_acceptance",
       "task5_evidence": null,
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "运输方式变化及确认标签取当前版本，旧报价标签过期。",
+      "implementation_files": [
+        "web/src/workflows.tsx",
+        "backend/app/documents/rendering.py"
+      ],
+      "ui_entry": "入库普通/收费/确认标签",
+      "covering_domain_tests": [
+        "backend/tests/test_documents.py",
+        "backend/tests/test_documents_review.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "LABEL-05",
@@ -1805,7 +3443,19 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#LABEL-05",
       "task5_role": "existing_domain_or_task6_acceptance",
       "task5_evidence": null,
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "按最后有效要求省略多余仓储展示，不删底层库存数据。",
+      "implementation_files": [
+        "web/src/workflows.tsx",
+        "backend/app/documents/rendering.py"
+      ],
+      "ui_entry": "入库普通/收费/确认标签",
+      "covering_domain_tests": [
+        "backend/tests/test_documents.py",
+        "backend/tests/test_documents_review.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "MBL-01",
@@ -1816,7 +3466,19 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#MBL-01",
       "task5_role": "existing_domain_or_task6_acceptance",
       "task5_evidence": null,
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "external_input_or_environment_pending",
+      "implementation": "MBL字段表单、真实模板/原件上传、出运关联、版本编辑与授权生成。",
+      "implementation_files": [
+        "web/src/catalog.ts",
+        "web/src/workflows.tsx",
+        "backend/app/documents"
+      ],
+      "ui_entry": "MBL/BO/SI/SO/DN",
+      "covering_domain_tests": [
+        "backend/tests/test_documents.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": "缺模板时明确不可生成，需真实模板验收"
     },
     {
       "requirement_id": "TRACK-01",
@@ -1830,7 +3492,19 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#TRACK-01",
       "task5_role": "existing_domain_or_task6_acceptance",
       "task5_evidence": null,
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "逐票入库/装柜/出运/港口/清关/仓确认/实放时间线，事实彼此独立。",
+      "implementation_files": [
+        "web/src/App.tsx",
+        "web/src/workflows.tsx",
+        "backend/app/tracking"
+      ],
+      "ui_entry": "客户自助查询/物流节点",
+      "covering_domain_tests": [
+        "backend/tests/test_tracking.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "TRACK-02",
@@ -1845,7 +3519,19 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#TRACK-02",
       "task5_role": "existing_domain_or_task6_acceptance",
       "task5_evidence": null,
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "客户跟踪中文/英文，错误不泄露存在性；正式本人箱单是另一授权入口。",
+      "implementation_files": [
+        "web/src/App.tsx",
+        "web/src/workflows.tsx",
+        "backend/app/tracking"
+      ],
+      "ui_entry": "客户自助查询/物流节点",
+      "covering_domain_tests": [
+        "backend/tests/test_tracking.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "TRACK-03",
@@ -1858,7 +3544,19 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#TRACK-03",
       "task5_role": "existing_domain_or_task6_acceptance",
       "task5_evidence": null,
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "收据/快递号及电话后四位逐候选证明，拒绝整柜遍历与其他客户信息。",
+      "implementation_files": [
+        "web/src/App.tsx",
+        "web/src/workflows.tsx",
+        "backend/app/tracking"
+      ],
+      "ui_entry": "客户自助查询/物流节点",
+      "covering_domain_tests": [
+        "backend/tests/test_tracking.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "TRACK-04",
@@ -1870,7 +3568,19 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#TRACK-04",
       "task5_role": "existing_domain_or_task6_acceptance",
       "task5_evidence": null,
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "原生收据/快递号同号多行逐条核对后聚合。",
+      "implementation_files": [
+        "web/src/App.tsx",
+        "web/src/workflows.tsx",
+        "backend/app/tracking"
+      ],
+      "ui_entry": "客户自助查询/物流节点",
+      "covering_domain_tests": [
+        "backend/tests/test_tracking.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "TRACK-05",
@@ -1885,7 +3595,19 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#TRACK-05",
       "task5_role": "existing_domain_or_task6_acceptance",
       "task5_evidence": null,
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "主单跟随与每票manual/follow明确覆盖；仓确认覆盖既有到货批次。",
+      "implementation_files": [
+        "web/src/App.tsx",
+        "web/src/workflows.tsx",
+        "backend/app/tracking"
+      ],
+      "ui_entry": "客户自助查询/物流节点",
+      "covering_domain_tests": [
+        "backend/tests/test_tracking.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "TRACK-06",
@@ -1899,7 +3621,19 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#TRACK-06",
       "task5_role": "existing_domain_or_task6_acceptance",
       "task5_evidence": null,
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "SEA/AIR时间线尊重真实节点，人工时间来源记录。",
+      "implementation_files": [
+        "web/src/App.tsx",
+        "web/src/workflows.tsx",
+        "backend/app/tracking"
+      ],
+      "ui_entry": "客户自助查询/物流节点",
+      "covering_domain_tests": [
+        "backend/tests/test_tracking.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "TRACK-07",
@@ -1911,7 +3645,19 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#TRACK-07",
       "task5_role": "existing_domain_or_task6_acceptance",
       "task5_evidence": null,
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "未配置开放节点采集保持暂停，不启动旧服务。",
+      "implementation_files": [
+        "web/src/App.tsx",
+        "web/src/workflows.tsx",
+        "backend/app/tracking"
+      ],
+      "ui_entry": "客户自助查询/物流节点",
+      "covering_domain_tests": [
+        "backend/tests/test_tracking.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "PORTAL-01",
@@ -1922,7 +3668,20 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#PORTAL-01",
       "task5_role": "existing_domain_or_task6_acceptance",
       "task5_evidence": null,
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "external_input_or_environment_pending",
+      "implementation": "号码归属验证、会话恢复和本人列表；仅本机传输fake验收，真实短信渠道未配置。",
+      "implementation_files": [
+        "web/src/App.tsx",
+        "web/src/ExportJob.tsx",
+        "backend/app/tracking/customer.py"
+      ],
+      "ui_entry": "验证本人手机号/本人箱单",
+      "covering_domain_tests": [
+        "backend/tests/test_tracking.py",
+        "backend/tests/test_documents.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": "真实短信/WhatsApp归属通道未配置，仅窄运输fake本机验证"
     },
     {
       "requirement_id": "PORTAL-02",
@@ -1936,7 +3695,20 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#PORTAL-02",
       "task5_role": "existing_domain_or_task6_acceptance",
       "task5_evidence": null,
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "本人选择正式箱单XLSX/PDF/PNG任务、下载及权限；另一号码不可读。",
+      "implementation_files": [
+        "web/src/App.tsx",
+        "web/src/ExportJob.tsx",
+        "backend/app/tracking/customer.py"
+      ],
+      "ui_entry": "验证本人手机号/本人箱单",
+      "covering_domain_tests": [
+        "backend/tests/test_tracking.py",
+        "backend/tests/test_documents.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "HOME-01",
@@ -1955,7 +3727,20 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#HOME-01",
       "task5_role": "existing_domain_or_task6_acceptance",
       "task5_evidence": null,
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "每次root新打开先欢迎，已有会话点进入系统可恢复，不自动跳入后台。",
+      "implementation_files": [
+        "web/src/App.tsx",
+        "web/src/style.css",
+        "backend/app/api/customer.py"
+      ],
+      "ui_entry": "公开欢迎/首页资料配置",
+      "covering_domain_tests": [
+        "backend/tests/test_workspace.py",
+        "backend/tests/test_documents.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "HOME-02",
@@ -1966,7 +3751,20 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#HOME-02",
       "task5_role": "existing_domain_or_task6_acceptance",
       "task5_evidence": null,
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "欢迎及配置联系人角色三语，业务联系人原文保持。",
+      "implementation_files": [
+        "web/src/App.tsx",
+        "web/src/style.css",
+        "backend/app/api/customer.py"
+      ],
+      "ui_entry": "公开欢迎/首页资料配置",
+      "covering_domain_tests": [
+        "backend/tests/test_workspace.py",
+        "backend/tests/test_documents.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "HOME-03",
@@ -1979,7 +3777,20 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#HOME-03",
       "task5_role": "existing_domain_or_task6_acceptance",
       "task5_evidence": null,
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "六服务固定顺序、桌面3×2、EXPRESS首排；仅已确认2–3天实时报价文案。",
+      "implementation_files": [
+        "web/src/App.tsx",
+        "web/src/style.css",
+        "backend/app/api/customer.py"
+      ],
+      "ui_entry": "公开欢迎/首页资料配置",
+      "covering_domain_tests": [
+        "backend/tests/test_workspace.py",
+        "backend/tests/test_documents.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "HOME-04",
@@ -1990,7 +3801,20 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#HOME-04",
       "task5_role": "migration_or_recovery_support",
       "task5_evidence": "docs/development/migration-contract.md",
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "external_input_or_environment_pending",
+      "implementation": "管理员受控配置仓库/办公资料，公开白名单投影；缺真实内容不显示假数据。",
+      "implementation_files": [
+        "web/src/App.tsx",
+        "web/src/style.css",
+        "backend/app/api/customer.py"
+      ],
+      "ui_entry": "公开欢迎/首页资料配置",
+      "covering_domain_tests": [
+        "backend/tests/test_workspace.py",
+        "backend/tests/test_documents.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": "未提供的仓库/联系人保持缺失"
     },
     {
       "requirement_id": "HOME-05",
@@ -2004,7 +3828,20 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#HOME-05",
       "task5_role": "existing_domain_or_task6_acceptance",
       "task5_evidence": null,
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "external_input_or_environment_pending",
+      "implementation": "大图中部/小图查询卡后底部配置入口；原图1/2未取得，不以生成图替代。",
+      "implementation_files": [
+        "web/src/App.tsx",
+        "web/src/style.css",
+        "backend/app/api/customer.py"
+      ],
+      "ui_entry": "公开欢迎/首页资料配置",
+      "covering_domain_tests": [
+        "backend/tests/test_workspace.py",
+        "backend/tests/test_documents.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": "宣传原图1/2未提供"
     },
     {
       "requirement_id": "HOME-06",
@@ -2017,7 +3854,20 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#HOME-06",
       "task5_role": "migration_or_recovery_support",
       "task5_evidence": "docs/development/migration-contract.md",
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "大号查询卡整卡链接，真实Hotline/Openshipment配置及三语角色。",
+      "implementation_files": [
+        "web/src/App.tsx",
+        "web/src/style.css",
+        "backend/app/api/customer.py"
+      ],
+      "ui_entry": "公开欢迎/首页资料配置",
+      "covering_domain_tests": [
+        "backend/tests/test_workspace.py",
+        "backend/tests/test_documents.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "INT-01",
@@ -2026,7 +3876,23 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#INT-01",
       "task5_role": "migration_or_recovery_support",
       "task5_evidence": "docs/development/migration-contract.md",
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "统一项目与全部146范围，遵循原提示词后指令优先和明确撤销。",
+      "implementation_files": [
+        "backend/app/bank",
+        "backend/app/channels",
+        "backend/app/dialogue",
+        "web/src/AssistantTools.tsx"
+      ],
+      "ui_entry": "110对话助手/账号连接/来源消息/银行流水",
+      "covering_domain_tests": [
+        "backend/tests/test_channels.py",
+        "backend/tests/test_connections.py",
+        "backend/tests/test_assistant.py",
+        "backend/tests/test_evidence.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "INT-02",
@@ -2035,7 +3901,23 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#INT-02",
       "task5_role": "migration_or_recovery_support",
       "task5_evidence": "docs/development/migration-contract.md",
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "110确定性匹配、原图/原银行行、唯一占用与版本复核，网页和渠道共用动作。",
+      "implementation_files": [
+        "backend/app/bank",
+        "backend/app/channels",
+        "backend/app/dialogue",
+        "web/src/AssistantTools.tsx"
+      ],
+      "ui_entry": "110对话助手/账号连接/来源消息/银行流水",
+      "covering_domain_tests": [
+        "backend/tests/test_channels.py",
+        "backend/tests/test_connections.py",
+        "backend/tests/test_assistant.py",
+        "backend/tests/test_evidence.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "INT-03",
@@ -2044,7 +3926,23 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#INT-03",
       "task5_role": "migration_or_recovery_support",
       "task5_evidence": "docs/development/migration-contract.md",
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "Case/BankClaim/Payment/Allocation/ReleaseOrder/PhysicalRelease独立实体及事务。",
+      "implementation_files": [
+        "backend/app/bank",
+        "backend/app/channels",
+        "backend/app/dialogue",
+        "web/src/AssistantTools.tsx"
+      ],
+      "ui_entry": "110对话助手/账号连接/来源消息/银行流水",
+      "covering_domain_tests": [
+        "backend/tests/test_channels.py",
+        "backend/tests/test_connections.py",
+        "backend/tests/test_assistant.py",
+        "backend/tests/test_evidence.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "INT-04",
@@ -2053,7 +3951,23 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#INT-04",
       "task5_role": "migration_or_recovery_support",
       "task5_evidence": "docs/development/migration-contract.md",
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "特殊差额只在已批准规则适用范围，不扩大银行通过条件。",
+      "implementation_files": [
+        "backend/app/bank",
+        "backend/app/channels",
+        "backend/app/dialogue",
+        "web/src/AssistantTools.tsx"
+      ],
+      "ui_entry": "110对话助手/账号连接/来源消息/银行流水",
+      "covering_domain_tests": [
+        "backend/tests/test_channels.py",
+        "backend/tests/test_connections.py",
+        "backend/tests/test_assistant.py",
+        "backend/tests/test_evidence.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "INT-05",
@@ -2062,7 +3976,23 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#INT-05",
       "task5_role": "migration_or_recovery_support",
       "task5_evidence": "docs/development/migration-contract.md",
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "external_input_or_environment_pending",
+      "implementation": "采集/摘要/模型/发送关闭；连接只读/冷却/不确定投递/新消息防重放。",
+      "implementation_files": [
+        "backend/app/bank",
+        "backend/app/channels",
+        "backend/app/dialogue",
+        "web/src/AssistantTools.tsx"
+      ],
+      "ui_entry": "110对话助手/账号连接/来源消息/银行流水",
+      "covering_domain_tests": [
+        "backend/tests/test_channels.py",
+        "backend/tests/test_connections.py",
+        "backend/tests/test_assistant.py",
+        "backend/tests/test_evidence.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": "真实账号配对/采集/发送按边界禁用"
     },
     {
       "requirement_id": "INT-06",
@@ -2071,7 +4001,23 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#INT-06",
       "task5_role": "migration_or_recovery_support",
       "task5_evidence": "docs/development/migration-contract.md",
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "历史人工核销、原审批依据与现银行补证分离，不虚构新现金。",
+      "implementation_files": [
+        "backend/app/bank",
+        "backend/app/channels",
+        "backend/app/dialogue",
+        "web/src/AssistantTools.tsx"
+      ],
+      "ui_entry": "110对话助手/账号连接/来源消息/银行流水",
+      "covering_domain_tests": [
+        "backend/tests/test_channels.py",
+        "backend/tests/test_connections.py",
+        "backend/tests/test_assistant.py",
+        "backend/tests/test_evidence.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "MIG-01",
@@ -2080,7 +4026,25 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#MIG-01",
       "task5_role": "migration_or_recovery_support",
       "task5_evidence": "docs/development/migration-contract.md",
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "external_input_or_environment_pending",
+      "implementation": "23类来源键和全部原行 staging/typed legacy、显式桥接、完整组修订、来源缺口。",
+      "implementation_files": [
+        "backend/app/migration",
+        "web/src/Operations.tsx",
+        "tools/backup.py",
+        "tools/package.py",
+        "tools/start.ps1"
+      ],
+      "ui_entry": "来源记录/完整组修订/迁移与备份",
+      "covering_domain_tests": [
+        "backend/tests/test_migration.py",
+        "backend/tests/test_migration_review.py",
+        "backend/tests/test_migration110.py",
+        "backend/tests/test_legacy_bank_evidence.py",
+        "backend/tests/test_restore.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": "未取得当前MCSTAR/110生产一致性备份"
     },
     {
       "requirement_id": "MIG-02",
@@ -2089,7 +4053,25 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#MIG-02",
       "task5_role": "migration_or_recovery_support",
       "task5_evidence": "docs/development/migration-contract.md",
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "无UID显式映射、合法同额/同号多行保留、幂等与冲突待复核。",
+      "implementation_files": [
+        "backend/app/migration",
+        "web/src/Operations.tsx",
+        "tools/backup.py",
+        "tools/package.py",
+        "tools/start.ps1"
+      ],
+      "ui_entry": "来源记录/完整组修订/迁移与备份",
+      "covering_domain_tests": [
+        "backend/tests/test_migration.py",
+        "backend/tests/test_migration_review.py",
+        "backend/tests/test_migration110.py",
+        "backend/tests/test_legacy_bank_evidence.py",
+        "backend/tests/test_restore.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     },
     {
       "requirement_id": "MIG-03",
@@ -2098,7 +4080,25 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#MIG-03",
       "task5_role": "migration_or_recovery_support",
       "task5_evidence": "docs/development/migration-contract.md",
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "external_input_or_environment_pending",
+      "implementation": "实际supplied snapshot与test_ui/test_bench/restore schemas分离；旧QA排除。",
+      "implementation_files": [
+        "backend/app/migration",
+        "web/src/Operations.tsx",
+        "tools/backup.py",
+        "tools/package.py",
+        "tools/start.ps1"
+      ],
+      "ui_entry": "来源记录/完整组修订/迁移与备份",
+      "covering_domain_tests": [
+        "backend/tests/test_migration.py",
+        "backend/tests/test_migration_review.py",
+        "backend/tests/test_migration110.py",
+        "backend/tests/test_legacy_bank_evidence.py",
+        "backend/tests/test_restore.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": "当前生产正式源未取得，包内快照非现网状态"
     },
     {
       "requirement_id": "MIG-04",
@@ -2109,836 +4109,35 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#MIG-04",
       "task5_role": "migration_or_recovery_support",
       "task5_evidence": "docs/development/migration-contract.md",
-      "whole_requirement_acceptance": "not_claimed_by_task5"
+      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "implementation": "锁定依赖、源码/build/start/docs ZIP、独立解压重建运行及恢复证据，实际状态单列。",
+      "implementation_files": [
+        "backend/app/migration",
+        "web/src/Operations.tsx",
+        "tools/backup.py",
+        "tools/package.py",
+        "tools/start.ps1"
+      ],
+      "ui_entry": "来源记录/完整组修订/迁移与备份",
+      "covering_domain_tests": [
+        "backend/tests/test_migration.py",
+        "backend/tests/test_migration_review.py",
+        "backend/tests/test_migration110.py",
+        "backend/tests/test_legacy_bank_evidence.py",
+        "backend/tests/test_restore.py"
+      ],
+      "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
+      "external_unaccepted": null
     }
   ],
-  "actual_source": {
-    "classification": "supplied_snapshot_not_production",
-    "archive_sha256": "4c47a5ffb612026bbc6944dc4729a6f7f5d07f2cf2df95c9a26b155f0c51fb40",
-    "member_sha256": "ddcb01c808de61b411c986c60ede84b96ee143eee31984f414b21f9189add904",
-    "version": "101908",
-    "controls": {
-      "parties": 439,
-      "shipments": 28,
-      "tickets": 964,
-      "bills": 619,
-      "slips": 60,
-      "ledger": 73,
-      "f6": 165,
-      "archive": 49,
-      "root_keys": 23,
-      "cash_created": 0,
-      "tokens_excluded": 39,
-      "files": 144,
-      "active_files": 48,
-      "historical_files": 96,
-      "unique_file_objects": 47,
-      "missing_modules": [
-        "logistics_whRecs",
-        "logistics_mbls",
-        "logistics_custs"
-      ],
-      "provided_warehouse_profiles": 8,
-      "public_contacts_present": true
-    },
-    "additional_controls": {
-      "missing_shipment_refs": 42,
-      "AR": 604,
-      "AP": 15,
-      "group_AR": 149,
-      "nonzero_discounts": 9,
-      "all_bills_NGN": true,
-      "distinct_receipts": 917,
-      "unknown_KG": 915,
-      "slips_approved": 57,
-      "slips_pending": 3,
-      "slips_unknown_original_currency": 16,
-      "slips_missing_uid": 55,
-      "slips_missing_approval_time": 57,
-      "F6_known_copy_time": 15,
-      "nonempty_dangling_party_refs": 12,
-      "blank_party_refs": 1,
-      "unavailable_party_links": 13,
-      "discount_field_present": 52
-    },
-    "semantic_parser_version": 2
+  "browser_evidence": {
+    "web/tests/full-chain.spec.ts": "真实UI跨页面主链，3条主资料API fixture，其余主要动作UI操作",
+    "web/tests/workspace.spec.ts": "reload CSRF/权限/焦点/409/离线/ClipboardItem/跨账号及撤权",
+    "web/tests/customer.spec.ts": "号码归属/本人导出/退出/另一号码；仅outbound phone transport fake",
+    "web/tests/english.spec.ts": "英文新仓/入库表单保存",
+    "web/tests/review-fixes.spec.ts": "手机冻结电话可见/联系人三语/安全号码链接，不实际跳转或发送"
   },
-  "actual_trial": {
-    "schema": "supplied_snapshot_final",
-    "mapping_plan_version": 2,
-    "mapping_upgrade": {
-      "previous_members": 934,
-      "added_members": 0,
-      "current_members": 934,
-      "relation_controls_match": true
-    },
-    "first_created": 0,
-    "second_created": 0,
-    "state": "verified",
-    "independent": {
-      "source_sha256": "ddcb01c808de61b411c986c60ede84b96ee143eee31984f414b21f9189add904",
-      "counts": {
-        "parties": 439,
-        "shipments": 28,
-        "tickets": 964,
-        "bills": 619,
-        "slips": 60,
-        "ledger": 73,
-        "f6": 165
-      },
-      "counts_match": true,
-      "money_status_match": true,
-      "quantities_match": true,
-      "source_references_preserved": true,
-      "f6_committed_copy_provenance_match": true,
-      "attachment_references": 144,
-      "unique_attachment_objects": 47,
-      "files_match": true,
-      "cash_created": 0,
-      "source_sessions_activated": 0,
-      "new_native_sessions": 2,
-      "relations_match": true,
-      "relation_members": 934,
-      "semantic_parser_version": 2,
-      "archive_sha256": "4c47a5ffb612026bbc6944dc4729a6f7f5d07f2cf2df95c9a26b155f0c51fb40",
-      "verified": true
-    },
-    "runtime_http_counts": {
-      "normal_login": true,
-      "new_native_identity": true,
-      "counts": {
-        "parties": 439,
-        "shipments": 28,
-        "tickets": 964,
-        "bills": 619,
-        "f6": 165
-      },
-      "old_account_activated": false
-    },
-    "source_original_bytes_mtime_acl_unchanged": true,
-    "source_old_sessions_activated": 0,
-    "new_native_sessions": 2,
-    "external_calls": 0,
-    "verified_at_commit": "74df2b66e36a3e4e97fc05f1445f7b7f32139c6b",
-    "rerun_in_fix_round2": false
-  },
-  "actual_restore": {
-    "schema": "restore_task5_fix1_final",
-    "revision": "f11000500006",
-    "verified": true,
-    "tables": 107,
-    "counts": {
-      "allocations": 0,
-      "app_settings": 2,
-      "arrival_settlements": 0,
-      "attachments": 144,
-      "audit_events": 5,
-      "bank_account_warehouses": 0,
-      "bank_accounts": 0,
-      "bank_claims": 0,
-      "bank_entries": 0,
-      "bank_files": 0,
-      "bank_identity_decisions": 0,
-      "bank_matches": 0,
-      "bank_source_rows": 0,
-      "cargo_arrivals": 0,
-      "cargo_charge_components": 0,
-      "cargo_import_batches": 0,
-      "cargo_phone_history": 0,
-      "cargo_source_rows": 0,
-      "channel_actions": 0,
-      "channel_automation_events": 0,
-      "channel_automations": 0,
-      "channel_deliveries": 0,
-      "channel_messages": 0,
-      "channel_receipt_observations": 0,
-      "commands": 0,
-      "connection_events": 0,
-      "connection_operations": 0,
-      "connections": 0,
-      "cross_party_authorizations": 0,
-      "customer_identities": 0,
-      "customer_sessions": 0,
-      "delivery_receipts": 0,
-      "dialogue_files": 0,
-      "dialogue_focus": 0,
-      "dialogue_proposals": 0,
-      "dialogue_threads": 0,
-      "dialogue_turns": 0,
-      "discounts": 0,
-      "dispatch_batches": 0,
-      "document_export_members": 0,
-      "document_exports": 0,
-      "document_revisions": 0,
-      "document_templates": 0,
-      "evidence_cases": 0,
-      "evidence_images": 0,
-      "evidence_reviews": 0,
-      "finance_events": 0,
-      "grants": 1,
-      "invoice_adjustments": 0,
-      "invoices": 0,
-      "jobs": 0,
-      "legacy_archive": 49,
-      "legacy_bank_coverage": 0,
-      "legacy_bank_evidence": 0,
-      "legacy_bill_applications": 0,
-      "legacy_bill_members": 934,
-      "legacy_bills": 619,
-      "legacy_f6": 165,
-      "legacy_group_revisions": 0,
-      "legacy_parties": 439,
-      "legacy_payment_observations": 133,
-      "legacy_resolutions": 0,
-      "legacy_shipments": 28,
-      "legacy_tickets": 964,
-      "manufacturer_holds": 0,
-      "mbl_attachments": 0,
-      "mbl_records": 0,
-      "migration_batches": 1,
-      "migration_files": 144,
-      "migration_issues": 191,
-      "migration_source_maps": 122330,
-      "notification_copy_events": 0,
-      "notification_members": 0,
-      "notifications": 0,
-      "opening_balances": 0,
-      "outbox": 0,
-      "packing_documents": 0,
-      "parties": 0,
-      "party_categories": 0,
-      "party_phones": 0,
-      "party_warehouses": 0,
-      "payment_registrations": 0,
-      "payments": 0,
-      "phone_challenges": 0,
-      "physical_photos": 0,
-      "physical_releases": 0,
-      "price_cards": 0,
-      "public_attempts": 0,
-      "quote_snapshots": 0,
-      "receipt_reviews": 0,
-      "receipt_specs": 0,
-      "receipts": 0,
-      "recognition_jobs": 0,
-      "recovery_checkpoints": 0,
-      "release_members": 0,
-      "release_orders": 0,
-      "sessions": 0,
-      "shipments": 0,
-      "stock_events": 0,
-      "ticket_attachments": 0,
-      "ticket_reviews": 0,
-      "tickets": 0,
-      "tracking_nodes": 0,
-      "translation_candidates": 0,
-      "users": 2,
-      "warehouse_scopes": 0,
-      "warehouses": 0
-    },
-    "table_hashes": {
-      "allocations": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "app_settings": "57b1eb9c4df7b903232203e4c58c6d7290b45faaeaa22eb6d5fff693d4248231",
-      "arrival_settlements": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "attachments": "6e9c894e6f06d13eb7b4a28949214d099e9424730ec9b18449cbdd27a08fa4c2",
-      "audit_events": "05cf2cefeaa6a92b301cd309c9cd226752ba8d67afb3821eeee38230af545309",
-      "bank_account_warehouses": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "bank_accounts": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "bank_claims": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "bank_entries": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "bank_files": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "bank_identity_decisions": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "bank_matches": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "bank_source_rows": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "cargo_arrivals": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "cargo_charge_components": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "cargo_import_batches": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "cargo_phone_history": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "cargo_source_rows": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "channel_actions": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "channel_automation_events": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "channel_automations": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "channel_deliveries": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "channel_messages": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "channel_receipt_observations": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "commands": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "connection_events": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "connection_operations": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "connections": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "cross_party_authorizations": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "customer_identities": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "customer_sessions": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "delivery_receipts": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "dialogue_files": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "dialogue_focus": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "dialogue_proposals": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "dialogue_threads": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "dialogue_turns": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "discounts": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "dispatch_batches": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "document_export_members": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "document_exports": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "document_revisions": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "document_templates": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "evidence_cases": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "evidence_images": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "evidence_reviews": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "finance_events": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "grants": "3171a8723ca4d6cf077a7bb382bedf955f91acd891347a99b8529d036ba2c6ad",
-      "invoice_adjustments": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "invoices": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "jobs": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "legacy_archive": "90792d4d05b9d2579a2c378c4bfe16d296ae909f66bf309d22e54468935b5767",
-      "legacy_bank_coverage": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "legacy_bank_evidence": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "legacy_bill_applications": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "legacy_bill_members": "d435add3781319f9afea8224819f2fbeab97adc22d106476e0eeb76812f75078",
-      "legacy_bills": "b10ca625e2003a55b4ad719ded145ae2449fe563e3dbf1ef066b60d5d93eac07",
-      "legacy_f6": "80aa104c58aa9f0930d3e9ad79088df6808f10f69a595b2bed19343d11f9698d",
-      "legacy_group_revisions": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "legacy_parties": "84c9f2a918622173f9bb54cbd44f1eb2d034657176890dd5769384f226c22b0d",
-      "legacy_payment_observations": "58ed6a33c574f272e4976480970e09de085c2f06cc358409506987736bfe56a7",
-      "legacy_resolutions": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "legacy_shipments": "e16e0fc09fcced0557d9f9f55f1ec97898d5d05077e21d0c6a2628b257138094",
-      "legacy_tickets": "c7a929c85d33612ce56aca989a99f6ec1103842d5b1bf896905f7400b8ea97ae",
-      "manufacturer_holds": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "mbl_attachments": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "mbl_records": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "migration_batches": "62cd3c6638f515104bed3758143da13d1de050863b38d368cf762c55b1cc0816",
-      "migration_files": "a9e1fa62be47b34767e863f6d6bf413379e251b22726c2ad922c30cd61198331",
-      "migration_issues": "178b1658b465ef2a308f89aa4a2e4a5d3db32e3479adc9c52b113579a6eda99e",
-      "migration_source_maps": "dd21cc19456a70c0fdba1b13db76c0482d5d6f9ba3f908df53ed7f5b0d7e11cd",
-      "notification_copy_events": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "notification_members": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "notifications": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "opening_balances": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "outbox": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "packing_documents": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "parties": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "party_categories": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "party_phones": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "party_warehouses": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "payment_registrations": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "payments": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "phone_challenges": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "physical_photos": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "physical_releases": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "price_cards": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "public_attempts": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "quote_snapshots": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "receipt_reviews": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "receipt_specs": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "receipts": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "recognition_jobs": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "recovery_checkpoints": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "release_members": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "release_orders": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "sessions": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "shipments": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "stock_events": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "ticket_attachments": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "ticket_reviews": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "tickets": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "tracking_nodes": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "translation_candidates": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "users": "1255671be78f2e54b3e85844f0ec9754f388424c12cc3fbb547a5af39c37a553",
-      "warehouse_scopes": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "warehouses": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
-    },
-    "records_sha256": "46858fe25b462e89918b9d8ad897892b31ad38a0c52c954e8e837e0a19931cc4",
-    "file_references": 144,
-    "unique_file_objects": 47,
-    "authority": "disabled",
-    "runtime_fence": "frozen",
-    "runtime_control_keys_added_after_exact_source_hash_verification": [
-      "migration.writer",
-      "migration.restore_gate"
-    ],
-    "team_archive": "not_archived",
-    "verified_at_commit": "74df2b66e36a3e4e97fc05f1445f7b7f32139c6b",
-    "rerun_in_fix_round2": false
-  },
-  "runtime_validation": {
-    "fresh_cli_started": true,
-    "caller_exited_before_probe": true,
-    "pid_matches": true,
-    "data_directory_matches": true,
-    "port_matches": true,
-    "sql_health": true,
-    "main_pid_unchanged": true,
-    "runtime_tool_sha256": "387cfd18fb3270ed4b27ae366ba3d5e45f60628a2c8b6bf795bffa7b41b4feb0",
-    "fresh_postmaster_pid": 46368,
-    "main_postmaster_pid": 19464,
-    "isolated_graceful_stop": true
-  },
-  "role_validation": {
-    "real_warehouse_limited_finance_reader_denied_global_legacy": true,
-    "nonadmin_explicit_global_reader_allowed": true,
-    "synthetic_schema_separate": true
-  },
-  "tests": {
-    "first_full": {
-      "passed": 267,
-      "failed": 1,
-      "reason": "old-schema native invoice queried later legacy table"
-    },
-    "compatibility_focused_passed": 20,
-    "namespace_and_old_schema_focused_passed": 2,
-    "pre_acl_full": {
-      "passed": 269,
-      "warnings": 1,
-      "seconds": "828.18"
-    },
-    "sqlite_acl_focused_passed": 4,
-    "sqlite_actual_cli": {
-      "cli_exit": 0,
-      "committed_wal_in_snapshot": true,
-      "source_bytes_unchanged": true,
-      "source_owner_acl_inheritance_unchanged": true,
-      "exported_rows": 1
-    },
-    "post_full_schema_guards_passed": 3,
-    "metadata": {
-      "head": "f11000500005",
-      "current": "f11000500005",
-      "metadata_matches": true,
-      "tables": 103
-    },
-    "compileall_exit": 0,
-    "pip_check": "No broken requirements found.",
-    "final_full": {
-      "passed": 296,
-      "warnings": 1,
-      "seconds": "952.47",
-      "verified_at_commit": "74df2b66e36a3e4e97fc05f1445f7b7f32139c6b",
-      "scope": "historical_full_suite_baseline_not_fix_round2_head"
-    },
-    "prior_f5_final_full": {
-      "passed": 271,
-      "warnings": 1,
-      "seconds": "847.60"
-    },
-    "fix_round1": {
-      "first_full": "interrupted_before_AP_relation_fix_not_counted",
-      "focused_before_AP_fix": {
-        "passed": 49,
-        "fixture_failures": 1,
-        "fixture_failure_fixed": true
-      },
-      "last_identity_proof_guards": {
-        "passed": 6
-      },
-      "last_authority_AP": {
-        "passed": 2
-      },
-      "AP_relation_focus": {
-        "passed": 5
-      },
-      "AP_source_version_focus": {
-        "passed": 2
-      },
-      "final_full": {
-        "passed": 296,
-        "warnings": 1,
-        "seconds": "952.47"
-      },
-      "metadata": {
-        "head": "f11000500006",
-        "current": "f11000500006",
-        "model_tables": 107,
-        "metadata_no_new_operations": true
-      },
-      "post_full_schema_gates": {
-        "passed": 7,
-        "warnings": 1,
-        "seconds": "28.43",
-        "empty_migration_roundtrip": true,
-        "f6_nonempty_guards": true,
-        "old_revisions_unchanged": true,
-        "compileall_exit": 0,
-        "pip_check": "No broken requirements found.",
-        "diff_check_exit": 0
-      },
-      "independent_nonempty_f6_restore": [
-        {
-          "scenario": "identity",
-          "verified": true,
-          "revision": "f11000500006",
-          "table_hashes_verified": 107,
-          "new_typed_counts": {
-            "bank_identity_decisions": 1,
-            "legacy_bill_applications": 1,
-            "legacy_group_revisions": 0,
-            "recovery_checkpoints": 1
-          },
-          "runtime_fence": "frozen",
-          "source_cash_control_preserved": true
-        },
-        {
-          "scenario": "group",
-          "verified": true,
-          "revision": "f11000500006",
-          "table_hashes_verified": 107,
-          "new_typed_counts": {
-            "bank_identity_decisions": 0,
-            "legacy_bill_applications": 1,
-            "legacy_group_revisions": 4,
-            "recovery_checkpoints": 1
-          },
-          "runtime_fence": "frozen",
-          "source_cash_control_preserved": true
-        }
-      ],
-      "source_frozen_hash_verification": {
-        "frozen_files": 173,
-        "changed_files": 0,
-        "same_code_for_full_tests_trial_and_restore": true
-      },
-      "M01": "existing_upstream_Starlette_AnyIO_warning_retained_no_ignore"
-    },
-    "fix_round2": {
-      "base_commit": "74df2b66e36a3e4e97fc05f1445f7b7f32139c6b",
-      "finding": "T5-R1-N01",
-      "full_suite_rerun": false,
-      "business_red": {
-        "original_dual_source_probe": "legacy_identity_review_rolled_back_all_rows",
-        "complete_export_regression_failed": 1,
-        "http_reverse_release_returned_200_instead_of_409": true
-      },
-      "focused": {
-        "passed": 37,
-        "warnings": 1,
-        "seconds": "134.04"
-      },
-      "frozen_scoped": {
-        "passed": 119,
-        "warnings": 1,
-        "seconds": "375.09",
-        "files": [
-          "test_migration110.py",
-          "test_migration_review.py",
-          "test_legacy_bank_evidence.py",
-          "test_evidence.py",
-          "test_finance.py",
-          "test_finance_review.py",
-          "test_restore.py",
-          "test_migration.py"
-        ],
-        "freeze_files": 172,
-        "freeze_changes": 0,
-        "freeze_rule": "recursive Python files in backend/app, backend/tests, backend/migrations, tools",
-        "prior_freeze_only": [
-          "deploy/start-local.ps1"
-        ],
-        "excluded_deploy_hash_unchanged": true
-      },
-      "compileall_exit": 0,
-      "pip_check": "No broken requirements found.",
-      "diff_check_exit": 0,
-      "schema_head": "f11000500006",
-      "schema_models_mcstar_parser_unchanged": true,
-      "native_adapter_format_version": 1,
-      "actual_source_rerun": false,
-      "external_calls": 0
-    }
-  },
-  "unaccepted_inputs": [
-    "production_110_database_and_original_attachment_directory_not_supplied",
-    "actual_cargo_warehouse_and_physical_reference_confirmation",
-    "external_team_destination_not_configured",
-    "external_account_transport_model_and_delivery_not_executed",
-    "Task6_UI_and_1y_5y_scale_acceptance",
-    "specific_original_membership_date_period_charge_owner_evidence_confirmation",
-    "Task6_public_profile_route_unification"
-  ],
-  "review_fix_round": 1,
-  "review_base": "6f90e4dfdd2dbe40d2819cbd2ed511e226493548",
-  "historical_f5_trial": {
-    "schema": "supplied_snapshot_final",
-    "first_created": 2397,
-    "second_created": 0,
-    "post_compat_created": 0,
-    "frozen_final_created": 0,
-    "frozen_final_verify": "verified",
-    "independent": {
-      "source_sha256": "ddcb01c808de61b411c986c60ede84b96ee143eee31984f414b21f9189add904",
-      "counts": {
-        "parties": 439,
-        "shipments": 28,
-        "tickets": 964,
-        "bills": 619,
-        "slips": 60,
-        "ledger": 73,
-        "f6": 165
-      },
-      "counts_match": true,
-      "money_status_match": true,
-      "quantities_match": true,
-      "source_references_preserved": true,
-      "f6_committed_copy_provenance_match": true,
-      "attachment_references": 144,
-      "unique_attachment_objects": 47,
-      "files_match": true,
-      "cash_created": 0,
-      "source_sessions_activated": 0,
-      "new_native_sessions": 1,
-      "archive_sha256": "4c47a5ffb612026bbc6944dc4729a6f7f5d07f2cf2df95c9a26b155f0c51fb40",
-      "verified": true
-    },
-    "runtime_http_counts": {
-      "health": "ok",
-      "counts": {
-        "parties": 439,
-        "shipments": 28,
-        "tickets": 964,
-        "bills": 619,
-        "f6": 165
-      },
-      "native_review_login": true,
-      "old_user_login": false,
-      "source": "supplied_snapshot",
-      "schema": "supplied_snapshot_final"
-    },
-    "native_review_identity_is_new": true,
-    "actual_archive_upload_bounds": {
-      "actual_archive_bytes": 30908012,
-      "dedicated_limit_bytes": 67108864,
-      "within_upload_limit": true,
-      "actual_archive_expansion_validation": true,
-      "member_sha256": "ddcb01c808de61b411c986c60ede84b96ee143eee31984f414b21f9189add904",
-      "source_copied": false
-    }
-  },
-  "historical_f5_restore": {
-    "schema": "restore_task5_frozen_final",
-    "earlier_verified_schema": "restore_task5_final",
-    "revision": "f11000500005",
-    "verified": true,
-    "tables": 103,
-    "counts": {
-      "allocations": 0,
-      "app_settings": 2,
-      "arrival_settlements": 0,
-      "attachments": 144,
-      "audit_events": 1,
-      "bank_account_warehouses": 0,
-      "bank_accounts": 0,
-      "bank_claims": 0,
-      "bank_entries": 0,
-      "bank_files": 0,
-      "bank_matches": 0,
-      "bank_source_rows": 0,
-      "cargo_arrivals": 0,
-      "cargo_charge_components": 0,
-      "cargo_import_batches": 0,
-      "cargo_phone_history": 0,
-      "cargo_source_rows": 0,
-      "channel_actions": 0,
-      "channel_automation_events": 0,
-      "channel_automations": 0,
-      "channel_deliveries": 0,
-      "channel_messages": 0,
-      "channel_receipt_observations": 0,
-      "commands": 0,
-      "connection_events": 0,
-      "connection_operations": 0,
-      "connections": 0,
-      "cross_party_authorizations": 0,
-      "customer_identities": 0,
-      "customer_sessions": 0,
-      "delivery_receipts": 0,
-      "dialogue_files": 0,
-      "dialogue_focus": 0,
-      "dialogue_proposals": 0,
-      "dialogue_threads": 0,
-      "dialogue_turns": 0,
-      "discounts": 0,
-      "dispatch_batches": 0,
-      "document_export_members": 0,
-      "document_exports": 0,
-      "document_revisions": 0,
-      "document_templates": 0,
-      "evidence_cases": 0,
-      "evidence_images": 0,
-      "evidence_reviews": 0,
-      "finance_events": 0,
-      "grants": 0,
-      "invoice_adjustments": 0,
-      "invoices": 0,
-      "jobs": 0,
-      "legacy_archive": 49,
-      "legacy_bank_coverage": 0,
-      "legacy_bank_evidence": 0,
-      "legacy_bill_members": 934,
-      "legacy_bills": 619,
-      "legacy_f6": 165,
-      "legacy_parties": 439,
-      "legacy_payment_observations": 133,
-      "legacy_resolutions": 0,
-      "legacy_shipments": 28,
-      "legacy_tickets": 964,
-      "manufacturer_holds": 0,
-      "mbl_attachments": 0,
-      "mbl_records": 0,
-      "migration_batches": 1,
-      "migration_files": 144,
-      "migration_issues": 191,
-      "migration_source_maps": 122330,
-      "notification_copy_events": 0,
-      "notification_members": 0,
-      "notifications": 0,
-      "opening_balances": 0,
-      "outbox": 0,
-      "packing_documents": 0,
-      "parties": 0,
-      "party_categories": 0,
-      "party_phones": 0,
-      "party_warehouses": 0,
-      "payment_registrations": 0,
-      "payments": 0,
-      "phone_challenges": 0,
-      "physical_photos": 0,
-      "physical_releases": 0,
-      "price_cards": 0,
-      "public_attempts": 0,
-      "quote_snapshots": 0,
-      "receipt_reviews": 0,
-      "receipt_specs": 0,
-      "receipts": 0,
-      "recognition_jobs": 0,
-      "release_members": 0,
-      "release_orders": 0,
-      "sessions": 0,
-      "shipments": 0,
-      "stock_events": 0,
-      "ticket_attachments": 0,
-      "ticket_reviews": 0,
-      "tickets": 0,
-      "tracking_nodes": 0,
-      "translation_candidates": 0,
-      "users": 1,
-      "warehouse_scopes": 0,
-      "warehouses": 0
-    },
-    "table_hashes": {
-      "allocations": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "app_settings": "57b1eb9c4df7b903232203e4c58c6d7290b45faaeaa22eb6d5fff693d4248231",
-      "arrival_settlements": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "attachments": "6e9c894e6f06d13eb7b4a28949214d099e9424730ec9b18449cbdd27a08fa4c2",
-      "audit_events": "528e1bc55344b5918978adabe370e57cf80ae49f6fdc5bced30256a154bce1ec",
-      "bank_account_warehouses": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "bank_accounts": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "bank_claims": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "bank_entries": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "bank_files": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "bank_matches": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "bank_source_rows": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "cargo_arrivals": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "cargo_charge_components": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "cargo_import_batches": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "cargo_phone_history": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "cargo_source_rows": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "channel_actions": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "channel_automation_events": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "channel_automations": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "channel_deliveries": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "channel_messages": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "channel_receipt_observations": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "commands": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "connection_events": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "connection_operations": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "connections": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "cross_party_authorizations": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "customer_identities": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "customer_sessions": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "delivery_receipts": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "dialogue_files": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "dialogue_focus": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "dialogue_proposals": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "dialogue_threads": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "dialogue_turns": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "discounts": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "dispatch_batches": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "document_export_members": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "document_exports": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "document_revisions": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "document_templates": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "evidence_cases": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "evidence_images": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "evidence_reviews": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "finance_events": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "grants": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "invoice_adjustments": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "invoices": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "jobs": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "legacy_archive": "90792d4d05b9d2579a2c378c4bfe16d296ae909f66bf309d22e54468935b5767",
-      "legacy_bank_coverage": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "legacy_bank_evidence": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "legacy_bill_members": "d435add3781319f9afea8224819f2fbeab97adc22d106476e0eeb76812f75078",
-      "legacy_bills": "304e7a62ed58ecb1e37998b27b46a9f83309a460d008bbe174b683a0556ee53b",
-      "legacy_f6": "80aa104c58aa9f0930d3e9ad79088df6808f10f69a595b2bed19343d11f9698d",
-      "legacy_parties": "84c9f2a918622173f9bb54cbd44f1eb2d034657176890dd5769384f226c22b0d",
-      "legacy_payment_observations": "58ed6a33c574f272e4976480970e09de085c2f06cc358409506987736bfe56a7",
-      "legacy_resolutions": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "legacy_shipments": "e16e0fc09fcced0557d9f9f55f1ec97898d5d05077e21d0c6a2628b257138094",
-      "legacy_tickets": "c7a929c85d33612ce56aca989a99f6ec1103842d5b1bf896905f7400b8ea97ae",
-      "manufacturer_holds": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "mbl_attachments": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "mbl_records": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "migration_batches": "eb4c2ee14d7fe44191bc4da1994d14f6a949a084afb6351d88ae68e8dd741cfa",
-      "migration_files": "a9e1fa62be47b34767e863f6d6bf413379e251b22726c2ad922c30cd61198331",
-      "migration_issues": "178b1658b465ef2a308f89aa4a2e4a5d3db32e3479adc9c52b113579a6eda99e",
-      "migration_source_maps": "dd21cc19456a70c0fdba1b13db76c0482d5d6f9ba3f908df53ed7f5b0d7e11cd",
-      "notification_copy_events": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "notification_members": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "notifications": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "opening_balances": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "outbox": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "packing_documents": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "parties": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "party_categories": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "party_phones": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "party_warehouses": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "payment_registrations": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "payments": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "phone_challenges": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "physical_photos": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "physical_releases": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "price_cards": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "public_attempts": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "quote_snapshots": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "receipt_reviews": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "receipt_specs": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "receipts": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "recognition_jobs": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "release_members": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "release_orders": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "sessions": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "shipments": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "stock_events": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "ticket_attachments": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "ticket_reviews": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "tickets": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "tracking_nodes": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "translation_candidates": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "users": "3a97eeb588c747f9a16b3ab5da7d5f3fe765431fa4db3dff080e4916e79ed71d",
-      "warehouse_scopes": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-      "warehouses": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
-    },
-    "records_sha256": "b00775dc126f185d7b44bfd885b4ba095a3585b5ff200e9a2c72606f4da646d9",
-    "file_references": 144,
-    "unique_file_objects": 47,
-    "backup_before_native_review_login": true,
-    "authority": "disabled",
-    "team_archive": "not_archived"
-  },
-  "review_fixes": {
-    "T5-I01": "addressed_by_independent_round1_rereview",
-    "T5-I02": "addressed_by_independent_round1_rereview",
-    "T5-I03": "addressed_by_independent_round1_rereview",
-    "T5-I04": "addressed_by_independent_round1_rereview",
-    "T5-I05": "addressed_by_independent_round1_rereview",
-    "T5-I06": "addressed_by_independent_round1_rereview",
-    "T5-R1-N01": "implemented_and_verified_pending_independent_rereview"
-  }
+  "runtime": "http://127.0.0.1:8011",
+  "runtime_data": "supplied package snapshot, controlled authentication; not asserted current production",
+  "prior_task5_evidence": "docs/acceptance/迁移审查记录.md"
 }

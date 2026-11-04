@@ -105,8 +105,8 @@ def replacement_preview(id:str,db:Database,payload:dict=Body(...),actor=Depends(
 
 
 @router.get('/tickets')
-def tickets(db:Database,limit:int=50,offset:int=0,receipt:str|None=None,client:str|None=None,item:str|None=None,destination:str|None=None,transport:str|None=None,state:str|None=None,document_id:str|None=None,actor=Depends(get_actor)):
-    return packing.list_tickets(db,actor,limit,offset,receipt,client,item,destination,transport,state,document_id)
+def tickets(db:Database,limit:int=50,offset:int=0,receipt:str|None=None,client:str|None=None,item:str|None=None,destination:str|None=None,transport:str|None=None,state:str|None=None,document_id:str|None=None,party_id:str|None=None,actor=Depends(get_actor)):
+    return packing.list_tickets(db,actor,limit,offset,receipt,client,item,destination,transport,state,document_id,party_id)
 
 
 @router.get('/tickets/{id}')

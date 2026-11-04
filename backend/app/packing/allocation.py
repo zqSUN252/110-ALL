@@ -68,17 +68,18 @@ def revise(db,t,p,quote=None,persist=True):
         t._charge_components=[dict(line,id=str(uuid5(NAMESPACE_URL,f'cargo-component:{t.id}:{t.version}:{i}')),version=1,ticket_version=t.version) for i,line in enumerate(lines)]
 
 
-def ready(db,t):
+def ready(db,t,lines=None):
     if t.pricing_authority=='review':return False
-    lines=components(db,t)
+    if lines is None:lines=components(db,t)
     if not lines:return False
     values=totals(lines)
     return None not in values and values==(t.freight_usd,t.clearing_ngn)
 
 
-def projection(db,t,rows):
+def projection(db,t,rows,lines=None):
     from .quantities import known_sum,complete as quantity_complete
-    lines=components(db,t);priced=ready(db,t) and (not t.freight_usd or t.ngn_per_usd)
+    if lines is None:lines=components(db,t)
+    priced=ready(db,t,lines) and (not t.freight_usd or t.ngn_per_usd)
     cumulative={k:Decimal(0) for k in UNITS.values()};used=[Decimal('0.00') for c in lines];result=[]
     for a in rows:
         for k in cumulative:cumulative[k]=known_sum((cumulative[k],getattr(a,k)))

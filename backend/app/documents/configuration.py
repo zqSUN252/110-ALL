@@ -4,7 +4,7 @@ from app.models import AppSetting
 from app.finance.service import record
 from .access import command
 
-PROFILE_FIELDS='china_contacts packing_list_contact customer_care_contact tracking_domain bank_name account_holder account_number public_company_name public_hotline public_address public_website'
+PROFILE_FIELDS='china_contacts packing_list_contact customer_care_contact tracking_domain bank_name account_holder account_number public_company_name public_hotline public_openshipment public_address public_website'
 
 
 @command('documents.configure','expected_version '+PROFILE_FIELDS,'documents.configure')

@@ -55,13 +55,6 @@ def job_status(identity:str,db:Database,actor=Depends(get_actor)):
     return {'id':row.id,'state':row.status,'error_code':row.error_code,'result':row.payload.get('result')}
 
 
-@router.get('/public/profile')
-def public_profile(db:Database):
-    from app.models import AppSetting
-    row=db.scalar(select(AppSetting).where(AppSetting.key=='documents.profile'))
-    return {k:v for k,v in (row.value if row else {}).items() if k in ('public_hotline','public_openshipment')}
-
-
 @router.get('/legacy/{kind}')
 def listing(kind:str,db:Database,actor=Depends(get_actor),limit:int=Query(50,ge=1,le=200),offset:int=Query(0,ge=0),query:str=Query('',max_length=200)):
     return service.legacy_list(db,actor,kind,limit,offset,query)

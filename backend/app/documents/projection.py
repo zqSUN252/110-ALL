@@ -31,7 +31,7 @@ def total_text(total):
 
 def profile(db):
     row=db.scalar(select(AppSetting).where(AppSetting.key=='documents.profile'))
-    allowed={'china_contacts','packing_list_contact','customer_care_contact','tracking_domain','bank_name','account_holder','account_number','public_company_name','public_hotline','public_address','public_website'}
+    allowed={'china_contacts','packing_list_contact','customer_care_contact','tracking_domain','bank_name','account_holder','account_number','public_company_name','public_hotline','public_openshipment','public_address','public_website'}
     return {k:v for k,v in (row.value if row else {}).items() if k in allowed}
 
 

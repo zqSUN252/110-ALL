@@ -159,10 +159,17 @@ def candidate_rows(db,case,account):
     amounts=[case.amount]
     if case.currency=='NGN': amounts.append(case.amount-Decimal('53.75'))
     entries=list(db.scalars(select(BankEntry).where(BankEntry.account_id==account.id,BankEntry.currency==case.currency,BankEntry.credit.in_(amounts))))
+    if not entries:return []
+    # Select exactly the same first original observation as before, in one
+    # account/amount-bounded query. Overlapping files remain separate facts.
+    observations=list(db.scalars(select(BankSourceRow).where(BankSourceRow.entry_id.in_([e.id for e in entries])).distinct(BankSourceRow.entry_id).order_by(BankSourceRow.entry_id,BankSourceRow.id)))
+    by_entry={row.entry_id:row for row in observations}
+    files={row.id:row for row in db.scalars(select(BankFile).where(BankFile.id.in_({r.file_id for r in observations})))}
     result=[]
     for e in entries:
-        row=db.scalar(select(BankSourceRow).where(BankSourceRow.entry_id==e.id).order_by(BankSourceRow.id).limit(1))
-        file=db.get(BankFile,row.file_id)
+        row=by_entry.get(e.id)
+        if row is None:raise DomainError('bank_source_missing','Bank entry has no original observation',409)
+        file=files[row.file_id]
         result.append({'id':e.id,'currency':e.currency,'credit':str(e.credit),'debit':str(e.debit),'date':e.transaction_date.isoformat() if e.transaction_date else None,
             'bank':account.bank_name,'account_suffix':account.account_number[-4:],'description':e.description,'reference':e.reference,'issues':e.issues,
             'fingerprint':e.fingerprint,'file_sha256':file.sha256,'sheet':row.sheet,'row':row.row_number,'source_code':row.parsed.get('source_code','')})
@@ -178,8 +185,10 @@ def decision(db,case):
     result=matching.compare({'fields':fields,'sha256':sha},candidate_rows(db,case,account))
     result['coverage']='unknown'
     if result['reason']=='no_bank_amount_candidate': result['reason']='bank_coverage_unknown'
+    candidate_ids=[candidate['bank']['id'] for candidate in result['candidates']]
+    claims={claim.entry_id:claim for claim in db.scalars(select(BankClaim).where(BankClaim.entry_id.in_(candidate_ids),BankClaim.state!='released'))} if candidate_ids else {}
     for candidate in result['candidates']:
-        claim=db.scalar(select(BankClaim).where(BankClaim.entry_id==candidate['bank']['id'],BankClaim.state!='released'))
+        claim=claims.get(candidate['bank']['id'])
         if claim and claim.case_id!=case.id:
             candidate.update(eligible=False,reason='bank_already_claimed')
     valid=[c for c in result['candidates'] if c['eligible']]

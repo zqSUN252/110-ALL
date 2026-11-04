@@ -1,5 +1,7 @@
 from datetime import timedelta
 import secrets
+import hashlib
+import hmac
 from argon2 import PasswordHasher
 from argon2.exceptions import VerificationError, InvalidHashError
 from fastapi import APIRouter, Depends, Request, Response
@@ -77,7 +79,8 @@ def login(payload: Login, request: Request, response: Response, db: Database):
         raise DomainError('invalid_credentials', 'Incorrect username or password', 401)
     if not user.active:
         raise DomainError('inactive_account', 'Account is inactive', 403)
-    token, csrf = secrets.token_urlsafe(48), secrets.token_urlsafe(32)
+    token = secrets.token_urlsafe(48)
+    csrf = hmac.new(token.encode(), b'mcstar-browser-csrf-v1', hashlib.sha256).hexdigest()
     db.add(Session(user_id=user.id, token_hash=token_hash(token), csrf_hash=token_hash(csrf),
         expires_at=utcnow() + timedelta(hours=request.app.state.settings.session_hours)))
     response.set_cookie('mcstar_session', token, httponly=True,
@@ -85,6 +88,20 @@ def login(payload: Login, request: Request, response: Response, db: Database):
         max_age=request.app.state.settings.session_hours * 3600, path='/')
     audit(db, Actor(user.id, set(), set()), 'auth.login', 'user', user.id, None, None)
     return {'user': user_json(user), 'csrf_token': csrf}
+
+
+@router.get('/auth/session')
+def browser_session(request: Request, response: Response, db: Database, actor=Depends(get_actor)):
+    # A same-origin read recovers a stable, session-bound CSRF value after reload.
+    # The HttpOnly authentication token is never returned. No CORS is enabled.
+    if request.headers.get('Sec-Fetch-Site') == 'cross-site':
+        raise DomainError('csrf', 'Same-origin session request required', 403)
+    token = request.cookies['mcstar_session']
+    csrf = hmac.new(token.encode(), b'mcstar-browser-csrf-v1', hashlib.sha256).hexdigest()
+    request.state.session.csrf_hash = token_hash(csrf)
+    response.headers['Cache-Control'] = 'private, no-store'
+    return {'user': {**user_json(request.state.user), 'capabilities': sorted(actor.capabilities),
+        'warehouse_ids': sorted(actor.warehouse_ids)}, 'csrf_token': csrf}
 
 
 @router.post('/auth/logout')

@@ -1,7 +1,7 @@
 """Typed logistics facts. JSON is restricted to immutable source/provenance and quote snapshots."""
 from datetime import date
 from decimal import Decimal
-from sqlalchemy import String, Text, Numeric, Date, ForeignKey, Integer, Boolean, UniqueConstraint, CheckConstraint
+from sqlalchemy import String, Text, Numeric, Date, ForeignKey, Integer, Boolean, UniqueConstraint, CheckConstraint, Index, text
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped, mapped_column as col
 from app.db import Base
@@ -195,7 +195,7 @@ class ImportBatch(Record,Base):
 
 class Ticket(Record,Base):
     __tablename__='tickets'
-    __table_args__=(CheckConstraint('pieces >= 0 AND kg >= 0 AND cbm >= 0'),CheckConstraint("pricing_authority IN ('quote','totals','pending','review')",name='ck_ticket_pricing_authority'),)
+    __table_args__=(CheckConstraint('pieces >= 0 AND kg >= 0 AND cbm >= 0'),CheckConstraint("pricing_authority IN ('quote','totals','pending','review')",name='ck_ticket_pricing_authority'),Index('ix_tickets_created_page',text('created_at DESC'),'id'),Index('ix_tickets_warehouse_created_page','warehouse_id',text('created_at DESC'),'id'))
     document_id:Mapped[str]=col(ForeignKey('packing_documents.id'),index=True)
     warehouse_id:Mapped[str]=col(ForeignKey('warehouses.id'))
     party_id:Mapped[str|None]=col(ForeignKey('parties.id'))

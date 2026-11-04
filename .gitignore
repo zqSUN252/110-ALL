@@ -30,4 +30,7 @@ build/
 coverage/
 .coverage
 htmlcov/
+web/test-results/
+web/playwright-report/
+*.tsbuildinfo
 

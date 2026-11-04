@@ -476,7 +476,8 @@ def test_f6_nonempty_review_facts_refuse_downgrade(app,fact):
             db.add(BankIdentityDecision(left_id=entries[0].id,right_id=entries[1].id,decision='distinct',basis={},actor_id=who.id,source='separate originals',reason='preserve ruling'))
     config=migration_config();config.attributes['database_url']=app.state.settings.database_url
     with pytest.raises(RuntimeError,match='Refuse loss'):command.downgrade(config,'f11000500005')
-    with app.state.engine.connect() as conn:assert conn.execute(__import__('sqlalchemy').text('SELECT version_num FROM alembic_version')).scalar_one()=='f11000500006'
+    from alembic.script import ScriptDirectory
+    with app.state.engine.connect() as conn:assert conn.execute(__import__('sqlalchemy').text('SELECT version_num FROM alembic_version')).scalar_one()==ScriptDirectory.from_config(config).get_current_head()
 
 
 @pytest.mark.parametrize('standalone',[False,True])

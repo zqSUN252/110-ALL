@@ -109,7 +109,10 @@ def validate(archive_path):
         compile(file.read_text(encoding='utf-8'),str(file),'exec')
     check('文档工具Python语法有效', True)
     check('未把应用验收或生产迁移标为完成', inv['production_migration_executed'] is False and '尚未完成正式业务验收或生产迁移' in (ROOT/'README.md').read_text(encoding='utf-8'))
-    report = {'date':'2026-11-04','scope':'仅文档、追溯与来源完整性；不是应用验收',
+    from datetime import datetime,timezone
+    checked=datetime.now(timezone.utc)
+    checked_local=checked.astimezone()
+    report = {'baseline_date':'2026-11-04','date':checked_local.date().isoformat(),'checked_at':checked.isoformat(),'checked_local_at':checked_local.isoformat(),'scope':'仅文档、追溯与来源完整性；不是应用验收',
               'checks_passed':len(checks),'checks':checks,'requirements':len(req),'prompt_sections':len(trace),
               'known_secrets_found':False,'source_archive_unchanged':True,'reference_110_unchanged':True,
               'application_code_present':(ROOT/'backend/app/main.py').exists(),

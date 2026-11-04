@@ -165,3 +165,14 @@ def notification_image(id:str,request:Request,db:Database,actor=Depends(get_acto
     authorize(db,actor,{'notification_id':id},'documents.notify');n=locked(db,Notification,id)
     notifications.current_generation(db,actor,n)
     return Response(png(request.app.state.settings,n.body.splitlines()),media_type='image/png',headers={'Cache-Control':'private, no-store','X-Content-Type-Options':'nosniff'})
+
+
+@router.get('/notifications/{id}/current')
+def notification_current(id:str,db:Database,actor=Depends(get_actor)):
+    from app.models import Notification
+    from app.finance.service import locked
+    n=locked(db,Notification,id)
+    notifications.current_generation(db,actor,n)
+    if n.generated_on!=notifications.today(db):
+        raise DomainError('stale_generation','Generate fresh content for the current business day',409)
+    return {'id':n.id,'version':n.version,'current':True}

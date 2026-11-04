@@ -1,4 +1,6 @@
 from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
+from pathlib import Path
 from fastapi.responses import JSONResponse
 from fastapi.exceptions import RequestValidationError
 from sqlalchemy import text
@@ -14,6 +16,7 @@ from app.api.customer import router as customer_router
 from app.api.documents import router as document_router
 from app.api.assistant import router as assistant_router
 from app.api.migration import router as migration_router
+from app.api.workspace import router as workspace_router
 
 
 def create_app(settings=None):
@@ -55,4 +58,9 @@ def create_app(settings=None):
     application.include_router(document_router)
     application.include_router(assistant_router)
     application.include_router(migration_router)
+    application.include_router(workspace_router)
+    web_root = Path(__file__).resolve().parents[2] / 'web' / 'dist'
+    if web_root.is_dir():
+        # Only the compiled public bundle is mounted. Private roots never enter this tree.
+        application.mount('/', StaticFiles(directory=web_root, html=True), name='workspace')
     return application

@@ -47,7 +47,8 @@ def verify(db,identity,code):
         u=User(username='customer-'+uuid4().hex,password_hash=PasswordHasher().hash(token_urlsafe(48)));db.add(u);db.flush()
         c=CustomerIdentity(phone=row.phone,user_id=u.id,verified_at=utcnow());db.add(c);db.flush()
     if not c.active:return None
-    c.verified_at=utcnow();token=token_urlsafe(32);csrf=token_urlsafe(32)
+    import hmac,hashlib
+    c.verified_at=utcnow();token=token_urlsafe(32);csrf=hmac.new(token.encode(),b'mcstar-customer-csrf-v1',hashlib.sha256).hexdigest()
     db.add(CustomerSession(customer_id=c.id,token_hash=token_hash(token),csrf_hash=token_hash(csrf),expires_at=utcnow()+timedelta(hours=12)))
     return {'customer':c,'token':token,'csrf':csrf}
 

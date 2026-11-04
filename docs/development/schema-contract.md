@@ -85,3 +85,9 @@ Tests use actual PG with unique `test_<UUID>` schemas, apply frozen migrations, 
 - SYS-05 (#59, #60, #65, #67, #69, #72, #115, #225, #226, #324, #330, #358, #360, #432, #530): real PG authoritative writes, stale conflicts and concurrent idempotency verified; two real devices/production connectivity not yet accepted.
 - SYS-07 (#145): audit transaction and rollback foundation verified; business-action audits remain domain-task acceptance.
 - SYS-09 and SYS-13: local runtime/migration verified; multi-year capacity, complete production restoration and deployment remain unverified.
+
+## Task6 integration extension (current local head)
+
+The foundation evidence above is historical. Current local head is `g11000600002`, descending from reviewed Task5 `f11000500006`. `g11000600001` adds the versioned `announcements` table with controlled Chinese/English fields and active state; the ordinary server command wrapper owns permissions, idempotency and transactional audit. `g11000600002` adds ticket ordering indexes `(created_at DESC,id)` and `(warehouse_id,created_at DESC,id)`; the Ticket model declares the same indexes so Alembic check has no artificial removal diff. There are108 application tables. No currency, bank identity, cash allocation, release or physical stock semantics are changed by these revisions.
+
+The supplied package snapshot has actually been upgraded to this head and independently backed up/restored with complete table/hash checks. Native review records remain separate from isolated synthetic tests and performance schemas. Current local UI/HTTP, scale, recovery and package results are recorded in `docs/acceptance/运行验证.json`; they do not certify the current production source, PG18, external delivery or production deployment.

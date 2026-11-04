@@ -35,5 +35,6 @@ def download(attachment_id: str, request: Request, db: Database, actor=Depends(g
         raise DomainError('not_found', 'Attachment not found', 404)
     if '*' not in actor.capabilities and not (row.owner_type == 'user' and row.owner_id == actor.id):
         raise DomainError('forbidden', 'Attachment is outside your scope', 403)
-    return Response(read_file(request.app.state.settings, row), media_type='application/octet-stream',
-        headers={'Content-Disposition': 'attachment', 'X-Content-Type-Options': 'nosniff', 'Cache-Control': 'private, no-store'})
+    from urllib.parse import quote
+    return Response(read_file(request.app.state.settings, row), media_type=row.media_type,
+        headers={'Content-Disposition': "attachment; filename*=UTF-8''"+quote(row.filename,safe=''), 'X-Content-Type-Options': 'nosniff', 'Cache-Control': 'private, no-store'})

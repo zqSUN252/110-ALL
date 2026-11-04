@@ -116,7 +116,7 @@ def fact_snapshot(db,schema=None):
         selects.append(f"SELECT '{name}' AS kind,id,to_jsonb(t)::text AS value FROM {prefix}\"{name}\" t{where}")
     if hasattr(db,'flush'):db.flush()
     result={}
-    for kind,identity,value in db.execute(text(' UNION ALL '.join(selects))):
+    for kind,identity,value in db.execute(text(' UNION ALL '.join(selects)).execution_options(yield_per=1000)):
         from decimal import Decimal
         value=json.loads(value,parse_float=Decimal)
         result.setdefault(kind,{})[identity]={'hash':digest(value),'updated_at':value.get('updated_at'),'version':value.get('version')}

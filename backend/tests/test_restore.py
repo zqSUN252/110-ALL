@@ -41,6 +41,9 @@ def test_empty_restore_preserves_rows_bytes_but_not_executable_sessions(app,tmp_
         db.add_all([pending,uncertain]);db.flush();pending_id,uncertain_id=pending.id,uncertain.id
         call(db,actor,configure,role='assistant',session='fixture',instance='fixture',generation='fixture',expected_version=0)
         invoice_id=ticket['invoice_id']
+        # Cross the streaming restore batch boundary with real PostgreSQL rows.
+        from app.models import Warehouse
+        db.add_all(Warehouse(name='SYNTHETIC chunk '+str(i),source='Original 中文 source') for i in range(1201))
     bundle=tmp_path/'backup'
     manifest=backup(app.state.settings,bundle)
     schema='restore_'+uuid4().hex
@@ -53,6 +56,7 @@ def test_empty_restore_preserves_rows_bytes_but_not_executable_sessions(app,tmp_
         assert result['verified'] is True
         engine=make_engine(target.database_url)
         with session_factory(engine)() as db:
+            assert db.scalar(select(func.count()).select_from(Warehouse).where(Warehouse.name.like('SYNTHETIC chunk %')))==1201
             assert db.scalar(select(func.count()).select_from(User))==3
             assert db.scalar(select(func.count()).select_from(Grant))==5
             assert read_file(target,db.get(Attachment,aid))==b'original fixture'

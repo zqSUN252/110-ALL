@@ -117,3 +117,4 @@ from .assistant import ChannelReceiptObservation
 from .migration import (MigrationBatch, LegacyParty, LegacyShipment, LegacyTicket, LegacyBill, LegacyBillMember, LegacyPaymentObservation, LegacyF6, MigrationSourceMap, MigrationIssue, LegacyArchive, MigrationFile, LegacyResolution)
 from .migration import LegacyBankEvidence,LegacyBankCoverage
 from .migration import BankIdentityDecision,LegacyBillApplication,LegacyGroupRevision,RecoveryCheckpoint
+from .workspace import Announcement

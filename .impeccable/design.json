@@ -1,0 +1,570 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-04T20:25:55.615373+00:00",
+  "title": "Design System: MC STAR LOGISTICS",
+  "extensions": {
+    "colorMeta": {
+      "blue": {
+        "role": "primary",
+        "displayName": "Blue",
+        "tonalRamp": [
+          "oklch(15% 0.21224 262.892)",
+          "oklch(26.43% 0.21224 262.892)",
+          "oklch(37.86% 0.21224 262.892)",
+          "oklch(49.29% 0.21224 262.892)",
+          "oklch(60.71% 0.21224 262.892)",
+          "oklch(72.14% 0.21224 262.892)",
+          "oklch(83.57% 0.21224 262.892)",
+          "oklch(95% 0.21224 262.892)"
+        ]
+      },
+      "nav": {
+        "role": "primary",
+        "displayName": "Nav",
+        "tonalRamp": [
+          "oklch(15% 0.16080 262.297)",
+          "oklch(26.43% 0.16080 262.297)",
+          "oklch(37.86% 0.16080 262.297)",
+          "oklch(49.29% 0.16080 262.297)",
+          "oklch(60.71% 0.16080 262.297)",
+          "oklch(72.14% 0.16080 262.297)",
+          "oklch(83.57% 0.16080 262.297)",
+          "oklch(95% 0.16080 262.297)"
+        ]
+      },
+      "focus": {
+        "role": "primary",
+        "displayName": "Focus",
+        "tonalRamp": [
+          "oklch(15% 0.14787 237.323)",
+          "oklch(26.43% 0.14787 237.323)",
+          "oklch(37.86% 0.14787 237.323)",
+          "oklch(49.29% 0.14787 237.323)",
+          "oklch(60.71% 0.14787 237.323)",
+          "oklch(72.14% 0.14787 237.323)",
+          "oklch(83.57% 0.14787 237.323)",
+          "oklch(95% 0.14787 237.323)"
+        ]
+      },
+      "link": {
+        "role": "primary",
+        "displayName": "Link",
+        "tonalRamp": [
+          "oklch(15% 0.18147 261.757)",
+          "oklch(26.43% 0.18147 261.757)",
+          "oklch(37.86% 0.18147 261.757)",
+          "oklch(49.29% 0.18147 261.757)",
+          "oklch(60.71% 0.18147 261.757)",
+          "oklch(72.14% 0.18147 261.757)",
+          "oklch(83.57% 0.18147 261.757)",
+          "oklch(95% 0.18147 261.757)"
+        ]
+      },
+      "canvas": {
+        "role": "neutral",
+        "displayName": "Canvas",
+        "tonalRamp": [
+          "oklch(15% 0.00685 247.896)",
+          "oklch(26.43% 0.00685 247.896)",
+          "oklch(37.86% 0.00685 247.896)",
+          "oklch(49.29% 0.00685 247.896)",
+          "oklch(60.71% 0.00685 247.896)",
+          "oklch(72.14% 0.00685 247.896)",
+          "oklch(83.57% 0.00685 247.896)",
+          "oklch(95% 0.00685 247.896)"
+        ]
+      },
+      "surface": {
+        "role": "neutral",
+        "displayName": "Surface",
+        "tonalRamp": [
+          "oklch(15% 0.00000 0.000)",
+          "oklch(26.43% 0.00000 0.000)",
+          "oklch(37.86% 0.00000 0.000)",
+          "oklch(49.29% 0.00000 0.000)",
+          "oklch(60.71% 0.00000 0.000)",
+          "oklch(72.14% 0.00000 0.000)",
+          "oklch(83.57% 0.00000 0.000)",
+          "oklch(95% 0.00000 0.000)"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Ink",
+        "tonalRamp": [
+          "oklch(15% 0.03982 265.755)",
+          "oklch(26.43% 0.03982 265.755)",
+          "oklch(37.86% 0.03982 265.755)",
+          "oklch(49.29% 0.03982 265.755)",
+          "oklch(60.71% 0.03982 265.755)",
+          "oklch(72.14% 0.03982 265.755)",
+          "oklch(83.57% 0.03982 265.755)",
+          "oklch(95% 0.03982 265.755)"
+        ]
+      },
+      "muted": {
+        "role": "neutral",
+        "displayName": "Muted",
+        "tonalRamp": [
+          "oklch(15% 0.03745 257.281)",
+          "oklch(26.43% 0.03745 257.281)",
+          "oklch(37.86% 0.03745 257.281)",
+          "oklch(49.29% 0.03745 257.281)",
+          "oklch(60.71% 0.03745 257.281)",
+          "oklch(72.14% 0.03745 257.281)",
+          "oklch(83.57% 0.03745 257.281)",
+          "oklch(95% 0.03745 257.281)"
+        ]
+      },
+      "line": {
+        "role": "neutral",
+        "displayName": "Line",
+        "tonalRamp": [
+          "oklch(15% 0.01985 252.894)",
+          "oklch(26.43% 0.01985 252.894)",
+          "oklch(37.86% 0.01985 252.894)",
+          "oklch(49.29% 0.01985 252.894)",
+          "oklch(60.71% 0.01985 252.894)",
+          "oklch(72.14% 0.01985 252.894)",
+          "oklch(83.57% 0.01985 252.894)",
+          "oklch(95% 0.01985 252.894)"
+        ]
+      },
+      "divider": {
+        "role": "neutral",
+        "displayName": "Divider",
+        "tonalRamp": [
+          "oklch(15% 0.01262 255.508)",
+          "oklch(26.43% 0.01262 255.508)",
+          "oklch(37.86% 0.01262 255.508)",
+          "oklch(49.29% 0.01262 255.508)",
+          "oklch(60.71% 0.01262 255.508)",
+          "oklch(72.14% 0.01262 255.508)",
+          "oklch(83.57% 0.01262 255.508)",
+          "oklch(95% 0.01262 255.508)"
+        ]
+      },
+      "field-border": {
+        "role": "neutral",
+        "displayName": "Field Border",
+        "tonalRamp": [
+          "oklch(15% 0.03511 256.788)",
+          "oklch(26.43% 0.03511 256.788)",
+          "oklch(37.86% 0.03511 256.788)",
+          "oklch(49.29% 0.03511 256.788)",
+          "oklch(60.71% 0.03511 256.788)",
+          "oklch(72.14% 0.03511 256.788)",
+          "oklch(83.57% 0.03511 256.788)",
+          "oklch(95% 0.03511 256.788)"
+        ]
+      },
+      "control-hover": {
+        "role": "neutral",
+        "displayName": "Control Hover",
+        "tonalRamp": [
+          "oklch(15% 0.01613 262.753)",
+          "oklch(26.43% 0.01613 262.753)",
+          "oklch(37.86% 0.01613 262.753)",
+          "oklch(49.29% 0.01613 262.753)",
+          "oklch(60.71% 0.01613 262.753)",
+          "oklch(72.14% 0.01613 262.753)",
+          "oklch(83.57% 0.01613 262.753)",
+          "oklch(95% 0.01613 262.753)"
+        ]
+      },
+      "control-hover-border": {
+        "role": "neutral",
+        "displayName": "Control Hover Border",
+        "tonalRamp": [
+          "oklch(15% 0.07958 261.812)",
+          "oklch(26.43% 0.07958 261.812)",
+          "oklch(37.86% 0.07958 261.812)",
+          "oklch(49.29% 0.07958 261.812)",
+          "oklch(60.71% 0.07958 261.812)",
+          "oklch(72.14% 0.07958 261.812)",
+          "oklch(83.57% 0.07958 261.812)",
+          "oklch(95% 0.07958 261.812)"
+        ]
+      },
+      "control-active": {
+        "role": "neutral",
+        "displayName": "Control Active",
+        "tonalRamp": [
+          "oklch(15% 0.03011 260.711)",
+          "oklch(26.43% 0.03011 260.711)",
+          "oklch(37.86% 0.03011 260.711)",
+          "oklch(49.29% 0.03011 260.711)",
+          "oklch(60.71% 0.03011 260.711)",
+          "oklch(72.14% 0.03011 260.711)",
+          "oklch(83.57% 0.03011 260.711)",
+          "oklch(95% 0.03011 260.711)"
+        ]
+      },
+      "table-heading": {
+        "role": "neutral",
+        "displayName": "Table Heading",
+        "tonalRamp": [
+          "oklch(15% 0.01254 255.506)",
+          "oklch(26.43% 0.01254 255.506)",
+          "oklch(37.86% 0.01254 255.506)",
+          "oklch(49.29% 0.01254 255.506)",
+          "oklch(60.71% 0.01254 255.506)",
+          "oklch(72.14% 0.01254 255.506)",
+          "oklch(83.57% 0.01254 255.506)",
+          "oklch(95% 0.01254 255.506)"
+        ]
+      },
+      "selected": {
+        "role": "neutral",
+        "displayName": "Selected",
+        "tonalRamp": [
+          "oklch(15% 0.01654 259.418)",
+          "oklch(26.43% 0.01654 259.418)",
+          "oklch(37.86% 0.01654 259.418)",
+          "oklch(49.29% 0.01654 259.418)",
+          "oklch(60.71% 0.01654 259.418)",
+          "oklch(72.14% 0.01654 259.418)",
+          "oklch(83.57% 0.01654 259.418)",
+          "oklch(95% 0.01654 259.418)"
+        ]
+      },
+      "receivable-red": {
+        "role": "neutral",
+        "displayName": "Receivable Red",
+        "tonalRamp": [
+          "oklch(15% 0.02978 12.580)",
+          "oklch(26.43% 0.02978 12.580)",
+          "oklch(37.86% 0.02978 12.580)",
+          "oklch(49.29% 0.02978 12.580)",
+          "oklch(60.71% 0.02978 12.580)",
+          "oklch(72.14% 0.02978 12.580)",
+          "oklch(83.57% 0.02978 12.580)",
+          "oklch(95% 0.02978 12.580)"
+        ]
+      },
+      "receivable-yellow": {
+        "role": "neutral",
+        "displayName": "Receivable Yellow",
+        "tonalRamp": [
+          "oklch(15% 0.07430 95.928)",
+          "oklch(26.43% 0.07430 95.928)",
+          "oklch(37.86% 0.07430 95.928)",
+          "oklch(49.29% 0.07430 95.928)",
+          "oklch(60.71% 0.07430 95.928)",
+          "oklch(72.14% 0.07430 95.928)",
+          "oklch(83.57% 0.07430 95.928)",
+          "oklch(95% 0.07430 95.928)"
+        ]
+      },
+      "loading-notified": {
+        "role": "neutral",
+        "displayName": "Loading Notified",
+        "tonalRamp": [
+          "oklch(15% 0.13545 98.506)",
+          "oklch(26.43% 0.13545 98.506)",
+          "oklch(37.86% 0.13545 98.506)",
+          "oklch(49.29% 0.13545 98.506)",
+          "oklch(60.71% 0.13545 98.506)",
+          "oklch(72.14% 0.13545 98.506)",
+          "oklch(83.57% 0.13545 98.506)",
+          "oklch(95% 0.13545 98.506)"
+        ]
+      },
+      "error-background": {
+        "role": "neutral",
+        "displayName": "Error Background",
+        "tonalRamp": [
+          "oklch(15% 0.01517 12.422)",
+          "oklch(26.43% 0.01517 12.422)",
+          "oklch(37.86% 0.01517 12.422)",
+          "oklch(49.29% 0.01517 12.422)",
+          "oklch(60.71% 0.01517 12.422)",
+          "oklch(72.14% 0.01517 12.422)",
+          "oklch(83.57% 0.01517 12.422)",
+          "oklch(95% 0.01517 12.422)"
+        ]
+      },
+      "error-ink": {
+        "role": "neutral",
+        "displayName": "Error Ink",
+        "tonalRamp": [
+          "oklch(15% 0.17128 13.697)",
+          "oklch(26.43% 0.17128 13.697)",
+          "oklch(37.86% 0.17128 13.697)",
+          "oklch(49.29% 0.17128 13.697)",
+          "oklch(60.71% 0.17128 13.697)",
+          "oklch(72.14% 0.17128 13.697)",
+          "oklch(83.57% 0.17128 13.697)",
+          "oklch(95% 0.17128 13.697)"
+        ]
+      },
+      "error-border": {
+        "role": "neutral",
+        "displayName": "Error Border",
+        "tonalRamp": [
+          "oklch(15% 0.05591 10.001)",
+          "oklch(26.43% 0.05591 10.001)",
+          "oklch(37.86% 0.05591 10.001)",
+          "oklch(49.29% 0.05591 10.001)",
+          "oklch(60.71% 0.05591 10.001)",
+          "oklch(72.14% 0.05591 10.001)",
+          "oklch(83.57% 0.05591 10.001)",
+          "oklch(95% 0.05591 10.001)"
+        ]
+      },
+      "caution-background": {
+        "role": "neutral",
+        "displayName": "Caution Background",
+        "tonalRamp": [
+          "oklch(15% 0.02140 95.277)",
+          "oklch(26.43% 0.02140 95.277)",
+          "oklch(37.86% 0.02140 95.277)",
+          "oklch(49.29% 0.02140 95.277)",
+          "oklch(60.71% 0.02140 95.277)",
+          "oklch(72.14% 0.02140 95.277)",
+          "oklch(83.57% 0.02140 95.277)",
+          "oklch(95% 0.02140 95.277)"
+        ]
+      },
+      "caution-ink": {
+        "role": "neutral",
+        "displayName": "Caution Ink",
+        "tonalRamp": [
+          "oklch(15% 0.08675 89.453)",
+          "oklch(26.43% 0.08675 89.453)",
+          "oklch(37.86% 0.08675 89.453)",
+          "oklch(49.29% 0.08675 89.453)",
+          "oklch(60.71% 0.08675 89.453)",
+          "oklch(72.14% 0.08675 89.453)",
+          "oklch(83.57% 0.08675 89.453)",
+          "oklch(95% 0.08675 89.453)"
+        ]
+      },
+      "caution-border": {
+        "role": "neutral",
+        "displayName": "Caution Border",
+        "tonalRamp": [
+          "oklch(15% 0.07005 92.113)",
+          "oklch(26.43% 0.07005 92.113)",
+          "oklch(37.86% 0.07005 92.113)",
+          "oklch(49.29% 0.07005 92.113)",
+          "oklch(60.71% 0.07005 92.113)",
+          "oklch(72.14% 0.07005 92.113)",
+          "oklch(83.57% 0.07005 92.113)",
+          "oklch(95% 0.07005 92.113)"
+        ]
+      },
+      "public-line": {
+        "role": "neutral",
+        "displayName": "Public Line",
+        "tonalRamp": [
+          "oklch(15% 0.03774 254.179)",
+          "oklch(26.43% 0.03774 254.179)",
+          "oklch(37.86% 0.03774 254.179)",
+          "oklch(49.29% 0.03774 254.179)",
+          "oklch(60.71% 0.03774 254.179)",
+          "oklch(72.14% 0.03774 254.179)",
+          "oklch(83.57% 0.03774 254.179)",
+          "oklch(95% 0.03774 254.179)"
+        ]
+      },
+      "public-action": {
+        "role": "primary",
+        "displayName": "Public Action",
+        "tonalRamp": [
+          "oklch(15% 0.13887 241.966)",
+          "oklch(26.43% 0.13887 241.966)",
+          "oklch(37.86% 0.13887 241.966)",
+          "oklch(49.29% 0.13887 241.966)",
+          "oklch(60.71% 0.13887 241.966)",
+          "oklch(72.14% 0.13887 241.966)",
+          "oklch(83.57% 0.13887 241.966)",
+          "oklch(95% 0.13887 241.966)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Internal h1; small-screen size override is documented in Layout."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Observed interface role from web/src/style.css; unspecified properties remain inherited or browser defaults."
+      },
+      "section-title": {
+        "displayName": "Section Title",
+        "purpose": "Observed interface role from web/src/style.css; unspecified properties remain inherited or browser defaults."
+      },
+      "public-headline": {
+        "displayName": "Public Headline",
+        "purpose": "Welcome introduction; small-screen override lives in the public surface record."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Paragraph text; root body size and weight are not explicitly set."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Observed interface role from web/src/style.css; unspecified properties remain inherited or browser defaults."
+      },
+      "table": {
+        "displayName": "Table",
+        "purpose": "Table text with tabular numerals."
+      },
+      "table-heading": {
+        "displayName": "Table Heading",
+        "purpose": "Observed interface role from web/src/style.css; unspecified properties remain inherited or browser defaults."
+      },
+      "fact-label": {
+        "displayName": "Fact Label",
+        "purpose": "Observed interface role from web/src/style.css; unspecified properties remain inherited or browser defaults."
+      },
+      "fact-value": {
+        "displayName": "Fact Value",
+        "purpose": "Observed interface role from web/src/style.css; unspecified properties remain inherited or browser defaults."
+      }
+    },
+    "shadows": [],
+    "motion": [
+      {
+        "name": "sidebar-slide",
+        "value": "transform 180ms ease-out",
+        "purpose": "Small-screen sidebar; web/src/style.css @media(max-width:700px). Reduced-motion override disables transitions."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "intermediate",
+        "value": "1000px"
+      },
+      {
+        "name": "small",
+        "value": "700px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary action",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Observed primary control; web/src/style.css button and .primary rules. Preview is visual only.",
+      "html": "<button class=\"ds-primary\" type=\"button\">保存 / Save</button>",
+      "css": ".ds-primary{font-family:Ebrima, \"Microsoft YaHei\", \"Segoe UI\", sans-serif;font-size:inherit;display:inline-flex;align-items:center;justify-content:center;gap:7px;border:1px solid var(--line,#cbd5e1);border-radius:6px;padding:9px 13px;color:#0f172a;background:#fff;min-height:38px;cursor:pointer;background:var(--blue,#1a56db);color:#fff;border-color:var(--blue,#1a56db);}.ds-primary:active{background:#dce8fc}.ds-primary:hover{background:#eaf0fb;border-color:#8ba7d9}.ds-primary:focus-visible{outline:2px solid #0ea5e9;outline-offset:3px;}.ds-primary:disabled{cursor:not-allowed;opacity:0.5}.ds-primary:hover{background:var(--nav,#12409e);color:#fff}"
+    },
+    {
+      "name": "Standard action",
+      "kind": "button",
+      "refersTo": "button-standard",
+      "description": "Observed standard bordered control and its keyboard/disabled states; web/src/style.css button rules.",
+      "html": "<button class=\"ds-standard\" type=\"button\">取消 / Cancel</button>",
+      "css": ".ds-standard{font-family:Ebrima, \"Microsoft YaHei\", \"Segoe UI\", sans-serif;font-size:inherit;display:inline-flex;align-items:center;justify-content:center;gap:7px;border:1px solid var(--line,#cbd5e1);border-radius:6px;padding:9px 13px;color:#0f172a;background:#fff;min-height:38px;cursor:pointer;}.ds-standard:active{background:#dce8fc}.ds-standard:hover{background:#eaf0fb;border-color:#8ba7d9}.ds-standard:focus-visible{outline:2px solid #0ea5e9;outline-offset:3px;}.ds-standard:disabled{cursor:not-allowed;opacity:0.5}"
+    },
+    {
+      "name": "Record text action",
+      "kind": "button",
+      "refersTo": "button-text",
+      "description": "Linked record action; web/src/style.css .text-button overrides the base control. No navigation handler in preview.",
+      "html": "<button class=\"ds-record-action\" type=\"button\">查看 / View</button>",
+      "css": ".ds-record-action{font-family:Ebrima, \"Microsoft YaHei\", \"Segoe UI\", sans-serif;font-size:inherit;display:inline-flex;align-items:center;justify-content:center;gap:7px;border:1px solid var(--line,#cbd5e1);border-radius:6px;padding:9px 13px;color:#0f172a;background:#fff;min-height:38px;cursor:pointer;}.ds-record-action:active{background:#dce8fc}.ds-record-action:hover{background:#eaf0fb;border-color:#8ba7d9}.ds-record-action:focus-visible{outline:2px solid #0ea5e9;outline-offset:3px;}.ds-record-action:disabled{cursor:not-allowed;opacity:0.5}.ds-record-action{padding:0;border:0;background:transparent;min-height:24px;color:#164fbc;text-decoration:underline;text-align:left;justify-content:flex-start}.ds-record-action:hover{background:transparent}"
+    },
+    {
+      "name": "Labelled field",
+      "kind": "input",
+      "refersTo": "field",
+      "description": "Explicit label and native input; web/src/style.css label/input/focus rules. No source-specific hover restyling exists.",
+      "html": "<div class=\"ds-field\"><label class=\"ds-label\" for=\"ds-reference\">收据号 / Receipt</label><input class=\"ds-input\" id=\"ds-reference\" type=\"text\" /></div>",
+      "css": ".ds-field{font-family:Ebrima, \"Microsoft YaHei\", \"Segoe UI\", sans-serif}.ds-label{display:block;font-size:0.875rem;font-weight:600;margin-bottom:6px}.ds-input{font-family:Ebrima, \"Microsoft YaHei\", \"Segoe UI\", sans-serif;font-size:inherit;width:100%;border:1px solid #94a3b8;border-radius:5px;padding:9px 10px;background:#fff;color:#0f172a;min-height:40px;caret-color:var(--blue,#1a56db);}.ds-input:focus-visible{outline:2px solid #0ea5e9;outline-offset:3px;}"
+    },
+    {
+      "name": "Department navigation",
+      "kind": "nav",
+      "refersTo": "navigation-item",
+      "description": "Observed sidebar default and active items; web/src/style.css .sidebar rules. Static active-state example, without application navigation.",
+      "html": "<nav class=\"ds-sidebar\" aria-label=\"部门 / Departments\"><button class=\"ds-nav-item ds-nav-active\" type=\"button\" aria-current=\"page\">入库管理</button><button class=\"ds-nav-item\" type=\"button\">应收账款</button></nav>",
+      "css": ".ds-sidebar{background:var(--nav,#12409e);color:#fff;width:224px;padding:15px 12px;font-family:Ebrima, \"Microsoft YaHei\", \"Segoe UI\", sans-serif}.ds-nav-item{font-family:Ebrima, \"Microsoft YaHei\", \"Segoe UI\", sans-serif;font-size:inherit;display:inline-flex;align-items:center;justify-content:center;gap:7px;border:1px solid var(--line,#cbd5e1);border-radius:6px;padding:9px 13px;color:#0f172a;background:#fff;min-height:38px;cursor:pointer;border:0;background:transparent;color:inherit;width:100%;justify-content:flex-start;text-align:left;padding:9px 12px;font-size:0.9rem;line-height:1.3}.ds-nav-item:hover{background:#ffffff1a}.ds-nav-item.ds-nav-active{background:#fff;color:#12409e;font-weight:700}.ds-nav-item:focus-visible{outline:2px solid #0ea5e9;outline-offset:3px;}"
+    },
+    {
+      "name": "Local active tab",
+      "kind": "nav",
+      "refersTo": "tab-active",
+      "description": "Wrapping tab controls with the existing selection tint; web/src/style.css .tabs and .tabs button.active. Static state only.",
+      "html": "<div class=\"ds-tabs\"><button class=\"ds-tab ds-tab-active\" type=\"button\" aria-pressed=\"true\">详情 / Details</button><button class=\"ds-tab\" type=\"button\">原件 / Original</button></div>",
+      "css": ".ds-tab{font-family:Ebrima, \"Microsoft YaHei\", \"Segoe UI\", sans-serif;font-size:inherit;display:inline-flex;align-items:center;justify-content:center;gap:7px;border:1px solid var(--line,#cbd5e1);border-radius:6px;padding:9px 13px;color:#0f172a;background:#fff;min-height:38px;cursor:pointer;}.ds-tab:active{background:#dce8fc}.ds-tab:hover{background:#eaf0fb;border-color:#8ba7d9}.ds-tab:focus-visible{outline:2px solid #0ea5e9;outline-offset:3px;}.ds-tab:disabled{cursor:not-allowed;opacity:0.5}.ds-tabs{display:flex;gap:6px;flex-wrap:wrap;padding-bottom:16px;margin-bottom:20px;border-bottom:1px solid var(--line,#cbd5e1)}.ds-tab.ds-tab-active{border-color:#1a56db;color:#164fbc;background:#edf4ff}@media(max-width:700px){.ds-tab{font-size:0.8rem}}"
+    },
+    {
+      "name": "Record detail panel",
+      "kind": "card",
+      "refersTo": "detail-panel",
+      "description": "Observed bordered in-page detail panel; web/src/style.css .detail-pane. The preview contains no record data.",
+      "html": "<section class=\"ds-detail\"><h2 class=\"ds-detail-title\">详情 / Details</h2></section>",
+      "css": ".ds-detail{font-family:Ebrima, \"Microsoft YaHei\", \"Segoe UI\", sans-serif;color:#0f172a;background:#fff;border:1px solid var(--line,#cbd5e1);border-radius:8px;padding:24px;margin-top:24px}.ds-detail-title{font-size:1.25rem;margin-top:0}@media(max-width:700px){.ds-detail{padding:16px}}"
+    },
+    {
+      "name": "Public service card",
+      "kind": "card",
+      "refersTo": "public-service-card",
+      "description": "Observed welcome card and line icon on its actual dark ground; web/src/style.css .welcome/.services and App.tsx. No promotional claim in preview. Inline Ship paths copied from installed lucide-react v0.468.0 (ISC), dist/esm/icons/ship.js; icon size 25 from App.tsx.",
+      "html": "<div class=\"ds-public-ground\"><article class=\"ds-service\"><svg class=\"ds-service-icon\" xmlns=\"http://www.w3.org/2000/svg\" width=\"25\" height=\"25\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M12 10.189V14\"/><path d=\"M12 2v3\"/><path d=\"M19 13V7a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v6\"/><path d=\"M19.38 20A11.6 11.6 0 0 0 21 14l-8.188-3.639a2 2 0 0 0-1.624 0L3 14a11.6 11.6 0 0 0 2.81 7.76\"/><path d=\"M2 21c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1s1.2 1 2.5 1c2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1\"/></svg><h3 class=\"ds-service-title\">海运整柜 / 拼箱</h3></article></div>",
+      "css": ".ds-public-ground{font-family:Ebrima, \"Microsoft YaHei\", \"Segoe UI\", sans-serif;color:#e2e8f0;background:linear-gradient(140deg,#0f172a,#1e293b 52%,#0c3d5a);padding:18px}.ds-service{border:1px solid #526276;border-radius:13px;padding:20px;background:#ffffff08}.ds-service-icon{color:#64cefa;margin-bottom:12px}.ds-service-title{font-size:1.05rem;margin-top:0;margin-bottom:8px}"
+    },
+    {
+      "name": "Operational table",
+      "kind": "custom",
+      "refersTo": "table-heading",
+      "description": "Static empty-table styling from web/src/style.css. Runtime width persistence, synchronized scrolling and narrow frozen offsets remain in ui.tsx; this snippet does not emulate those behaviors.",
+      "html": "<div class=\"ds-table-wrap\"><table class=\"ds-table\"><thead><tr><th class=\"ds-th\" scope=\"col\">收据号 / Receipt</th><th class=\"ds-th\" scope=\"col\">客户电话 / Customer phone</th></tr></thead><tbody></tbody></table></div>",
+      "css": ".ds-table-wrap{font-family:Ebrima, \"Microsoft YaHei\", \"Segoe UI\", sans-serif;color:#0f172a;width:100%;max-height:62vh;overflow:auto;border:1px solid var(--line,#cbd5e1);background:#fff;position:relative}.ds-table{border-spacing:0;table-layout:fixed;font-size:0.85rem;font-variant-numeric:tabular-nums}.ds-th{text-align:left;padding:11px 12px;border-bottom:1px solid #e2e8f0;border-right:1px solid #e2e8f0;word-break:break-word;vertical-align:top;background:#eaf0f8;position:sticky;top:0;z-index:4;font-weight:600;user-select:none}@media(max-width:700px){.ds-table-wrap{max-height:58vh}}"
+    },
+    {
+      "name": "Repeatable original-file group",
+      "kind": "custom",
+      "refersTo": "field-group",
+      "description": "Current generic form structure from web/src/ui.tsx Fields: fieldset/legend, native original-file input and explicit clipboard action. Preview contains no upload handler or permission request.",
+      "html": "<fieldset class=\"ds-group\"><legend class=\"ds-legend\">原件 / Originals</legend><label class=\"ds-group-label\" for=\"ds-originals\">原件 / Originals</label><input class=\"ds-group-input\" id=\"ds-originals\" type=\"file\" multiple /><button class=\"ds-group-button\" type=\"button\">从剪贴板添加原图 / Add original image from clipboard</button></fieldset>",
+      "css": ".ds-group{font-family:Ebrima, \"Microsoft YaHei\", \"Segoe UI\", sans-serif;color:#0f172a;border:1px solid var(--line,#cbd5e1);border-radius:6px;margin:12px 0;padding:15px}.ds-legend{font-weight:600;font-size:0.85rem}.ds-group-label{display:block;font-size:0.875rem;font-weight:600;margin-bottom:6px}.ds-group-input{font-family:Ebrima, \"Microsoft YaHei\", \"Segoe UI\", sans-serif;font-size:inherit;width:100%;border:1px solid #94a3b8;border-radius:5px;padding:9px 10px;background:#fff;color:#0f172a;min-height:40px;caret-color:var(--blue,#1a56db);}.ds-group-input:focus-visible{outline:2px solid #0ea5e9;outline-offset:3px;}.ds-group-button{font-family:Ebrima, \"Microsoft YaHei\", \"Segoe UI\", sans-serif;font-size:inherit;display:inline-flex;align-items:center;justify-content:center;gap:7px;border:1px solid var(--line,#cbd5e1);border-radius:6px;padding:9px 13px;color:#0f172a;background:#fff;min-height:38px;cursor:pointer;}.ds-group-button:active{background:#dce8fc}.ds-group-button:hover{background:#eaf0fb;border-color:#8ba7d9}.ds-group-button:focus-visible{outline:2px solid #0ea5e9;outline-offset:3px;}.ds-group-button:disabled{cursor:not-allowed;opacity:0.5}.ds-group>.ds-group-button{margin-top:12px}"
+    }
+  ],
+  "narrative": {
+    "northStar": "MC STAR blue-brand operations workspace",
+    "overview": "This is the inherited MC STAR visual identity as implemented in the unified React application: the supplied logo, blue navigation, light operational surfaces and ordinary business forms. The name above describes that incumbent; it is not a newly approved concept. User templates, field labels, field order and function sequence take precedence over decorative changes.\n\nThe system supports dense, evidence-oriented work. Lists and their detail forms remain together, broad tables keep their column structure, and small screens gain access through navigation collapse, form reflow and horizontal scrolling. The dark public welcome is a separate expression of the same identity, rather than a replacement palette for internal work.",
+    "keyCharacteristics": [
+      "Original MC STAR logo and established blue identity.",
+      "Light, bordered operational surfaces with explicit field labels.",
+      "Broad tables, tabular numerals and context-preserving detail forms.",
+      "Responsive reflow without deleting required information."
+    ],
+    "rules": [
+      {
+        "name": "The Business Color Rule",
+        "body": "Preserve the difference between receivable red, receivable yellow, selection tint and loading-notified yellow; do not infer a financial or delivery event from color alone.",
+        "section": "colors"
+      },
+      {
+        "name": "The Original Template Rule",
+        "body": "The Ebrima commitment does not establish missing export font sizes or exact notice/label compositions. Keep those items pending their actual reference assets.",
+        "section": "typography"
+      },
+      {
+        "name": "The Field Order Rule",
+        "body": "Reflow and horizontal scrolling preserve the user's fields and operation sequence; density is not authorization to omit columns or change their meaning.",
+        "section": "layout"
+      }
+    ],
+    "dos": [
+      "**Do** preserve the supplied logo, established blues, user labels and field/function order.",
+      "**Do** keep internal controls in Chinese/English and public welcome controls in Chinese/English/French while preserving business values.",
+      "**Do** retain broad tables, configured frozen groups, width-only resizing and access to later columns on small screens.",
+      "**Do** keep source viewing, local errors and pending inputs in the current business context.",
+      "**Do** distinguish user actions, generated/copyable material and actual delivery facts.",
+      "**Do** refresh this scan when the recorded UI sources or build change."
+    ],
+    "donts": [
+      "**Don't** replace missing hero originals, contact data or exact template references with invented substitutes.",
+      "**Don't** interpret a prior screenshot, successful build or the four-fix review verdict as whole-app acceptance.",
+      "**Don't** copy unconfirmed shipping schedules, free-storage terms or qualifications into public copy.",
+      "**Don't** introduce a new brand, promotional display face or decorative shadow system through these documentation tokens."
+    ]
+  }
+}

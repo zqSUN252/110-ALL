@@ -141,6 +141,7 @@ def dispatch(db,actor,p):
 
 
 def list_receipts(db,actor,*,limit=100,offset=0,receipt=None,client=None,item=None,destination=None,transport=None,warehouse_id=None,state=None):
+    from app.models import Party
     require(actor,'cargo.read');q=visible(select(Receipt),Receipt,actor)
     if not 1<=limit<=200 or offset<0:raise DomainError('pagination','Use limit 1..200 and nonnegative offset')
     if warehouse_id:require(actor,'cargo.read',warehouse_id);q=q.where(Receipt.warehouse_id==warehouse_id)
@@ -151,7 +152,9 @@ def list_receipts(db,actor,*,limit=100,offset=0,receipt=None,client=None,item=No
         q=q.join(Party,Party.id==Receipt.party_id).where(Party.name.icontains(client,autoescape=True))
     if transport:q=q.where(Receipt.transport==transport)
     if state:q=q.where(Receipt.state==state)
-    return [receipt_json(db,r) for r in db.scalars(q.order_by(Receipt.received_on.desc(),Receipt.id).offset(offset).limit(limit))]
+    page=list(db.scalars(q.order_by(Receipt.received_on.desc(),Receipt.id).offset(offset).limit(limit)))
+    parties=dict(db.execute(select(Party.id,Party.name).where(Party.id.in_([r.party_id for r in page if r.party_id]))).all())
+    return [receipt_json(db,r)|{'party_name':parties.get(r.party_id)} for r in page]
 
 
 def numbering_gaps(db,actor,warehouse_id,series):

@@ -27,14 +27,35 @@ def ticket_values(p):
     return out
 
 
-def ticket_json(db,t):
+def ticket_json(db,t,bundle=None):
     from app.models import PhysicalRelease
-    pickup=db.scalar(select(func.max(PhysicalRelease.occurred_at)).where(PhysicalRelease.ticket_id==t.id))
-    arrivals=[finance.record(a)|{'effective_freight_usd':str(usd) if usd is not None else None,'effective_clearing_ngn':str(ngn) if ngn is not None else None} for a,usd,ngn in arrival_projection(db,t)]
+    pickup=bundle['pickup'].get(t.id) if bundle is not None else db.scalar(select(func.max(PhysicalRelease.occurred_at)).where(PhysicalRelease.ticket_id==t.id))
+    lines=bundle['components'].get(t.id,[]) if bundle is not None else allocation.components(db,t)
+    raw_arrivals=bundle['arrivals'].get(t.id,[]) if bundle is not None else list(db.scalars(select(Arrival).where(Arrival.ticket_id==t.id).order_by(Arrival.created_at,Arrival.id)))
+    arrivals=[finance.record(a)|{'effective_freight_usd':str(usd) if usd is not None else None,'effective_clearing_ngn':str(ngn) if ngn is not None else None} for a,usd,ngn,_ in allocation.projection(db,t,raw_arrivals,lines)]
     observed_kg=known_sum(Decimal(a['kg']) if a['kg'] is not None else None for a in arrivals)
-    return finance.record(t)|{'charge_components':allocation.components(db,t),'arrivals':arrivals,'arrived':{'pieces':sum(a['pieces'] for a in arrivals),'kg':f'{observed_kg:.6f}' if observed_kg is not None else None,'cbm':f"{sum((Decimal(a['cbm']) for a in arrivals),Decimal(0)):.6f}"},
-        'attachments':[finance.record(a) for a in db.scalars(select(TicketAttachment).where(TicketAttachment.ticket_id==t.id))],
-        'quote_id':t.quote_id if t.pricing_authority=='quote' else None,'quote':finance.record(db.get(QuoteSnapshot,t.quote_id)) if t.quote_id and t.pricing_authority=='quote' else None,'historical_quote_id':t.quote_id if t.pricing_authority!='quote' else None,'actual_release_at':pickup.isoformat() if pickup else None}
+    attachments=bundle['attachments'].get(t.id,[]) if bundle is not None else list(db.scalars(select(TicketAttachment).where(TicketAttachment.ticket_id==t.id)))
+    quote=(bundle['quotes'].get(t.quote_id) if bundle is not None else db.get(QuoteSnapshot,t.quote_id)) if t.quote_id and t.pricing_authority=='quote' else None
+    return finance.record(t)|{'charge_components':lines,'arrivals':arrivals,'arrived':{'pieces':sum(a['pieces'] for a in arrivals),'kg':f'{observed_kg:.6f}' if observed_kg is not None else None,'cbm':f"{sum((Decimal(a['cbm']) for a in arrivals),Decimal(0)):.6f}"},
+        'attachments':[finance.record(a) for a in attachments],
+        'quote_id':t.quote_id if t.pricing_authority=='quote' else None,'quote':finance.record(quote) if quote else None,'historical_quote_id':t.quote_id if t.pricing_authority!='quote' else None,'actual_release_at':pickup.isoformat() if pickup else None}
+
+
+def ticket_page_bundle(db,tickets):
+    from app.models import PhysicalRelease,CargoChargeComponent
+    from collections import defaultdict
+    ids=[t.id for t in tickets]
+    bundle={'pickup':{},'components':defaultdict(list),'arrivals':defaultdict(list),'attachments':defaultdict(list),'quotes':{}}
+    if not ids:return bundle
+    bundle['pickup']=dict(db.execute(select(PhysicalRelease.ticket_id,func.max(PhysicalRelease.occurred_at)).where(PhysicalRelease.ticket_id.in_(ids)).group_by(PhysicalRelease.ticket_id)).all())
+    revisions=select(CargoChargeComponent.ticket_id,func.max(CargoChargeComponent.ticket_version).label('revision')).join(Ticket,Ticket.id==CargoChargeComponent.ticket_id).where(Ticket.id.in_(ids),CargoChargeComponent.ticket_version<=Ticket.version).group_by(CargoChargeComponent.ticket_id).subquery()
+    lines=select(CargoChargeComponent).join(revisions,(revisions.c.ticket_id==CargoChargeComponent.ticket_id)&(revisions.c.revision==CargoChargeComponent.ticket_version)).order_by(CargoChargeComponent.ticket_id,CargoChargeComponent.position)
+    for line in db.scalars(lines):bundle['components'][line.ticket_id].append({key:finance.record(line)[key] for key in ('id','version','ticket_version',*allocation.LINE_FIELDS.split())})
+    for arrival in db.scalars(select(Arrival).where(Arrival.ticket_id.in_(ids)).order_by(Arrival.created_at,Arrival.id)):bundle['arrivals'][arrival.ticket_id].append(arrival)
+    for attachment in db.scalars(select(TicketAttachment).where(TicketAttachment.ticket_id.in_(ids))):bundle['attachments'][attachment.ticket_id].append(attachment)
+    quote_ids={t.quote_id for t in tickets if t.quote_id and t.pricing_authority=='quote'}
+    if quote_ids:bundle['quotes']={q.id:q for q in db.scalars(select(QuoteSnapshot).where(QuoteSnapshot.id.in_(quote_ids)))}
+    return bundle
 
 
 def get_ticket(db,actor,identity):
@@ -416,7 +437,7 @@ def list_documents(db,actor,limit=100,offset=0,shipment_id=None,state=None):
     return [finance.record(d) for d in db.scalars(q.order_by(PackingDocument.created_at.desc(),PackingDocument.id).limit(limit).offset(offset))]
 
 
-def list_tickets(db,actor,limit=50,offset=0,receipt=None,client=None,item=None,destination=None,transport=None,state=None,document_id=None):
+def list_tickets(db,actor,limit=50,offset=0,receipt=None,client=None,item=None,destination=None,transport=None,state=None,document_id=None,party_id=None):
     from sqlalchemy import or_
     from app.models import Party
     require(actor,'packing.read')
@@ -426,13 +447,16 @@ def list_tickets(db,actor,limit=50,offset=0,receipt=None,client=None,item=None,d
         if value:q=q.where(field.icontains(value,autoescape=True))
     if item:q=q.where(or_(Ticket.item_zh.icontains(item,autoescape=True),Ticket.item_en.icontains(item,autoescape=True)))
     if client:q=q.outerjoin(Party,Party.id==Ticket.party_id).where(or_(Party.name.icontains(client,autoescape=True),Ticket.mark.icontains(client,autoescape=True)))
-    for field,value in [(Ticket.transport,transport),(Ticket.state,state),(Ticket.document_id,document_id)]:
+    for field,value in [(Ticket.transport,transport),(Ticket.state,state),(Ticket.document_id,document_id),(Ticket.party_id,party_id)]:
         if value:q=q.where(field==value)
-    result=[]
-    for ticket in db.scalars(q.order_by(Ticket.created_at.desc(),Ticket.id).limit(limit).offset(offset)):
-        if ticket.invoice_id:finance.get_invoice(db,actor,ticket.invoice_id)
-        result.append(ticket_json(db,ticket))
-    return result
+    tickets=list(db.scalars(q.order_by(Ticket.created_at.desc(),Ticket.id).limit(limit).offset(offset)))
+    invoice_ids={t.invoice_id for t in tickets if t.invoice_id}
+    if invoice_ids:
+        invoices=list(db.scalars(select(Invoice).where(Invoice.id.in_(invoice_ids))))
+        if len(invoices)!=len(invoice_ids):raise DomainError('not_found','Linked invoice unavailable',404)
+        for invoice in invoices:require(actor,'payables.read' if invoice.kind=='AP' else 'finance.read',invoice.warehouse_id)
+    bundle=ticket_page_bundle(db,tickets)
+    return [ticket_json(db,ticket,bundle) for ticket in tickets]
 
 
 def document_groups(db,actor,identity):

@@ -1,0 +1,409 @@
+{
+  "checked_at": "2026-11-04T20:59:55.006833+00:00",
+  "scope": "Local synthetic performance and supplied package snapshot; not production/external acceptance",
+  "benchmark": [
+    {
+      "tickets": 25000,
+      "sessions": 10,
+      "population": {
+        "tickets": 25000,
+        "receipts": 25000,
+        "receipt_specs": 50000,
+        "bank_entries": 25000,
+        "bank_source_observations": 50000,
+        "evidence_cases": 2500,
+        "equal_amount_bucket": 50,
+        "elapsed_seconds": 15.987446099999943,
+        "charge_components": 50000,
+        "bank_original_workbooks": 2,
+        "bank_original_rows_per_file": 25000
+      },
+      "label": "authorized-sessions",
+      "elapsed_seconds": 37.83671410000534,
+      "api_peak_sampled_working_set_bytes": 659464192,
+      "memory_sample_count": 610,
+      "results": {
+        "bank_match_50_candidates": {
+          "requests": 60,
+          "p50_seconds": 1.2809158500022022,
+          "p95_seconds": 1.5865338999865344,
+          "max_seconds": 1.7980723999935435,
+          "errors": 0,
+          "error_codes": [],
+          "response_bytes_max": 42092
+        },
+        "bank_review_idempotent": {
+          "requests": 60,
+          "p50_seconds": 1.0734792500079493,
+          "p95_seconds": 1.3363884999998845,
+          "max_seconds": 1.460405100006028,
+          "errors": 0,
+          "error_codes": [],
+          "response_bytes_max": 663
+        },
+        "bank_review_submit": {
+          "requests": 60,
+          "p50_seconds": 1.2862533500010613,
+          "p95_seconds": 1.5784810000041034,
+          "max_seconds": 1.7715740999992704,
+          "errors": 0,
+          "error_codes": [],
+          "response_bytes_max": 663
+        },
+        "bank_search_50": {
+          "requests": 60,
+          "p50_seconds": 0.050458350000553764,
+          "p95_seconds": 0.20396030000119936,
+          "max_seconds": 0.3284637000033399,
+          "errors": 0,
+          "error_codes": [],
+          "response_bytes_max": 23497
+        },
+        "ticket_list_50": {
+          "requests": 60,
+          "p50_seconds": 0.1581735999934608,
+          "p95_seconds": 0.4467644999967888,
+          "max_seconds": 0.820979800002533,
+          "errors": 0,
+          "error_codes": [],
+          "response_bytes_max": 75084
+        },
+        "ticket_review_idempotent": {
+          "requests": 60,
+          "p50_seconds": 0.880334599998605,
+          "p95_seconds": 1.0846865000057733,
+          "max_seconds": 1.199060400002054,
+          "errors": 0,
+          "error_codes": [],
+          "response_bytes_max": 1500
+        },
+        "ticket_review_submit": {
+          "requests": 60,
+          "p50_seconds": 0.8283726000008755,
+          "p95_seconds": 1.1462458000023616,
+          "max_seconds": 1.2938103999913437,
+          "errors": 0,
+          "error_codes": [],
+          "response_bytes_max": 1500
+        },
+        "ticket_search_50": {
+          "requests": 60,
+          "p50_seconds": 0.13378230000671465,
+          "p95_seconds": 0.4207287000026554,
+          "max_seconds": 0.5604071000125259,
+          "errors": 0,
+          "error_codes": [],
+          "response_bytes_max": 75091
+        }
+      },
+      "receipt_sha256": "e7bdabc462a902997808ca019a9b7813d5a24711cbdfd955de113f15fafe6b4b",
+      "version_note": "Complete source digest was not captured at run start; no retrospective hash invented"
+    },
+    {
+      "tickets": 125000,
+      "sessions": 10,
+      "population": {
+        "tickets": 125000,
+        "receipts": 125000,
+        "receipt_specs": 250000,
+        "bank_entries": 50000,
+        "bank_source_observations": 100000,
+        "evidence_cases": 5000,
+        "equal_amount_bucket": 50,
+        "elapsed_seconds": 41.62244229999487,
+        "charge_components": 250000,
+        "bank_original_workbooks": 2,
+        "bank_original_rows_per_file": 50000
+      },
+      "label": "indexed",
+      "elapsed_seconds": 38.051923800012446,
+      "api_peak_sampled_working_set_bytes": 520704000,
+      "memory_sample_count": 611,
+      "results": {
+        "bank_match_50_candidates": {
+          "requests": 60,
+          "p50_seconds": 1.2488219999941066,
+          "p95_seconds": 1.6157470000034664,
+          "max_seconds": 1.956750799989095,
+          "errors": 0,
+          "error_codes": [],
+          "response_bytes_max": 41972
+        },
+        "bank_review_idempotent": {
+          "requests": 60,
+          "p50_seconds": 1.007947600002808,
+          "p95_seconds": 1.357931099992129,
+          "max_seconds": 1.3859473000047728,
+          "errors": 0,
+          "error_codes": [],
+          "response_bytes_max": 663
+        },
+        "bank_review_submit": {
+          "requests": 60,
+          "p50_seconds": 1.231353199997102,
+          "p95_seconds": 1.6078132999973604,
+          "max_seconds": 1.8926025999971898,
+          "errors": 0,
+          "error_codes": [],
+          "response_bytes_max": 663
+        },
+        "bank_search_50": {
+          "requests": 60,
+          "p50_seconds": 0.0777935000078287,
+          "p95_seconds": 0.1557321000000229,
+          "max_seconds": 0.26630329999898095,
+          "errors": 0,
+          "error_codes": [],
+          "response_bytes_max": 23497
+        },
+        "ticket_list_50": {
+          "requests": 60,
+          "p50_seconds": 0.10741910000069765,
+          "p95_seconds": 0.5031937000021571,
+          "max_seconds": 0.5218275000079302,
+          "errors": 0,
+          "error_codes": [],
+          "response_bytes_max": 75135
+        },
+        "ticket_review_idempotent": {
+          "requests": 60,
+          "p50_seconds": 0.9333368499937933,
+          "p95_seconds": 1.1637216999952216,
+          "max_seconds": 1.2814615999959642,
+          "errors": 0,
+          "error_codes": [],
+          "response_bytes_max": 1500
+        },
+        "ticket_review_submit": {
+          "requests": 60,
+          "p50_seconds": 0.783401849999791,
+          "p95_seconds": 1.0082069000054616,
+          "max_seconds": 1.0880328999919584,
+          "errors": 0,
+          "error_codes": [],
+          "response_bytes_max": 1500
+        },
+        "ticket_search_50": {
+          "requests": 60,
+          "p50_seconds": 0.27403264999884414,
+          "p95_seconds": 0.7102721999981441,
+          "max_seconds": 0.8361619000061182,
+          "errors": 0,
+          "error_codes": [],
+          "response_bytes_max": 75091
+        }
+      },
+      "source_digest": "d4222465dce995bd017b60d4a2daec66248559ee36ba7902a2cb69b0fcd4d4d5",
+      "warmup_requests": 0,
+      "memory_definition": "50ms sampled process-tree working-set sum; PostgreSQL shared pages may be counted per process; not unique resident memory or whole-machine peak",
+      "receipt_sha256": "10489474d256081e657b39986f421aff6672c04628a29098b99ac26ce8ca723b",
+      "version_note": "Source digest recorded at run start"
+    }
+  ],
+  "recovery": [
+    {
+      "label": "recovery-125000.json",
+      "tickets": 125000,
+      "backup": {
+        "exit_code": 0,
+        "elapsed_seconds": 197.8540459000069,
+        "peak_working_set_bytes": 3892277248,
+        "samples": 1670,
+        "memory_definition": "100ms native process-tree working-set sum, including virtualenv child"
+      },
+      "restore": {
+        "exit_code": 0,
+        "elapsed_seconds": 250.4610049000039,
+        "peak_working_set_bytes": 5099868160,
+        "samples": 2113,
+        "memory_definition": "100ms native process-tree working-set sum, including virtualenv child"
+      },
+      "record_bytes": 592762799,
+      "verified": true,
+      "runtime_fence": "frozen",
+      "schema_revision": "g11000600002",
+      "receipt_sha256": "7a1ee7e370ad574ddb0145f45a2b4761dee79751b73e6b80154658d05e376243"
+    },
+    {
+      "label": "recovery-125000-streaming.json",
+      "tickets": 125000,
+      "backup": {
+        "exit_code": 0,
+        "elapsed_seconds": 139.23641019999923,
+        "peak_working_set_bytes": 667656192,
+        "samples": 1179,
+        "memory_definition": "100ms native process-tree working-set sum, including virtualenv child"
+      },
+      "restore": {
+        "exit_code": 0,
+        "elapsed_seconds": 216.64842450000287,
+        "peak_working_set_bytes": 801357824,
+        "samples": 1828,
+        "memory_definition": "100ms native process-tree working-set sum, including virtualenv child"
+      },
+      "record_bytes": 592762799,
+      "verified": true,
+      "runtime_fence": "frozen",
+      "schema_revision": "g11000600002",
+      "receipt_sha256": "cd8c7d45fb382ade940f2224be6455d64a6d608ecdac2e69f674198ce74dc145"
+    }
+  ],
+  "queued_export": {
+    "tickets": 125000,
+    "queue_seconds": 4.440151899994817,
+    "worker": {
+      "exit_code": 0,
+      "elapsed_seconds": 50.404781399993226,
+      "peak_working_set_bytes": 1010774016,
+      "samples": 425,
+      "memory_definition": "100ms native process-tree working-set sum, including virtualenv child"
+    },
+    "rows": 125001,
+    "bytes": 3639931,
+    "sha256": "71ba236de4ec7e666ad1cdb368679924bbdad320229670d53b0bc27dc75ff9b6",
+    "total_seconds": 74.62616159999743,
+    "external_calls": 0
+  },
+  "supplied_snapshot": {
+    "schema_head": "g11000600002",
+    "counts": {
+      "legacy_tickets": 964,
+      "legacy_bills": 619,
+      "legacy_shipments": 28,
+      "legacy_parties": 439
+    },
+    "backup_seconds": 8.38559490001353,
+    "restore_seconds": 19.285357400003704,
+    "records_sha256": "c0091fbcd5ec21d2a349d0d52aa6a8c662358b54f4ad995394ae6b664a1dbbdc",
+    "external_calls": 0
+  },
+  "snapshot_restore_verified": true,
+  "snapshot_restore_frozen": "frozen",
+  "normal_runtime_browser": {
+    "status": "passed",
+    "url": "http://127.0.0.1:8011",
+    "profile": "supplied-snapshot",
+    "source_list_rows": {
+      "来源客户": 50,
+      "来源出运单": 28,
+      "来源箱单票件": 50,
+      "来源账款": 50
+    },
+    "anonymous_status": 401,
+    "private_path_status": 404,
+    "reload_csrf": true,
+    "source_business_mutations": 0,
+    "external_calls": 0
+  },
+  "full_application_tests": {
+    "backend_first": {
+      "state": "failed_or_incomplete",
+      "summary": "6 failed, 308 passed, 1 warning in 1038.38s (0:17:18)",
+      "counts": {
+        "passed": 308,
+        "failed": 6,
+        "error": 0,
+        "warning": 1
+      },
+      "log_sha256": "36259cec73f98b71bdd84c02e101c6ab4defb0f15221416b217d60f35cdfad68"
+    },
+    "backend_metadata_fixed": {
+      "state": "failed_or_incomplete",
+      "summary": "313 passed, 1 warning, 1 error in 1057.02s (0:17:37)",
+      "counts": {
+        "passed": 313,
+        "failed": 0,
+        "error": 1,
+        "warning": 1
+      },
+      "log_sha256": "8ffd542b2fb3e948c4b2e5c912db72e0d6385de29a7f923f4437c1670b6da4a5"
+    },
+    "backend_connection_same_config_retry": {
+      "state": "passed",
+      "summary": "1 passed in 3.48s",
+      "counts": {
+        "passed": 1,
+        "failed": 0,
+        "error": 0,
+        "warning": 0
+      },
+      "log_sha256": "8156c268b42cd430486fec79cde2369c5c61ba9976928b9a682c1a67250a566c"
+    },
+    "backend_final_isolated": {
+      "state": "passed",
+      "summary": "314 passed, 1 warning in 1002.79s (0:16:42)",
+      "counts": {
+        "passed": 314,
+        "failed": 0,
+        "error": 0,
+        "warning": 1
+      },
+      "log_sha256": "e079a2da76f65f4784e11ccca5fb3a48513e11d0b91033dbea130d734e689786"
+    },
+    "browser_first": {
+      "state": "failed_or_incomplete",
+      "summary": "2 failed; 10 passed (45.2s)",
+      "counts": {
+        "passed": 10,
+        "failed": 2,
+        "error": 0,
+        "warning": 0
+      },
+      "log_sha256": "95d3334dcd4a186980fc276f10236993a3ff0534e2a8279ca8eb9fea7b4775a2"
+    },
+    "browser_same_timeout_retry": {
+      "state": "passed",
+      "summary": "2 passed (21.3s)",
+      "counts": {
+        "passed": 2,
+        "failed": 0,
+        "error": 0,
+        "warning": 0
+      },
+      "log_sha256": "0750c8f07fba0b9b1d8e8969b902c5c2cde6cf4e16c8c4de43d420677aa1da14"
+    },
+    "browser_final_stable": {
+      "state": "passed",
+      "summary": "12 passed (35.8s)",
+      "counts": {
+        "passed": 12,
+        "failed": 0,
+        "error": 0,
+        "warning": 0
+      },
+      "log_sha256": "b232385d09e46a2f6120fb149ef615197b27c788fac044bfbacc777fd896032e"
+    },
+    "http": {
+      "status": "passed",
+      "base_url": "http://127.0.0.1:8014",
+      "commands": 34,
+      "negative_checks": 5,
+      "external_calls": 0
+    },
+    "build": {
+      "status": "passed",
+      "javascript_bytes": 311250,
+      "javascript_gzip_bytes": 99510,
+      "css_bytes": 11040,
+      "css_gzip_bytes": 3240,
+      "sizes": "Vite rounded report, not exact file lengths",
+      "log_sha256": "825afc3e2f24650c680eb77d77c98aef1e403998e3892b74001a6df5da317b54"
+    },
+    "upstream_warning": "Starlette TestClient references deprecated AnyIO BlockingPortal alias; retained, not silenced"
+  },
+  "source_freeze": "source-freeze.json",
+  "ui_finish": "UI实现审阅记录.md",
+  "known_secret_scan": {
+    "files_checked": 281,
+    "known_secret_substring_matches": 9,
+    "reviewed_nonsecret_collisions": 9,
+    "unreviewed_matches": 0,
+    "scope": "Known original archive and controlled local credentials only; not proof of absence of every possible secret or business value"
+  },
+  "diagnostic_boundary": "验证边界.md",
+  "package_reconstruction": {
+    "receipt": "MCSTAR-110-ALL-validation.json distributed alongside the exact ZIP",
+    "binding": "Companion receipt contains exact package SHA256, fresh-directory setup/build, isolated restore and HTTP guards. No self-referential package hash is embedded here."
+  },
+  "memory_limitations": "Sampled process-tree Working Set; shared database pages may be counted per process. Not machine-wide or unique physical RSS."
+}

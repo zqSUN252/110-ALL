@@ -67,6 +67,11 @@ def test_actual_provider_transport_verification_never_returns_code(app):
         assert bad.status_code==400
         good=client.post('/api/customer/register',json={'challenge_id':identity,'code':captured['code']})
         assert good.status_code==200 and client.get('/api/customer/documents').status_code==200
+        recovered=client.get('/api/customer/session')
+        assert recovered.status_code==200 and recovered.json()['csrf_token']==good.json()['csrf_token']
+        assert 'no-store' in recovered.headers['cache-control'] and 'token' not in recovered.json()
+        assert client.get('/api/customer/session',headers={'Sec-Fetch-Site':'cross-site'}).status_code==403
+        assert client.post('/api/customer/logout').status_code==403
         assert client.post('/api/customer/register',json={'challenge_id':identity,'code':captured['code']}).status_code==400
         assert client.post('/api/customer/logout',headers={'X-CSRF-Token':good.json()['csrf_token']}).status_code==204
         assert client.get('/api/customer/documents').status_code==401

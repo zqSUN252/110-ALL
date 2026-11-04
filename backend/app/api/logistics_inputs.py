@@ -140,7 +140,7 @@ class TicketCreate(TicketFields):
     document_id:str
     receipt:str=Field(min_length=1,max_length=200)
     pieces:int=Field(ge=0)
-    kg:str
+    kg:str|None=None
     cbm:str
 
 

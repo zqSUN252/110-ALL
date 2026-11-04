@@ -23,7 +23,8 @@ def require(actor: Actor, capability: str, warehouse_id=None):
 
 def check_version(entity, expected):
     if expected is None or entity.version != expected:
-        raise DomainError('stale_version', 'Record changed; reload before saving', 409)
+        raise DomainError('stale_version', 'Record changed; reload before saving', 409,
+            {'current_version': entity.version, 'expected_version': expected})
 
 
 def json_value(value):
