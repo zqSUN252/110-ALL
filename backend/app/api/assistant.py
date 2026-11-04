@@ -139,6 +139,8 @@ def operations(id:str,db:Database,actor=Depends(get_actor)):
 @router.get('/connections/{id}/qr')
 def qr(id:str,db:Database,actor=Depends(get_actor)):
     require(actor,'connections.manage');row=locked(db,Connection,id)
+    from app.channels.service import ChannelConfig
+    if not connections.current(row,ChannelConfig.from_env()):raise DomainError('qr_unavailable','Connection configuration changed',409)
     if row.status!='SCAN_QR_CODE' or not row.qr_attachment_id or not row.qr_expires_at or row.qr_expires_at<=utcnow():raise DomainError('qr_unavailable','No current QR',409)
     a=locked(db,Attachment,row.qr_attachment_id)
     if a.owner_type!='connection' or a.owner_id!=id:raise DomainError('qr_unavailable','QR owner differs',409)

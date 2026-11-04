@@ -74,6 +74,7 @@ def query(db,actor,thread,args):
             from app.finance.service import get_invoice
             items=[get_invoice(db,actor,r.id) for r in rows[:args.limit]]
     result={'kind':kind,'items':items,'offset':args.offset,'next_offset':args.offset+args.limit if len(rows)>args.limit else None,'coverage':'unknown' if kind=='bank' else 'selected_scope','executed':False}
+    if kind in ('bank','bank_files'):result['account_id']=args.account_id
     if kind=='cases':result['focus']=[record(f) for f in focus]
     return result
 

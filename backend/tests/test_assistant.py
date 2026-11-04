@@ -153,4 +153,6 @@ def test_saved_query_cannot_leak_after_read_capability_revocation(app):
         c=EvidenceCase(warehouse_id=wh,scope='live',payer_name='PRIVATE');db.add(c);db.flush()
         t=call(db,who,service.create_thread,warehouse_id=wh);tr=call(db,who,service.submit_turn,id=t['id'],expected_version=1,text='查询凭证')
         db.get(DialogueTurn,tr['id']).result={'tools':[{'tool':'query','result':{'kind':'cases','items':[{'id':c.id,'payer_name':'PRIVATE'}]}}]}
-        with pytest.raises(DomainError):service.get_thread(db,Actor(who.id,{'assistant.read'},{wh}),t['id'])
+        result=service.get_thread(db,Actor(who.id,{'assistant.read'},{wh}),t['id'])
+        assert result['turns'][0]['result']['availability']=='blocked'
+        assert 'PRIVATE' not in json.dumps(result)

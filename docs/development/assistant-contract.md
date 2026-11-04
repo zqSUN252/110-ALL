@@ -18,7 +18,7 @@ All paths below begin `/api`. IDs are the real persisted UUIDs. Output money use
 | --- | --- |
 | POST `/assistant/threads` | `{warehouse_id, scope?:"live"|"sample"="live", title?:string<=200="", source_message_id?:string|null}`. Returns thread record, including `id,version,actor_id,warehouse_id,scope,source_message_id`. A web thread omits source_message_id. |
 | GET `/assistant/threads` | Up to 100 current-operator threads, newest first. Current warehouse scope filters results. |
-| GET `/assistant/threads/{id}` | Thread plus ordered `turns[]` (text, result, job/status/error), `focus[]`, `files[]` (id/kind/authenticated URL). Saved result permissions are rechecked. |
+| GET `/assistant/threads/{id}` | Thread plus ordered `turns[]` (text, result, job/status/error), `focus[]`, `files[]` (id/kind/availability/authenticated URL). Saved result permissions and versions are rechecked. Stale or blocked history remains readable as safe metadata with `availability:"stale"|"blocked",error_code`; invalid tool facts, reply body and nonce are redacted. Files with unavailable sources have no URL or attachment id; denied focus exposes only id/position/status. Original protected history is retained. One expired export/notification never blocks the entire thread. |
 | POST `/assistant/threads/{id}/turns` | `{expected_version>=1,text?:string<=16000="",source_message_id?:string|null,attachment_ids?:string[<=20]=[]}`. At least text or attachment is required. Channel text must equal the original signed message body. Returns turn id, job_id, thread_id/thread_version, status, executed:false. Files must be personally owned original uploads. |
 | POST `/assistant/threads/{id}/focus` | `{expected_version,items:[{case_id,expected_version,image_id?:string|null}]}` max 40. Exact shown order and each case's own version are saved. An image must belong to that case. |
 | POST `/assistant/threads/{id}/tools` | `{expected_version,turn_id,name,arguments}`. `name` is one of the strict tools below; arguments are validated against that tool's schema. Uses the same dispatcher as the model, so Task 6 can provide ordinary forms while model calls stay disabled. Returns domain result plus thread_version. |
@@ -27,10 +27,10 @@ All paths below begin `/api`. IDs are the real persisted UUIDs. Output money use
 | GET `/assistant/files/{id}` | Actual checksum-verified private bytes with their real media type, forced attachment/no-store/nosniff. Pending files return 409. HTML exports also use restrictive CSP. Formal document and notification source checks run at retrieval. |
 | POST `/assistant/files/{id}/send` | `{expected_version,recipient:string<=250}`. Explicit human-selected allowlisted target only; no recipient-selecting model tool exists. Queues a guarded typed Delivery; returns delivered:false/provider_accepted:false. Defaults block sending. |
 | POST `/connections` | `{expected_version>=0,role:"main"|"assistant"|"capture",session:string[1..100],instance:string[1..100],generation:string[1..100],recovery_enabled?:bool=false,alert_actor_id?:string|null,alert_recipient?:string|null}`. Zero creates; current version updates. Role/session unique. Current actor becomes operation owner. Alert actor, if supplied, must be that actor; target must already be allowlisted. Changing identity resets cached pairing/status/QR and advances revision. |
-| GET `/connections` | Cached records plus online/qr_available/diagnostic. `online` requires a WORKING observation within 90 seconds; it never comes from generic service health. No external IO occurs in this GET. |
+| GET `/connections` | Cached records plus boundary_current/online/qr_available/diagnostic. Both online and QR availability require the current deployment instance/session/generation/role. Mismatch preserves historical status but returns online=false, qr_available=false, qr_attachment_id=null and diagnostic=configuration_changed. `online` additionally requires a WORKING observation within 90 seconds; it never comes from generic service health. No external IO occurs in this GET. |
 | POST `/connections/{id}/operations` | `{expected_version,kind:"inspect"|"qr"|"connect"|"recover"|"diagnose"}`. Returns a persisted pending operation, not provider success. Disabled flags return 409 before external IO. |
 | GET `/connections/{id}/operations` | Latest 100 operation records, including revision, boundary, attempted_at, outcome and lease. |
-| GET `/connections/{id}/qr` | Current PNG only during SCAN_QR_CODE and before 45-second expiry, with current attachment ownership. No implicit provider fetch. |
+| GET `/connections/{id}/qr` | Current PNG only during SCAN_QR_CODE and before 45-second expiry, with current deployment boundary and attachment ownership. Mismatch returns 409 qr_unavailable even when the cached PNG is unexpired. No implicit provider fetch. |
 | POST `/channels/automations` | `{id?:string|null,expected_version>=0,kind:"summary"|"echo",warehouse_id,scope,source_group,destination,paused?:bool=true}`. New=version 0; existing uses id/current version. Source and destination must differ and match configured source warehouse/target whitelist. |
 | GET `/channels/automations` | Current operator's scoped configurations and latest 100 history events per configuration. |
 | GET `/channels/messages?state=&after=&limit=50` | Warehouse-scoped source records; max 200, next cursor. Exposes origin_held for operator review. |
@@ -42,6 +42,8 @@ All paths below begin `/api`. IDs are the real persisted UUIDs. Output money use
 ## Strict tools
 
 Tool calls cannot provide SQL, filesystem paths, URLs, code, credentials, session control or arbitrary recipients. There are at most four model requests and eight tool calls in one leased turn. Invalid/unknown tools produce fixed error results; the remaining bounded loop may repair arguments. Uninterrupted processing persists actual tool results. Interrupted running turns become needs_review; no earlier send or business effect is replayed.
+
+Model context uses the same redacted historical projection as GET. Stale files and revoked results are marked rather than supplied as actionable facts; their body/nonce is absent. Current-turn/source/context validation errors persist a blocked job before returning called:false, so invalid historical state cannot roll back a pending job indefinitely. Fresh turns and exports remain available when historical files expire. Actual downloads, confirms and sends still require full current authorization.
 
 | Tool | Exact arguments and behavior |
 | --- | --- |
@@ -70,6 +72,8 @@ WAHA media retrieval requests one current authorized message by encoded session/
 `fromMe` alone is never a bot flag. Configured trusted owner JID, participant identity, actual chat and precise outbound message id are used. Known outbound IDs become bot_ignored; unknown owner/participant conflicts stay origin_held. During sending or uncertain IO to that session/chat, own-source callbacks are held. After a provider response stores its exact ID, matching held callbacks become bot; distinct trusted human messages may become recoverable. Text equality is never identity. A held human with an outstanding uncertain send requires explicit owner review; the uncertain send itself remains untouched.
 
 Delivery states: pending→sending→submitted only for a successful provider response with actual id; explicit rejection→failed; timeout/missing id/process interruption→uncertain. Neither failed nor uncertain is automatically retried. Real signed ack facts are stored separately: 1=server, 2=device, 3/4=read/played. Direct delivery may advance to delivered/read; group delivery remains submitted and reports each trusted participant separately. Unknown/unsupported signed receipt shapes are persisted as held observations. A receipt arriving before the send response is linked later by exact instance/session/message/chat. A configuration change cannot erase already-observed facts.
+
+Automatic tool replies bind Delivery.assistant_turn_id to the actual DialogueTurn and assistant_result_hash to its persisted result. Their ordinary Delivery.text is empty, enforced with a database paired-field/text/artifact constraint. At claim and immediately before provider IO, the worker checks current actor, original thread/message/chat, completed job, unchanged result fingerprint, every original tool result's current domain permissions/source, and saved record versions. It reconstructs text only after those checks; it cannot fall back to copied text. Bank query results retain explicit account_id even when empty, recheck membership/scope and each entry/file's actual account. Revoked evidence.read/bank.read, changed scope/version, or replaced result blocks delivery with called:false. Historical uncertain/failed/sent facts are never deleted or replayed.
 
 ## Connections and recovery
 
@@ -107,7 +111,7 @@ With `PYTHONPATH=backend`, run the existing explicit CLI `python -m app.domain_w
 
 ## Typed schema and Task 5 migration obligations
 
-Fixed revision `e11000700001` follows `d11000400003`; explicit frozen tables/columns/FKs/indexes, not live metadata.create_all. Every new table inherits id/version/UTC created_at/updated_at.
+Fixed revision `e11000700001` follows `d11000400003`; follow-up `e11000700002` adds assistant reply provenance without rewriting the applied first revision. Both use explicit frozen tables/columns/FKs/indexes, not live metadata.create_all. Every new table inherits id/version/UTC created_at/updated_at.
 
 | Model/table | Typed relationships and state |
 | --- | --- |
@@ -125,6 +129,8 @@ Fixed revision `e11000700001` follows `d11000400003`; explicit frozen tables/col
 | ChannelAutomationEvent / channel_automation_events | unique(automation,message), source message FK, whole recognition FK, delivery FK, state |
 
 Existing ChannelMessage adds from_me (false for prior rows), origin_state (human for previously accepted rows), nullable original attachment FK. Delivery adds captured boundary and nullable DialogueFile FK. Old Task 2 `delivered` rows are conservatively renamed submitted because that version only established API acceptance. Legacy pending deliveries without a captured boundary fail closed. Migration never invents participant receipts, pairing success or bank/financial facts. Nonempty new histories/provenance prevent downgrade; empty schemas support base/head round-trip. Preserve source mappings and originals for all these entities, migrate running leases to needs-review/paused, and never replay historical or uncertain sends.
+
+Revision e11000700002 additionally adds Delivery.assistant_turn_id (nullable FK to dialogue_turns), assistant_result_hash (nullable varchar64), FK `fk_delivery_assistant_turn` and check `ck_delivery_assistant_provenance`. Both fields must be null together, or populated together with empty text and no artifact_id. Existing pending automatic replies identified by the committed channel.delivery.queue command key `assistant-reply:%` become blocked; copied text is retained only as historical evidence, not reconstructed into executable provenance. Uncertain/submitted/receipt facts are unchanged. Downgrade refuses any populated reply provenance. Task 5 must preserve both fields and the turn/result/source relationships, or import such unsent replies blocked; it must never migrate cached text as an authorized assistant reply.
 
 ## Validation and evidence boundary
 

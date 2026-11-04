@@ -95,22 +95,61 @@ def set_focus(db,actor,p):
     return {'id':thread.id,'version':thread.version,'focus':[record(r) for r in rows]}
 
 
+def unavailable(exc):
+    code=exc.code if isinstance(exc,DomainError) else 'invalid_history'
+    return {'availability':'stale' if code.startswith('stale_') or code=='action_expired' else 'blocked','error_code':code}
+
+
+def history_result(db,actor,thread,result):
+    """Read projections redact invalid facts/nonces without altering original history."""
+    if result is None:return None
+    tools=[];failures=[]
+    try:
+        for item in result.get('tools',[]):
+            try:authorize_result(db,actor,thread,item['tool'],item['result']);tools.append(item)
+            except (DomainError,KeyError,TypeError,ValueError) as exc:
+                state=unavailable(exc);failures.append(state)
+                tools.append({'tool':item.get('tool'),'result':{'error':state['error_code'],'executed':False,**state}})
+    except (AttributeError,TypeError,ValueError) as exc:failures.append(unavailable(exc))
+    if failures:return {'text':'部分历史结果已失效或当前无权读取；请重新查询或生成。','executed':False,'tools':tools,**failures[0]}
+    return result
+
+
+def history_focus(db,actor,thread):
+    items=[]
+    for f in db.scalars(select(DialogueFocus).where(DialogueFocus.thread_id==thread.id).order_by(DialogueFocus.position)):
+        try:scoped_case(db,actor,thread,f.case_id);items.append(record(f)|{'availability':'available'})
+        except DomainError as exc:items.append({'id':f.id,'position':f.position,**unavailable(exc)})
+    return items
+
+
+def history_files(db,actor,thread):
+    from .files import authorize_file
+    items=[]
+    for f in db.scalars(select(DialogueFile).where(DialogueFile.thread_id==thread.id)):
+        item={'id':f.id,'kind':f.kind}
+        try:authorize_file(db,actor,thread,f);item.update(availability='available',url='/api/assistant/files/'+f.id,attachment_id=f.attachment_id)
+        except (DomainError,KeyError,TypeError,ValueError) as exc:item.update(unavailable(exc))
+        items.append(item)
+    return items
+
+
 def get_thread(db,actor,identity):
     thread=thread_access(db,actor,identity)
     turns=[]
     for t in db.scalars(select(DialogueTurn).where(DialogueTurn.thread_id==identity).order_by(DialogueTurn.created_at,DialogueTurn.id)):
-        for tool in (t.result or {}).get('tools',[]):authorize_result(db,actor,thread,tool.get('tool'),tool.get('result',{}))
-        j=db.get(Job,t.job_id);turns.append(record(t)|{'status':j.status,'error_code':j.error_code})
-    for focus in db.scalars(select(DialogueFocus).where(DialogueFocus.thread_id==identity)):scoped_case(db,actor,thread,focus.case_id)
-    from .files import authorize_file
-    for file in db.scalars(select(DialogueFile).where(DialogueFile.thread_id==identity)):authorize_file(db,actor,thread,file)
-    return record(thread)|{'turns':turns,'focus':[record(f) for f in db.scalars(select(DialogueFocus).where(DialogueFocus.thread_id==identity).order_by(DialogueFocus.position))], 'files':[{'id':f.id,'kind':f.kind,'url':'/api/assistant/files/'+f.id} for f in db.scalars(select(DialogueFile).where(DialogueFile.thread_id==identity))]}
+        j=db.get(Job,t.job_id)
+        turns.append(record(t)|{'result':history_result(db,actor,thread,t.result),'status':j.status,'error_code':j.error_code})
+    return record(thread)|{'turns':turns,'focus':history_focus(db,actor,thread),'files':history_files(db,actor,thread)}
 
 
 def authorize_result(db,actor,thread,name,result):
     """Cached tool results are not an authorization bypass after grants/source changes."""
     if 'error' in result:return
-    if name=='case':scoped_case(db,actor,thread,result['id'])
+    def version(current,saved):
+        actual=current['version'] if isinstance(current,dict) else current.version
+        if 'version' in saved and actual!=saved['version']:raise DomainError('stale_result','Saved result version changed; query again',409)
+    if name=='case':version(scoped_case(db,actor,thread,result['id']),result)
     elif name=='source_assessment':
         scoped_case(db,actor,thread,result['case_id'])
         from app.evidence.service import source_assessment_preview
@@ -118,32 +157,51 @@ def authorize_result(db,actor,thread,name,result):
     elif name=='compare':
         for item in result.get('items',[]):
             case=scoped_case(db,actor,thread,item['id'])
+            version(case,item)
             if case.get('account_id'):
                 from app.finance.access import account_access
                 account_access(db,actor,locked(db,BankAccount,case['account_id']),'bank.read',thread.warehouse_id)
     elif name=='query':
         kind=result.get('kind')
+        caps={'cases':'evidence.read','bank':'bank.read','bank_files':'bank.read','archives':'bank.export','templates':'documents.read','cargo':'packing.read','invoices':'finance.read','files':'assistant.read'}
+        if kind not in caps:raise DomainError('result_provenance','Unsupported query provenance',403)
+        require(actor,caps[kind],thread.warehouse_id)
+        def bank_source(account_id):
+            from app.finance.access import account_access
+            account=locked(db,BankAccount,account_id);account_access(db,actor,account,'bank.read',thread.warehouse_id)
+            if account.scope!=thread.scope:raise DomainError('source_scope','Bank source moved outside conversation',403)
+        if kind in ('bank','bank_files'):
+            account_id=result.get('account_id')
+            if not account_id:raise DomainError('result_provenance','Bank query account provenance unavailable',403)
+            bank_source(account_id)
         for item in result.get('items',[]):
-            if kind=='cases':scoped_case(db,actor,thread,item['id'])
+            if kind=='cases':version(scoped_case(db,actor,thread,item['id']),item)
             elif kind=='bank':
-                from app.finance.access import account_access
-                account_access(db,actor,locked(db,BankAccount,item['account_id']),'bank.read',thread.warehouse_id)
+                from app.models import BankEntry
+                entry=locked(db,BankEntry,item['id'])
+                version(entry,item)
+                if entry.account_id!=result['account_id'] or item['account_id']!=entry.account_id:raise DomainError('source_scope','Bank entry source changed',403)
+                bank_source(entry.account_id)
                 for claim in item.get('claims',[]):
-                    case=locked(db,EvidenceCase,claim['case_id']);require(actor,'evidence.read',case.warehouse_id)
+                    scoped_case(db,actor,thread,claim['case_id'])
             elif kind=='invoices':
                 from app.finance.service import get_invoice
                 current=get_invoice(db,actor,item['id'])
+                version(current,item)
                 if current['warehouse_id']!=thread.warehouse_id or current['scope']!=thread.scope:raise DomainError('source_scope','Invoice moved outside conversation',403)
             elif kind=='cargo':
                 from app.packing.service import get_ticket
                 current=get_ticket(db,actor,item['id'])
+                version(current,item)
                 if current['warehouse_id']!=thread.warehouse_id or thread.scope!='live':raise DomainError('source_scope','Cargo moved outside conversation',403)
             elif kind=='files':
                 from .files import authorize_file
                 authorize_file(db,actor,thread,locked(db,DialogueFile,item['id']))
             elif kind=='bank_files':
-                from app.finance.access import account_access
-                account_access(db,actor,locked(db,BankAccount,locked(db,BankFile,item['id']).account_id),'bank.read',thread.warehouse_id)
+                file=locked(db,BankFile,item['id'])
+                version(file,item)
+                if file.account_id!=result['account_id']:raise DomainError('source_scope','Bank file source changed',403)
+                bank_source(file.account_id)
             elif kind=='archives':
                 from app.finance.authorization import export_file_access
                 export_file_access(db,actor,locked(db,Attachment,item['id']))
@@ -151,6 +209,8 @@ def authorize_result(db,actor,thread,name,result):
     elif name=='propose' and result.get('status')=='confirmation_required':
         proposal=locked(db,DialogueProposal,result['id'])
         if proposal.thread_id!=thread.id:raise DomainError('source_scope','Proposal conversation differs',403)
+        if proposal.used_at or proposal.expires_at<=utcnow():raise DomainError('action_expired','Proposal no longer available',409)
+        validate_proposal(db,actor,thread,proposal.action,proposal.payload)
         from app.finance.authorization import authorize
         authorize(db,actor,{'bank.review':'bank.case.review'}.get(proposal.action,proposal.action),proposal.payload)
         if proposal.action!='bank.import.confirm':scoped_case(db,actor,thread,proposal.payload['id'])

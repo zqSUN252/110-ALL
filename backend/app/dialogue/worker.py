@@ -11,7 +11,7 @@ from app.evidence.recognition import ModelConfig
 from app.channels.worker import actor_now
 from app.channels.service import ChannelConfig,operator_message
 from app.channels.source import same_boundary
-from .service import thread_access,create_thread,submit_turn,confirm,authorize_result
+from .service import thread_access,create_thread,submit_turn,confirm,authorize_result,history_result,history_focus,history_files
 from .inputs import TOOLS,definitions
 from .tools import dispatch
 from .commands import domain_guard
@@ -54,15 +54,15 @@ async def dialogue_once(factory,settings,config=None,transport=None):
         t=db.scalar(select(DialogueTurn).where(DialogueTurn.job_id==j.id));identity=t.id;jid=j.id
         try:
             actor=actor_now(db,j.payload['actor_id']);thread=thread_access(db,actor,t.thread_id,'assistant.act')
-        except DomainError as exc:j.status='blocked';j.error_code=exc.code;return {'status':'blocked','called':False}
-        if t.source_message_id:operator_message(db,actor,t.source_message_id,ChannelConfig.from_env())
+            if t.source_message_id:operator_message(db,actor,t.source_message_id,ChannelConfig.from_env())
+            focus=history_focus(db,actor,thread)
+            uploads=history_files(db,actor,thread)
+            previous=[{'request':x.text,'result':history_result(db,actor,thread,x.result)} for x in db.scalars(select(DialogueTurn).where(DialogueTurn.thread_id==thread.id,DialogueTurn.id!=identity,DialogueTurn.result.is_not(None)).order_by(DialogueTurn.created_at.desc()).limit(6))]
+            messages=[{'role':'system','content':SYSTEM},{'role':'user','content':json.dumps({'current_human_request':t.text,'focus':focus,'attachments':uploads,'past_conversation_data':list(reversed(previous))},ensure_ascii=False)}]
+        except (DomainError,KeyError,TypeError,ValueError) as exc:
+            j.status='blocked';j.error_code=exc.code if isinstance(exc,DomainError) else 'invalid_context'
+            return {'id':identity,'status':'blocked','called':False}
         j.status='running';j.locked_at=utcnow();j.attempts+=1;lease=j.locked_at;t.model_profile=config.profile
-        focus=[record(f) for f in db.scalars(select(DialogueFocus).where(DialogueFocus.thread_id==thread.id).order_by(DialogueFocus.position))]
-        uploads=[{'attachment_id':f.attachment_id,'kind':f.kind} for f in db.scalars(select(DialogueFile).where(DialogueFile.thread_id==thread.id))]
-        previous=[{'request':x.text,'result':x.result} for x in db.scalars(select(DialogueTurn).where(DialogueTurn.thread_id==thread.id,DialogueTurn.id!=identity,DialogueTurn.result.is_not(None)).order_by(DialogueTurn.created_at.desc()).limit(6))]
-        for previous_turn in previous:
-            for item in (previous_turn['result'] or {}).get('tools',[]):authorize_result(db,actor,thread,item['tool'],item['result'])
-        messages=[{'role':'system','content':SYSTEM},{'role':'user','content':json.dumps({'current_human_request':t.text,'focus':focus,'attachments':uploads,'past_conversation_data':list(reversed(previous))},ensure_ascii=False)}]
     results=[];called=False;status='completed';error=None;count=0
     try:
         async with httpx.AsyncClient(transport=transport,trust_env=False,follow_redirects=False,timeout=45) as client:
@@ -109,10 +109,12 @@ async def dialogue_once(factory,settings,config=None,transport=None):
         except DomainError as exc:status='blocked';error=exc.code;results=[]
         t.result=deterministic_reply(results);t.version+=1;j.status=status;j.error_code=error
         if status=='completed' and t.source_message_id and settings.sending_enabled:
-            from app.channels.service import queue_delivery
+            from .delivery import queue_reply
             source=operator_message(db,actor,t.source_message_id,ChannelConfig.from_env());cfg=ChannelConfig.from_env()
             if source.group_id in cfg.recipients and cfg.api_key and cfg.base_url and ('*' in actor.capabilities or 'channels.send' in actor.capabilities):
-                queue_delivery(db,actor,{'message_id':source.id,'session':cfg.assistant_session,'recipient':source.group_id,'text':t.result['text'][:8000],'idempotency_key':'assistant-reply:'+t.id})
+                try:queue_reply(db,actor,t,source,cfg)
+                except DomainError as exc:
+                    status='blocked';j.status=status;j.error_code=exc.code;t.result=deterministic_reply([])
     return {'id':identity,'status':status,'called':called}
 
 

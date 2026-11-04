@@ -107,7 +107,13 @@ def request_operation(db,actor,p):
 
 def view(db,actor):
     require(actor,'connections.read')
-    return [record(row)|{'qr_available':bool(row.status=='SCAN_QR_CODE' and row.qr_expires_at and row.qr_expires_at>utcnow()),'online':row.status=='WORKING' and bool(row.observed_at and row.observed_at>utcnow()-timedelta(seconds=90)),'diagnostic':('phone_action_required' if row.status in VERIFY-{'SCAN_QR_CODE'} else 'unpaired' if not row.ever_paired else 'observed')} for row in db.scalars(select(Connection).order_by(Connection.role))]
+    config=ChannelConfig.from_env();items=[]
+    for row in db.scalars(select(Connection).order_by(Connection.role)):
+        active=current(row,config)
+        item=record(row)
+        if not active:item['qr_attachment_id']=None
+        items.append(item|{'boundary_current':active,'qr_available':active and bool(row.status=='SCAN_QR_CODE' and row.qr_attachment_id and row.qr_expires_at and row.qr_expires_at>utcnow()),'online':active and row.status=='WORKING' and bool(row.observed_at and row.observed_at>utcnow()-timedelta(seconds=90)),'diagnostic':('configuration_changed' if not active else 'phone_action_required' if row.status in VERIFY-{'SCAN_QR_CODE'} else 'unpaired' if not row.ever_paired else 'observed')})
+    return items
 
 
 def alerts(db,row,now=None):

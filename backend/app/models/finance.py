@@ -302,6 +302,7 @@ class ChannelAction(Record, Base):
 
 class Delivery(Record, Base):
     __tablename__ = 'channel_deliveries'
+    __table_args__ = (CheckConstraint("(assistant_turn_id IS NULL AND assistant_result_hash IS NULL) OR (assistant_turn_id IS NOT NULL AND assistant_result_hash IS NOT NULL AND text = '' AND artifact_id IS NULL)",name='ck_delivery_assistant_provenance'),)
     message_id: Mapped[str | None] = col(ForeignKey('channel_messages.id'))
     actor_id: Mapped[str] = col(ForeignKey('users.id'))
     session: Mapped[str] = col(String(120))
@@ -312,6 +313,8 @@ class Delivery(Record, Base):
     receipt: Mapped[str | None] = col(String(500))
     boundary: Mapped[dict | None] = col(JSONB)
     artifact_id: Mapped[str | None] = col(ForeignKey('dialogue_files.id'))
+    assistant_turn_id: Mapped[str | None] = col(ForeignKey('dialogue_turns.id',name='fk_delivery_assistant_turn'))
+    assistant_result_hash: Mapped[str | None] = col(String(64))
 
 
 class FinanceEvent(Record, Base):

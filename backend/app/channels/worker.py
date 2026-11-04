@@ -45,6 +45,8 @@ async def delivery_once(factory,settings,config=None,transport=None):
             if item.message_id:operator_message(db,actor,item.message_id,config)
             from .automation import delivery_guard
             delivery_guard(db,actor,item,settings,config)
+            from app.dialogue.delivery import reply_text
+            reply=reply_text(db,actor,item)
             artifact=None;notice=None
             if item.artifact_id:
                 from app.dialogue.files import delivery_material
@@ -52,7 +54,7 @@ async def delivery_once(factory,settings,config=None,transport=None):
         except DomainError:
             item.state='blocked'; return {'id':item.id,'status':'blocked','called':False}
         item.state='sending'; item.lease_until=utcnow()+timedelta(minutes=5); item.version+=1
-        identity=item.id; artifact_id=item.artifact_id;payload={'session':item.session,'chatId':item.recipient,'text':notice if notice is not None else item.text}
+        identity=item.id; artifact_id=item.artifact_id;payload={'session':item.session,'chatId':item.recipient,'text':reply if reply is not None else notice if notice is not None else item.text}
         endpoint='/api/sendText'
     state='uncertain'; receipt=None;started=False
     try:
@@ -68,6 +70,7 @@ async def delivery_once(factory,settings,config=None,transport=None):
             if item.session==config.main_session or item.session!=config.assistant_session or item.recipient not in config.recipients:raise DomainError('send_scope','Recipient changed')
             if item.message_id:operator_message(db,actor,item.message_id,config)
             delivery_guard(db,actor,item,settings,config)
+            if reply_text(db,actor,item)!=reply:raise DomainError('source_changed','Assistant result source changed')
             if artifact_id:
                 latest,latest_notice=delivery_material(db,actor,artifact_id)
                 if (artifact and (not latest or latest.id!=artifact.id or latest.sha256!=artifact.sha256)) or latest_notice!=notice:raise DomainError('source_changed','File source changed')
