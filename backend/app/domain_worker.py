@@ -10,10 +10,13 @@ from app.channels.worker import delivery_once,media_once
 
 def main():
     parser=argparse.ArgumentParser()
-    parser.add_argument('kind',choices=['recognition','delivery','media','translation','cargo-export'])
+    parser.add_argument('kind',choices=['recognition','delivery','media','translation','cargo-export','document-export'])
     parser.add_argument('--operator-id')
     args=parser.parse_args(); settings=load_settings(); engine=make_engine(settings.database_url); factory=session_factory(engine)
     try:
+        if args.kind=='document-export':
+            from app.documents.exports import export_once
+            print(json.dumps({'processed':export_once(settings,factory)},ensure_ascii=False));return
         if args.kind=='cargo-export':
             from app.warehouses.exports import export_once
             print(json.dumps(export_once(factory,settings),ensure_ascii=False));return

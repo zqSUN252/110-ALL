@@ -186,4 +186,7 @@ def test_n1_migration_review_preserves_ar_and_allows_metadata_then_explicit_reso
         assert t['pricing_authority']=='totals' and t['quote_id'] is None
         assert finance.get_invoice(db,actor,inv['id'])['amount_ngn']=='2000.00'
         assert finance.get_payment(db,actor,payment['id'])['amount_ngn']=='1000.00' and finance.get_payment(db,actor,payment['id'])['available_ngn']=='0.00'
-    with pytest.raises(RuntimeError,match='Cannot discard pricing authority'):command.downgrade(config,'c11000300005')
+    # A real phone correction now creates Task4 source history; its newer guard
+    # correctly refuses downgrade before c6. The dedicated no-phone test below
+    # still reaches c6 itself without erasing any real history.
+    with pytest.raises(RuntimeError,match='Cannot discard nonempty document/customer/hold facts: cargo_phone_history'):command.downgrade(config,'c11000300005')

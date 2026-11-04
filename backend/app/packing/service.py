@@ -27,10 +27,12 @@ def ticket_values(p):
 
 
 def ticket_json(db,t):
+    from app.models import PhysicalRelease
+    pickup=db.scalar(select(func.max(PhysicalRelease.occurred_at)).where(PhysicalRelease.ticket_id==t.id))
     arrivals=[finance.record(a)|{'effective_freight_usd':str(usd) if usd is not None else None,'effective_clearing_ngn':str(ngn) if ngn is not None else None} for a,usd,ngn in arrival_projection(db,t)]
     return finance.record(t)|{'charge_components':allocation.components(db,t),'arrivals':arrivals,'arrived':{'pieces':sum(a['pieces'] for a in arrivals),'kg':f"{sum((Decimal(a['kg']) for a in arrivals),Decimal(0)):.6f}",'cbm':f"{sum((Decimal(a['cbm']) for a in arrivals),Decimal(0)):.6f}"},
         'attachments':[finance.record(a) for a in db.scalars(select(TicketAttachment).where(TicketAttachment.ticket_id==t.id))],
-        'quote_id':t.quote_id if t.pricing_authority=='quote' else None,'quote':finance.record(db.get(QuoteSnapshot,t.quote_id)) if t.quote_id and t.pricing_authority=='quote' else None,'historical_quote_id':t.quote_id if t.pricing_authority!='quote' else None,'actual_release_at':None}
+        'quote_id':t.quote_id if t.pricing_authority=='quote' else None,'quote':finance.record(db.get(QuoteSnapshot,t.quote_id)) if t.quote_id and t.pricing_authority=='quote' else None,'historical_quote_id':t.quote_id if t.pricing_authority!='quote' else None,'actual_release_at':pickup.isoformat() if pickup else None}
 
 
 def get_ticket(db,actor,identity):

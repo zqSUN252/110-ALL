@@ -20,6 +20,12 @@ class Settings:
     main_account_read_only: bool = True
     session_hours: int = 12
     max_attachment_bytes: int = 20 * 1024 * 1024
+    phone_delivery_enabled: bool = False
+    phone_provider_url: str | None = None
+    phone_provider_token: str | None = field(default=None,repr=False)
+    document_font_regular: str | None = None
+    document_font_bold: str | None = None
+    document_font_chinese: str | None = None
 
 
 def load_settings() -> Settings:
