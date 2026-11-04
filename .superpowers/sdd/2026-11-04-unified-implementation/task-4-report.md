@@ -156,3 +156,11 @@ The following source IDs/numbers are taken from the binding requirement catalog.
 | TRACK-07 暂停通用开放节点API | #265、#266 | Per-node follow and warehouse coverage / per-source public proof; tracking suite |
 | PORTAL-01 手机号注册及自助资料 | #518 | Verified identity / current owner / bytes; provider, export, photo and pagination tests |
 | PORTAL-02 导出正式客户箱单 | #303、#381、#386、#518 | Verified identity / current owner / bytes; provider, export, photo and pagination tests |
+
+## Fix round 1 — limited gate I1–I5
+
+The independent gate at `ca36dfadcaa4156da4a6e5b3071b51144d0dc48b` found five Important issues despite the original 181-test pass. They are addressed by implementation commit `38fe82ca5f2f7137438f9dc3691a18e2ea64330d`: restore multi-source export sequence from the immutable source snapshot; bind rates/receipt generations to the selected effective price-card set; expose native Receipt copy markers through a scoped persisted API; label XLSX currency totals correctly while retaining true fee components; and reuse shared HALF_UP conversion plus current billed components/explicit rounding in arrival/removal text.
+
+Actual behavioral REDs and final focused GREEN (**41 passed**) are recorded in [task-4-fix-1-report.md](task-4-fix-1-report.md). The fix also covers partial-arrival REMOVE ON HOLD currency reconciliation discovered through I5's requested nonzero-adjustment test. It does not alter billing, actual warehouse/pickup facts or hold/credit policy. No schema migration was needed; runtime remains d11000400003 with no metadata diff.
+
+Fix-round final source verification: **197 passed, 1 warning in 520.22s (0:08:40), exit 0**. Independent limited rereview and the previously listed external/template/UI acceptance boundaries remain separate; the original Task 4 pass is not used as evidence that these five omissions did not exist.
