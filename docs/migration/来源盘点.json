@@ -1,0 +1,539 @@
+{
+  "review_date": "2026-11-04",
+  "archive_filename": "MCSTAR项目完整包_20261103(1).zip",
+  "archive_sha256": "4c47a5ffb612026bbc6944dc4729a6f7f5d07f2cf2df95c9a26b155f0c51fb40",
+  "prompt_sections": 578,
+  "snapshots": [
+    {
+      "member": "data/data.json",
+      "sha256": "ddcb01c808de61b411c986c60ede84b96ee143eee31984f414b21f9189add904",
+      "version": 101908,
+      "bytes": 24340770,
+      "key_counts": {
+        "logistics_users": 6,
+        "logistics_partners": 439,
+        "logistics_bills": 619,
+        "logistics_shipments": 28,
+        "logistics_seq": 3,
+        "logistics_whBank": 2,
+        "logistics_fxRate": null,
+        "logistics_oplog": 507,
+        "logistics_lang": null,
+        "logistics_ri_wh": null,
+        "logistics_ri_co": null,
+        "logistics_userDeleted": 0,
+        "logistics_f6recs": 165,
+        "logistics_f6TelFix2": null,
+        "logistics_cr_wh": null,
+        "logistics_f6cfg": 14,
+        "logistics_shipTrash": 6,
+        "logistics_payLedger": 73,
+        "logistics_opPend": 32,
+        "logistics_billTomb": 139,
+        "logistics_shipTomb": 12,
+        "logistics_arrReg": 4,
+        "logistics_partnerTomb": 4
+      },
+      "bill_types": {
+        "ar": 604,
+        "ap": 15
+      },
+      "shipment_modes": {
+        "sea": 24,
+        "air": 4
+      },
+      "ticket_rows": 964,
+      "unique_nonempty_receipt_numbers": 917,
+      "slips": 60,
+      "approved_slips": 57,
+      "slips_with_embedded_file": 37,
+      "slips_missing_uid": 55,
+      "historical_sessions_excluded": 39,
+      "history_keys": [
+        "logistics_arrReg",
+        "logistics_bills",
+        "logistics_opPend",
+        "logistics_oplog",
+        "logistics_partners",
+        "logistics_payLedger",
+        "logistics_ri_co",
+        "logistics_ri_wh",
+        "logistics_shipments",
+        "logistics_users"
+      ],
+      "bill_partner_orphans": 12,
+      "bill_shipment_orphans": 42,
+      "missing_keys_not_proof_of_no_business": [
+        "logistics_whRecs",
+        "logistics_mbls",
+        "logistics_custs"
+      ]
+    },
+    {
+      "member": "data/data_test.json",
+      "sha256": "1212a3eab737540da0ec35a84cc1984cfb04aa36e1c3358c935dc8a5083b83da",
+      "version": 101844,
+      "bytes": 23121879,
+      "key_counts": {
+        "logistics_users": 6,
+        "logistics_partners": 439,
+        "logistics_bills": 576,
+        "logistics_shipments": 29,
+        "logistics_seq": 3,
+        "logistics_whBank": 2,
+        "logistics_fxRate": null,
+        "logistics_oplog": 107,
+        "logistics_lang": null,
+        "logistics_ri_wh": null,
+        "logistics_ri_co": null,
+        "logistics_userDeleted": 0,
+        "logistics_f6recs": 165,
+        "logistics_f6TelFix2": null,
+        "logistics_cr_wh": null,
+        "logistics_f6cfg": 14,
+        "logistics_shipTrash": 6,
+        "logistics_payLedger": 62,
+        "logistics_opPend": 9,
+        "logistics_billTomb": 139,
+        "logistics_shipTomb": 12,
+        "logistics_arrReg": 4,
+        "logistics_partnerTomb": 4
+      },
+      "bill_types": {
+        "ar": 561,
+        "ap": 15
+      },
+      "shipment_modes": {
+        "sea": 25,
+        "air": 4
+      },
+      "ticket_rows": 983,
+      "unique_nonempty_receipt_numbers": 927,
+      "slips": 51,
+      "approved_slips": 50,
+      "slips_with_embedded_file": 32,
+      "slips_missing_uid": 51,
+      "historical_sessions_excluded": 20,
+      "history_keys": [
+        "logistics_arrReg",
+        "logistics_billTomb",
+        "logistics_bills",
+        "logistics_f6recs",
+        "logistics_fxRate",
+        "logistics_opPend",
+        "logistics_oplog",
+        "logistics_partnerTomb",
+        "logistics_partners",
+        "logistics_payLedger",
+        "logistics_ri_co",
+        "logistics_ri_wh",
+        "logistics_seq",
+        "logistics_shipTomb",
+        "logistics_shipTrash",
+        "logistics_shipments",
+        "logistics_users"
+      ],
+      "bill_partner_orphans": 12,
+      "bill_shipment_orphans": 38,
+      "missing_keys_not_proof_of_no_business": [
+        "logistics_whRecs",
+        "logistics_mbls",
+        "logistics_custs"
+      ]
+    },
+    {
+      "member": "deploy/mcstar部署包/data.json",
+      "sha256": "d6d7a44c7f9f1b3df1fffae843824136a64d1274fccb60169a1152c76682ea26",
+      "version": 114,
+      "bytes": 16327774,
+      "key_counts": {
+        "logistics_users": 5,
+        "logistics_partners": 272,
+        "logistics_bills": 326,
+        "logistics_shipments": 12,
+        "logistics_seq": 3,
+        "logistics_whBank": 2,
+        "logistics_fxRate": null,
+        "logistics_oplog": 14,
+        "logistics_lang": null,
+        "logistics_ri_wh": null,
+        "logistics_ri_co": null
+      },
+      "bill_types": {
+        "ar": 316,
+        "ap": 10
+      },
+      "shipment_modes": {
+        "sea": 12
+      },
+      "ticket_rows": 524,
+      "unique_nonempty_receipt_numbers": 508,
+      "slips": 9,
+      "approved_slips": 9,
+      "slips_with_embedded_file": 4,
+      "slips_missing_uid": 9,
+      "historical_sessions_excluded": 42,
+      "history_keys": [
+        "logistics_bills",
+        "logistics_oplog",
+        "logistics_partners",
+        "logistics_shipments"
+      ],
+      "bill_partner_orphans": 0,
+      "bill_shipment_orphans": 0,
+      "missing_keys_not_proof_of_no_business": [
+        "logistics_whRecs",
+        "logistics_mbls",
+        "logistics_custs"
+      ]
+    }
+  ],
+  "members": [
+    {
+      "name": "source/index.html",
+      "bytes": 889427
+    },
+    {
+      "name": "source/server.js",
+      "bytes": 37755
+    },
+    {
+      "name": "source/track.html",
+      "bytes": 15800
+    },
+    {
+      "name": "source/my.html",
+      "bytes": 16095
+    },
+    {
+      "name": "source/logo.png",
+      "bytes": 93372
+    },
+    {
+      "name": "source/logo_side.png",
+      "bytes": 11050
+    },
+    {
+      "name": "source/index_debug.html",
+      "bytes": 855390
+    },
+    {
+      "name": "data/data.json",
+      "bytes": 24340770
+    },
+    {
+      "name": "data/data_test.json",
+      "bytes": 23121879
+    },
+    {
+      "name": "deploy/mcstar部署包/index.html",
+      "bytes": 501741
+    },
+    {
+      "name": "deploy/mcstar部署包/server.js",
+      "bytes": 17456
+    },
+    {
+      "name": "deploy/mcstar部署包/data.json",
+      "bytes": 16327774
+    },
+    {
+      "name": "deploy/mcstar部署包/start.sh",
+      "bytes": 126
+    },
+    {
+      "name": "deploy/mcstar部署包/mcstar.service",
+      "bytes": 494
+    },
+    {
+      "name": "deploy/mcstar部署包/部署说明.md",
+      "bytes": 1777
+    },
+    {
+      "name": "deploy/mcstar_backup.py",
+      "bytes": 4344
+    },
+    {
+      "name": "deploy/mcstar_publish.py",
+      "bytes": 4047
+    },
+    {
+      "name": "docs/MCSTAR云端化改造盘点报告.md",
+      "bytes": 4384
+    },
+    {
+      "name": "docs/MCSTAR出运单导入模板.xlsx",
+      "bytes": 5787
+    },
+    {
+      "name": "credentials/admin_cred.txt",
+      "bytes": 15
+    },
+    {
+      "name": "prompts/用户提示词全记录.md",
+      "bytes": 223499
+    },
+    {
+      "name": "README.md",
+      "bytes": 2541
+    }
+  ],
+  "live_110_database": "未取得当前生产一致性备份，本地QA库不作正式来源",
+  "production_migration_executed": false,
+  "mcstar_source_files": [
+    {
+      "member": "source/index.html",
+      "sha256": "5b08f619f405159711a036d7c10a095af10cfb50239ce671c5683ec46dcc866c",
+      "lines": 10835
+    },
+    {
+      "member": "source/server.js",
+      "sha256": "c131c05502cafead7974f9e3029d7409463df97f47e5997a71b0fe9143aebdac",
+      "lines": 618
+    },
+    {
+      "member": "source/track.html",
+      "sha256": "45b9a3362304e31517d15319b898e2b3837c203040c21d721a4896ed03377695",
+      "lines": 191
+    },
+    {
+      "member": "source/my.html",
+      "sha256": "e243abcc89e78baeb93657a8d72d6d5ed1728838d68cafe6df8bc787c978fd4b",
+      "lines": 246
+    }
+  ],
+  "reference_110_files": [
+    {
+      "path": "compose.yaml",
+      "sha256": "5e458b6ee9b5c6d836429fb0a1b13ef25323dd7ac58e028276acaeea319a0b95"
+    },
+    {
+      "path": "intake/__init__.py",
+      "sha256": "8b75e6ad3f956b48d5f5edeeca317961f62c7673336f187e3be927da574320cf"
+    },
+    {
+      "path": "intake/app.py",
+      "sha256": "591053c8aa2d9c64c4c85f13680acbb61347ce71cf225433bcbaab6e1da4a839"
+    },
+    {
+      "path": "intake/archive_delivery.py",
+      "sha256": "3b5fd8aa8c8cc415789da8be86ecb3cfb4fb48c4549f34c12e99acd30c5d2093"
+    },
+    {
+      "path": "intake/auth.py",
+      "sha256": "66e393af5f489fed3ce689ab3c7f2d64c62f609b99bb40f9f981b64a79d2d9f3"
+    },
+    {
+      "path": "intake/bank.py",
+      "sha256": "edc786d30d1262f4f702b93c15dca79ae01d21ee8704d91d1f324d6952964063"
+    },
+    {
+      "path": "intake/bank_imports.py",
+      "sha256": "f361e54d077896f529104f7fa52d79daa37a19e98e8eabaf503609e1c2237e92"
+    },
+    {
+      "path": "intake/bank_schema.py",
+      "sha256": "c350fd38440f29d3799400ef530ce725a305cf5a16221051839dedebaf963071"
+    },
+    {
+      "path": "intake/channel_routes.py",
+      "sha256": "7401b52d821528dbcec2fc178d87a68bf2fbcc472fb22550bf9d1d250ef5ceb8"
+    },
+    {
+      "path": "intake/channels.py",
+      "sha256": "d77340829fd56039765a921b7d38ca8328ba9c4aae0914df7f6886180755583e"
+    },
+    {
+      "path": "intake/connection_health.py",
+      "sha256": "2fc5119811e064983df63315118b8b88cbab2f24f25a0f25340fa2086ba9a077"
+    },
+    {
+      "path": "intake/connections.py",
+      "sha256": "395973b7f2e93c1a2828298dee3e369bfb3682a2a5fdc4a1bc779658b6c314af"
+    },
+    {
+      "path": "intake/dialogue.py",
+      "sha256": "d628460b44447b6f3763a314b8c5bcb4e4ed0be78f06300858aebf6331642c02"
+    },
+    {
+      "path": "intake/dialogue_reply.py",
+      "sha256": "a6002ccb25f87c6998437dfff2f3c2a88598ef7f6cebaaa12ad4aae090a7dcfa"
+    },
+    {
+      "path": "intake/dialogue_store.py",
+      "sha256": "cc32ce676aeb87771af9f8905f4860916d817f6c88f7e792ea11bfbee5a547f4"
+    },
+    {
+      "path": "intake/dialogue_tools.py",
+      "sha256": "0ee442120c6ad2f6b19f27e4a7da952e13cd80eeb2f037e83f7610e40b8248ae"
+    },
+    {
+      "path": "intake/echo.py",
+      "sha256": "9a2b7f43dfb5ab07d92bce9782a181ae7b5d9e18af86f8b0cec8185cb933f9bd"
+    },
+    {
+      "path": "intake/entry_services.py",
+      "sha256": "fa2e037e25132d57614400f857003521ed51f32408fa27e687dc5f11c2246981"
+    },
+    {
+      "path": "intake/entry_worker.py",
+      "sha256": "cd8698f473abb1d96f12c22382dbea0998ad11b65400f32129b7278ca90016cb"
+    },
+    {
+      "path": "intake/evidence.py",
+      "sha256": "73f687ee99aef642a199fcdb90d7011930c040ab5544d65bcd87029f540f58d8"
+    },
+    {
+      "path": "intake/image_prep.py",
+      "sha256": "35d7a79d15c49f042661fb424ad1dbc5ec5bb6deddf2ab32330f7d82e2b74120"
+    },
+    {
+      "path": "intake/image_summaries.py",
+      "sha256": "91eca23b6b2b518d1e9f5966561fc89869617ec3071e715fbd539ecde3a8640f"
+    },
+    {
+      "path": "intake/metadata.py",
+      "sha256": "e60f15aa23d03040fefee0ae1fb0537ac1101834451426f9f09bb1682921edb4"
+    },
+    {
+      "path": "intake/model_errors.py",
+      "sha256": "804a6dbf5aa6556976a639d4f4f55ae26765e759b8ef60ee4b78037ae20b7bee"
+    },
+    {
+      "path": "intake/ocr_fields.py",
+      "sha256": "6a373be5f2e52dafd24dc0e4af4f4dbb4ef8d9d766b3c317b7a8e06f487e2d7d"
+    },
+    {
+      "path": "intake/pairing_diagnostics.py",
+      "sha256": "47fbbc49e34a9d6ff4ef0ac3b4822a959bb450f2f49706a2ee5df3f659336b4b"
+    },
+    {
+      "path": "intake/payment_format.py",
+      "sha256": "accdd2e84a193ad0659a93fea589061e6f3d91996da65609cf181fcf32169b59"
+    },
+    {
+      "path": "intake/portal.py",
+      "sha256": "6d13e2f33120fc7011d69af83565a80892f9eecbcecf4d2287fd2b75d31d63d7"
+    },
+    {
+      "path": "intake/receipt_evaluation.py",
+      "sha256": "71daf501cbbd636cc778fae1b8b15d657c859d3a79749f8bdddd9b4ccc2759a4"
+    },
+    {
+      "path": "intake/recognition.py",
+      "sha256": "2938e7a2a9049f7af8680b763a7353a5fdc4b836f01294f38414a428f428f7b8"
+    },
+    {
+      "path": "intake/recognition_consistency.py",
+      "sha256": "c08c31d90d19af9d1c217c120a11ddaf2a02dde2ad326bb78529e62ee8d5e7a9"
+    },
+    {
+      "path": "intake/recognition_context.py",
+      "sha256": "6ef7ef4c09daeaad2ec9616c1222ee11073b95c43ec850689d7acf8e02aa9585"
+    },
+    {
+      "path": "intake/recognition_validation.py",
+      "sha256": "a9589b0fe86caa9f5e85dc635bf535a6bbe7bdf9149458fc01c9eef31ad397bf"
+    },
+    {
+      "path": "intake/reconciliation.py",
+      "sha256": "40d7e679cfd385f376474f39f2fdf55c1a00beaab2a01b41da8d4cfb7f128e86"
+    },
+    {
+      "path": "intake/settings.py",
+      "sha256": "07b726b1ccb1e615a2c27f0473fbd8a40512dc51b1ce86180b6692b6e39d56a6"
+    },
+    {
+      "path": "intake/store.py",
+      "sha256": "3103c01da742bbbed366120e3955882e7c28131d7ef652e7b5831d65c245b594"
+    },
+    {
+      "path": "intake/worker.py",
+      "sha256": "79f664da0bdc0143f572b1467e8a7a9823577d58d6a85c70d332502d7a0dd23c"
+    },
+    {
+      "path": "intake/workflow.py",
+      "sha256": "71323362049374b4cce60cc56108742ee2a2c231f8d434c15d91be26f6e7b1ef"
+    },
+    {
+      "path": "intake/workflow_archive.py",
+      "sha256": "ae903af31c0590aca1d912c9a635ef31e5de72d859598be78f3af6fd517ba21e"
+    },
+    {
+      "path": "intake/workflow_bank.py",
+      "sha256": "e301a18d981ca7c5778ac10a1138fef8fe821cbc3d12f6cb25a064e0d1aef710"
+    },
+    {
+      "path": "intake/workflow_chat.py",
+      "sha256": "5ae17112c8c59c4d75fe2fecf4367eeaacd84886329121d27f2b3332bbbccca0"
+    },
+    {
+      "path": "intake/workflow_routes.py",
+      "sha256": "7f9307736b1b6d81c183e4dee7a6dfd5a6d9d7ee4c1fec9dcda8516715ed1d7a"
+    },
+    {
+      "path": "intake/workflow_worker.py",
+      "sha256": "3f318c60e66bdfcb2daafff0b6a82d0cf548048302dee31208983541876d276f"
+    },
+    {
+      "path": "requirements.txt",
+      "sha256": "f01b2a8a2d3ad5807ec0a30feb463c95589ee12bd5d0237907c123e15b544e16"
+    },
+    {
+      "path": "web/src/api.js",
+      "sha256": "15554ecc9ce5bcea88a9a4b899d1842b36a2b0b8b879c7f2f819f445d4a67594"
+    },
+    {
+      "path": "web/src/assistant.jsx",
+      "sha256": "691a0b2d687b471e69ae7ad803af044effe22cfa24db9437b77144ababe42770"
+    },
+    {
+      "path": "web/src/bank.jsx",
+      "sha256": "ca9fdd7740e74b7d14878403ded58e17fd28e3901d325e5f8275126e0c45bf2c"
+    },
+    {
+      "path": "web/src/channels.jsx",
+      "sha256": "246a7c6c04c3c6975a7d23747d33c00837f502bd3918e88a27a316776f19bd52"
+    },
+    {
+      "path": "web/src/components.jsx",
+      "sha256": "28f20fa621c7300327cb9445f51a586d3ff4c033a74b90d0cb40d3e61a1a0564"
+    },
+    {
+      "path": "web/src/connections.jsx",
+      "sha256": "4d2939d9bec0a9328052d768f44cdb3c9a02ddb2c410381b3f08575f7282be7f"
+    },
+    {
+      "path": "web/src/evidence.jsx",
+      "sha256": "71782adfabfd080c964d20862b4412b0b2d2a4c21443ea7fa95d1754e41a0fb1"
+    },
+    {
+      "path": "web/src/main.jsx",
+      "sha256": "01fdd6cf09631ab24b81184ddd9c092743e72b71d692bd2e4d407dd215f3c4f0"
+    },
+    {
+      "path": "web/src/recognition.jsx",
+      "sha256": "79da8e99caa4eb95efbe25e1491556cb45d71fab67677b089c2030c6bf71e426"
+    },
+    {
+      "path": "web/src/style.css",
+      "sha256": "eab8baffde0e1b0aca0d7cce51d50d1726aff89435d87fbe19c9deac46fd6130"
+    },
+    {
+      "path": "web/src/ui.jsx",
+      "sha256": "e070ec55f8e187b843e413375d1c45806fcc963596eafcf77f490b91472c3564"
+    },
+    {
+      "path": "web/src/workbench.css",
+      "sha256": "cfcdba19a3cf3448d25dc3c58135a1e264951ca8a833ae11871cd50f0074daf3"
+    },
+    {
+      "path": "web/src/workbench.jsx",
+      "sha256": "a3529b0c6d8f847280db8e39d56347d773e791687ad4c713a5e1594c7e299ee9"
+    },
+    {
+      "path": "web/src/workflow.jsx",
+      "sha256": "23bd8e5a9ef02a44598568d3535fcae21051d3102d78b18a947c2c0913e9de42"
+    }
+  ]
+}

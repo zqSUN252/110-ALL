@@ -1,0 +1,6342 @@
+[
+  {
+    "prompt": 1,
+    "source_start_line": 5,
+    "source_end_line": 8,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SHIP-01",
+      "SYS-01"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 2,
+    "source_start_line": 9,
+    "source_end_line": 12,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "RATE-02"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 3,
+    "source_start_line": 13,
+    "source_end_line": 16,
+    "kind": "简短反馈或承接",
+    "disposition": "需上下文",
+    "requirements": [],
+    "note": "没有独立新增功能；不能将“好了/继续/看不到”等扩成业务政策。"
+  },
+  {
+    "prompt": 4,
+    "source_start_line": 17,
+    "source_end_line": 20,
+    "kind": "简短反馈或承接",
+    "disposition": "需上下文",
+    "requirements": [],
+    "note": "没有独立新增功能；不能将“好了/继续/看不到”等扩成业务政策。"
+  },
+  {
+    "prompt": 5,
+    "source_start_line": 21,
+    "source_end_line": 24,
+    "kind": "用户要求或反馈",
+    "disposition": "按范围部分替代",
+    "requirements": [
+      "RATE-02"
+    ],
+    "note": "USD/NGN主计价保留；付款币种后被73扩展，不能据此禁止人民币付款。"
+  },
+  {
+    "prompt": 6,
+    "source_start_line": 25,
+    "source_end_line": 31,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "PL-01"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 7,
+    "source_start_line": 32,
+    "source_end_line": 35,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "PL-04"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 8,
+    "source_start_line": 36,
+    "source_end_line": 105,
+    "kind": "用户要求或反馈",
+    "disposition": "按范围部分替代",
+    "requirements": [
+      "PAY-01",
+      "REL-01"
+    ],
+    "note": "保留审核后双版放货；文字版按486/541/543及559替代相应字段。"
+  },
+  {
+    "prompt": 9,
+    "source_start_line": 106,
+    "source_end_line": 115,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "PL-04",
+      "SYS-01"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 10,
+    "source_start_line": 116,
+    "source_end_line": 119,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "PL-04"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 11,
+    "source_start_line": 120,
+    "source_end_line": 123,
+    "kind": "简短反馈或承接",
+    "disposition": "需上下文",
+    "requirements": [],
+    "note": "没有独立新增功能；不能将“好了/继续/看不到”等扩成业务政策。"
+  },
+  {
+    "prompt": 12,
+    "source_start_line": 124,
+    "source_end_line": 133,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "PL-04",
+      "PL-11",
+      "SYS-02"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 13,
+    "source_start_line": 134,
+    "source_end_line": 162,
+    "kind": "会话摘要",
+    "disposition": "仅背景",
+    "requirements": [],
+    "note": "非用户原始新增要求；其中助手行为、测试与部署说法需另查源码和实证。"
+  },
+  {
+    "prompt": 14,
+    "source_start_line": 163,
+    "source_end_line": 166,
+    "kind": "简短反馈或承接",
+    "disposition": "需上下文",
+    "requirements": [],
+    "note": "没有独立新增功能；不能将“好了/继续/看不到”等扩成业务政策。"
+  },
+  {
+    "prompt": 15,
+    "source_start_line": 167,
+    "source_end_line": 175,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "AR-01",
+      "PL-04",
+      "RATE-02"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 16,
+    "source_start_line": 176,
+    "source_end_line": 189,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "AR-07",
+      "PAY-01",
+      "REL-01"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 17,
+    "source_start_line": 190,
+    "source_end_line": 193,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "AR-07"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 18,
+    "source_start_line": 194,
+    "source_end_line": 197,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "REL-01"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 19,
+    "source_start_line": 198,
+    "source_end_line": 206,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "AR-02",
+      "PL-01",
+      "REL-01"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 20,
+    "source_start_line": 207,
+    "source_end_line": 210,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "PAY-01",
+      "PAY-03"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 21,
+    "source_start_line": 211,
+    "source_end_line": 214,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "PAY-01",
+      "PAY-03"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 22,
+    "source_start_line": 215,
+    "source_end_line": 288,
+    "kind": "用户要求或反馈",
+    "disposition": "按范围部分替代",
+    "requirements": [
+      "AR-07",
+      "REL-02",
+      "REL-03"
+    ],
+    "note": "信用放货与折扣保留；模板取后续25/541/543，不能照抄旧示例金额。"
+  },
+  {
+    "prompt": 23,
+    "source_start_line": 289,
+    "source_end_line": 292,
+    "kind": "用户要求或反馈",
+    "disposition": "按范围部分替代",
+    "requirements": [
+      "SYS-06"
+    ],
+    "note": "操作完成定位按后续29/31/521/541保留当前业务现场。"
+  },
+  {
+    "prompt": 24,
+    "source_start_line": 293,
+    "source_end_line": 296,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "AR-04"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 25,
+    "source_start_line": 297,
+    "source_end_line": 366,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "REL-02"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 26,
+    "source_start_line": 367,
+    "source_end_line": 370,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "AR-03"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 27,
+    "source_start_line": 371,
+    "source_end_line": 374,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "AR-02"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 28,
+    "source_start_line": 375,
+    "source_end_line": 378,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "AR-01",
+      "DOC-10"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 29,
+    "source_start_line": 379,
+    "source_end_line": 382,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SYS-06"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 30,
+    "source_start_line": 383,
+    "source_end_line": 386,
+    "kind": "历史操作或咨询",
+    "disposition": "不重放",
+    "requirements": [],
+    "note": "对特定旧单清理重复费用；迁移尊重最新作废/删除证据，不重放历史删库动作。"
+  },
+  {
+    "prompt": 31,
+    "source_start_line": 387,
+    "source_end_line": 390,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SYS-06"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 32,
+    "source_start_line": 391,
+    "source_end_line": 394,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "AR-03"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 33,
+    "source_start_line": 395,
+    "source_end_line": 398,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "PARTY-01"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 34,
+    "source_start_line": 399,
+    "source_end_line": 402,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "PARTY-02",
+      "PL-04"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 35,
+    "source_start_line": 403,
+    "source_end_line": 406,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "AR-05"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 36,
+    "source_start_line": 407,
+    "source_end_line": 410,
+    "kind": "历史操作或咨询",
+    "disposition": "不重放",
+    "requirements": [],
+    "note": "指定旧测试账单删除；禁止从旧快照恢复成正式应收。"
+  },
+  {
+    "prompt": 37,
+    "source_start_line": 411,
+    "source_end_line": 414,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "AR-09"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 38,
+    "source_start_line": 415,
+    "source_end_line": 452,
+    "kind": "会话摘要",
+    "disposition": "仅背景",
+    "requirements": [],
+    "note": "非用户原始新增要求；其中助手行为、测试与部署说法需另查源码和实证。"
+  },
+  {
+    "prompt": 39,
+    "source_start_line": 453,
+    "source_end_line": 456,
+    "kind": "历史操作或咨询",
+    "disposition": "不重放",
+    "requirements": [],
+    "note": "再次删除同一旧测试文档；以最新墓碑及作废记录核对。"
+  },
+  {
+    "prompt": 40,
+    "source_start_line": 457,
+    "source_end_line": 463,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "AR-03"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 41,
+    "source_start_line": 464,
+    "source_end_line": 472,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "AR-05"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 42,
+    "source_start_line": 473,
+    "source_end_line": 476,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "AR-03",
+      "DOC-09"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 43,
+    "source_start_line": 477,
+    "source_end_line": 480,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "AR-05"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 44,
+    "source_start_line": 481,
+    "source_end_line": 484,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "AR-03",
+      "DOC-09"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 45,
+    "source_start_line": 485,
+    "source_end_line": 488,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "PL-04"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 46,
+    "source_start_line": 489,
+    "source_end_line": 492,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "AR-04",
+      "SYS-08"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 47,
+    "source_start_line": 493,
+    "source_end_line": 496,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "PARTY-02",
+      "PL-04"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 48,
+    "source_start_line": 497,
+    "source_end_line": 500,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "PARTY-02",
+      "PL-04"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 49,
+    "source_start_line": 501,
+    "source_end_line": 504,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "PL-02",
+      "PL-04"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 50,
+    "source_start_line": 505,
+    "source_end_line": 508,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "PL-02"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 51,
+    "source_start_line": 509,
+    "source_end_line": 527,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "PARTY-01"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 52,
+    "source_start_line": 528,
+    "source_end_line": 531,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "PL-02"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 53,
+    "source_start_line": 532,
+    "source_end_line": 535,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SHIP-05"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 54,
+    "source_start_line": 536,
+    "source_end_line": 539,
+    "kind": "历史操作或咨询",
+    "disposition": "不重放",
+    "requirements": [
+      "SHIP-05"
+    ],
+    "note": "指定旧运单删除指令；不是对新系统持续执行的自动删除规则。"
+  },
+  {
+    "prompt": 55,
+    "source_start_line": 540,
+    "source_end_line": 543,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "PL-07"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 56,
+    "source_start_line": 544,
+    "source_end_line": 547,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "AR-10",
+      "PL-07"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 57,
+    "source_start_line": 548,
+    "source_end_line": 551,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SYS-03"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 58,
+    "source_start_line": 552,
+    "source_end_line": 584,
+    "kind": "会话摘要",
+    "disposition": "仅背景",
+    "requirements": [],
+    "note": "非用户原始新增要求；其中助手行为、测试与部署说法需另查源码和实证。"
+  },
+  {
+    "prompt": 59,
+    "source_start_line": 585,
+    "source_end_line": 588,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SYS-05"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 60,
+    "source_start_line": 589,
+    "source_end_line": 592,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SYS-05"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 61,
+    "source_start_line": 593,
+    "source_end_line": 596,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SHIP-01"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 62,
+    "source_start_line": 597,
+    "source_end_line": 600,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "AR-01",
+      "AR-10"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 63,
+    "source_start_line": 601,
+    "source_end_line": 604,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "AR-06"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 64,
+    "source_start_line": 605,
+    "source_end_line": 608,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SYS-12"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 65,
+    "source_start_line": 609,
+    "source_end_line": 612,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SYS-05"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 66,
+    "source_start_line": 613,
+    "source_end_line": 619,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SYS-12"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 67,
+    "source_start_line": 620,
+    "source_end_line": 623,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SYS-05"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 68,
+    "source_start_line": 624,
+    "source_end_line": 627,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SHIP-03"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 69,
+    "source_start_line": 628,
+    "source_end_line": 631,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SYS-05"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 70,
+    "source_start_line": 632,
+    "source_end_line": 701,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "REL-01",
+      "REL-03"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 71,
+    "source_start_line": 702,
+    "source_end_line": 762,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "REL-01",
+      "REL-03"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 72,
+    "source_start_line": 763,
+    "source_end_line": 766,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SYS-05"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 73,
+    "source_start_line": 767,
+    "source_end_line": 770,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "RATE-02"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 74,
+    "source_start_line": 771,
+    "source_end_line": 793,
+    "kind": "会话摘要",
+    "disposition": "仅背景",
+    "requirements": [],
+    "note": "非用户原始新增要求；其中助手行为、测试与部署说法需另查源码和实证。"
+  },
+  {
+    "prompt": 75,
+    "source_start_line": 794,
+    "source_end_line": 797,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "PAY-08"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 76,
+    "source_start_line": 798,
+    "source_end_line": 801,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "PAY-08"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 77,
+    "source_start_line": 802,
+    "source_end_line": 805,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "AR-04",
+      "PAY-08"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 78,
+    "source_start_line": 806,
+    "source_end_line": 809,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SYS-08"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 79,
+    "source_start_line": 810,
+    "source_end_line": 813,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SHIP-02"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 80,
+    "source_start_line": 814,
+    "source_end_line": 817,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "DOC-01"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 81,
+    "source_start_line": 818,
+    "source_end_line": 821,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SHIP-02"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 82,
+    "source_start_line": 822,
+    "source_end_line": 825,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SYS-04"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 83,
+    "source_start_line": 826,
+    "source_end_line": 829,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "PAY-01"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 84,
+    "source_start_line": 830,
+    "source_end_line": 833,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SYS-04"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 85,
+    "source_start_line": 834,
+    "source_end_line": 837,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "PAY-01",
+      "PAY-03"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 86,
+    "source_start_line": 838,
+    "source_end_line": 841,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SYS-06"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 87,
+    "source_start_line": 842,
+    "source_end_line": 845,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "REL-02"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 88,
+    "source_start_line": 846,
+    "source_end_line": 849,
+    "kind": "历史操作或咨询",
+    "disposition": "不重放",
+    "requirements": [
+      "SYS-17"
+    ],
+    "note": "当时链接不可用的故障反馈；稳定入口要求已收录SYS-17。"
+  },
+  {
+    "prompt": 89,
+    "source_start_line": 850,
+    "source_end_line": 853,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SYS-13"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 90,
+    "source_start_line": 854,
+    "source_end_line": 857,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SYS-13"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 91,
+    "source_start_line": 858,
+    "source_end_line": 898,
+    "kind": "会话摘要",
+    "disposition": "仅背景",
+    "requirements": [],
+    "note": "非用户原始新增要求；其中助手行为、测试与部署说法需另查源码和实证。"
+  },
+  {
+    "prompt": 92,
+    "source_start_line": 899,
+    "source_end_line": 902,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SYS-09"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 93,
+    "source_start_line": 903,
+    "source_end_line": 906,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SYS-13"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 94,
+    "source_start_line": 907,
+    "source_end_line": 910,
+    "kind": "简短反馈或承接",
+    "disposition": "需上下文",
+    "requirements": [],
+    "note": "没有独立新增功能；不能将“好了/继续/看不到”等扩成业务政策。"
+  },
+  {
+    "prompt": 95,
+    "source_start_line": 911,
+    "source_end_line": 914,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SYS-13"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 96,
+    "source_start_line": 915,
+    "source_end_line": 918,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "PARTY-02"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 97,
+    "source_start_line": 919,
+    "source_end_line": 922,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "AP-01"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 98,
+    "source_start_line": 923,
+    "source_end_line": 926,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "AP-01"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 99,
+    "source_start_line": 927,
+    "source_end_line": 933,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "AP-02",
+      "AP-03"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 100,
+    "source_start_line": 934,
+    "source_end_line": 937,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SYS-03"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 101,
+    "source_start_line": 938,
+    "source_end_line": 941,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SYS-09",
+      "SYS-13"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 102,
+    "source_start_line": 942,
+    "source_end_line": 1009,
+    "kind": "用户要求或反馈",
+    "disposition": "按范围部分替代",
+    "requirements": [
+      "DOC-01",
+      "NOT-01"
+    ],
+    "note": "客户箱单及通知功能保留；普通到货模板改用510/512。"
+  },
+  {
+    "prompt": 103,
+    "source_start_line": 1010,
+    "source_end_line": 1013,
+    "kind": "简短反馈或承接",
+    "disposition": "需上下文",
+    "requirements": [],
+    "note": "没有独立新增功能；不能将“好了/继续/看不到”等扩成业务政策。"
+  },
+  {
+    "prompt": 104,
+    "source_start_line": 1014,
+    "source_end_line": 1022,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "DOC-01",
+      "PL-06"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 105,
+    "source_start_line": 1023,
+    "source_end_line": 1058,
+    "kind": "会话摘要",
+    "disposition": "仅背景",
+    "requirements": [],
+    "note": "非用户原始新增要求；其中助手行为、测试与部署说法需另查源码和实证。"
+  },
+  {
+    "prompt": 106,
+    "source_start_line": 1059,
+    "source_end_line": 1062,
+    "kind": "简短反馈或承接",
+    "disposition": "需上下文",
+    "requirements": [],
+    "note": "没有独立新增功能；不能将“好了/继续/看不到”等扩成业务政策。"
+  },
+  {
+    "prompt": 107,
+    "source_start_line": 1063,
+    "source_end_line": 1066,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "DOC-02"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 108,
+    "source_start_line": 1067,
+    "source_end_line": 1070,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SHIP-04"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 109,
+    "source_start_line": 1071,
+    "source_end_line": 1089,
+    "kind": "工具通知",
+    "disposition": "非业务命令",
+    "requirements": [],
+    "note": "异步任务结果不是用户功能要求。"
+  },
+  {
+    "prompt": 110,
+    "source_start_line": 1090,
+    "source_end_line": 1093,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SYS-17"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 111,
+    "source_start_line": 1094,
+    "source_end_line": 1105,
+    "kind": "用户要求或反馈",
+    "disposition": "按范围部分替代",
+    "requirements": [
+      "NOT-01"
+    ],
+    "note": "普通到货模板相应内容被510/512替代。"
+  },
+  {
+    "prompt": 112,
+    "source_start_line": 1106,
+    "source_end_line": 1109,
+    "kind": "历史操作或咨询",
+    "disposition": "不重放",
+    "requirements": [],
+    "note": "历史登录或部署凭据操作，正文不复制、不执行。"
+  },
+  {
+    "prompt": 113,
+    "source_start_line": 1110,
+    "source_end_line": 1113,
+    "kind": "历史操作或咨询",
+    "disposition": "不重放",
+    "requirements": [],
+    "note": "历史登录或部署凭据操作，正文不复制、不执行。"
+  },
+  {
+    "prompt": 114,
+    "source_start_line": 1114,
+    "source_end_line": 1117,
+    "kind": "历史操作或咨询",
+    "disposition": "不重放",
+    "requirements": [],
+    "note": "确认旧网址，不能当作新系统已部署。"
+  },
+  {
+    "prompt": 115,
+    "source_start_line": 1118,
+    "source_end_line": 1121,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SYS-05"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 116,
+    "source_start_line": 1122,
+    "source_end_line": 1125,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "AP-03",
+      "SYS-03"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 117,
+    "source_start_line": 1126,
+    "source_end_line": 1129,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "NOT-04"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 118,
+    "source_start_line": 1130,
+    "source_end_line": 1148,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "PARTY-03",
+      "PL-06"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 119,
+    "source_start_line": 1149,
+    "source_end_line": 1155,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "PARTY-03",
+      "PL-06"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 120,
+    "source_start_line": 1156,
+    "source_end_line": 1165,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "PARTY-03",
+      "PL-06"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 121,
+    "source_start_line": 1166,
+    "source_end_line": 1172,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "PARTY-03",
+      "PL-06"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 122,
+    "source_start_line": 1173,
+    "source_end_line": 1176,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "PARTY-04"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 123,
+    "source_start_line": 1177,
+    "source_end_line": 1195,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "PARTY-03",
+      "PL-06"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 124,
+    "source_start_line": 1196,
+    "source_end_line": 1202,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "PARTY-03",
+      "PL-06"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 125,
+    "source_start_line": 1203,
+    "source_end_line": 1211,
+    "kind": "历史操作或咨询",
+    "disposition": "不重放",
+    "requirements": [],
+    "note": "确认旧托管网址，不能当作新系统部署目的地。"
+  },
+  {
+    "prompt": 126,
+    "source_start_line": 1212,
+    "source_end_line": 1215,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "DOC-09"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 127,
+    "source_start_line": 1216,
+    "source_end_line": 1219,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "AR-09"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 128,
+    "source_start_line": 1220,
+    "source_end_line": 1223,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "AR-10",
+      "PL-09"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 129,
+    "source_start_line": 1224,
+    "source_end_line": 1227,
+    "kind": "用户要求或反馈",
+    "disposition": "按范围部分替代",
+    "requirements": [
+      "DOC-02",
+      "PL-11"
+    ],
+    "note": "原件/原版式诉求按244允许系统版式；原始事实继续保留。"
+  },
+  {
+    "prompt": 130,
+    "source_start_line": 1228,
+    "source_end_line": 1250,
+    "kind": "会话摘要",
+    "disposition": "仅背景",
+    "requirements": [],
+    "note": "非用户原始新增要求；其中助手行为、测试与部署说法需另查源码和实证。"
+  },
+  {
+    "prompt": 131,
+    "source_start_line": 1251,
+    "source_end_line": 1254,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "DOC-02"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 132,
+    "source_start_line": 1255,
+    "source_end_line": 1258,
+    "kind": "用户要求或反馈",
+    "disposition": "按范围部分替代",
+    "requirements": [
+      "PL-11"
+    ],
+    "note": "不能自制版式的限制被244明确放宽；原始信息不得补造。"
+  },
+  {
+    "prompt": 133,
+    "source_start_line": 1259,
+    "source_end_line": 1262,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "TRACK-01"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 134,
+    "source_start_line": 1263,
+    "source_end_line": 1266,
+    "kind": "用户要求或反馈",
+    "disposition": "按范围部分替代",
+    "requirements": [
+      "DOC-02",
+      "PL-11"
+    ],
+    "note": "后续244允许系统版式；Logo及真实抬头要求继续保留。"
+  },
+  {
+    "prompt": 135,
+    "source_start_line": 1267,
+    "source_end_line": 1275,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "TRACK-01"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 136,
+    "source_start_line": 1276,
+    "source_end_line": 1279,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SYS-17"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 137,
+    "source_start_line": 1280,
+    "source_end_line": 1286,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "PAY-05"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 138,
+    "source_start_line": 1287,
+    "source_end_line": 1290,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "AR-01"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 139,
+    "source_start_line": 1291,
+    "source_end_line": 1312,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "AR-07"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 140,
+    "source_start_line": 1313,
+    "source_end_line": 1322,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "AR-08"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 141,
+    "source_start_line": 1323,
+    "source_end_line": 1331,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SYS-17"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 142,
+    "source_start_line": 1332,
+    "source_end_line": 1335,
+    "kind": "历史操作或咨询",
+    "disposition": "不重放",
+    "requirements": [],
+    "note": "当时504及付费问题咨询；不构成新增付费服务授权。"
+  },
+  {
+    "prompt": 143,
+    "source_start_line": 1336,
+    "source_end_line": 1339,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SYS-17"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 144,
+    "source_start_line": 1340,
+    "source_end_line": 1346,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "PAY-05"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 145,
+    "source_start_line": 1347,
+    "source_end_line": 1350,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SYS-07"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 146,
+    "source_start_line": 1351,
+    "source_end_line": 1381,
+    "kind": "会话摘要",
+    "disposition": "仅背景",
+    "requirements": [],
+    "note": "非用户原始新增要求；其中助手行为、测试与部署说法需另查源码和实证。"
+  },
+  {
+    "prompt": 147,
+    "source_start_line": 1382,
+    "source_end_line": 1395,
+    "kind": "工具通知",
+    "disposition": "非业务命令",
+    "requirements": [],
+    "note": "异步任务结果不是用户功能要求。"
+  },
+  {
+    "prompt": 148,
+    "source_start_line": 1396,
+    "source_end_line": 1399,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SYS-04"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 149,
+    "source_start_line": 1400,
+    "source_end_line": 1403,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "AR-03"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 150,
+    "source_start_line": 1404,
+    "source_end_line": 1407,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SHIP-04"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 151,
+    "source_start_line": 1408,
+    "source_end_line": 1411,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SYS-04"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 152,
+    "source_start_line": 1412,
+    "source_end_line": 1415,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "AR-04"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 153,
+    "source_start_line": 1416,
+    "source_end_line": 1419,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "PAY-05",
+      "SYS-13"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 154,
+    "source_start_line": 1420,
+    "source_end_line": 1423,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "PAY-05"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 155,
+    "source_start_line": 1424,
+    "source_end_line": 1427,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "NOT-04",
+      "PL-09"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 156,
+    "source_start_line": 1428,
+    "source_end_line": 1431,
+    "kind": "简短反馈或承接",
+    "disposition": "需上下文",
+    "requirements": [],
+    "note": "没有独立新增功能；不能将“好了/继续/看不到”等扩成业务政策。"
+  },
+  {
+    "prompt": 157,
+    "source_start_line": 1432,
+    "source_end_line": 1438,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "DOC-01"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 158,
+    "source_start_line": 1439,
+    "source_end_line": 1442,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SYS-09",
+      "SYS-13"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 159,
+    "source_start_line": 1443,
+    "source_end_line": 1446,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SYS-09"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 160,
+    "source_start_line": 1447,
+    "source_end_line": 1450,
+    "kind": "历史操作或咨询",
+    "disposition": "不重放",
+    "requirements": [],
+    "note": "与原网站开发商交接的历史背景，不代表已取得正式库。"
+  },
+  {
+    "prompt": 161,
+    "source_start_line": 1451,
+    "source_end_line": 1454,
+    "kind": "简短反馈或承接",
+    "disposition": "需上下文",
+    "requirements": [],
+    "note": "没有独立新增功能；不能将“好了/继续/看不到”等扩成业务政策。"
+  },
+  {
+    "prompt": 162,
+    "source_start_line": 1455,
+    "source_end_line": 1458,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SYS-09"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 163,
+    "source_start_line": 1459,
+    "source_end_line": 1462,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SYS-09"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 164,
+    "source_start_line": 1463,
+    "source_end_line": 1466,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SYS-09"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 165,
+    "source_start_line": 1467,
+    "source_end_line": 1470,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SYS-09",
+      "WH-01"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 166,
+    "source_start_line": 1471,
+    "source_end_line": 1519,
+    "kind": "会话摘要",
+    "disposition": "仅背景",
+    "requirements": [],
+    "note": "非用户原始新增要求；其中助手行为、测试与部署说法需另查源码和实证。"
+  },
+  {
+    "prompt": 167,
+    "source_start_line": 1520,
+    "source_end_line": 1523,
+    "kind": "简短反馈或承接",
+    "disposition": "需上下文",
+    "requirements": [],
+    "note": "没有独立新增功能；不能将“好了/继续/看不到”等扩成业务政策。"
+  },
+  {
+    "prompt": 168,
+    "source_start_line": 1524,
+    "source_end_line": 1527,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "NOT-07"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 169,
+    "source_start_line": 1528,
+    "source_end_line": 1531,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "NOT-07"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 170,
+    "source_start_line": 1532,
+    "source_end_line": 1535,
+    "kind": "简短反馈或承接",
+    "disposition": "需上下文",
+    "requirements": [],
+    "note": "没有独立新增功能；不能将“好了/继续/看不到”等扩成业务政策。"
+  },
+  {
+    "prompt": 171,
+    "source_start_line": 1536,
+    "source_end_line": 1539,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "NOT-07"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 172,
+    "source_start_line": 1540,
+    "source_end_line": 1543,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SYS-13"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 173,
+    "source_start_line": 1544,
+    "source_end_line": 1547,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SYS-04"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 174,
+    "source_start_line": 1548,
+    "source_end_line": 1551,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "NOT-08"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 175,
+    "source_start_line": 1552,
+    "source_end_line": 1555,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SYS-06"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 176,
+    "source_start_line": 1556,
+    "source_end_line": 1559,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SYS-17"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 177,
+    "source_start_line": 1560,
+    "source_end_line": 1563,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SYS-04"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 178,
+    "source_start_line": 1564,
+    "source_end_line": 1567,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "F6-01",
+      "RATE-01"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 179,
+    "source_start_line": 1568,
+    "source_end_line": 1571,
+    "kind": "用户要求或反馈",
+    "disposition": "按范围部分替代",
+    "requirements": [
+      "NOT-02"
+    ],
+    "note": "收货通知结构和价目逻辑保留；文字取527，存储费提示按207删除。"
+  },
+  {
+    "prompt": 180,
+    "source_start_line": 1572,
+    "source_end_line": 1575,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "F6-01",
+      "PARTY-02"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 181,
+    "source_start_line": 1576,
+    "source_end_line": 1579,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "F6-01"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 182,
+    "source_start_line": 1580,
+    "source_end_line": 1583,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "WH-06"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 183,
+    "source_start_line": 1584,
+    "source_end_line": 1587,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "F6-01"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 184,
+    "source_start_line": 1588,
+    "source_end_line": 1594,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "F6-01",
+      "PARTY-02",
+      "SYS-11",
+      "WH-03"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 185,
+    "source_start_line": 1595,
+    "source_end_line": 1598,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "RATE-01",
+      "RATE-05"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 186,
+    "source_start_line": 1599,
+    "source_end_line": 1602,
+    "kind": "简短反馈或承接",
+    "disposition": "需上下文",
+    "requirements": [],
+    "note": "没有独立新增功能；不能将“好了/继续/看不到”等扩成业务政策。"
+  },
+  {
+    "prompt": 187,
+    "source_start_line": 1603,
+    "source_end_line": 1606,
+    "kind": "简短反馈或承接",
+    "disposition": "需上下文",
+    "requirements": [],
+    "note": "没有独立新增功能；不能将“好了/继续/看不到”等扩成业务政策。"
+  },
+  {
+    "prompt": 188,
+    "source_start_line": 1607,
+    "source_end_line": 1610,
+    "kind": "简短反馈或承接",
+    "disposition": "需上下文",
+    "requirements": [],
+    "note": "没有独立新增功能；不能将“好了/继续/看不到”等扩成业务政策。"
+  },
+  {
+    "prompt": 189,
+    "source_start_line": 1611,
+    "source_end_line": 1614,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "F6-01"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 190,
+    "source_start_line": 1615,
+    "source_end_line": 1618,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "F6-01",
+      "WH-03"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 191,
+    "source_start_line": 1619,
+    "source_end_line": 1622,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SYS-10"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 192,
+    "source_start_line": 1623,
+    "source_end_line": 1626,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "LABEL-05"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 193,
+    "source_start_line": 1627,
+    "source_end_line": 1630,
+    "kind": "用户要求或反馈",
+    "disposition": "按范围部分替代",
+    "requirements": [
+      "RATE-01"
+    ],
+    "note": "收费标准按293/297/298的三通道和生效期细化。"
+  },
+  {
+    "prompt": 194,
+    "source_start_line": 1631,
+    "source_end_line": 1634,
+    "kind": "用户要求或反馈",
+    "disposition": "按范围部分替代",
+    "requirements": [
+      "PL-06",
+      "REL-03"
+    ],
+    "note": "ONNE/ONTISHA原话保留为适用仓库别名，最终城市拼写按后续模板；不能覆盖多目的仓规则。"
+  },
+  {
+    "prompt": 195,
+    "source_start_line": 1635,
+    "source_end_line": 1638,
+    "kind": "历史操作或咨询",
+    "disposition": "不重放",
+    "requirements": [],
+    "note": "当时要求导出版本；统一交付约束见MIG-04，不重发旧版本。"
+  },
+  {
+    "prompt": 196,
+    "source_start_line": 1639,
+    "source_end_line": 1642,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "WH-03"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 197,
+    "source_start_line": 1643,
+    "source_end_line": 1649,
+    "kind": "用户要求或反馈",
+    "disposition": "按范围部分替代",
+    "requirements": [
+      "LABEL-01"
+    ],
+    "note": "标签规格按204/206最终竖版76×130mm。"
+  },
+  {
+    "prompt": 198,
+    "source_start_line": 1650,
+    "source_end_line": 1653,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "DOC-05",
+      "LABEL-01"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 199,
+    "source_start_line": 1654,
+    "source_end_line": 1657,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SYS-10"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 200,
+    "source_start_line": 1658,
+    "source_end_line": 1664,
+    "kind": "用户要求或反馈",
+    "disposition": "按范围部分替代",
+    "requirements": [
+      "LABEL-01"
+    ],
+    "note": "普通标签打印保留；收费标签复制及竖版规格按后续要求。"
+  },
+  {
+    "prompt": 201,
+    "source_start_line": 1665,
+    "source_end_line": 1668,
+    "kind": "简短反馈或承接",
+    "disposition": "需上下文",
+    "requirements": [],
+    "note": "没有独立新增功能；不能将“好了/继续/看不到”等扩成业务政策。"
+  },
+  {
+    "prompt": 202,
+    "source_start_line": 1669,
+    "source_end_line": 1672,
+    "kind": "用户要求或反馈",
+    "disposition": "按范围部分替代",
+    "requirements": [
+      "NOT-02",
+      "SYS-11"
+    ],
+    "note": "缺失目的港规则保留；收货通知最终模板按527。"
+  },
+  {
+    "prompt": 203,
+    "source_start_line": 1673,
+    "source_end_line": 1765,
+    "kind": "用户要求或反馈",
+    "disposition": "按范围部分替代",
+    "requirements": [
+      "NOT-02"
+    ],
+    "note": "英文通知要求保留；527又明确包含中英文品名原值，不删除原始中文品名。"
+  },
+  {
+    "prompt": 204,
+    "source_start_line": 1766,
+    "source_end_line": 1769,
+    "kind": "用户要求或反馈",
+    "disposition": "按范围部分替代",
+    "requirements": [
+      "LABEL-01"
+    ],
+    "note": "继续按206的竖向纸张解释规格。"
+  },
+  {
+    "prompt": 205,
+    "source_start_line": 1770,
+    "source_end_line": 1808,
+    "kind": "会话摘要",
+    "disposition": "仅背景",
+    "requirements": [],
+    "note": "非用户原始新增要求；其中助手行为、测试与部署说法需另查源码和实证。"
+  },
+  {
+    "prompt": 206,
+    "source_start_line": 1809,
+    "source_end_line": 1812,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "LABEL-01"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 207,
+    "source_start_line": 1813,
+    "source_end_line": 1824,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "LABEL-05",
+      "NOT-02",
+      "RATE-05"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 208,
+    "source_start_line": 1825,
+    "source_end_line": 1852,
+    "kind": "用户要求或反馈",
+    "disposition": "按范围部分替代",
+    "requirements": [
+      "LABEL-02",
+      "LABEL-03"
+    ],
+    "note": "标签字段继续保留，标题/具体值样式用后续209—224/253。"
+  },
+  {
+    "prompt": 209,
+    "source_start_line": 1853,
+    "source_end_line": 1868,
+    "kind": "用户要求或反馈",
+    "disposition": "按范围部分替代",
+    "requirements": [
+      "LABEL-02",
+      "LABEL-03"
+    ],
+    "note": "最终标题和字段保留；Total cost采用253最终双币写法。"
+  },
+  {
+    "prompt": 210,
+    "source_start_line": 1869,
+    "source_end_line": 1872,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "LABEL-02"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 211,
+    "source_start_line": 1873,
+    "source_end_line": 1876,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "LABEL-02"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 212,
+    "source_start_line": 1877,
+    "source_end_line": 1883,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "LABEL-02"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 213,
+    "source_start_line": 1884,
+    "source_end_line": 1887,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "LABEL-02"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 214,
+    "source_start_line": 1888,
+    "source_end_line": 1891,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "LABEL-02"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 215,
+    "source_start_line": 1892,
+    "source_end_line": 1895,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "LABEL-02"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 216,
+    "source_start_line": 1896,
+    "source_end_line": 1902,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "LABEL-02"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 217,
+    "source_start_line": 1903,
+    "source_end_line": 1906,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "LABEL-02"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 218,
+    "source_start_line": 1907,
+    "source_end_line": 1910,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "LABEL-02"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 219,
+    "source_start_line": 1911,
+    "source_end_line": 1914,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "LABEL-02"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 220,
+    "source_start_line": 1915,
+    "source_end_line": 1921,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "DOC-09",
+      "SYS-06",
+      "SYS-10"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 221,
+    "source_start_line": 1922,
+    "source_end_line": 1925,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "LABEL-02"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 222,
+    "source_start_line": 1926,
+    "source_end_line": 1929,
+    "kind": "用户要求或反馈",
+    "disposition": "按范围部分替代",
+    "requirements": [
+      "LABEL-03"
+    ],
+    "note": "本条Total cost样式被223取消；最终按253恢复后的双币格式。"
+  },
+  {
+    "prompt": 223,
+    "source_start_line": 1930,
+    "source_end_line": 1933,
+    "kind": "用户要求或反馈",
+    "disposition": "按范围部分替代",
+    "requirements": [
+      "LABEL-03"
+    ],
+    "note": "取消上一版的历史动作；最终显示按253，不永久隐藏费用合计。"
+  },
+  {
+    "prompt": 224,
+    "source_start_line": 1934,
+    "source_end_line": 1943,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "LABEL-02"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 225,
+    "source_start_line": 1944,
+    "source_end_line": 1947,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SYS-05",
+      "SYS-13"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 226,
+    "source_start_line": 1948,
+    "source_end_line": 1951,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SYS-05"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 227,
+    "source_start_line": 1952,
+    "source_end_line": 1955,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SYS-06"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 228,
+    "source_start_line": 1956,
+    "source_end_line": 1959,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SYS-06"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 229,
+    "source_start_line": 1960,
+    "source_end_line": 1963,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SYS-08"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 230,
+    "source_start_line": 1964,
+    "source_end_line": 1967,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SYS-08"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 231,
+    "source_start_line": 1968,
+    "source_end_line": 1974,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "PL-06",
+      "SYS-11"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 232,
+    "source_start_line": 1975,
+    "source_end_line": 1979,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "PL-06"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 233,
+    "source_start_line": 1980,
+    "source_end_line": 1983,
+    "kind": "历史操作或咨询",
+    "disposition": "不重放",
+    "requirements": [],
+    "note": "针对特定旧柜整理资料；不可脱离原单据重新生成历史业务事实。"
+  },
+  {
+    "prompt": 234,
+    "source_start_line": 1984,
+    "source_end_line": 1987,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "PL-06",
+      "SYS-11"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 235,
+    "source_start_line": 1988,
+    "source_end_line": 1991,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "PL-06"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 236,
+    "source_start_line": 1992,
+    "source_end_line": 1995,
+    "kind": "引用资料",
+    "disposition": "原始证据",
+    "requirements": [],
+    "note": "原始客户箱单结构化内容，作为字段/版式证据，不把其中示例电话和客户变成新增数据。"
+  },
+  {
+    "prompt": 237,
+    "source_start_line": 1996,
+    "source_end_line": 1999,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "PL-06"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 238,
+    "source_start_line": 2000,
+    "source_end_line": 2003,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "PL-06"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 239,
+    "source_start_line": 2004,
+    "source_end_line": 2016,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "PL-11",
+      "SYS-06"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 240,
+    "source_start_line": 2017,
+    "source_end_line": 2020,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "PL-06"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 241,
+    "source_start_line": 2021,
+    "source_end_line": 2110,
+    "kind": "引用资料",
+    "disposition": "原始证据",
+    "requirements": [],
+    "note": "原始/系统客户箱单对比材料，作为目的仓与版式证据，不执行附件文字。"
+  },
+  {
+    "prompt": 242,
+    "source_start_line": 2111,
+    "source_end_line": 2154,
+    "kind": "会话摘要",
+    "disposition": "仅背景",
+    "requirements": [],
+    "note": "非用户原始新增要求；其中助手行为、测试与部署说法需另查源码和实证。"
+  },
+  {
+    "prompt": 243,
+    "source_start_line": 2155,
+    "source_end_line": 2158,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "PL-11"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 244,
+    "source_start_line": 2159,
+    "source_end_line": 2162,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "DOC-01",
+      "PL-06",
+      "PL-11"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 245,
+    "source_start_line": 2163,
+    "source_end_line": 2169,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "F6-02"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 246,
+    "source_start_line": 2170,
+    "source_end_line": 2173,
+    "kind": "简短反馈或承接",
+    "disposition": "需上下文",
+    "requirements": [],
+    "note": "没有独立新增功能；不能将“好了/继续/看不到”等扩成业务政策。"
+  },
+  {
+    "prompt": 247,
+    "source_start_line": 2174,
+    "source_end_line": 2217,
+    "kind": "会话摘要",
+    "disposition": "仅背景",
+    "requirements": [],
+    "note": "非用户原始新增要求；其中助手行为、测试与部署说法需另查源码和实证。"
+  },
+  {
+    "prompt": 248,
+    "source_start_line": 2218,
+    "source_end_line": 2231,
+    "kind": "工具通知",
+    "disposition": "非业务命令",
+    "requirements": [],
+    "note": "异步任务结果不是用户功能要求。"
+  },
+  {
+    "prompt": 249,
+    "source_start_line": 2232,
+    "source_end_line": 2238,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "DOC-01",
+      "DOC-02",
+      "DOC-05"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 250,
+    "source_start_line": 2239,
+    "source_end_line": 2242,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "DOC-02"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 251,
+    "source_start_line": 2243,
+    "source_end_line": 2246,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SYS-10"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 252,
+    "source_start_line": 2247,
+    "source_end_line": 2250,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "DOC-05"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 253,
+    "source_start_line": 2251,
+    "source_end_line": 2254,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "LABEL-03"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 254,
+    "source_start_line": 2255,
+    "source_end_line": 2292,
+    "kind": "会话摘要",
+    "disposition": "仅背景",
+    "requirements": [],
+    "note": "非用户原始新增要求；其中助手行为、测试与部署说法需另查源码和实证。"
+  },
+  {
+    "prompt": 255,
+    "source_start_line": 2293,
+    "source_end_line": 2296,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "PL-02"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 256,
+    "source_start_line": 2297,
+    "source_end_line": 2300,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "PL-02"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 257,
+    "source_start_line": 2301,
+    "source_end_line": 2304,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SYS-04"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 258,
+    "source_start_line": 2305,
+    "source_end_line": 2314,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "PL-02",
+      "PL-10"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 259,
+    "source_start_line": 2315,
+    "source_end_line": 2318,
+    "kind": "简短反馈或承接",
+    "disposition": "需上下文",
+    "requirements": [],
+    "note": "没有独立新增功能；不能将“好了/继续/看不到”等扩成业务政策。"
+  },
+  {
+    "prompt": 260,
+    "source_start_line": 2319,
+    "source_end_line": 2322,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "PL-05"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 261,
+    "source_start_line": 2323,
+    "source_end_line": 2326,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "DOC-07"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 262,
+    "source_start_line": 2327,
+    "source_end_line": 2330,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "DOC-07"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 263,
+    "source_start_line": 2331,
+    "source_end_line": 2334,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "DOC-08"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 264,
+    "source_start_line": 2335,
+    "source_end_line": 2338,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "TRACK-01"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 265,
+    "source_start_line": 2339,
+    "source_end_line": 2342,
+    "kind": "用户要求或反馈",
+    "disposition": "按范围部分替代",
+    "requirements": [
+      "TRACK-07"
+    ],
+    "note": "通用对外API被266暂缓；内部与明确客户查货范围仍需实现。"
+  },
+  {
+    "prompt": 266,
+    "source_start_line": 2343,
+    "source_end_line": 2346,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "TRACK-07"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 267,
+    "source_start_line": 2347,
+    "source_end_line": 2355,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SYS-08"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 268,
+    "source_start_line": 2356,
+    "source_end_line": 2359,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SYS-08"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 269,
+    "source_start_line": 2360,
+    "source_end_line": 2363,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SYS-06"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 270,
+    "source_start_line": 2364,
+    "source_end_line": 2367,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "PAY-04"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 271,
+    "source_start_line": 2368,
+    "source_end_line": 2428,
+    "kind": "用户要求或反馈",
+    "disposition": "按范围部分替代",
+    "requirements": [
+      "NOT-08"
+    ],
+    "note": "历史放货文本例证；最新模板以486/541/543为准。"
+  },
+  {
+    "prompt": 272,
+    "source_start_line": 2429,
+    "source_end_line": 2432,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "PAY-04"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 273,
+    "source_start_line": 2433,
+    "source_end_line": 2439,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "PAY-04",
+      "SYS-06"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 274,
+    "source_start_line": 2440,
+    "source_end_line": 2443,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "PAY-05",
+      "PL-09",
+      "SYS-13"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 275,
+    "source_start_line": 2444,
+    "source_end_line": 2447,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "PAY-05",
+      "SYS-13"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 276,
+    "source_start_line": 2448,
+    "source_end_line": 2451,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "PAY-05"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 277,
+    "source_start_line": 2452,
+    "source_end_line": 2455,
+    "kind": "用户要求或反馈",
+    "disposition": "按范围部分替代",
+    "requirements": [
+      "PAY-08",
+      "PAY-09"
+    ],
+    "note": "核销导出保留；今日统计口径以492审核通过日为准。"
+  },
+  {
+    "prompt": 278,
+    "source_start_line": 2456,
+    "source_end_line": 2500,
+    "kind": "会话摘要",
+    "disposition": "仅背景",
+    "requirements": [],
+    "note": "非用户原始新增要求；其中助手行为、测试与部署说法需另查源码和实证。"
+  },
+  {
+    "prompt": 279,
+    "source_start_line": 2501,
+    "source_end_line": 2504,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "PAY-05",
+      "SYS-13"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 280,
+    "source_start_line": 2505,
+    "source_end_line": 2508,
+    "kind": "简短反馈或承接",
+    "disposition": "需上下文",
+    "requirements": [],
+    "note": "没有独立新增功能；不能将“好了/继续/看不到”等扩成业务政策。"
+  },
+  {
+    "prompt": 281,
+    "source_start_line": 2509,
+    "source_end_line": 2517,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "F6-02",
+      "PARTY-02",
+      "SYS-11"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 282,
+    "source_start_line": 2518,
+    "source_end_line": 2521,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SYS-06"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 283,
+    "source_start_line": 2522,
+    "source_end_line": 2530,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "PL-02"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 284,
+    "source_start_line": 2531,
+    "source_end_line": 2537,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "REL-03"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 285,
+    "source_start_line": 2538,
+    "source_end_line": 2541,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "PAY-02"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 286,
+    "source_start_line": 2542,
+    "source_end_line": 2545,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "F6-01",
+      "PARTY-02"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 287,
+    "source_start_line": 2546,
+    "source_end_line": 2549,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SYS-08"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 288,
+    "source_start_line": 2550,
+    "source_end_line": 2553,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "PAY-05",
+      "SYS-13"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 289,
+    "source_start_line": 2554,
+    "source_end_line": 2587,
+    "kind": "会话摘要",
+    "disposition": "仅背景",
+    "requirements": [],
+    "note": "非用户原始新增要求；其中助手行为、测试与部署说法需另查源码和实证。"
+  },
+  {
+    "prompt": 290,
+    "source_start_line": 2588,
+    "source_end_line": 2648,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "PAY-05"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 291,
+    "source_start_line": 2649,
+    "source_end_line": 2704,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "PAY-05"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 292,
+    "source_start_line": 2705,
+    "source_end_line": 2708,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "WH-01"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 293,
+    "source_start_line": 2709,
+    "source_end_line": 2793,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "PL-10",
+      "RATE-01"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 294,
+    "source_start_line": 2794,
+    "source_end_line": 2797,
+    "kind": "简短反馈或承接",
+    "disposition": "需上下文",
+    "requirements": [],
+    "note": "没有独立新增功能；不能将“好了/继续/看不到”等扩成业务政策。"
+  },
+  {
+    "prompt": 295,
+    "source_start_line": 2798,
+    "source_end_line": 2801,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "RATE-01"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 296,
+    "source_start_line": 2802,
+    "source_end_line": 2805,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "RATE-01"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 297,
+    "source_start_line": 2806,
+    "source_end_line": 2809,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "PL-10",
+      "RATE-01"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 298,
+    "source_start_line": 2810,
+    "source_end_line": 2813,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "PL-10",
+      "RATE-01"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 299,
+    "source_start_line": 2814,
+    "source_end_line": 2823,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "PARTY-03"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 300,
+    "source_start_line": 2824,
+    "source_end_line": 2837,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "DOC-09",
+      "RATE-03",
+      "SYS-10"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 301,
+    "source_start_line": 2838,
+    "source_end_line": 2841,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SYS-13"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 302,
+    "source_start_line": 2842,
+    "source_end_line": 2845,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "DOC-09",
+      "SYS-10"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 303,
+    "source_start_line": 2846,
+    "source_end_line": 2849,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "DOC-01",
+      "PORTAL-02"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 304,
+    "source_start_line": 2850,
+    "source_end_line": 2862,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "PARTY-03"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 305,
+    "source_start_line": 2863,
+    "source_end_line": 2900,
+    "kind": "会话摘要",
+    "disposition": "仅背景",
+    "requirements": [],
+    "note": "非用户原始新增要求；其中助手行为、测试与部署说法需另查源码和实证。"
+  },
+  {
+    "prompt": 306,
+    "source_start_line": 2901,
+    "source_end_line": 2905,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "DOC-03"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 307,
+    "source_start_line": 2906,
+    "source_end_line": 2923,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "DOC-03",
+      "RATE-03"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 308,
+    "source_start_line": 2924,
+    "source_end_line": 3002,
+    "kind": "用户要求或反馈",
+    "disposition": "按范围部分替代",
+    "requirements": [
+      "NOT-01"
+    ],
+    "note": "普通到货模板已被510/512替代；不是全盘恢复旧版本。"
+  },
+  {
+    "prompt": 309,
+    "source_start_line": 3003,
+    "source_end_line": 3006,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "PARTY-03",
+      "PL-06"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 310,
+    "source_start_line": 3007,
+    "source_end_line": 3015,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "DOC-03",
+      "RATE-03"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 311,
+    "source_start_line": 3016,
+    "source_end_line": 3023,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "PL-07"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 312,
+    "source_start_line": 3024,
+    "source_end_line": 3032,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "AR-10",
+      "PL-07"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 313,
+    "source_start_line": 3033,
+    "source_end_line": 3036,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "PL-07"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 314,
+    "source_start_line": 3037,
+    "source_end_line": 3040,
+    "kind": "简短反馈或承接",
+    "disposition": "需上下文",
+    "requirements": [],
+    "note": "没有独立新增功能；不能将“好了/继续/看不到”等扩成业务政策。"
+  },
+  {
+    "prompt": 315,
+    "source_start_line": 3041,
+    "source_end_line": 3044,
+    "kind": "历史操作或咨询",
+    "disposition": "不重放",
+    "requirements": [],
+    "note": "当时暂停对话的历史指令，不是暂停本次已明确要求的方案工作。"
+  },
+  {
+    "prompt": 316,
+    "source_start_line": 3045,
+    "source_end_line": 3048,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SYS-13"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 317,
+    "source_start_line": 3049,
+    "source_end_line": 3052,
+    "kind": "简短反馈或承接",
+    "disposition": "需上下文",
+    "requirements": [],
+    "note": "没有独立新增功能；不能将“好了/继续/看不到”等扩成业务政策。"
+  },
+  {
+    "prompt": 318,
+    "source_start_line": 3053,
+    "source_end_line": 3056,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "DOC-03",
+      "RATE-03"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 319,
+    "source_start_line": 3057,
+    "source_end_line": 3060,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SYS-04"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 320,
+    "source_start_line": 3061,
+    "source_end_line": 3064,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "DOC-03",
+      "RATE-03"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 321,
+    "source_start_line": 3065,
+    "source_end_line": 3068,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "DOC-03"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 322,
+    "source_start_line": 3069,
+    "source_end_line": 3072,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "DOC-06"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 323,
+    "source_start_line": 3073,
+    "source_end_line": 3076,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "DOC-06"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 324,
+    "source_start_line": 3077,
+    "source_end_line": 3080,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SYS-05"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 325,
+    "source_start_line": 3081,
+    "source_end_line": 3084,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "RATE-03"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 326,
+    "source_start_line": 3085,
+    "source_end_line": 3091,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "DOC-03"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 327,
+    "source_start_line": 3092,
+    "source_end_line": 3095,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SHIP-04"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 328,
+    "source_start_line": 3096,
+    "source_end_line": 3099,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "PAY-05",
+      "SYS-13"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 329,
+    "source_start_line": 3100,
+    "source_end_line": 3126,
+    "kind": "会话摘要",
+    "disposition": "仅背景",
+    "requirements": [],
+    "note": "非用户原始新增要求；其中助手行为、测试与部署说法需另查源码和实证。"
+  },
+  {
+    "prompt": 330,
+    "source_start_line": 3127,
+    "source_end_line": 3130,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SYS-05"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 331,
+    "source_start_line": 3131,
+    "source_end_line": 3134,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "PARTY-02",
+      "SYS-11"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 332,
+    "source_start_line": 3135,
+    "source_end_line": 3138,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "PARTY-02",
+      "SYS-11"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 333,
+    "source_start_line": 3139,
+    "source_end_line": 3145,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "AR-09",
+      "SHIP-06"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 334,
+    "source_start_line": 3146,
+    "source_end_line": 3186,
+    "kind": "会话摘要",
+    "disposition": "仅背景",
+    "requirements": [],
+    "note": "非用户原始新增要求；其中助手行为、测试与部署说法需另查源码和实证。"
+  },
+  {
+    "prompt": 335,
+    "source_start_line": 3187,
+    "source_end_line": 3190,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "DOC-07",
+      "DOC-10"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 336,
+    "source_start_line": 3191,
+    "source_end_line": 3195,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "PL-06",
+      "REL-03"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 337,
+    "source_start_line": 3196,
+    "source_end_line": 3199,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SHIP-07"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 338,
+    "source_start_line": 3200,
+    "source_end_line": 3203,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SHIP-04",
+      "SHIP-08"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 339,
+    "source_start_line": 3204,
+    "source_end_line": 3207,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SHIP-08"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 340,
+    "source_start_line": 3208,
+    "source_end_line": 3211,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "PL-09",
+      "SHIP-08",
+      "SYS-13"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 341,
+    "source_start_line": 3212,
+    "source_end_line": 3215,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "AR-10",
+      "PL-07"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 342,
+    "source_start_line": 3216,
+    "source_end_line": 3219,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "PL-05",
+      "REL-04"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 343,
+    "source_start_line": 3220,
+    "source_end_line": 3223,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "PL-05",
+      "REL-04"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 344,
+    "source_start_line": 3224,
+    "source_end_line": 3227,
+    "kind": "简短反馈或承接",
+    "disposition": "需上下文",
+    "requirements": [],
+    "note": "没有独立新增功能；不能将“好了/继续/看不到”等扩成业务政策。"
+  },
+  {
+    "prompt": 345,
+    "source_start_line": 3228,
+    "source_end_line": 3245,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "REL-05"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 346,
+    "source_start_line": 3246,
+    "source_end_line": 3249,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SYS-04"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 347,
+    "source_start_line": 3250,
+    "source_end_line": 3253,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SYS-03"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 348,
+    "source_start_line": 3254,
+    "source_end_line": 3257,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SYS-11"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 349,
+    "source_start_line": 3258,
+    "source_end_line": 3261,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SYS-11"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 350,
+    "source_start_line": 3262,
+    "source_end_line": 3265,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SYS-04"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 351,
+    "source_start_line": 3266,
+    "source_end_line": 3303,
+    "kind": "会话摘要",
+    "disposition": "仅背景",
+    "requirements": [],
+    "note": "非用户原始新增要求；其中助手行为、测试与部署说法需另查源码和实证。"
+  },
+  {
+    "prompt": 352,
+    "source_start_line": 3304,
+    "source_end_line": 3307,
+    "kind": "简短反馈或承接",
+    "disposition": "需上下文",
+    "requirements": [],
+    "note": "没有独立新增功能；不能将“好了/继续/看不到”等扩成业务政策。"
+  },
+  {
+    "prompt": 353,
+    "source_start_line": 3308,
+    "source_end_line": 3311,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "PL-02"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 354,
+    "source_start_line": 3312,
+    "source_end_line": 3315,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SYS-04"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 355,
+    "source_start_line": 3316,
+    "source_end_line": 3322,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "DOC-10",
+      "REL-04"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 356,
+    "source_start_line": 3323,
+    "source_end_line": 3326,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SYS-13"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 357,
+    "source_start_line": 3327,
+    "source_end_line": 3330,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SYS-09"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 358,
+    "source_start_line": 3331,
+    "source_end_line": 3334,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SYS-05",
+      "SYS-09"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 359,
+    "source_start_line": 3335,
+    "source_end_line": 3338,
+    "kind": "历史操作或咨询",
+    "disposition": "不重放",
+    "requirements": [],
+    "note": "部署方案比较的过程性提问，不锁定新项目后端。"
+  },
+  {
+    "prompt": 360,
+    "source_start_line": 3339,
+    "source_end_line": 3342,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SYS-05",
+      "SYS-09"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 361,
+    "source_start_line": 3343,
+    "source_end_line": 3346,
+    "kind": "历史操作或咨询",
+    "disposition": "不重放",
+    "requirements": [],
+    "note": "当时服务器购买咨询，不构成新采购指令。"
+  },
+  {
+    "prompt": 362,
+    "source_start_line": 3347,
+    "source_end_line": 3350,
+    "kind": "历史操作或咨询",
+    "disposition": "不重放",
+    "requirements": [],
+    "note": "比较Supabase的历史提问；不等于实际迁移或本次指定供应商。"
+  },
+  {
+    "prompt": 363,
+    "source_start_line": 3351,
+    "source_end_line": 3354,
+    "kind": "历史操作或咨询",
+    "disposition": "不重放",
+    "requirements": [],
+    "note": "当时注册Supabase的操作，不在本次重放，也不能证明已使用。"
+  },
+  {
+    "prompt": 364,
+    "source_start_line": 3355,
+    "source_end_line": 3358,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SYS-09"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 365,
+    "source_start_line": 3359,
+    "source_end_line": 3362,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SYS-09"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 366,
+    "source_start_line": 3363,
+    "source_end_line": 3366,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SYS-09"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 367,
+    "source_start_line": 3367,
+    "source_end_line": 3370,
+    "kind": "简短反馈或承接",
+    "disposition": "需上下文",
+    "requirements": [],
+    "note": "没有独立新增功能；不能将“好了/继续/看不到”等扩成业务政策。"
+  },
+  {
+    "prompt": 368,
+    "source_start_line": 3371,
+    "source_end_line": 3374,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SYS-09"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 369,
+    "source_start_line": 3375,
+    "source_end_line": 3378,
+    "kind": "历史操作或咨询",
+    "disposition": "不重放",
+    "requirements": [],
+    "note": "历史域名后台资料尚未取得；新部署仍需核验管理权。"
+  },
+  {
+    "prompt": 370,
+    "source_start_line": 3379,
+    "source_end_line": 3382,
+    "kind": "历史操作或咨询",
+    "disposition": "不重放",
+    "requirements": [],
+    "note": "当时界面选择需上下文截图，不重放历史点击。"
+  },
+  {
+    "prompt": 371,
+    "source_start_line": 3383,
+    "source_end_line": 3386,
+    "kind": "历史操作或咨询",
+    "disposition": "不重放",
+    "requirements": [],
+    "note": "当时配置询问需上下文，不据此增加服务。"
+  },
+  {
+    "prompt": 372,
+    "source_start_line": 3387,
+    "source_end_line": 3393,
+    "kind": "历史操作或咨询",
+    "disposition": "不重放",
+    "requirements": [],
+    "note": "历史私密凭据操作，正文不复制、不执行。"
+  },
+  {
+    "prompt": 373,
+    "source_start_line": 3394,
+    "source_end_line": 3397,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SYS-17"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 374,
+    "source_start_line": 3398,
+    "source_end_line": 3444,
+    "kind": "会话摘要",
+    "disposition": "仅背景",
+    "requirements": [],
+    "note": "非用户原始新增要求；其中助手行为、测试与部署说法需另查源码和实证。"
+  },
+  {
+    "prompt": 375,
+    "source_start_line": 3445,
+    "source_end_line": 3448,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "TRACK-02"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 376,
+    "source_start_line": 3449,
+    "source_end_line": 3455,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "REL-01"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 377,
+    "source_start_line": 3456,
+    "source_end_line": 3459,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "TRACK-02"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 378,
+    "source_start_line": 3460,
+    "source_end_line": 3463,
+    "kind": "历史操作或咨询",
+    "disposition": "不重放",
+    "requirements": [],
+    "note": "历史域名登记身份背景，不是业务客户数据来源。"
+  },
+  {
+    "prompt": 379,
+    "source_start_line": 3464,
+    "source_end_line": 3467,
+    "kind": "历史操作或咨询",
+    "disposition": "不重放",
+    "requirements": [],
+    "note": "历史域名审核反馈，不代表当前域名控制权及证件状态。"
+  },
+  {
+    "prompt": 380,
+    "source_start_line": 3468,
+    "source_end_line": 3474,
+    "kind": "历史操作或咨询",
+    "disposition": "不重放",
+    "requirements": [],
+    "note": "纠正登记主体名称；不能据此猜测完整主体资料。"
+  },
+  {
+    "prompt": 381,
+    "source_start_line": 3475,
+    "source_end_line": 3478,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "DOC-05",
+      "PORTAL-02"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 382,
+    "source_start_line": 3479,
+    "source_end_line": 3482,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "TRACK-02"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 383,
+    "source_start_line": 3483,
+    "source_end_line": 3486,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "TRACK-02"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 384,
+    "source_start_line": 3487,
+    "source_end_line": 3490,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "TRACK-02"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 385,
+    "source_start_line": 3491,
+    "source_end_line": 3494,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "DOC-05"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 386,
+    "source_start_line": 3495,
+    "source_end_line": 3498,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "DOC-05",
+      "PORTAL-02"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 387,
+    "source_start_line": 3499,
+    "source_end_line": 3502,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "DOC-05"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 388,
+    "source_start_line": 3503,
+    "source_end_line": 3506,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "DOC-05"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 389,
+    "source_start_line": 3507,
+    "source_end_line": 3510,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "DOC-05"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 390,
+    "source_start_line": 3511,
+    "source_end_line": 3514,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "PL-02",
+      "PL-03",
+      "SYS-11"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 391,
+    "source_start_line": 3515,
+    "source_end_line": 3518,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "DOC-05"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 392,
+    "source_start_line": 3519,
+    "source_end_line": 3522,
+    "kind": "用户要求或反馈",
+    "disposition": "按范围部分替代",
+    "requirements": [
+      "SYS-06"
+    ],
+    "note": "内部操作保持当前页；每次新打开网址先欢迎页以558/562/573/577为准。"
+  },
+  {
+    "prompt": 393,
+    "source_start_line": 3523,
+    "source_end_line": 3526,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "AR-09",
+      "PAY-02"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 394,
+    "source_start_line": 3527,
+    "source_end_line": 3530,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "PAY-04"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 395,
+    "source_start_line": 3531,
+    "source_end_line": 3535,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "AR-09",
+      "PAY-02",
+      "PAY-03"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 396,
+    "source_start_line": 3536,
+    "source_end_line": 3539,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "WH-01"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 397,
+    "source_start_line": 3540,
+    "source_end_line": 3544,
+    "kind": "用户要求或反馈",
+    "disposition": "按范围部分替代",
+    "requirements": [
+      "SYS-16"
+    ],
+    "note": "查询页美化提案被398回退；公司Logo位置后按405。"
+  },
+  {
+    "prompt": 398,
+    "source_start_line": 3545,
+    "source_end_line": 3548,
+    "kind": "用户要求或反馈",
+    "disposition": "按范围部分替代",
+    "requirements": [
+      "SYS-16"
+    ],
+    "note": "保留查询页回退结果；不撤销405要求的系统Logo位置。"
+  },
+  {
+    "prompt": 399,
+    "source_start_line": 3549,
+    "source_end_line": 3584,
+    "kind": "会话摘要",
+    "disposition": "仅背景",
+    "requirements": [],
+    "note": "非用户原始新增要求；其中助手行为、测试与部署说法需另查源码和实证。"
+  },
+  {
+    "prompt": 400,
+    "source_start_line": 3585,
+    "source_end_line": 3596,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SYS-15"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 401,
+    "source_start_line": 3597,
+    "source_end_line": 3600,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "TRACK-03"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 402,
+    "source_start_line": 3601,
+    "source_end_line": 3604,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "WH-01"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 403,
+    "source_start_line": 3605,
+    "source_end_line": 3608,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "PL-02"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 404,
+    "source_start_line": 3609,
+    "source_end_line": 3612,
+    "kind": "用户要求或反馈",
+    "disposition": "按范围部分替代",
+    "requirements": [
+      "DOC-09",
+      "SYS-10"
+    ],
+    "note": "冻结规则按不同页面保留；箱单文档以后续556冻结至客户电话。"
+  },
+  {
+    "prompt": 405,
+    "source_start_line": 3613,
+    "source_end_line": 3616,
+    "kind": "用户要求或反馈",
+    "disposition": "按范围部分替代",
+    "requirements": [
+      "SYS-16"
+    ],
+    "note": "保留系统左上Logo位置；407/409要求回退导致乱码的处理。"
+  },
+  {
+    "prompt": 406,
+    "source_start_line": 3617,
+    "source_end_line": 3620,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "PL-06"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 407,
+    "source_start_line": 3621,
+    "source_end_line": 3624,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SYS-16"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 408,
+    "source_start_line": 3625,
+    "source_end_line": 3630,
+    "kind": "用户要求或反馈",
+    "disposition": "按范围部分替代",
+    "requirements": [
+      "DOC-11",
+      "WH-01"
+    ],
+    "note": "SO/SI/DN与库存范围保留；462细化MBL、B/O、SI和S/O上传，未明确取消DN。"
+  },
+  {
+    "prompt": 409,
+    "source_start_line": 3631,
+    "source_end_line": 3634,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SYS-16"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 410,
+    "source_start_line": 3635,
+    "source_end_line": 3638,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "WH-02"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 411,
+    "source_start_line": 3639,
+    "source_end_line": 3642,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "F6-04"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 412,
+    "source_start_line": 3643,
+    "source_end_line": 3646,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "WH-04"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 413,
+    "source_start_line": 3647,
+    "source_end_line": 3650,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "WH-01"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 414,
+    "source_start_line": 3651,
+    "source_end_line": 3669,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "WH-03"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 415,
+    "source_start_line": 3670,
+    "source_end_line": 3674,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "WH-01"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 416,
+    "source_start_line": 3675,
+    "source_end_line": 3678,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "WH-16"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 417,
+    "source_start_line": 3679,
+    "source_end_line": 3682,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SYS-10",
+      "WH-10"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 418,
+    "source_start_line": 3683,
+    "source_end_line": 3686,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SYS-03"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 419,
+    "source_start_line": 3687,
+    "source_end_line": 3690,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "TRACK-04",
+      "WH-16"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 420,
+    "source_start_line": 3691,
+    "source_end_line": 3694,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SYS-14"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 421,
+    "source_start_line": 3695,
+    "source_end_line": 3698,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "REL-08",
+      "WH-16"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 422,
+    "source_start_line": 3699,
+    "source_end_line": 3702,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "TRACK-06"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 423,
+    "source_start_line": 3703,
+    "source_end_line": 3706,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SHIP-01",
+      "WH-02"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 424,
+    "source_start_line": 3707,
+    "source_end_line": 3757,
+    "kind": "会话摘要",
+    "disposition": "仅背景",
+    "requirements": [],
+    "note": "非用户原始新增要求；其中助手行为、测试与部署说法需另查源码和实证。"
+  },
+  {
+    "prompt": 425,
+    "source_start_line": 3758,
+    "source_end_line": 3761,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SYS-15"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 426,
+    "source_start_line": 3762,
+    "source_end_line": 3765,
+    "kind": "历史操作或咨询",
+    "disposition": "不重放",
+    "requirements": [
+      "SYS-17"
+    ],
+    "note": "当时放行443的操作；本次只在SYS-17保留HTTPS结果要求。"
+  },
+  {
+    "prompt": 427,
+    "source_start_line": 3766,
+    "source_end_line": 3769,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "WH-02",
+      "WH-04"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 428,
+    "source_start_line": 3770,
+    "source_end_line": 3773,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "NOT-04"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 429,
+    "source_start_line": 3774,
+    "source_end_line": 3777,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "WH-06"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 430,
+    "source_start_line": 3778,
+    "source_end_line": 3781,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "TRACK-04",
+      "WH-07"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 431,
+    "source_start_line": 3782,
+    "source_end_line": 3785,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "RATE-03"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 432,
+    "source_start_line": 3786,
+    "source_end_line": 3789,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SYS-05"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 433,
+    "source_start_line": 3790,
+    "source_end_line": 3793,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "WH-08"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 434,
+    "source_start_line": 3794,
+    "source_end_line": 3797,
+    "kind": "用户要求或反馈",
+    "disposition": "按范围部分替代",
+    "requirements": [
+      "WH-09"
+    ],
+    "note": "通用下拉筛选被438按字段细化；收据号/客户/品名/目的港手输。"
+  },
+  {
+    "prompt": 435,
+    "source_start_line": 3798,
+    "source_end_line": 3801,
+    "kind": "用户要求或反馈",
+    "disposition": "按范围部分替代",
+    "requirements": [
+      "WH-08"
+    ],
+    "note": "新建初始要；清空/未选或旧空值显示不要；保留来源未知。"
+  },
+  {
+    "prompt": 436,
+    "source_start_line": 3802,
+    "source_end_line": 3806,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "WH-02",
+      "WH-03",
+      "WH-09"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 437,
+    "source_start_line": 3807,
+    "source_end_line": 3810,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SYS-10",
+      "WH-10"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 438,
+    "source_start_line": 3811,
+    "source_end_line": 3814,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "WH-09"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 439,
+    "source_start_line": 3815,
+    "source_end_line": 3818,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "WH-09"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 440,
+    "source_start_line": 3819,
+    "source_end_line": 3822,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "WH-11"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 441,
+    "source_start_line": 3823,
+    "source_end_line": 3826,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "WH-10"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 442,
+    "source_start_line": 3827,
+    "source_end_line": 3830,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "WH-10"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 443,
+    "source_start_line": 3831,
+    "source_end_line": 3834,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "WH-10"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 444,
+    "source_start_line": 3835,
+    "source_end_line": 3838,
+    "kind": "简短反馈或承接",
+    "disposition": "需上下文",
+    "requirements": [],
+    "note": "没有独立新增功能；不能将“好了/继续/看不到”等扩成业务政策。"
+  },
+  {
+    "prompt": 445,
+    "source_start_line": 3839,
+    "source_end_line": 3842,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "WH-10"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 446,
+    "source_start_line": 3843,
+    "source_end_line": 3846,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SYS-04"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 447,
+    "source_start_line": 3847,
+    "source_end_line": 3850,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "WH-10"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 448,
+    "source_start_line": 3851,
+    "source_end_line": 3854,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SHIP-01",
+      "WH-02"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 449,
+    "source_start_line": 3855,
+    "source_end_line": 3858,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "WH-11"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 450,
+    "source_start_line": 3859,
+    "source_end_line": 3873,
+    "kind": "用户要求或反馈",
+    "disposition": "按范围部分替代",
+    "requirements": [
+      "REL-04",
+      "REL-06"
+    ],
+    "note": "解控流程保留；显示日期及文案以559/560为准。"
+  },
+  {
+    "prompt": 451,
+    "source_start_line": 3874,
+    "source_end_line": 3929,
+    "kind": "会话摘要",
+    "disposition": "仅背景",
+    "requirements": [],
+    "note": "非用户原始新增要求；其中助手行为、测试与部署说法需另查源码和实证。"
+  },
+  {
+    "prompt": 452,
+    "source_start_line": 3930,
+    "source_end_line": 3933,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "PL-02"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 453,
+    "source_start_line": 3934,
+    "source_end_line": 3937,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SYS-15"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 454,
+    "source_start_line": 3938,
+    "source_end_line": 3946,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "REL-08"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 455,
+    "source_start_line": 3947,
+    "source_end_line": 3950,
+    "kind": "历史操作或咨询",
+    "disposition": "不重放",
+    "requirements": [],
+    "note": "历史HTTPS与账号操作的上下文句子，不作为本次开通账号指令。"
+  },
+  {
+    "prompt": 456,
+    "source_start_line": 3951,
+    "source_end_line": 3954,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SYS-15"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 457,
+    "source_start_line": 3955,
+    "source_end_line": 3958,
+    "kind": "历史操作或咨询",
+    "disposition": "不重放",
+    "requirements": [],
+    "note": "历史域名主体变更咨询，需实际有效证件才能执行。"
+  },
+  {
+    "prompt": 458,
+    "source_start_line": 3959,
+    "source_end_line": 3962,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "F6-04"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 459,
+    "source_start_line": 3963,
+    "source_end_line": 3966,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SHIP-01",
+      "TRACK-06"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 460,
+    "source_start_line": 3967,
+    "source_end_line": 3970,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SYS-15"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 461,
+    "source_start_line": 3971,
+    "source_end_line": 3974,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SYS-15"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 462,
+    "source_start_line": 3975,
+    "source_end_line": 3978,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "DOC-11",
+      "MBL-01"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 463,
+    "source_start_line": 3979,
+    "source_end_line": 4019,
+    "kind": "会话摘要",
+    "disposition": "仅背景",
+    "requirements": [],
+    "note": "非用户原始新增要求；其中助手行为、测试与部署说法需另查源码和实证。"
+  },
+  {
+    "prompt": 464,
+    "source_start_line": 4020,
+    "source_end_line": 4096,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "REL-06",
+      "REL-07"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 465,
+    "source_start_line": 4097,
+    "source_end_line": 4103,
+    "kind": "用户要求或反馈",
+    "disposition": "按范围部分替代",
+    "requirements": [
+      "REL-06",
+      "REL-07",
+      "SYS-03"
+    ],
+    "note": "取消文案REMOVED ON CREDIT须保留，但不是实际信用放货状态。"
+  },
+  {
+    "prompt": 466,
+    "source_start_line": 4104,
+    "source_end_line": 4107,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "PAY-05",
+      "SYS-13"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 467,
+    "source_start_line": 4108,
+    "source_end_line": 4114,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SHIP-01",
+      "TRACK-06",
+      "WH-09",
+      "WH-12"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 468,
+    "source_start_line": 4115,
+    "source_end_line": 4118,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "PAY-07"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 469,
+    "source_start_line": 4119,
+    "source_end_line": 4127,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "PAY-07"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 470,
+    "source_start_line": 4128,
+    "source_end_line": 4156,
+    "kind": "会话摘要",
+    "disposition": "仅背景",
+    "requirements": [],
+    "note": "非用户原始新增要求；其中助手行为、测试与部署说法需另查源码和实证。"
+  },
+  {
+    "prompt": 471,
+    "source_start_line": 4157,
+    "source_end_line": 4160,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SHIP-01",
+      "TRACK-06",
+      "WH-09"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 472,
+    "source_start_line": 4161,
+    "source_end_line": 4169,
+    "kind": "用户要求或反馈",
+    "disposition": "按范围部分替代",
+    "requirements": [
+      "F6-03",
+      "WH-12"
+    ],
+    "note": "功能与分析保留；入库行操作以497再加532确认标签为准。"
+  },
+  {
+    "prompt": 473,
+    "source_start_line": 4170,
+    "source_end_line": 4173,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "F6-03",
+      "PAY-09"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 474,
+    "source_start_line": 4174,
+    "source_end_line": 4177,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SYS-14"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 475,
+    "source_start_line": 4178,
+    "source_end_line": 4181,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SYS-14"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 476,
+    "source_start_line": 4182,
+    "source_end_line": 4185,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SYS-14"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 477,
+    "source_start_line": 4186,
+    "source_end_line": 4189,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SYS-02"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 478,
+    "source_start_line": 4190,
+    "source_end_line": 4193,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "WH-17"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 479,
+    "source_start_line": 4194,
+    "source_end_line": 4197,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "WH-04"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 480,
+    "source_start_line": 4198,
+    "source_end_line": 4201,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "WH-05"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 481,
+    "source_start_line": 4202,
+    "source_end_line": 4208,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "WH-14",
+      "WH-15"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 482,
+    "source_start_line": 4209,
+    "source_end_line": 4218,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "WH-13"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 483,
+    "source_start_line": 4219,
+    "source_end_line": 4222,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "WH-15"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 484,
+    "source_start_line": 4223,
+    "source_end_line": 4226,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "NOT-08",
+      "PAY-07"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 485,
+    "source_start_line": 4227,
+    "source_end_line": 4230,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "NOT-08",
+      "PAY-07",
+      "REL-01"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 486,
+    "source_start_line": 4231,
+    "source_end_line": 4291,
+    "kind": "用户要求或反馈",
+    "disposition": "按范围部分替代",
+    "requirements": [
+      "REL-01"
+    ],
+    "note": "放货文字骨架保留，粗体/尾款细节按541/543，复制日期按559。"
+  },
+  {
+    "prompt": 487,
+    "source_start_line": 4292,
+    "source_end_line": 4298,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "REL-08",
+      "WH-13"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 488,
+    "source_start_line": 4299,
+    "source_end_line": 4302,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "REL-08",
+      "WH-13"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 489,
+    "source_start_line": 4303,
+    "source_end_line": 4311,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "WH-02"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 490,
+    "source_start_line": 4312,
+    "source_end_line": 4340,
+    "kind": "会话摘要",
+    "disposition": "仅背景",
+    "requirements": [],
+    "note": "非用户原始新增要求；其中助手行为、测试与部署说法需另查源码和实证。"
+  },
+  {
+    "prompt": 491,
+    "source_start_line": 4341,
+    "source_end_line": 4345,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "PAY-02"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 492,
+    "source_start_line": 4346,
+    "source_end_line": 4349,
+    "kind": "用户要求或反馈",
+    "disposition": "按范围部分替代",
+    "requirements": [
+      "PAY-08"
+    ],
+    "note": "按审核通过日统计；历史无审核时间只能未知，不用付款日补成今日事实。"
+  },
+  {
+    "prompt": 493,
+    "source_start_line": 4350,
+    "source_end_line": 4353,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "WH-10"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 494,
+    "source_start_line": 4354,
+    "source_end_line": 4357,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SYS-17"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 495,
+    "source_start_line": 4358,
+    "source_end_line": 4409,
+    "kind": "会话摘要",
+    "disposition": "仅背景",
+    "requirements": [],
+    "note": "非用户原始新增要求；其中助手行为、测试与部署说法需另查源码和实证。"
+  },
+  {
+    "prompt": 496,
+    "source_start_line": 4410,
+    "source_end_line": 4413,
+    "kind": "用户要求或反馈",
+    "disposition": "按范围部分替代",
+    "requirements": [
+      "WH-12"
+    ],
+    "note": "去掉行内出库保留；普通标签用497文案，再加532确认标签。"
+  },
+  {
+    "prompt": 497,
+    "source_start_line": 4414,
+    "source_end_line": 4417,
+    "kind": "用户要求或反馈",
+    "disposition": "按范围部分替代",
+    "requirements": [
+      "WH-12"
+    ],
+    "note": "三按钮名称保留，后续532明确增加确认标签，最终为四入口。"
+  },
+  {
+    "prompt": 498,
+    "source_start_line": 4418,
+    "source_end_line": 4421,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SYS-04"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 499,
+    "source_start_line": 4422,
+    "source_end_line": 4425,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "DOC-05"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 500,
+    "source_start_line": 4426,
+    "source_end_line": 4429,
+    "kind": "历史操作或咨询",
+    "disposition": "不重放",
+    "requirements": [],
+    "note": "历史VNC入口咨询，不访问或保存其凭据。"
+  },
+  {
+    "prompt": 501,
+    "source_start_line": 4430,
+    "source_end_line": 4434,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "DOC-05",
+      "WH-12"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 502,
+    "source_start_line": 4435,
+    "source_end_line": 4438,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "DOC-05"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 503,
+    "source_start_line": 4439,
+    "source_end_line": 4442,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SYS-17"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 504,
+    "source_start_line": 4443,
+    "source_end_line": 4446,
+    "kind": "简短反馈或承接",
+    "disposition": "需上下文",
+    "requirements": [],
+    "note": "没有独立新增功能；不能将“好了/继续/看不到”等扩成业务政策。"
+  },
+  {
+    "prompt": 505,
+    "source_start_line": 4447,
+    "source_end_line": 4450,
+    "kind": "简短反馈或承接",
+    "disposition": "需上下文",
+    "requirements": [],
+    "note": "没有独立新增功能；不能将“好了/继续/看不到”等扩成业务政策。"
+  },
+  {
+    "prompt": 506,
+    "source_start_line": 4451,
+    "source_end_line": 4454,
+    "kind": "历史操作或咨询",
+    "disposition": "不重放",
+    "requirements": [],
+    "note": "当时配置操作引导请求，不代表本次执行终端历史命令。"
+  },
+  {
+    "prompt": 507,
+    "source_start_line": 4455,
+    "source_end_line": 4458,
+    "kind": "简短反馈或承接",
+    "disposition": "需上下文",
+    "requirements": [],
+    "note": "没有独立新增功能；不能将“好了/继续/看不到”等扩成业务政策。"
+  },
+  {
+    "prompt": 508,
+    "source_start_line": 4459,
+    "source_end_line": 4462,
+    "kind": "简短反馈或承接",
+    "disposition": "需上下文",
+    "requirements": [],
+    "note": "没有独立新增功能；不能将“好了/继续/看不到”等扩成业务政策。"
+  },
+  {
+    "prompt": 509,
+    "source_start_line": 4463,
+    "source_end_line": 4466,
+    "kind": "用户要求或反馈",
+    "disposition": "按范围部分替代",
+    "requirements": [
+      "HOME-01"
+    ],
+    "note": "欢迎页最终优先于登录，详见558/562/573/577。"
+  },
+  {
+    "prompt": 510,
+    "source_start_line": 4467,
+    "source_end_line": 4549,
+    "kind": "用户要求或反馈",
+    "disposition": "按范围部分替代",
+    "requirements": [
+      "NOT-01"
+    ],
+    "note": "普通到货最新骨架；示例日期不是固定值，四类通知签发日按559。"
+  },
+  {
+    "prompt": 511,
+    "source_start_line": 4550,
+    "source_end_line": 4553,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "NOT-01"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 512,
+    "source_start_line": 4554,
+    "source_end_line": 4557,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "NOT-01"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 513,
+    "source_start_line": 4558,
+    "source_end_line": 4561,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SYS-04"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 514,
+    "source_start_line": 4562,
+    "source_end_line": 4565,
+    "kind": "历史操作或咨询",
+    "disposition": "不重放",
+    "requirements": [],
+    "note": "历史重新打开终端操作，不在本次重放。"
+  },
+  {
+    "prompt": 515,
+    "source_start_line": 4566,
+    "source_end_line": 4569,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "DOC-05"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 516,
+    "source_start_line": 4570,
+    "source_end_line": 4573,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "NOT-04"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 517,
+    "source_start_line": 4574,
+    "source_end_line": 4582,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "HOME-01"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 518,
+    "source_start_line": 4583,
+    "source_end_line": 4586,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "PORTAL-01",
+      "PORTAL-02"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 519,
+    "source_start_line": 4587,
+    "source_end_line": 4628,
+    "kind": "会话摘要",
+    "disposition": "仅背景",
+    "requirements": [],
+    "note": "非用户原始新增要求；其中助手行为、测试与部署说法需另查源码和实证。"
+  },
+  {
+    "prompt": 520,
+    "source_start_line": 4629,
+    "source_end_line": 4632,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SYS-17"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 521,
+    "source_start_line": 4633,
+    "source_end_line": 4636,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SYS-06"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 522,
+    "source_start_line": 4637,
+    "source_end_line": 4640,
+    "kind": "简短反馈或承接",
+    "disposition": "需上下文",
+    "requirements": [],
+    "note": "没有独立新增功能；不能将“好了/继续/看不到”等扩成业务政策。"
+  },
+  {
+    "prompt": 523,
+    "source_start_line": 4641,
+    "source_end_line": 4644,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "PAY-05",
+      "SYS-13"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 524,
+    "source_start_line": 4645,
+    "source_end_line": 4648,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "AR-03"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 525,
+    "source_start_line": 4649,
+    "source_end_line": 4652,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "AP-02"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 526,
+    "source_start_line": 4653,
+    "source_end_line": 4656,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "AP-02"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 527,
+    "source_start_line": 4657,
+    "source_end_line": 4726,
+    "kind": "用户要求或反馈",
+    "disposition": "按范围部分替代",
+    "requirements": [
+      "NOT-02"
+    ],
+    "note": "最终收货模板；示例报价仅来源当周，不能固定为新系统长期价格。"
+  },
+  {
+    "prompt": 528,
+    "source_start_line": 4727,
+    "source_end_line": 4730,
+    "kind": "历史操作或咨询",
+    "disposition": "不重放",
+    "requirements": [],
+    "note": "历史调试链接咨询，不据此公开调试服务。"
+  },
+  {
+    "prompt": 529,
+    "source_start_line": 4731,
+    "source_end_line": 4734,
+    "kind": "历史操作或咨询",
+    "disposition": "不重放",
+    "requirements": [],
+    "note": "澄清历史代码分发网页入口，不据此重新发布旧代码。"
+  },
+  {
+    "prompt": 530,
+    "source_start_line": 4735,
+    "source_end_line": 4738,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SYS-05"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 531,
+    "source_start_line": 4739,
+    "source_end_line": 4742,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "LABEL-04"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 532,
+    "source_start_line": 4743,
+    "source_end_line": 4750,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "LABEL-04",
+      "NOT-04",
+      "SYS-13",
+      "WH-12"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 533,
+    "source_start_line": 4751,
+    "source_end_line": 4754,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "NOT-04",
+      "PL-09",
+      "SYS-13"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 534,
+    "source_start_line": 4755,
+    "source_end_line": 4814,
+    "kind": "会话摘要",
+    "disposition": "仅背景",
+    "requirements": [],
+    "note": "非用户原始新增要求；其中助手行为、测试与部署说法需另查源码和实证。"
+  },
+  {
+    "prompt": 535,
+    "source_start_line": 4815,
+    "source_end_line": 4818,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "DOC-04"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 536,
+    "source_start_line": 4819,
+    "source_end_line": 4822,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "PAY-06"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 537,
+    "source_start_line": 4823,
+    "source_end_line": 4826,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "PAY-06"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 538,
+    "source_start_line": 4827,
+    "source_end_line": 4830,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "REL-02"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 539,
+    "source_start_line": 4831,
+    "source_end_line": 4834,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "REL-02"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 540,
+    "source_start_line": 4835,
+    "source_end_line": 4838,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "REL-02"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 541,
+    "source_start_line": 4839,
+    "source_end_line": 4905,
+    "kind": "用户要求或反馈",
+    "disposition": "按范围部分替代",
+    "requirements": [
+      "NOT-08",
+      "REL-01",
+      "REL-02",
+      "REL-03",
+      "SYS-06"
+    ],
+    "note": "信用放货原页与粗体保留，具体粗体按543原图核验，日期按559。"
+  },
+  {
+    "prompt": 542,
+    "source_start_line": 4906,
+    "source_end_line": 4909,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SHIP-01"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 543,
+    "source_start_line": 4910,
+    "source_end_line": 4913,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "REL-01"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 544,
+    "source_start_line": 4914,
+    "source_end_line": 4917,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "PAY-06"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 545,
+    "source_start_line": 4918,
+    "source_end_line": 4921,
+    "kind": "用户要求或反馈",
+    "disposition": "按范围部分替代",
+    "requirements": [
+      "TRACK-01",
+      "TRACK-05"
+    ],
+    "note": "主分单同步保留；550/551明确排除目的港实际放货。"
+  },
+  {
+    "prompt": 546,
+    "source_start_line": 4922,
+    "source_end_line": 4930,
+    "kind": "用户要求或反馈",
+    "disposition": "按范围部分替代",
+    "requirements": [
+      "TRACK-05"
+    ],
+    "note": "跟随主单并可单票覆盖；实际放货不跟随主单。"
+  },
+  {
+    "prompt": 547,
+    "source_start_line": 4931,
+    "source_end_line": 4934,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "TRACK-03"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 548,
+    "source_start_line": 4935,
+    "source_end_line": 4938,
+    "kind": "用户要求或反馈",
+    "disposition": "按范围部分替代",
+    "requirements": [
+      "TRACK-05"
+    ],
+    "note": "分单独立覆盖不反写主单；放货按550/551独立确认。"
+  },
+  {
+    "prompt": 549,
+    "source_start_line": 4939,
+    "source_end_line": 4942,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "TRACK-03"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 550,
+    "source_start_line": 4943,
+    "source_end_line": 4946,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "REL-08",
+      "TRACK-05"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 551,
+    "source_start_line": 4947,
+    "source_end_line": 4950,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "REL-08",
+      "TRACK-05"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 552,
+    "source_start_line": 4951,
+    "source_end_line": 4994,
+    "kind": "用户要求或反馈",
+    "disposition": "按范围部分替代",
+    "requirements": [
+      "NOT-03"
+    ],
+    "note": "仅箱单文档行入口改装柜通知，不能删除账款/核销后的放货业务。"
+  },
+  {
+    "prompt": 553,
+    "source_start_line": 4995,
+    "source_end_line": 4998,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "NOT-05"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 554,
+    "source_start_line": 4999,
+    "source_end_line": 5002,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "NOT-05"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 555,
+    "source_start_line": 5003,
+    "source_end_line": 5006,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "NOT-05"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 556,
+    "source_start_line": 5007,
+    "source_end_line": 5010,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "DOC-09"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 557,
+    "source_start_line": 5011,
+    "source_end_line": 5014,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "NOT-05"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 558,
+    "source_start_line": 5015,
+    "source_end_line": 5092,
+    "kind": "用户要求或反馈",
+    "disposition": "按范围部分替代",
+    "requirements": [
+      "HOME-01",
+      "HOME-02",
+      "HOME-03",
+      "HOME-04",
+      "PARTY-03"
+    ],
+    "note": "首页三语/仓库/EXPRESS保留；布局与图片位置采用565—577的细化。"
+  },
+  {
+    "prompt": 559,
+    "source_start_line": 5093,
+    "source_end_line": 5096,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "NOT-06"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 560,
+    "source_start_line": 5097,
+    "source_end_line": 5103,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "REL-05",
+      "REL-06"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 561,
+    "source_start_line": 5104,
+    "source_end_line": 5107,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "HOME-01"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 562,
+    "source_start_line": 5108,
+    "source_end_line": 5111,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "HOME-01"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 563,
+    "source_start_line": 5112,
+    "source_end_line": 5115,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "HOME-05"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 564,
+    "source_start_line": 5116,
+    "source_end_line": 5155,
+    "kind": "会话摘要",
+    "disposition": "仅背景",
+    "requirements": [],
+    "note": "非用户原始新增要求；其中助手行为、测试与部署说法需另查源码和实证。"
+  },
+  {
+    "prompt": 565,
+    "source_start_line": 5156,
+    "source_end_line": 5159,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "SYS-15"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 566,
+    "source_start_line": 5160,
+    "source_end_line": 5163,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "HOME-05"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 567,
+    "source_start_line": 5164,
+    "source_end_line": 5167,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "HOME-03"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 568,
+    "source_start_line": 5168,
+    "source_end_line": 5171,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "RATE-04"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 569,
+    "source_start_line": 5172,
+    "source_end_line": 5187,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "HOME-03",
+      "HOME-05",
+      "HOME-06"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 570,
+    "source_start_line": 5188,
+    "source_end_line": 5191,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "HOME-01"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 571,
+    "source_start_line": 5192,
+    "source_end_line": 5195,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "HOME-05"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 572,
+    "source_start_line": 5196,
+    "source_end_line": 5200,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "PL-07",
+      "PL-08"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 573,
+    "source_start_line": 5201,
+    "source_end_line": 5204,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "HOME-01"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 574,
+    "source_start_line": 5205,
+    "source_end_line": 5208,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "HOME-01"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 575,
+    "source_start_line": 5209,
+    "source_end_line": 5227,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "HOME-06"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 576,
+    "source_start_line": 5228,
+    "source_end_line": 5231,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "HOME-06"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 577,
+    "source_start_line": 5232,
+    "source_end_line": 5235,
+    "kind": "用户要求或反馈",
+    "disposition": "有效要求的依据",
+    "requirements": [
+      "HOME-01"
+    ],
+    "note": "执行关联清单的最终行为；同范围后续修改与具体模板优先。"
+  },
+  {
+    "prompt": 578,
+    "source_start_line": 5236,
+    "source_end_line": 5239,
+    "kind": "用户要求或反馈",
+    "disposition": "按范围部分替代",
+    "requirements": [
+      "MIG-04"
+    ],
+    "note": "完整交付范围保留；明文密钥和历史凭据打包不在本次重放，按本轮安全边界另行受控保存。"
+  }
+]

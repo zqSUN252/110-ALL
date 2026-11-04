@@ -1,0 +1,5812 @@
+[
+  {
+    "id": "SYS-01",
+    "group": "系统与权限",
+    "title": "公司名称",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      1,
+      9
+    ],
+    "requirement": "系统业务名称使用 MC STAR LOGISTICS；统一项目承载海运、空运和应收应付。",
+    "acceptance": "主要业务页面和导出抬头不再使用未确认的替代公司名。",
+    "source_refs": [
+      {
+        "prompt": 1,
+        "start_line": 5,
+        "end_line": 8
+      },
+      {
+        "prompt": 9,
+        "start_line": 106,
+        "end_line": 115
+      }
+    ]
+  },
+  {
+    "id": "SYS-02",
+    "group": "系统与权限",
+    "title": "内部全站中英文",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      12,
+      477
+    ],
+    "requirement": "内部操作系统支持中英文；菜单、表头、弹窗、状态和错误提示均需翻译。",
+    "acceptance": "同一业务流程两种语言均可完成，不能只翻译导航词条。",
+    "source_refs": [
+      {
+        "prompt": 12,
+        "start_line": 124,
+        "end_line": 133
+      },
+      {
+        "prompt": 477,
+        "start_line": 4186,
+        "end_line": 4189
+      }
+    ]
+  },
+  {
+    "id": "SYS-03",
+    "group": "系统与权限",
+    "title": "多账号与服务端权限",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      57,
+      100,
+      116,
+      347,
+      418,
+      465
+    ],
+    "requirement": "支持管理员、按授权操作员和仓库主管；细分出运、收款、应付查看/编辑、放货、导出等权限。",
+    "acceptance": "无权账号直接调用API也被拒绝；更改权限在新请求生效。",
+    "source_refs": [
+      {
+        "prompt": 57,
+        "start_line": 548,
+        "end_line": 551
+      },
+      {
+        "prompt": 100,
+        "start_line": 934,
+        "end_line": 937
+      },
+      {
+        "prompt": 116,
+        "start_line": 1122,
+        "end_line": 1125
+      },
+      {
+        "prompt": 347,
+        "start_line": 3250,
+        "end_line": 3253
+      },
+      {
+        "prompt": 418,
+        "start_line": 3683,
+        "end_line": 3686
+      },
+      {
+        "prompt": 465,
+        "start_line": 4097,
+        "end_line": 4103
+      }
+    ]
+  },
+  {
+    "id": "SYS-04",
+    "group": "系统与权限",
+    "title": "账号不被同步挤掉",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      82,
+      84,
+      148,
+      151,
+      173,
+      177,
+      257,
+      319,
+      346,
+      350,
+      354,
+      446,
+      498,
+      513
+    ],
+    "requirement": "账号长期保存，不能因发布、登录、同步或其他账号上传而被覆盖删除；登录失败应区分原因。",
+    "acceptance": "两账号交替上传、刷新和服务重启后账号仍在，错误显示实际类别。",
+    "source_refs": [
+      {
+        "prompt": 82,
+        "start_line": 822,
+        "end_line": 825
+      },
+      {
+        "prompt": 84,
+        "start_line": 830,
+        "end_line": 833
+      },
+      {
+        "prompt": 148,
+        "start_line": 1396,
+        "end_line": 1399
+      },
+      {
+        "prompt": 151,
+        "start_line": 1408,
+        "end_line": 1411
+      },
+      {
+        "prompt": 173,
+        "start_line": 1544,
+        "end_line": 1547
+      },
+      {
+        "prompt": 177,
+        "start_line": 1560,
+        "end_line": 1563
+      },
+      {
+        "prompt": 257,
+        "start_line": 2301,
+        "end_line": 2304
+      },
+      {
+        "prompt": 319,
+        "start_line": 3057,
+        "end_line": 3060
+      },
+      {
+        "prompt": 346,
+        "start_line": 3246,
+        "end_line": 3249
+      },
+      {
+        "prompt": 350,
+        "start_line": 3262,
+        "end_line": 3265
+      },
+      {
+        "prompt": 354,
+        "start_line": 3312,
+        "end_line": 3315
+      },
+      {
+        "prompt": 446,
+        "start_line": 3843,
+        "end_line": 3846
+      },
+      {
+        "prompt": 498,
+        "start_line": 4418,
+        "end_line": 4421
+      },
+      {
+        "prompt": 513,
+        "start_line": 4558,
+        "end_line": 4561
+      }
+    ]
+  },
+  {
+    "id": "SYS-05",
+    "group": "系统与权限",
+    "title": "跨账号设备共享",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      59,
+      60,
+      65,
+      67,
+      69,
+      72,
+      115,
+      225,
+      226,
+      324,
+      330,
+      358,
+      360,
+      432,
+      530
+    ],
+    "requirement": "授权账号共享同一业务事实；本机缓存不能作为唯一数据源，上传失败不得声称云端已保存。",
+    "acceptance": "两设备可见同一已提交版本；断网重试、过期写入冲突均有明确反馈。",
+    "source_refs": [
+      {
+        "prompt": 59,
+        "start_line": 585,
+        "end_line": 588
+      },
+      {
+        "prompt": 60,
+        "start_line": 589,
+        "end_line": 592
+      },
+      {
+        "prompt": 65,
+        "start_line": 609,
+        "end_line": 612
+      },
+      {
+        "prompt": 67,
+        "start_line": 620,
+        "end_line": 623
+      },
+      {
+        "prompt": 69,
+        "start_line": 628,
+        "end_line": 631
+      },
+      {
+        "prompt": 72,
+        "start_line": 763,
+        "end_line": 766
+      },
+      {
+        "prompt": 115,
+        "start_line": 1118,
+        "end_line": 1121
+      },
+      {
+        "prompt": 225,
+        "start_line": 1944,
+        "end_line": 1947
+      },
+      {
+        "prompt": 226,
+        "start_line": 1948,
+        "end_line": 1951
+      },
+      {
+        "prompt": 324,
+        "start_line": 3077,
+        "end_line": 3080
+      },
+      {
+        "prompt": 330,
+        "start_line": 3127,
+        "end_line": 3130
+      },
+      {
+        "prompt": 358,
+        "start_line": 3331,
+        "end_line": 3334
+      },
+      {
+        "prompt": 360,
+        "start_line": 3339,
+        "end_line": 3342
+      },
+      {
+        "prompt": 432,
+        "start_line": 3786,
+        "end_line": 3789
+      },
+      {
+        "prompt": 530,
+        "start_line": 4735,
+        "end_line": 4738
+      }
+    ]
+  },
+  {
+    "id": "SYS-06",
+    "group": "系统与权限",
+    "title": "保留当前操作现场",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      23,
+      29,
+      31,
+      86,
+      175,
+      220,
+      227,
+      228,
+      239,
+      269,
+      273,
+      282,
+      392,
+      521,
+      541
+    ],
+    "requirement": "完成操作、后台同步或审核后保留当前业务页、选中单据、搜索词和滚动位置；首页入口规则另按HOME-01。",
+    "acceptance": "上传、审核、信用放货后仍可在原弹窗复制文本，输入焦点不被同步抢走。",
+    "source_refs": [
+      {
+        "prompt": 23,
+        "start_line": 289,
+        "end_line": 292
+      },
+      {
+        "prompt": 29,
+        "start_line": 379,
+        "end_line": 382
+      },
+      {
+        "prompt": 31,
+        "start_line": 387,
+        "end_line": 390
+      },
+      {
+        "prompt": 86,
+        "start_line": 838,
+        "end_line": 841
+      },
+      {
+        "prompt": 175,
+        "start_line": 1552,
+        "end_line": 1555
+      },
+      {
+        "prompt": 220,
+        "start_line": 1915,
+        "end_line": 1921
+      },
+      {
+        "prompt": 227,
+        "start_line": 1952,
+        "end_line": 1955
+      },
+      {
+        "prompt": 228,
+        "start_line": 1956,
+        "end_line": 1959
+      },
+      {
+        "prompt": 239,
+        "start_line": 2004,
+        "end_line": 2016
+      },
+      {
+        "prompt": 269,
+        "start_line": 2360,
+        "end_line": 2363
+      },
+      {
+        "prompt": 273,
+        "start_line": 2433,
+        "end_line": 2439
+      },
+      {
+        "prompt": 282,
+        "start_line": 2518,
+        "end_line": 2521
+      },
+      {
+        "prompt": 392,
+        "start_line": 3519,
+        "end_line": 3522
+      },
+      {
+        "prompt": 521,
+        "start_line": 4633,
+        "end_line": 4636
+      },
+      {
+        "prompt": 541,
+        "start_line": 4839,
+        "end_line": 4905
+      }
+    ]
+  },
+  {
+    "id": "SYS-07",
+    "group": "系统与权限",
+    "title": "操作责任追溯",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      145
+    ],
+    "requirement": "关键业务操作保存账号、时间、目标、前后版本和动作，供责任查询。",
+    "acceptance": "能从核销、改港、解控及出库记录追溯实际操作者，不能由前端任意伪造。",
+    "source_refs": [
+      {
+        "prompt": 145,
+        "start_line": 1347,
+        "end_line": 1350
+      }
+    ]
+  },
+  {
+    "id": "SYS-08",
+    "group": "系统与权限",
+    "title": "全局模糊查找",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      46,
+      78,
+      229,
+      230,
+      267,
+      268,
+      287
+    ],
+    "requirement": "以收据号、柜号、客户电话、客户名模糊查找运单和账款；名下运单位于应付/未付款清单下面。",
+    "acceptance": "输入单号片段可找到对应记录；结果可跳回具体账单且数据范围受权限制。",
+    "source_refs": [
+      {
+        "prompt": 46,
+        "start_line": 489,
+        "end_line": 492
+      },
+      {
+        "prompt": 78,
+        "start_line": 806,
+        "end_line": 809
+      },
+      {
+        "prompt": 229,
+        "start_line": 1960,
+        "end_line": 1963
+      },
+      {
+        "prompt": 230,
+        "start_line": 1964,
+        "end_line": 1967
+      },
+      {
+        "prompt": 267,
+        "start_line": 2347,
+        "end_line": 2355
+      },
+      {
+        "prompt": 268,
+        "start_line": 2356,
+        "end_line": 2359
+      },
+      {
+        "prompt": 287,
+        "start_line": 2546,
+        "end_line": 2549
+      }
+    ]
+  },
+  {
+    "id": "SYS-09",
+    "group": "系统与权限",
+    "title": "独立部署与数据规模",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      92,
+      101,
+      158,
+      159,
+      162,
+      163,
+      164,
+      165,
+      357,
+      358,
+      360,
+      364,
+      365,
+      366,
+      368
+    ],
+    "requirement": "可独立部署；满足每年约500柜、每柜约50票并保留历年数据的业务规模；可靠共享与私密性同等重要。",
+    "acceptance": "以约定年度与多年数据集执行分页、并发、恢复验收，不能只用包内小样本证明。",
+    "source_refs": [
+      {
+        "prompt": 92,
+        "start_line": 899,
+        "end_line": 902
+      },
+      {
+        "prompt": 101,
+        "start_line": 938,
+        "end_line": 941
+      },
+      {
+        "prompt": 158,
+        "start_line": 1439,
+        "end_line": 1442
+      },
+      {
+        "prompt": 159,
+        "start_line": 1443,
+        "end_line": 1446
+      },
+      {
+        "prompt": 162,
+        "start_line": 1455,
+        "end_line": 1458
+      },
+      {
+        "prompt": 163,
+        "start_line": 1459,
+        "end_line": 1462
+      },
+      {
+        "prompt": 164,
+        "start_line": 1463,
+        "end_line": 1466
+      },
+      {
+        "prompt": 165,
+        "start_line": 1467,
+        "end_line": 1470
+      },
+      {
+        "prompt": 357,
+        "start_line": 3327,
+        "end_line": 3330
+      },
+      {
+        "prompt": 358,
+        "start_line": 3331,
+        "end_line": 3334
+      },
+      {
+        "prompt": 360,
+        "start_line": 3339,
+        "end_line": 3342
+      },
+      {
+        "prompt": 364,
+        "start_line": 3355,
+        "end_line": 3358
+      },
+      {
+        "prompt": 365,
+        "start_line": 3359,
+        "end_line": 3362
+      },
+      {
+        "prompt": 366,
+        "start_line": 3363,
+        "end_line": 3366
+      },
+      {
+        "prompt": 368,
+        "start_line": 3371,
+        "end_line": 3374
+      }
+    ]
+  },
+  {
+    "id": "SYS-10",
+    "group": "系统与权限",
+    "title": "所有宽表可水平滚动",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      191,
+      199,
+      220,
+      251,
+      300,
+      302,
+      404,
+      417,
+      437
+    ],
+    "requirement": "宽表提供可发现的横向滚动和浮动滚动条；冻结列按页面独立规定。",
+    "acceptance": "手机与桌面均可访问全部列，冻结列无空白遮挡或错位。",
+    "source_refs": [
+      {
+        "prompt": 191,
+        "start_line": 1619,
+        "end_line": 1622
+      },
+      {
+        "prompt": 199,
+        "start_line": 1654,
+        "end_line": 1657
+      },
+      {
+        "prompt": 220,
+        "start_line": 1915,
+        "end_line": 1921
+      },
+      {
+        "prompt": 251,
+        "start_line": 2243,
+        "end_line": 2246
+      },
+      {
+        "prompt": 300,
+        "start_line": 2824,
+        "end_line": 2837
+      },
+      {
+        "prompt": 302,
+        "start_line": 2842,
+        "end_line": 2845
+      },
+      {
+        "prompt": 404,
+        "start_line": 3609,
+        "end_line": 3612
+      },
+      {
+        "prompt": 417,
+        "start_line": 3679,
+        "end_line": 3682
+      },
+      {
+        "prompt": 437,
+        "start_line": 3807,
+        "end_line": 3810
+      }
+    ]
+  },
+  {
+    "id": "SYS-11",
+    "group": "系统与权限",
+    "title": "缺失信息不自配",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      184,
+      202,
+      231,
+      234,
+      281,
+      331,
+      332,
+      348,
+      349,
+      390
+    ],
+    "requirement": "客户电话、目的仓和原单内容缺失时留空或待确认；不得按同名猜号码或向业务库注入演示客户。",
+    "acceptance": "原文件电话为空仍为空；未知目的仓为TO BE CONFIRMED，正式库无自动种子客户。",
+    "source_refs": [
+      {
+        "prompt": 184,
+        "start_line": 1588,
+        "end_line": 1594
+      },
+      {
+        "prompt": 202,
+        "start_line": 1669,
+        "end_line": 1672
+      },
+      {
+        "prompt": 231,
+        "start_line": 1968,
+        "end_line": 1974
+      },
+      {
+        "prompt": 234,
+        "start_line": 1984,
+        "end_line": 1987
+      },
+      {
+        "prompt": 281,
+        "start_line": 2509,
+        "end_line": 2517
+      },
+      {
+        "prompt": 331,
+        "start_line": 3131,
+        "end_line": 3134
+      },
+      {
+        "prompt": 332,
+        "start_line": 3135,
+        "end_line": 3138
+      },
+      {
+        "prompt": 348,
+        "start_line": 3254,
+        "end_line": 3257
+      },
+      {
+        "prompt": 349,
+        "start_line": 3258,
+        "end_line": 3261
+      },
+      {
+        "prompt": 390,
+        "start_line": 3511,
+        "end_line": 3514
+      }
+    ]
+  },
+  {
+    "id": "SYS-12",
+    "group": "系统与权限",
+    "title": "资料库及团队空间归档",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      64,
+      66
+    ],
+    "requirement": "保留团队空间共享、编辑/查看权限和更新后JSON归档的要求；与新系统本地恢复备份分别管理。",
+    "acceptance": "目标空间完成绑定后可回读归档；未绑定或失败时显示未完成，不伪称已上传。",
+    "source_refs": [
+      {
+        "prompt": 64,
+        "start_line": 605,
+        "end_line": 608
+      },
+      {
+        "prompt": 66,
+        "start_line": 613,
+        "end_line": 619
+      }
+    ]
+  },
+  {
+    "id": "SYS-13",
+    "group": "系统与权限",
+    "title": "备份与可恢复保存",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      89,
+      90,
+      93,
+      95,
+      101,
+      153,
+      158,
+      172,
+      225,
+      274,
+      275,
+      279,
+      288,
+      301,
+      316,
+      328,
+      340,
+      356,
+      466,
+      523,
+      532,
+      533
+    ],
+    "requirement": "保存账款、水单、通知标记、到货标记及账号；全量备份须能恢复全部业务模块。",
+    "acceptance": "在空环境恢复并核对记录、金额、状态及附件，不能只验证文件生成。",
+    "source_refs": [
+      {
+        "prompt": 89,
+        "start_line": 850,
+        "end_line": 853
+      },
+      {
+        "prompt": 90,
+        "start_line": 854,
+        "end_line": 857
+      },
+      {
+        "prompt": 93,
+        "start_line": 903,
+        "end_line": 906
+      },
+      {
+        "prompt": 95,
+        "start_line": 911,
+        "end_line": 914
+      },
+      {
+        "prompt": 101,
+        "start_line": 938,
+        "end_line": 941
+      },
+      {
+        "prompt": 153,
+        "start_line": 1416,
+        "end_line": 1419
+      },
+      {
+        "prompt": 158,
+        "start_line": 1439,
+        "end_line": 1442
+      },
+      {
+        "prompt": 172,
+        "start_line": 1540,
+        "end_line": 1543
+      },
+      {
+        "prompt": 225,
+        "start_line": 1944,
+        "end_line": 1947
+      },
+      {
+        "prompt": 274,
+        "start_line": 2440,
+        "end_line": 2443
+      },
+      {
+        "prompt": 275,
+        "start_line": 2444,
+        "end_line": 2447
+      },
+      {
+        "prompt": 279,
+        "start_line": 2501,
+        "end_line": 2504
+      },
+      {
+        "prompt": 288,
+        "start_line": 2550,
+        "end_line": 2553
+      },
+      {
+        "prompt": 301,
+        "start_line": 2838,
+        "end_line": 2841
+      },
+      {
+        "prompt": 316,
+        "start_line": 3045,
+        "end_line": 3048
+      },
+      {
+        "prompt": 328,
+        "start_line": 3096,
+        "end_line": 3099
+      },
+      {
+        "prompt": 340,
+        "start_line": 3208,
+        "end_line": 3211
+      },
+      {
+        "prompt": 356,
+        "start_line": 3323,
+        "end_line": 3326
+      },
+      {
+        "prompt": 466,
+        "start_line": 4104,
+        "end_line": 4107
+      },
+      {
+        "prompt": 523,
+        "start_line": 4641,
+        "end_line": 4644
+      },
+      {
+        "prompt": 532,
+        "start_line": 4743,
+        "end_line": 4750
+      },
+      {
+        "prompt": 533,
+        "start_line": 4751,
+        "end_line": 4754
+      }
+    ]
+  },
+  {
+    "id": "SYS-14",
+    "group": "系统与权限",
+    "title": "账号入口和公告不遮挡",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      420,
+      474,
+      475,
+      476
+    ],
+    "requirement": "账号入口位于页首右侧；管理员可发布滚动公告，公告和发布入口不遮挡用户名/登录按钮。",
+    "acceptance": "不同宽度下可登录、发布及关闭公告，普通员工不能改管理员公告。",
+    "source_refs": [
+      {
+        "prompt": 420,
+        "start_line": 3691,
+        "end_line": 3694
+      },
+      {
+        "prompt": 474,
+        "start_line": 4174,
+        "end_line": 4177
+      },
+      {
+        "prompt": 475,
+        "start_line": 4178,
+        "end_line": 4181
+      },
+      {
+        "prompt": 476,
+        "start_line": 4182,
+        "end_line": 4185
+      }
+    ]
+  },
+  {
+    "id": "SYS-15",
+    "group": "系统与权限",
+    "title": "最终导航归属",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      400,
+      425,
+      453,
+      456,
+      460,
+      461,
+      565
+    ],
+    "requirement": "常用区首页在工作台上方；箱单文档归操作部并排在入库管理下面；PACKING LIST归单证部。",
+    "acceptance": "导航使用最终名称和顺序，不沿用中间版本的部门归属。",
+    "source_refs": [
+      {
+        "prompt": 400,
+        "start_line": 3585,
+        "end_line": 3596
+      },
+      {
+        "prompt": 425,
+        "start_line": 3758,
+        "end_line": 3761
+      },
+      {
+        "prompt": 453,
+        "start_line": 3934,
+        "end_line": 3937
+      },
+      {
+        "prompt": 456,
+        "start_line": 3951,
+        "end_line": 3954
+      },
+      {
+        "prompt": 460,
+        "start_line": 3967,
+        "end_line": 3970
+      },
+      {
+        "prompt": 461,
+        "start_line": 3971,
+        "end_line": 3974
+      },
+      {
+        "prompt": 565,
+        "start_line": 5156,
+        "end_line": 5159
+      }
+    ]
+  },
+  {
+    "id": "SYS-16",
+    "group": "系统与权限",
+    "title": "Logo与既有品牌版式",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      397,
+      398,
+      405,
+      407,
+      409
+    ],
+    "requirement": "保留公司Logo在左上公司名旁；客户查询页美化与乱码变更已要求回退，不照搬被撤销样式。",
+    "acceptance": "Logo可加载且全站中文编码正常，查询页样式以最终保留版本和用户原图验收。",
+    "source_refs": [
+      {
+        "prompt": 397,
+        "start_line": 3540,
+        "end_line": 3544
+      },
+      {
+        "prompt": 398,
+        "start_line": 3545,
+        "end_line": 3548
+      },
+      {
+        "prompt": 405,
+        "start_line": 3613,
+        "end_line": 3616
+      },
+      {
+        "prompt": 407,
+        "start_line": 3621,
+        "end_line": 3624
+      },
+      {
+        "prompt": 409,
+        "start_line": 3631,
+        "end_line": 3634
+      }
+    ]
+  },
+  {
+    "id": "SYS-17",
+    "group": "系统与权限",
+    "title": "稳定HTTPS业务入口",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      88,
+      110,
+      136,
+      141,
+      143,
+      176,
+      373,
+      426,
+      494,
+      503,
+      520
+    ],
+    "requirement": "独立部署提供稳定HTTPS入口及证书续期；上传和复制失败应准确诊断，不归因于未验证的服务器容量。",
+    "acceptance": "真实域名无证书错误，重启后可用，微信/WhatsApp粘贴在真实浏览器验收。",
+    "source_refs": [
+      {
+        "prompt": 88,
+        "start_line": 846,
+        "end_line": 849
+      },
+      {
+        "prompt": 110,
+        "start_line": 1090,
+        "end_line": 1093
+      },
+      {
+        "prompt": 136,
+        "start_line": 1276,
+        "end_line": 1279
+      },
+      {
+        "prompt": 141,
+        "start_line": 1323,
+        "end_line": 1331
+      },
+      {
+        "prompt": 143,
+        "start_line": 1336,
+        "end_line": 1339
+      },
+      {
+        "prompt": 176,
+        "start_line": 1556,
+        "end_line": 1559
+      },
+      {
+        "prompt": 373,
+        "start_line": 3394,
+        "end_line": 3397
+      },
+      {
+        "prompt": 426,
+        "start_line": 3762,
+        "end_line": 3765
+      },
+      {
+        "prompt": 494,
+        "start_line": 4354,
+        "end_line": 4357
+      },
+      {
+        "prompt": 503,
+        "start_line": 4439,
+        "end_line": 4442
+      },
+      {
+        "prompt": 520,
+        "start_line": 4629,
+        "end_line": 4632
+      }
+    ]
+  },
+  {
+    "id": "SHIP-01",
+    "group": "出运管理",
+    "title": "运输模式与状态",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      1,
+      61,
+      423,
+      448,
+      459,
+      467,
+      471,
+      542
+    ],
+    "requirement": "区分海运、空运、EXPRESS、仓储；出运列表展示目的港并可按状态筛选；EXPRESS不得丢成AIR或SEA。",
+    "acceptance": "导入、编辑、筛选和查货端展示一致。",
+    "source_refs": [
+      {
+        "prompt": 1,
+        "start_line": 5,
+        "end_line": 8
+      },
+      {
+        "prompt": 61,
+        "start_line": 593,
+        "end_line": 596
+      },
+      {
+        "prompt": 423,
+        "start_line": 3703,
+        "end_line": 3706
+      },
+      {
+        "prompt": 448,
+        "start_line": 3851,
+        "end_line": 3854
+      },
+      {
+        "prompt": 459,
+        "start_line": 3963,
+        "end_line": 3966
+      },
+      {
+        "prompt": 467,
+        "start_line": 4108,
+        "end_line": 4114
+      },
+      {
+        "prompt": 471,
+        "start_line": 4157,
+        "end_line": 4160
+      },
+      {
+        "prompt": 542,
+        "start_line": 4906,
+        "end_line": 4909
+      }
+    ]
+  },
+  {
+    "id": "SHIP-02",
+    "group": "出运管理",
+    "title": "清关日期及成本方",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      79,
+      81
+    ],
+    "requirement": "新建/编辑出运单包含清关入库日期、清关公司、清关费用；费用信息生成或更新对应应付。",
+    "acceptance": "同一出运单重复保存不重复建应付，更改清关费准确更新原关联账单。",
+    "source_refs": [
+      {
+        "prompt": 79,
+        "start_line": 810,
+        "end_line": 813
+      },
+      {
+        "prompt": 81,
+        "start_line": 818,
+        "end_line": 821
+      }
+    ]
+  },
+  {
+    "id": "SHIP-03",
+    "group": "出运管理",
+    "title": "仓库客户优先",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      68
+    ],
+    "requirement": "客户下拉中含仓库的单位优先排列，其他单位仍可选择。",
+    "acceptance": "仓库单位前置但不改变单位身份或误改客户信息。",
+    "source_refs": [
+      {
+        "prompt": 68,
+        "start_line": 624,
+        "end_line": 627
+      }
+    ]
+  },
+  {
+    "id": "SHIP-04",
+    "group": "出运管理",
+    "title": "到港前不自动生应收",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      108,
+      150,
+      327,
+      338
+    ],
+    "requirement": "未到港的货不能自动生成应收；空运到货及应收路径也必须完整。",
+    "acceptance": "未到港批次不被自动计入新应收，到货后可生成且不漏空运；历史账不自动重建。",
+    "source_refs": [
+      {
+        "prompt": 108,
+        "start_line": 1067,
+        "end_line": 1070
+      },
+      {
+        "prompt": 150,
+        "start_line": 1404,
+        "end_line": 1407
+      },
+      {
+        "prompt": 327,
+        "start_line": 3092,
+        "end_line": 3095
+      },
+      {
+        "prompt": 338,
+        "start_line": 3200,
+        "end_line": 3203
+      }
+    ]
+  },
+  {
+    "id": "SHIP-05",
+    "group": "出运管理",
+    "title": "删除关联单据",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      53,
+      54
+    ],
+    "requirement": "删除/作废箱单文档时对应应收文档同步处理，不留下孤立应收。",
+    "acceptance": "有关款项时执行有审计的业务作废/解除分配流程，不物理抹掉原付款证据。",
+    "source_refs": [
+      {
+        "prompt": 53,
+        "start_line": 532,
+        "end_line": 535
+      },
+      {
+        "prompt": 54,
+        "start_line": 536,
+        "end_line": 539
+      }
+    ]
+  },
+  {
+    "id": "SHIP-06",
+    "group": "出运管理",
+    "title": "主箱单拆分",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      333
+    ],
+    "requirement": "同一个主箱单的客户票件可拆成独立单，原票对应的账单、收款和附件随明确关系转移。",
+    "acceptance": "拆前拆后件数、重量、费用和已收合计守恒，无重复核销。",
+    "source_refs": [
+      {
+        "prompt": 333,
+        "start_line": 3139,
+        "end_line": 3145
+      }
+    ]
+  },
+  {
+    "id": "SHIP-07",
+    "group": "出运管理",
+    "title": "空运分批到货",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      337
+    ],
+    "requirement": "同一收据号可分批到货、拆分重量与费用，不能改变原票总账单。",
+    "acceptance": "两批KG及费用相加等于原值，舍入余数有固定归属。",
+    "source_refs": [
+      {
+        "prompt": 337,
+        "start_line": 3196,
+        "end_line": 3199
+      }
+    ]
+  },
+  {
+    "id": "SHIP-08",
+    "group": "出运管理",
+    "title": "空运到货标记",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      338,
+      339,
+      340
+    ],
+    "requirement": "空运/EXPRESS票件可确认到货并持久保存；海运不提供该项空运专用确认入口。",
+    "acceptance": "刷新、换设备、替换箱单后标记仍可追溯，不误标另一批次。",
+    "source_refs": [
+      {
+        "prompt": 338,
+        "start_line": 3200,
+        "end_line": 3203
+      },
+      {
+        "prompt": 339,
+        "start_line": 3204,
+        "end_line": 3207
+      },
+      {
+        "prompt": 340,
+        "start_line": 3208,
+        "end_line": 3211
+      }
+    ]
+  },
+  {
+    "id": "PL-01",
+    "group": "箱单导入与编辑",
+    "title": "每次上传独立文档",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      6,
+      19
+    ],
+    "requirement": "每份箱单建立独立文档，并按出运单号组织对应应收；不能把其他上传内容混在同一页。",
+    "acceptance": "上传两份资料得到独立文档，能从费用单查看对应客户箱单。",
+    "source_refs": [
+      {
+        "prompt": 6,
+        "start_line": 25,
+        "end_line": 31
+      },
+      {
+        "prompt": 19,
+        "start_line": 198,
+        "end_line": 206
+      }
+    ]
+  },
+  {
+    "id": "PL-02",
+    "group": "箱单导入与编辑",
+    "title": "草稿及英文版导入",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      49,
+      50,
+      52,
+      255,
+      256,
+      258,
+      283,
+      353,
+      390,
+      403,
+      452
+    ],
+    "requirement": "支持原整份英文箱单与草稿多表；保留原行序，读取首个收据号至TOTAL上一行，提取海运重量。",
+    "acceptance": "两种实际格式逐行核对，不因合并单元格或重复收据行漏读/自添内容。",
+    "source_refs": [
+      {
+        "prompt": 49,
+        "start_line": 501,
+        "end_line": 504
+      },
+      {
+        "prompt": 50,
+        "start_line": 505,
+        "end_line": 508
+      },
+      {
+        "prompt": 52,
+        "start_line": 528,
+        "end_line": 531
+      },
+      {
+        "prompt": 255,
+        "start_line": 2293,
+        "end_line": 2296
+      },
+      {
+        "prompt": 256,
+        "start_line": 2297,
+        "end_line": 2300
+      },
+      {
+        "prompt": 258,
+        "start_line": 2305,
+        "end_line": 2314
+      },
+      {
+        "prompt": 283,
+        "start_line": 2522,
+        "end_line": 2530
+      },
+      {
+        "prompt": 353,
+        "start_line": 3308,
+        "end_line": 3311
+      },
+      {
+        "prompt": 390,
+        "start_line": 3511,
+        "end_line": 3514
+      },
+      {
+        "prompt": 403,
+        "start_line": 3605,
+        "end_line": 3608
+      },
+      {
+        "prompt": 452,
+        "start_line": 3930,
+        "end_line": 3933
+      }
+    ]
+  },
+  {
+    "id": "PL-03",
+    "group": "箱单导入与编辑",
+    "title": "原始行保留",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      390
+    ],
+    "requirement": "同一收据号多行是原始明细，不得仅按收据号合并成一行或加原文件没有的信息。",
+    "acceptance": "导入行数、顺序和原始字段可回查；汇总仅作用于业务视图。",
+    "source_refs": [
+      {
+        "prompt": 390,
+        "start_line": 3511,
+        "end_line": 3514
+      }
+    ]
+  },
+  {
+    "id": "PL-04",
+    "group": "箱单导入与编辑",
+    "title": "精确提取双币费用",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      7,
+      9,
+      10,
+      12,
+      15,
+      34,
+      45,
+      47,
+      48,
+      49
+    ],
+    "requirement": "按原列提取USD运费、NGN费用、RECEIPT NO.、MARK及CONTACT NO./CONTACT NUMBER，不漏USD部分。",
+    "acceptance": "原表与分票、应收及导出对应字段一致。",
+    "source_refs": [
+      {
+        "prompt": 7,
+        "start_line": 32,
+        "end_line": 35
+      },
+      {
+        "prompt": 9,
+        "start_line": 106,
+        "end_line": 115
+      },
+      {
+        "prompt": 10,
+        "start_line": 116,
+        "end_line": 119
+      },
+      {
+        "prompt": 12,
+        "start_line": 124,
+        "end_line": 133
+      },
+      {
+        "prompt": 15,
+        "start_line": 167,
+        "end_line": 175
+      },
+      {
+        "prompt": 34,
+        "start_line": 399,
+        "end_line": 402
+      },
+      {
+        "prompt": 45,
+        "start_line": 485,
+        "end_line": 488
+      },
+      {
+        "prompt": 47,
+        "start_line": 493,
+        "end_line": 496
+      },
+      {
+        "prompt": 48,
+        "start_line": 497,
+        "end_line": 500
+      },
+      {
+        "prompt": 49,
+        "start_line": 501,
+        "end_line": 504
+      }
+    ]
+  },
+  {
+    "id": "PL-05",
+    "group": "箱单导入与编辑",
+    "title": "ON HOLD联系方式原文",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      260,
+      342,
+      343
+    ],
+    "requirement": "原电话/备忘中的ON HOLD BY及号码保留，控货依据仅为对应货主电话字段，不因收据号或备注含字样误控货。",
+    "acceptance": "控货原文可查，普通备注不触发控货。",
+    "source_refs": [
+      {
+        "prompt": 260,
+        "start_line": 2319,
+        "end_line": 2322
+      },
+      {
+        "prompt": 342,
+        "start_line": 3216,
+        "end_line": 3219
+      },
+      {
+        "prompt": 343,
+        "start_line": 3220,
+        "end_line": 3223
+      }
+    ]
+  },
+  {
+    "id": "PL-06",
+    "group": "箱单导入与编辑",
+    "title": "目的城市来自客户子单",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      104,
+      118,
+      119,
+      120,
+      121,
+      123,
+      124,
+      194,
+      231,
+      232,
+      234,
+      235,
+      237,
+      238,
+      240,
+      244,
+      309,
+      336,
+      406
+    ],
+    "requirement": "客户目的仓以分票/子单城市和地址为准；ONNE港不能默认等同ONITSHA；P.H归PORT HARCOURT。",
+    "acceptance": "同柜ONITSHA、ABA、P.H客户各用正确仓库，未知不回落ABUJA。",
+    "source_refs": [
+      {
+        "prompt": 104,
+        "start_line": 1014,
+        "end_line": 1022
+      },
+      {
+        "prompt": 118,
+        "start_line": 1130,
+        "end_line": 1148
+      },
+      {
+        "prompt": 119,
+        "start_line": 1149,
+        "end_line": 1155
+      },
+      {
+        "prompt": 120,
+        "start_line": 1156,
+        "end_line": 1165
+      },
+      {
+        "prompt": 121,
+        "start_line": 1166,
+        "end_line": 1172
+      },
+      {
+        "prompt": 123,
+        "start_line": 1177,
+        "end_line": 1195
+      },
+      {
+        "prompt": 124,
+        "start_line": 1196,
+        "end_line": 1202
+      },
+      {
+        "prompt": 194,
+        "start_line": 1631,
+        "end_line": 1634
+      },
+      {
+        "prompt": 231,
+        "start_line": 1968,
+        "end_line": 1974
+      },
+      {
+        "prompt": 232,
+        "start_line": 1975,
+        "end_line": 1979
+      },
+      {
+        "prompt": 234,
+        "start_line": 1984,
+        "end_line": 1987
+      },
+      {
+        "prompt": 235,
+        "start_line": 1988,
+        "end_line": 1991
+      },
+      {
+        "prompt": 237,
+        "start_line": 1996,
+        "end_line": 1999
+      },
+      {
+        "prompt": 238,
+        "start_line": 2000,
+        "end_line": 2003
+      },
+      {
+        "prompt": 240,
+        "start_line": 2017,
+        "end_line": 2020
+      },
+      {
+        "prompt": 244,
+        "start_line": 2159,
+        "end_line": 2162
+      },
+      {
+        "prompt": 309,
+        "start_line": 3003,
+        "end_line": 3006
+      },
+      {
+        "prompt": 336,
+        "start_line": 3191,
+        "end_line": 3195
+      },
+      {
+        "prompt": 406,
+        "start_line": 3617,
+        "end_line": 3620
+      }
+    ]
+  },
+  {
+    "id": "PL-07",
+    "group": "箱单导入与编辑",
+    "title": "分票手工编辑",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      55,
+      56,
+      311,
+      312,
+      313,
+      341,
+      572
+    ],
+    "requirement": "分票可修改收据号、客户、品名、件数、CBM、KG、客户电话、单价、费用、目的港和地址；手改单价可保存。",
+    "acceptance": "保存后重开/换设备不回退，相关账单更新且不清空CBM/收款。",
+    "source_refs": [
+      {
+        "prompt": 55,
+        "start_line": 540,
+        "end_line": 543
+      },
+      {
+        "prompt": 56,
+        "start_line": 544,
+        "end_line": 547
+      },
+      {
+        "prompt": 311,
+        "start_line": 3016,
+        "end_line": 3023
+      },
+      {
+        "prompt": 312,
+        "start_line": 3024,
+        "end_line": 3032
+      },
+      {
+        "prompt": 313,
+        "start_line": 3033,
+        "end_line": 3036
+      },
+      {
+        "prompt": 341,
+        "start_line": 3212,
+        "end_line": 3215
+      },
+      {
+        "prompt": 572,
+        "start_line": 5196,
+        "end_line": 5200
+      }
+    ]
+  },
+  {
+    "id": "PL-08",
+    "group": "箱单导入与编辑",
+    "title": "改目的港计价联动",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      572
+    ],
+    "requirement": "出运后允许分票单独改目的港，收费标准对应更新或手工调整。",
+    "acceptance": "重新取价使用正确运输方式、币种和KG/PCS单位，不能把USD/KG当NGN/件。",
+    "source_refs": [
+      {
+        "prompt": 572,
+        "start_line": 5196,
+        "end_line": 5200
+      }
+    ]
+  },
+  {
+    "id": "PL-09",
+    "group": "箱单导入与编辑",
+    "title": "重传覆盖及收款保留",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      128,
+      155,
+      274,
+      340,
+      533
+    ],
+    "requirement": "原文件有误可重传替换；同步更新箱单与费用，保留有效付款、折扣、到货和通知记录。",
+    "acceptance": "重传前后确认关系、金额及标记对照，无同收据多行错绑。",
+    "source_refs": [
+      {
+        "prompt": 128,
+        "start_line": 1220,
+        "end_line": 1223
+      },
+      {
+        "prompt": 155,
+        "start_line": 1424,
+        "end_line": 1427
+      },
+      {
+        "prompt": 274,
+        "start_line": 2440,
+        "end_line": 2443
+      },
+      {
+        "prompt": 340,
+        "start_line": 3208,
+        "end_line": 3211
+      },
+      {
+        "prompt": 533,
+        "start_line": 4751,
+        "end_line": 4754
+      }
+    ]
+  },
+  {
+    "id": "PL-10",
+    "group": "箱单导入与编辑",
+    "title": "按原序与时段费率建档",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      258,
+      293,
+      297,
+      298
+    ],
+    "requirement": "新导入保留原排序，并按收货日期命中的海运/空运/EXPRESS价目卡计算，允许明确手工例外。",
+    "acceptance": "过期价目不冒充最新报价，人工价格不被后台自动覆盖。",
+    "source_refs": [
+      {
+        "prompt": 258,
+        "start_line": 2305,
+        "end_line": 2314
+      },
+      {
+        "prompt": 293,
+        "start_line": 2709,
+        "end_line": 2793
+      },
+      {
+        "prompt": 297,
+        "start_line": 2806,
+        "end_line": 2809
+      },
+      {
+        "prompt": 298,
+        "start_line": 2810,
+        "end_line": 2813
+      }
+    ]
+  },
+  {
+    "id": "PL-11",
+    "group": "箱单导入与编辑",
+    "title": "保留原件查看语义",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      12,
+      129,
+      132,
+      134,
+      239,
+      243,
+      244
+    ],
+    "requirement": "客户箱单现允许系统版式；原始数据及已有原文件仍可查看追溯。停止内嵌文件的历史摘要不等于允许丢原始事实。",
+    "acceptance": "系统版式与来源字段可比对；原文件缺失明确显示而非伪造下载。",
+    "source_refs": [
+      {
+        "prompt": 12,
+        "start_line": 124,
+        "end_line": 133
+      },
+      {
+        "prompt": 129,
+        "start_line": 1224,
+        "end_line": 1227
+      },
+      {
+        "prompt": 132,
+        "start_line": 1255,
+        "end_line": 1258
+      },
+      {
+        "prompt": 134,
+        "start_line": 1263,
+        "end_line": 1266
+      },
+      {
+        "prompt": 239,
+        "start_line": 2004,
+        "end_line": 2016
+      },
+      {
+        "prompt": 243,
+        "start_line": 2155,
+        "end_line": 2158
+      },
+      {
+        "prompt": 244,
+        "start_line": 2159,
+        "end_line": 2162
+      }
+    ]
+  },
+  {
+    "id": "RATE-01",
+    "group": "收费与汇率",
+    "title": "三通道收费标准",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      178,
+      185,
+      193,
+      293,
+      295,
+      296,
+      297,
+      298
+    ],
+    "requirement": "工作台有独立收费标准入口；按海运、空运、EXPRESS、普货/特货、始发地、目的港及生效期维护，保留293中广州与香港始发的区别。",
+    "acceptance": "可从入口编辑并验证新单与收费标签使用正确时段、始发地和通道。",
+    "source_refs": [
+      {
+        "prompt": 178,
+        "start_line": 1564,
+        "end_line": 1567
+      },
+      {
+        "prompt": 185,
+        "start_line": 1595,
+        "end_line": 1598
+      },
+      {
+        "prompt": 193,
+        "start_line": 1627,
+        "end_line": 1630
+      },
+      {
+        "prompt": 293,
+        "start_line": 2709,
+        "end_line": 2793
+      },
+      {
+        "prompt": 295,
+        "start_line": 2798,
+        "end_line": 2801
+      },
+      {
+        "prompt": 296,
+        "start_line": 2802,
+        "end_line": 2805
+      },
+      {
+        "prompt": 297,
+        "start_line": 2806,
+        "end_line": 2809
+      },
+      {
+        "prompt": 298,
+        "start_line": 2810,
+        "end_line": 2813
+      }
+    ]
+  },
+  {
+    "id": "RATE-02",
+    "group": "收费与汇率",
+    "title": "结算币种及汇率",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      2,
+      5,
+      15,
+      73
+    ],
+    "requirement": "应收主计价保留USD/NGN并按NGN结算；付款可用NGN、USD及后续要求的人民币，保存本笔结算汇率。",
+    "acceptance": "原币金额、币种、换算及最终NGN均可回查，不能混用公开现价。",
+    "source_refs": [
+      {
+        "prompt": 2,
+        "start_line": 9,
+        "end_line": 12
+      },
+      {
+        "prompt": 5,
+        "start_line": 21,
+        "end_line": 24
+      },
+      {
+        "prompt": 15,
+        "start_line": 167,
+        "end_line": 175
+      },
+      {
+        "prompt": 73,
+        "start_line": 767,
+        "end_line": 770
+      }
+    ]
+  },
+  {
+    "id": "RATE-03",
+    "group": "收费与汇率",
+    "title": "空运全包价",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      300,
+      307,
+      310,
+      318,
+      320,
+      325,
+      431
+    ],
+    "requirement": "空运/EXPRESS默认按USD/KG全包价计费，已含清关，展示KG及PER KG CHARGES，不重复加清关。",
+    "acceptance": "同票收费与应收一致，无海运CBM报价或第二份清关费。",
+    "source_refs": [
+      {
+        "prompt": 300,
+        "start_line": 2824,
+        "end_line": 2837
+      },
+      {
+        "prompt": 307,
+        "start_line": 2906,
+        "end_line": 2923
+      },
+      {
+        "prompt": 310,
+        "start_line": 3007,
+        "end_line": 3015
+      },
+      {
+        "prompt": 318,
+        "start_line": 3053,
+        "end_line": 3056
+      },
+      {
+        "prompt": 320,
+        "start_line": 3061,
+        "end_line": 3064
+      },
+      {
+        "prompt": 325,
+        "start_line": 3081,
+        "end_line": 3084
+      },
+      {
+        "prompt": 431,
+        "start_line": 3782,
+        "end_line": 3785
+      }
+    ]
+  },
+  {
+    "id": "RATE-04",
+    "group": "收费与汇率",
+    "title": "按件及NGN空运计价",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      568
+    ],
+    "requirement": "空运允许手工单价、NGN币种及按件PCS；按件数量不是KG。",
+    "acceptance": "NGN 2000/件×3=NGN 6000，不再乘USD汇率；编辑和改港后仍正确。",
+    "source_refs": [
+      {
+        "prompt": 568,
+        "start_line": 5168,
+        "end_line": 5171
+      }
+    ]
+  },
+  {
+    "id": "RATE-05",
+    "group": "收费与汇率",
+    "title": "收费标准通知范围",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      185,
+      207
+    ],
+    "requirement": "已知目的港只发该港报价，未知发全价目供参考；通知不自行附加仓储费预估与催提政策。",
+    "acceptance": "未知目的港显示TO BE CONFIRMED，通知不含被删除的仓储费两段。",
+    "source_refs": [
+      {
+        "prompt": 185,
+        "start_line": 1595,
+        "end_line": 1598
+      },
+      {
+        "prompt": 207,
+        "start_line": 1813,
+        "end_line": 1824
+      }
+    ]
+  },
+  {
+    "id": "DOC-01",
+    "group": "客户箱单与导出",
+    "title": "统一客户箱单版本",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      80,
+      102,
+      104,
+      157,
+      244,
+      249,
+      303
+    ],
+    "requirement": "个人箱单与PACKING LIST客户箱单使用同一有效系统版式；逐客户对应内容和地址；客户对应子文件与到货通知页删去用户指定的客户箱单列。",
+    "acceptance": "账款入口和箱单入口对同票生成一致数据；仅删除指定页面列，不删除客户箱单功能。",
+    "source_refs": [
+      {
+        "prompt": 80,
+        "start_line": 814,
+        "end_line": 817
+      },
+      {
+        "prompt": 102,
+        "start_line": 942,
+        "end_line": 1009
+      },
+      {
+        "prompt": 104,
+        "start_line": 1014,
+        "end_line": 1022
+      },
+      {
+        "prompt": 157,
+        "start_line": 1432,
+        "end_line": 1438
+      },
+      {
+        "prompt": 244,
+        "start_line": 2159,
+        "end_line": 2162
+      },
+      {
+        "prompt": 249,
+        "start_line": 2232,
+        "end_line": 2238
+      },
+      {
+        "prompt": 303,
+        "start_line": 2846,
+        "end_line": 2849
+      }
+    ]
+  },
+  {
+    "id": "DOC-02",
+    "group": "客户箱单与导出",
+    "title": "公司Logo及抬头",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      107,
+      129,
+      131,
+      134,
+      249,
+      250
+    ],
+    "requirement": "使用用户提供公司Logo和真实联系方式；PACKING LIST采用Ebrima、原话24号及参考版式。",
+    "acceptance": "无错误联系方式；字号单位和缺失原图按冲突文档核验，不擅自用代码字号替代。",
+    "source_refs": [
+      {
+        "prompt": 107,
+        "start_line": 1063,
+        "end_line": 1066
+      },
+      {
+        "prompt": 129,
+        "start_line": 1224,
+        "end_line": 1227
+      },
+      {
+        "prompt": 131,
+        "start_line": 1251,
+        "end_line": 1254
+      },
+      {
+        "prompt": 134,
+        "start_line": 1263,
+        "end_line": 1266
+      },
+      {
+        "prompt": 249,
+        "start_line": 2232,
+        "end_line": 2238
+      },
+      {
+        "prompt": 250,
+        "start_line": 2239,
+        "end_line": 2242
+      }
+    ]
+  },
+  {
+    "id": "DOC-03",
+    "group": "客户箱单与导出",
+    "title": "海空运标题和字段",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      306,
+      307,
+      310,
+      318,
+      320,
+      321,
+      326
+    ],
+    "requirement": "标题为SEA CARGO/AIR CARGO/EXPRESS；空运用WAYBILL NO.、KG、PER KG CHARGES；海运用CBM、FREIGHT/PER CBM及TOTAL FREIGHT。",
+    "acceptance": "不同运输方式导出字段、名称、字号调整及计费单位对应。",
+    "source_refs": [
+      {
+        "prompt": 306,
+        "start_line": 2901,
+        "end_line": 2905
+      },
+      {
+        "prompt": 307,
+        "start_line": 2906,
+        "end_line": 2923
+      },
+      {
+        "prompt": 310,
+        "start_line": 3007,
+        "end_line": 3015
+      },
+      {
+        "prompt": 318,
+        "start_line": 3053,
+        "end_line": 3056
+      },
+      {
+        "prompt": 320,
+        "start_line": 3061,
+        "end_line": 3064
+      },
+      {
+        "prompt": 321,
+        "start_line": 3065,
+        "end_line": 3068
+      },
+      {
+        "prompt": 326,
+        "start_line": 3085,
+        "end_line": 3091
+      }
+    ]
+  },
+  {
+    "id": "DOC-04",
+    "group": "客户箱单与导出",
+    "title": "海运清关单价",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      535
+    ],
+    "requirement": "客户箱单同时展示海运费和清关费的PER CBM收费标准。",
+    "acceptance": "运费和清关费单价、合计与原票对应，无仅显示运费单价的遗漏。",
+    "source_refs": [
+      {
+        "prompt": 535,
+        "start_line": 4815,
+        "end_line": 4818
+      }
+    ]
+  },
+  {
+    "id": "DOC-05",
+    "group": "客户箱单与导出",
+    "title": "图片直接复制",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      198,
+      249,
+      252,
+      381,
+      385,
+      386,
+      387,
+      388,
+      389,
+      391,
+      499,
+      501,
+      502,
+      515
+    ],
+    "requirement": "客户箱单、付款后个人箱单及收费标签复制为可粘贴图片；这些复制入口不转打印或自动下载。",
+    "acceptance": "真实微信与WhatsApp均能粘贴非空图；失败明确提示并保留当前页。",
+    "source_refs": [
+      {
+        "prompt": 198,
+        "start_line": 1650,
+        "end_line": 1653
+      },
+      {
+        "prompt": 249,
+        "start_line": 2232,
+        "end_line": 2238
+      },
+      {
+        "prompt": 252,
+        "start_line": 2247,
+        "end_line": 2250
+      },
+      {
+        "prompt": 381,
+        "start_line": 3475,
+        "end_line": 3478
+      },
+      {
+        "prompt": 385,
+        "start_line": 3491,
+        "end_line": 3494
+      },
+      {
+        "prompt": 386,
+        "start_line": 3495,
+        "end_line": 3498
+      },
+      {
+        "prompt": 387,
+        "start_line": 3499,
+        "end_line": 3502
+      },
+      {
+        "prompt": 388,
+        "start_line": 3503,
+        "end_line": 3506
+      },
+      {
+        "prompt": 389,
+        "start_line": 3507,
+        "end_line": 3510
+      },
+      {
+        "prompt": 391,
+        "start_line": 3515,
+        "end_line": 3518
+      },
+      {
+        "prompt": 499,
+        "start_line": 4422,
+        "end_line": 4425
+      },
+      {
+        "prompt": 501,
+        "start_line": 4430,
+        "end_line": 4434
+      },
+      {
+        "prompt": 502,
+        "start_line": 4435,
+        "end_line": 4438
+      },
+      {
+        "prompt": 515,
+        "start_line": 4566,
+        "end_line": 4569
+      }
+    ]
+  },
+  {
+    "id": "DOC-06",
+    "group": "客户箱单与导出",
+    "title": "单页清单导出选择",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      322,
+      323
+    ],
+    "requirement": "单个箱单文档提供明确的Excel、PDF、图片导出选择，与仅复制入口分开。",
+    "acceptance": "三种文件可打开且内容一致，不用复制按钮暗中触发下载。",
+    "source_refs": [
+      {
+        "prompt": 322,
+        "start_line": 3069,
+        "end_line": 3072
+      },
+      {
+        "prompt": 323,
+        "start_line": 3073,
+        "end_line": 3076
+      }
+    ]
+  },
+  {
+    "id": "DOC-07",
+    "group": "客户箱单与导出",
+    "title": "客户Excel同版式",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      261,
+      262,
+      335
+    ],
+    "requirement": "全部客户箱单Excel应有规范样式、总表和按目的港分表；客户子表与图片版一致。",
+    "acceptance": "总表与分表金额/数量勾稽，客户子表不串客户或遗漏。",
+    "source_refs": [
+      {
+        "prompt": 261,
+        "start_line": 2323,
+        "end_line": 2326
+      },
+      {
+        "prompt": 262,
+        "start_line": 2327,
+        "end_line": 2330
+      },
+      {
+        "prompt": 335,
+        "start_line": 3187,
+        "end_line": 3190
+      }
+    ]
+  },
+  {
+    "id": "DOC-08",
+    "group": "客户箱单与导出",
+    "title": "主表完整字段",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      263
+    ],
+    "requirement": "主箱单导出包含目的港、客户号码、真实柜号、汇率、总费用及收费单价。",
+    "acceptance": "逐列与所选主单/分票一致，无系统临时编号冒充柜号。",
+    "source_refs": [
+      {
+        "prompt": 263,
+        "start_line": 2331,
+        "end_line": 2334
+      }
+    ]
+  },
+  {
+    "id": "DOC-09",
+    "group": "客户箱单与导出",
+    "title": "宽表冻结与列宽",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      42,
+      44,
+      126,
+      220,
+      300,
+      302,
+      404,
+      556
+    ],
+    "requirement": "箱单文档在品名前加客户电话，冻结至客户电话；空运编辑表按其重量列要求，品名20字符宽自动换行。",
+    "acceptance": "按各页面对应规则冻结；未知截图5栏映射列入待确认，不用一套规则覆盖所有表。",
+    "source_refs": [
+      {
+        "prompt": 42,
+        "start_line": 473,
+        "end_line": 476
+      },
+      {
+        "prompt": 44,
+        "start_line": 481,
+        "end_line": 484
+      },
+      {
+        "prompt": 126,
+        "start_line": 1212,
+        "end_line": 1215
+      },
+      {
+        "prompt": 220,
+        "start_line": 1915,
+        "end_line": 1921
+      },
+      {
+        "prompt": 300,
+        "start_line": 2824,
+        "end_line": 2837
+      },
+      {
+        "prompt": 302,
+        "start_line": 2842,
+        "end_line": 2845
+      },
+      {
+        "prompt": 404,
+        "start_line": 3609,
+        "end_line": 3612
+      },
+      {
+        "prompt": 556,
+        "start_line": 5007,
+        "end_line": 5010
+      }
+    ]
+  },
+  {
+    "id": "DOC-10",
+    "group": "客户箱单与导出",
+    "title": "客户箱单合并展示",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      28,
+      335,
+      355
+    ],
+    "requirement": "同柜多票释放给同一客户可汇总为一份箱单，原票明细、收据号及件重尺仍保留。",
+    "acceptance": "汇总后总额正确，单票可追溯，通知标记覆盖同一合并组。",
+    "source_refs": [
+      {
+        "prompt": 28,
+        "start_line": 375,
+        "end_line": 378
+      },
+      {
+        "prompt": 335,
+        "start_line": 3187,
+        "end_line": 3190
+      },
+      {
+        "prompt": 355,
+        "start_line": 3316,
+        "end_line": 3322
+      }
+    ]
+  },
+  {
+    "id": "DOC-11",
+    "group": "客户箱单与导出",
+    "title": "SO/SI/DN文档范围",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      408,
+      462
+    ],
+    "requirement": "保留SO/SI/DN与库存文档需求；实现BOOKING ORDER、SHIPPING INSTRUCTION及船东S/O上传。",
+    "acceptance": "文档按确认模板导出；DN和SO模板缺失明确待核，不从范围中静默删除。",
+    "source_refs": [
+      {
+        "prompt": 408,
+        "start_line": 3625,
+        "end_line": 3630
+      },
+      {
+        "prompt": 462,
+        "start_line": 3975,
+        "end_line": 3978
+      }
+    ]
+  },
+  {
+    "id": "AR-01",
+    "group": "应收账款",
+    "title": "一票及合并组应收",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      15,
+      28,
+      62,
+      138
+    ],
+    "requirement": "单票应收=USD部分×结算汇率+NGN部分；同子单按同唛头或真实电话合并为一个应收；显示收据号作为账单编号。",
+    "acceptance": "不把双币拆成两张应收；内部ID稳定且不以显示收据号强制唯一。",
+    "source_refs": [
+      {
+        "prompt": 15,
+        "start_line": 167,
+        "end_line": 175
+      },
+      {
+        "prompt": 28,
+        "start_line": 375,
+        "end_line": 378
+      },
+      {
+        "prompt": 62,
+        "start_line": 597,
+        "end_line": 600
+      },
+      {
+        "prompt": 138,
+        "start_line": 1287,
+        "end_line": 1290
+      }
+    ]
+  },
+  {
+    "id": "AR-02",
+    "group": "应收账款",
+    "title": "子单与客户范围合计",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      19,
+      27
+    ],
+    "requirement": "按出运单形成应收文档，子单/客户视图的应收、已收、未结只统计该范围。",
+    "acceptance": "切换范围卡片与行合计一致，不混全库金额。",
+    "source_refs": [
+      {
+        "prompt": 19,
+        "start_line": 198,
+        "end_line": 206
+      },
+      {
+        "prompt": 27,
+        "start_line": 371,
+        "end_line": 374
+      }
+    ]
+  },
+  {
+    "id": "AR-03",
+    "group": "应收账款",
+    "title": "应收列与颜色",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      26,
+      32,
+      40,
+      42,
+      44,
+      149,
+      524
+    ],
+    "requirement": "应收隐藏项目/费用名称、显示目的港、件数、CBM、客户电话和收款日期；未登记付款红色，部分/信用放货黄色。",
+    "acceptance": "列宽换行及颜色对应真实状态，银行核验状态不冒充已收。",
+    "source_refs": [
+      {
+        "prompt": 26,
+        "start_line": 367,
+        "end_line": 370
+      },
+      {
+        "prompt": 32,
+        "start_line": 391,
+        "end_line": 394
+      },
+      {
+        "prompt": 40,
+        "start_line": 457,
+        "end_line": 463
+      },
+      {
+        "prompt": 42,
+        "start_line": 473,
+        "end_line": 476
+      },
+      {
+        "prompt": 44,
+        "start_line": 481,
+        "end_line": 484
+      },
+      {
+        "prompt": 149,
+        "start_line": 1400,
+        "end_line": 1403
+      },
+      {
+        "prompt": 524,
+        "start_line": 4645,
+        "end_line": 4648
+      }
+    ]
+  },
+  {
+    "id": "AR-04",
+    "group": "应收账款",
+    "title": "单据及客户可点击",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      24,
+      46,
+      77,
+      152
+    ],
+    "requirement": "收据号、客户名、逾期单号和今日核销条目可进入对应账单并保留返回上下文。",
+    "acceptance": "从任一入口能回到准确单据，不跳到全局初始页。",
+    "source_refs": [
+      {
+        "prompt": 24,
+        "start_line": 293,
+        "end_line": 296
+      },
+      {
+        "prompt": 46,
+        "start_line": 489,
+        "end_line": 492
+      },
+      {
+        "prompt": 77,
+        "start_line": 802,
+        "end_line": 805
+      },
+      {
+        "prompt": 152,
+        "start_line": 1412,
+        "end_line": 1415
+      }
+    ]
+  },
+  {
+    "id": "AR-05",
+    "group": "应收账款",
+    "title": "未付款清单",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      35,
+      41,
+      43
+    ],
+    "requirement": "应收子单有Excel/PDF及含ON CREDIT未结款的PDF清单。",
+    "acceptance": "清单合计与当前账单未结一致，信用放货不等于结清。",
+    "source_refs": [
+      {
+        "prompt": 35,
+        "start_line": 403,
+        "end_line": 406
+      },
+      {
+        "prompt": 41,
+        "start_line": 464,
+        "end_line": 472
+      },
+      {
+        "prompt": 43,
+        "start_line": 477,
+        "end_line": 480
+      }
+    ]
+  },
+  {
+    "id": "AR-06",
+    "group": "应收账款",
+    "title": "付款周期",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      63
+    ],
+    "requirement": "新账的付款周期按上传日起14天，进入逾期/即将到期视图；已有到期日迁移保留。",
+    "acceptance": "上传日、到期日和逾期判定可回查，重传不悄悄重置期限。",
+    "source_refs": [
+      {
+        "prompt": 63,
+        "start_line": 601,
+        "end_line": 604
+      }
+    ]
+  },
+  {
+    "id": "AR-07",
+    "group": "应收账款",
+    "title": "手工减免与原因",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      16,
+      17,
+      22,
+      139
+    ],
+    "requirement": "支持手工折扣/减免，原因非必填；下拉保留六类用户原文，其他可手写。",
+    "acceptance": "原应收、实收与减免分开保存，减免不伪造银行入账。",
+    "source_refs": [
+      {
+        "prompt": 16,
+        "start_line": 176,
+        "end_line": 189
+      },
+      {
+        "prompt": 17,
+        "start_line": 190,
+        "end_line": 193
+      },
+      {
+        "prompt": 22,
+        "start_line": 215,
+        "end_line": 288
+      },
+      {
+        "prompt": 139,
+        "start_line": 1291,
+        "end_line": 1312
+      }
+    ]
+  },
+  {
+    "id": "AR-08",
+    "group": "应收账款",
+    "title": "小额尾款放货",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      140
+    ],
+    "requirement": "正未结金额在NGN 5000以内可按用户规则显示Balance waived to release；公司名与日期分行。",
+    "acceptance": "此规则仅用于相应放货/减免判定，不能变成银行差额自动匹配容差。",
+    "source_refs": [
+      {
+        "prompt": 140,
+        "start_line": 1313,
+        "end_line": 1322
+      }
+    ]
+  },
+  {
+    "id": "AR-09",
+    "group": "应收账款",
+    "title": "合并付款及拆分",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      37,
+      127,
+      333,
+      393,
+      395
+    ],
+    "requirement": "输入多个收据号合并付款，支持后续拆分结算；一笔付款可分配多账单，一账单可多次付款。",
+    "acceptance": "分配总额不超有效付款，拆分前后原币、NGN、折扣与已收守恒。",
+    "source_refs": [
+      {
+        "prompt": 37,
+        "start_line": 411,
+        "end_line": 414
+      },
+      {
+        "prompt": 127,
+        "start_line": 1216,
+        "end_line": 1219
+      },
+      {
+        "prompt": 333,
+        "start_line": 3139,
+        "end_line": 3145
+      },
+      {
+        "prompt": 393,
+        "start_line": 3523,
+        "end_line": 3526
+      },
+      {
+        "prompt": 395,
+        "start_line": 3531,
+        "end_line": 3535
+      }
+    ]
+  },
+  {
+    "id": "AR-10",
+    "group": "应收账款",
+    "title": "编辑箱单同步应收",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      56,
+      62,
+      128,
+      312,
+      341
+    ],
+    "requirement": "修改票件价格、数量或目的港后更新关联应收；保留已收、折扣及历史计价依据。",
+    "acceptance": "两边金额一致，未知汇率/收费不能自动补造。",
+    "source_refs": [
+      {
+        "prompt": 56,
+        "start_line": 544,
+        "end_line": 547
+      },
+      {
+        "prompt": 62,
+        "start_line": 597,
+        "end_line": 600
+      },
+      {
+        "prompt": 128,
+        "start_line": 1220,
+        "end_line": 1223
+      },
+      {
+        "prompt": 312,
+        "start_line": 3024,
+        "end_line": 3032
+      },
+      {
+        "prompt": 341,
+        "start_line": 3212,
+        "end_line": 3215
+      }
+    ]
+  },
+  {
+    "id": "AP-01",
+    "group": "应付账款",
+    "title": "柜号显示和手工付款",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      97,
+      98
+    ],
+    "requirement": "应付显示实际柜号，支持独立手输付款金额。",
+    "acceptance": "非强制按收据号付款，原始付款流水及余额可查。",
+    "source_refs": [
+      {
+        "prompt": 97,
+        "start_line": 919,
+        "end_line": 922
+      },
+      {
+        "prompt": 98,
+        "start_line": 923,
+        "end_line": 926
+      }
+    ]
+  },
+  {
+    "id": "AP-02",
+    "group": "应付账款",
+    "title": "按账单方周期结算",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      99,
+      525,
+      526
+    ],
+    "requirement": "按账单方/周期结算，总账单-已付款=余额；批量或自定义付款不强制匹配单号分配。",
+    "acceptance": "整期付款不指定单柜仍可完成，页面文案为按帐单方结算。",
+    "source_refs": [
+      {
+        "prompt": 99,
+        "start_line": 927,
+        "end_line": 933
+      },
+      {
+        "prompt": 525,
+        "start_line": 4649,
+        "end_line": 4652
+      },
+      {
+        "prompt": 526,
+        "start_line": 4653,
+        "end_line": 4656
+      }
+    ]
+  },
+  {
+    "id": "AP-03",
+    "group": "应付账款",
+    "title": "应付导出与权限",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      99,
+      116
+    ],
+    "requirement": "应付可导出PDF和Excel，查看与编辑付款权限分离。",
+    "acceptance": "只读用户可按权限查看但不能付款，导出数据与账单一致。",
+    "source_refs": [
+      {
+        "prompt": 99,
+        "start_line": 927,
+        "end_line": 933
+      },
+      {
+        "prompt": 116,
+        "start_line": 1122,
+        "end_line": 1125
+      }
+    ]
+  },
+  {
+    "id": "PARTY-01",
+    "group": "客户与仓库资料",
+    "title": "单位分类",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      33,
+      51
+    ],
+    "requirement": "客户/供应商分类保留清关代理、报关行、拖车行、订舱代理、目的港杂费、WAYBILL费用、其他及五仓类型。",
+    "acceptance": "原分类无损迁移，非客户成本方仍可选作应付对象。",
+    "source_refs": [
+      {
+        "prompt": 33,
+        "start_line": 395,
+        "end_line": 398
+      },
+      {
+        "prompt": 51,
+        "start_line": 509,
+        "end_line": 527
+      }
+    ]
+  },
+  {
+    "id": "PARTY-02",
+    "group": "客户与仓库资料",
+    "title": "电话来源与存档",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      34,
+      47,
+      48,
+      96,
+      180,
+      184,
+      281,
+      286,
+      331,
+      332
+    ],
+    "requirement": "从原CONTACT列提取并保存客户电话，可手工补录；不按同名跨单推断号码。",
+    "acceptance": "每个电话号码可查来源或手工录入者，空白保持空白。",
+    "source_refs": [
+      {
+        "prompt": 34,
+        "start_line": 399,
+        "end_line": 402
+      },
+      {
+        "prompt": 47,
+        "start_line": 493,
+        "end_line": 496
+      },
+      {
+        "prompt": 48,
+        "start_line": 497,
+        "end_line": 500
+      },
+      {
+        "prompt": 96,
+        "start_line": 915,
+        "end_line": 918
+      },
+      {
+        "prompt": 180,
+        "start_line": 1572,
+        "end_line": 1575
+      },
+      {
+        "prompt": 184,
+        "start_line": 1588,
+        "end_line": 1594
+      },
+      {
+        "prompt": 281,
+        "start_line": 2509,
+        "end_line": 2517
+      },
+      {
+        "prompt": 286,
+        "start_line": 2542,
+        "end_line": 2545
+      },
+      {
+        "prompt": 331,
+        "start_line": 3131,
+        "end_line": 3134
+      },
+      {
+        "prompt": 332,
+        "start_line": 3135,
+        "end_line": 3138
+      }
+    ]
+  },
+  {
+    "id": "PARTY-03",
+    "group": "客户与仓库资料",
+    "title": "五仓与空运仓配置",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      118,
+      119,
+      120,
+      121,
+      123,
+      124,
+      299,
+      304,
+      309,
+      558
+    ],
+    "requirement": "维护中国仓、尼日利亚各目的仓和LAGOS空运仓的地址及联系人，以用户最新资料覆盖旧版本。",
+    "acceptance": "通知/箱单取本票实际目的仓，实际联系方式存受控配置不写公开文档。",
+    "source_refs": [
+      {
+        "prompt": 118,
+        "start_line": 1130,
+        "end_line": 1148
+      },
+      {
+        "prompt": 119,
+        "start_line": 1149,
+        "end_line": 1155
+      },
+      {
+        "prompt": 120,
+        "start_line": 1156,
+        "end_line": 1165
+      },
+      {
+        "prompt": 121,
+        "start_line": 1166,
+        "end_line": 1172
+      },
+      {
+        "prompt": 123,
+        "start_line": 1177,
+        "end_line": 1195
+      },
+      {
+        "prompt": 124,
+        "start_line": 1196,
+        "end_line": 1202
+      },
+      {
+        "prompt": 299,
+        "start_line": 2814,
+        "end_line": 2823
+      },
+      {
+        "prompt": 304,
+        "start_line": 2850,
+        "end_line": 2862
+      },
+      {
+        "prompt": 309,
+        "start_line": 3003,
+        "end_line": 3006
+      },
+      {
+        "prompt": 558,
+        "start_line": 5015,
+        "end_line": 5092
+      }
+    ]
+  },
+  {
+    "id": "PARTY-04",
+    "group": "客户与仓库资料",
+    "title": "WhatsApp联系入口",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      122
+    ],
+    "requirement": "点击客户号码可进入对应WhatsApp聊天，客户名与电话号码使用明确记录。",
+    "acceptance": "打开正确号码的聊天而不自动发送消息。",
+    "source_refs": [
+      {
+        "prompt": 122,
+        "start_line": 1173,
+        "end_line": 1176
+      }
+    ]
+  },
+  {
+    "id": "PAY-01",
+    "group": "水单与核销",
+    "title": "文件或优先粘贴",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      8,
+      16,
+      20,
+      21,
+      83,
+      85
+    ],
+    "requirement": "应收可上传/粘贴水单，优先便捷粘贴，查看原上传文件及已审核凭证。",
+    "acceptance": "原文件可回读，金额识别结果与原图分开，支持失败后手填。",
+    "source_refs": [
+      {
+        "prompt": 8,
+        "start_line": 36,
+        "end_line": 105
+      },
+      {
+        "prompt": 16,
+        "start_line": 176,
+        "end_line": 189
+      },
+      {
+        "prompt": 20,
+        "start_line": 207,
+        "end_line": 210
+      },
+      {
+        "prompt": 21,
+        "start_line": 211,
+        "end_line": 214
+      },
+      {
+        "prompt": 83,
+        "start_line": 826,
+        "end_line": 829
+      },
+      {
+        "prompt": 85,
+        "start_line": 834,
+        "end_line": 837
+      }
+    ]
+  },
+  {
+    "id": "PAY-02",
+    "group": "水单与核销",
+    "title": "批量图片与审核",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      285,
+      393,
+      395,
+      491
+    ],
+    "requirement": "单票及合并付款均可一次粘贴/上传多张水单，逐张或批量审核核销。",
+    "acceptance": "第三张及以后不丢；待审核不提前计已收。",
+    "source_refs": [
+      {
+        "prompt": 285,
+        "start_line": 2538,
+        "end_line": 2541
+      },
+      {
+        "prompt": 393,
+        "start_line": 3523,
+        "end_line": 3526
+      },
+      {
+        "prompt": 395,
+        "start_line": 3531,
+        "end_line": 3535
+      },
+      {
+        "prompt": 491,
+        "start_line": 4341,
+        "end_line": 4345
+      }
+    ]
+  },
+  {
+    "id": "PAY-03",
+    "group": "水单与核销",
+    "title": "金额和付款日识别",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      20,
+      21,
+      85,
+      395
+    ],
+    "requirement": "自动提取付款金额与付款日期作为候选，未识别或有歧义时允许人工填写。",
+    "acceptance": "不以余额/手续费/发图日替代交易金额或日期，不凭空补缺失信息。",
+    "source_refs": [
+      {
+        "prompt": 20,
+        "start_line": 207,
+        "end_line": 210
+      },
+      {
+        "prompt": 21,
+        "start_line": 211,
+        "end_line": 214
+      },
+      {
+        "prompt": 85,
+        "start_line": 834,
+        "end_line": 837
+      },
+      {
+        "prompt": 395,
+        "start_line": 3531,
+        "end_line": 3535
+      }
+    ]
+  },
+  {
+    "id": "PAY-04",
+    "group": "水单与核销",
+    "title": "待审立即可见",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      270,
+      272,
+      273,
+      394
+    ],
+    "requirement": "添加待审水单后立即出现审核流程，打开新账单对话框清空上一笔输入缓存。",
+    "acceptance": "无需刷新即可审核，新表单不串上一笔图片。",
+    "source_refs": [
+      {
+        "prompt": 270,
+        "start_line": 2364,
+        "end_line": 2367
+      },
+      {
+        "prompt": 272,
+        "start_line": 2429,
+        "end_line": 2432
+      },
+      {
+        "prompt": 273,
+        "start_line": 2433,
+        "end_line": 2439
+      },
+      {
+        "prompt": 394,
+        "start_line": 3527,
+        "end_line": 3530
+      }
+    ]
+  },
+  {
+    "id": "PAY-05",
+    "group": "水单与核销",
+    "title": "审核成功与持久化",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      137,
+      144,
+      153,
+      154,
+      274,
+      275,
+      276,
+      279,
+      288,
+      290,
+      291,
+      328,
+      466,
+      523
+    ],
+    "requirement": "审核通过必须以服务端提交为准，付款和水单不因刷新/同步恢复未付或消失。",
+    "acceptance": "重启、换设备和并发后仍能取到同一审核记录。",
+    "source_refs": [
+      {
+        "prompt": 137,
+        "start_line": 1280,
+        "end_line": 1286
+      },
+      {
+        "prompt": 144,
+        "start_line": 1340,
+        "end_line": 1346
+      },
+      {
+        "prompt": 153,
+        "start_line": 1416,
+        "end_line": 1419
+      },
+      {
+        "prompt": 154,
+        "start_line": 1420,
+        "end_line": 1423
+      },
+      {
+        "prompt": 274,
+        "start_line": 2440,
+        "end_line": 2443
+      },
+      {
+        "prompt": 275,
+        "start_line": 2444,
+        "end_line": 2447
+      },
+      {
+        "prompt": 276,
+        "start_line": 2448,
+        "end_line": 2451
+      },
+      {
+        "prompt": 279,
+        "start_line": 2501,
+        "end_line": 2504
+      },
+      {
+        "prompt": 288,
+        "start_line": 2550,
+        "end_line": 2553
+      },
+      {
+        "prompt": 290,
+        "start_line": 2588,
+        "end_line": 2648
+      },
+      {
+        "prompt": 291,
+        "start_line": 2649,
+        "end_line": 2704
+      },
+      {
+        "prompt": 328,
+        "start_line": 3096,
+        "end_line": 3099
+      },
+      {
+        "prompt": 466,
+        "start_line": 4104,
+        "end_line": 4107
+      },
+      {
+        "prompt": 523,
+        "start_line": 4641,
+        "end_line": 4644
+      }
+    ]
+  },
+  {
+    "id": "PAY-06",
+    "group": "水单与核销",
+    "title": "核销单独身份",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      536,
+      537,
+      544
+    ],
+    "requirement": "同一笔不能重复计入；同日同金额同付款人的不同真实交易也不能被内容去重吞掉。",
+    "acceptance": "以稳定来源及交易身份去重，两个合法同额付款都保留。",
+    "source_refs": [
+      {
+        "prompt": 536,
+        "start_line": 4819,
+        "end_line": 4822
+      },
+      {
+        "prompt": 537,
+        "start_line": 4823,
+        "end_line": 4826
+      },
+      {
+        "prompt": 544,
+        "start_line": 4914,
+        "end_line": 4917
+      }
+    ]
+  },
+  {
+    "id": "PAY-07",
+    "group": "水单与核销",
+    "title": "合并审核后操作保留",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      468,
+      469,
+      484,
+      485
+    ],
+    "requirement": "合并审核后对话框保留，将所选单的放货指令合成一份，可复制文字并切换信用放货。",
+    "acceptance": "不要求回列表重找；跨柜分段并清楚列每票，文字和图片都在。",
+    "source_refs": [
+      {
+        "prompt": 468,
+        "start_line": 4115,
+        "end_line": 4118
+      },
+      {
+        "prompt": 469,
+        "start_line": 4119,
+        "end_line": 4127
+      },
+      {
+        "prompt": 484,
+        "start_line": 4223,
+        "end_line": 4226
+      },
+      {
+        "prompt": 485,
+        "start_line": 4227,
+        "end_line": 4230
+      }
+    ]
+  },
+  {
+    "id": "PAY-08",
+    "group": "水单与核销",
+    "title": "今日核销定义",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      75,
+      76,
+      77,
+      277,
+      492
+    ],
+    "requirement": "今日核销按当天审核通过时间统计，不限原付款日期；显示收据号及客户，替代银行/渠道列。",
+    "acceptance": "昨日付款今日审核列入今天，记录只计一次并可跳转账单。",
+    "source_refs": [
+      {
+        "prompt": 75,
+        "start_line": 794,
+        "end_line": 797
+      },
+      {
+        "prompt": 76,
+        "start_line": 798,
+        "end_line": 801
+      },
+      {
+        "prompt": 77,
+        "start_line": 802,
+        "end_line": 805
+      },
+      {
+        "prompt": 277,
+        "start_line": 2452,
+        "end_line": 2455
+      },
+      {
+        "prompt": 492,
+        "start_line": 4346,
+        "end_line": 4349
+      }
+    ]
+  },
+  {
+    "id": "PAY-09",
+    "group": "水单与核销",
+    "title": "核销Excel导出",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      277,
+      473
+    ],
+    "requirement": "今日核销可导出Excel，金额和日期为有效类型，业务统计按其作用范围汇总。",
+    "acceptance": "文件可打开，无NaN，导出条数与合计对应筛选条件。",
+    "source_refs": [
+      {
+        "prompt": 277,
+        "start_line": 2452,
+        "end_line": 2455
+      },
+      {
+        "prompt": 473,
+        "start_line": 4170,
+        "end_line": 4173
+      }
+    ]
+  },
+  {
+    "id": "REL-01",
+    "group": "放货与控货",
+    "title": "文字及图片放货指令",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      8,
+      16,
+      18,
+      19,
+      70,
+      71,
+      376,
+      485,
+      486,
+      541,
+      543
+    ],
+    "requirement": "付款审核后生成放货指令；随时可查看文字和图片，英文文本按最新模板及粗体要求。",
+    "acceptance": "已核销账单始终能找到关联指令，重要字段粗体不丢。",
+    "source_refs": [
+      {
+        "prompt": 8,
+        "start_line": 36,
+        "end_line": 105
+      },
+      {
+        "prompt": 16,
+        "start_line": 176,
+        "end_line": 189
+      },
+      {
+        "prompt": 18,
+        "start_line": 194,
+        "end_line": 197
+      },
+      {
+        "prompt": 19,
+        "start_line": 198,
+        "end_line": 206
+      },
+      {
+        "prompt": 70,
+        "start_line": 632,
+        "end_line": 701
+      },
+      {
+        "prompt": 71,
+        "start_line": 702,
+        "end_line": 762
+      },
+      {
+        "prompt": 376,
+        "start_line": 3449,
+        "end_line": 3455
+      },
+      {
+        "prompt": 485,
+        "start_line": 4227,
+        "end_line": 4230
+      },
+      {
+        "prompt": 486,
+        "start_line": 4231,
+        "end_line": 4291
+      },
+      {
+        "prompt": 541,
+        "start_line": 4839,
+        "end_line": 4905
+      },
+      {
+        "prompt": 543,
+        "start_line": 4910,
+        "end_line": 4913
+      }
+    ]
+  },
+  {
+    "id": "REL-02",
+    "group": "放货与控货",
+    "title": "信用放货",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      22,
+      25,
+      87,
+      538,
+      539,
+      540,
+      541
+    ],
+    "requirement": "所有适用货物均可RELEASE ON CREDIT，记录承诺付款日期、担保人、已付款金额/日期。",
+    "acceptance": "保留欠款与承诺；一键登记后原弹窗可继续复制。",
+    "source_refs": [
+      {
+        "prompt": 22,
+        "start_line": 215,
+        "end_line": 288
+      },
+      {
+        "prompt": 25,
+        "start_line": 297,
+        "end_line": 366
+      },
+      {
+        "prompt": 87,
+        "start_line": 842,
+        "end_line": 845
+      },
+      {
+        "prompt": 538,
+        "start_line": 4827,
+        "end_line": 4830
+      },
+      {
+        "prompt": 539,
+        "start_line": 4831,
+        "end_line": 4834
+      },
+      {
+        "prompt": 540,
+        "start_line": 4835,
+        "end_line": 4838
+      },
+      {
+        "prompt": 541,
+        "start_line": 4839,
+        "end_line": 4905
+      }
+    ]
+  },
+  {
+    "id": "REL-03",
+    "group": "放货与控货",
+    "title": "实际仓库标题",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      22,
+      70,
+      71,
+      194,
+      284,
+      336,
+      541
+    ],
+    "requirement": "放货标题带📦并按本票实际仓库及最新模板城市拼写；旧ONNE/ONTISHA标签保留来源别名，不把所有货统一成该仓。",
+    "acceptance": "港口别名仅影响适用标签，不把多目的仓的ONNE港强制归成一个城市。",
+    "source_refs": [
+      {
+        "prompt": 22,
+        "start_line": 215,
+        "end_line": 288
+      },
+      {
+        "prompt": 70,
+        "start_line": 632,
+        "end_line": 701
+      },
+      {
+        "prompt": 71,
+        "start_line": 702,
+        "end_line": 762
+      },
+      {
+        "prompt": 194,
+        "start_line": 1631,
+        "end_line": 1634
+      },
+      {
+        "prompt": 284,
+        "start_line": 2531,
+        "end_line": 2537
+      },
+      {
+        "prompt": 336,
+        "start_line": 3191,
+        "end_line": 3195
+      },
+      {
+        "prompt": 541,
+        "start_line": 4839,
+        "end_line": 4905
+      }
+    ]
+  },
+  {
+    "id": "REL-04",
+    "group": "放货与控货",
+    "title": "解除控货资料",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      342,
+      343,
+      355,
+      450
+    ],
+    "requirement": "REMOVE ON HOLD对话框收取原因、日期、新客户电话并允许调整汇率；解除后号码同步列表及箱单。",
+    "acceptance": "同柜多票可统一解控，费用汇总和货物明细分区。",
+    "source_refs": [
+      {
+        "prompt": 342,
+        "start_line": 3216,
+        "end_line": 3219
+      },
+      {
+        "prompt": 343,
+        "start_line": 3220,
+        "end_line": 3223
+      },
+      {
+        "prompt": 355,
+        "start_line": 3316,
+        "end_line": 3322
+      },
+      {
+        "prompt": 450,
+        "start_line": 3859,
+        "end_line": 3873
+      }
+    ]
+  },
+  {
+    "id": "REL-05",
+    "group": "放货与控货",
+    "title": "控货专用到货通知",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      345,
+      560
+    ],
+    "requirement": "控货未解除用指定中文通知；解除后恢复普通到货通知，解除控货不是实际放货。",
+    "acceptance": "仅解控不点亮实际提货，后续入口为到货指令。",
+    "source_refs": [
+      {
+        "prompt": 345,
+        "start_line": 3228,
+        "end_line": 3245
+      },
+      {
+        "prompt": 560,
+        "start_line": 5097,
+        "end_line": 5103
+      }
+    ]
+  },
+  {
+    "id": "REL-06",
+    "group": "放货与控货",
+    "title": "解控日期及取消文案",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      450,
+      464,
+      465,
+      560
+    ],
+    "requirement": "正常解控后箱单使用REMOVED ON HOLD DATED ON；取消后按用户原文显示REMOVED ON CREDIT，并留撤销记录。",
+    "acceptance": "显示文案与业务状态分开，不能把REMOVED ON CREDIT误认定新增信用放货。",
+    "source_refs": [
+      {
+        "prompt": 450,
+        "start_line": 3859,
+        "end_line": 3873
+      },
+      {
+        "prompt": 464,
+        "start_line": 4020,
+        "end_line": 4096
+      },
+      {
+        "prompt": 465,
+        "start_line": 4097,
+        "end_line": 4103
+      },
+      {
+        "prompt": 560,
+        "start_line": 5097,
+        "end_line": 5103
+      }
+    ]
+  },
+  {
+    "id": "REL-07",
+    "group": "放货与控货",
+    "title": "主管撤销解控",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      464,
+      465
+    ],
+    "requirement": "误操作REMOVE ON HOLD仅部门主管/授权管理者可撤销，普通员工无权限。",
+    "acceptance": "前端与直接API均执行相同限制，撤销不抹掉历史。",
+    "source_refs": [
+      {
+        "prompt": 464,
+        "start_line": 4020,
+        "end_line": 4096
+      },
+      {
+        "prompt": 465,
+        "start_line": 4097,
+        "end_line": 4103
+      }
+    ]
+  },
+  {
+    "id": "REL-08",
+    "group": "放货与控货",
+    "title": "目的港实际放货独立",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      421,
+      454,
+      487,
+      488,
+      550,
+      551
+    ],
+    "requirement": "中国出库、目的港清关入库、核销、发出指令与实际放货分开；实际放货由目的港仓核实。",
+    "acceptance": "入库、整柜节点同步、核销和解控均不自动生成实际放货节点。",
+    "source_refs": [
+      {
+        "prompt": 421,
+        "start_line": 3695,
+        "end_line": 3698
+      },
+      {
+        "prompt": 454,
+        "start_line": 3938,
+        "end_line": 3946
+      },
+      {
+        "prompt": 487,
+        "start_line": 4292,
+        "end_line": 4298
+      },
+      {
+        "prompt": 488,
+        "start_line": 4299,
+        "end_line": 4302
+      },
+      {
+        "prompt": 550,
+        "start_line": 4943,
+        "end_line": 4946
+      },
+      {
+        "prompt": 551,
+        "start_line": 4947,
+        "end_line": 4950
+      }
+    ]
+  },
+  {
+    "id": "NOT-01",
+    "group": "通知与标记",
+    "title": "最新到货通知骨架",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      102,
+      111,
+      308,
+      510,
+      511,
+      512
+    ],
+    "requirement": "到货通知采用第510条最新骨架并应用到所有普通到货入口，按运输方式替换相应件重尺和收费字段。",
+    "acceptance": "各入口模板版本一致；控货专用通知仍按REL-05分支。",
+    "source_refs": [
+      {
+        "prompt": 102,
+        "start_line": 942,
+        "end_line": 1009
+      },
+      {
+        "prompt": 111,
+        "start_line": 1094,
+        "end_line": 1105
+      },
+      {
+        "prompt": 308,
+        "start_line": 2924,
+        "end_line": 3002
+      },
+      {
+        "prompt": 510,
+        "start_line": 4467,
+        "end_line": 4549
+      },
+      {
+        "prompt": 511,
+        "start_line": 4550,
+        "end_line": 4553
+      },
+      {
+        "prompt": 512,
+        "start_line": 4554,
+        "end_line": 4557
+      }
+    ]
+  },
+  {
+    "id": "NOT-02",
+    "group": "通知与标记",
+    "title": "最新收货通知及CBM",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      179,
+      202,
+      203,
+      207,
+      527
+    ],
+    "requirement": "收货通知按第527条，含CBM；按要求清除客户英文通知中的不应出现中文，未知目的港TO BE CONFIRMED。",
+    "acceptance": "保留Goods、件数、KG、CBM、目的地及联系信息，不含已删除仓储提示。",
+    "source_refs": [
+      {
+        "prompt": 179,
+        "start_line": 1568,
+        "end_line": 1571
+      },
+      {
+        "prompt": 202,
+        "start_line": 1669,
+        "end_line": 1672
+      },
+      {
+        "prompt": 203,
+        "start_line": 1673,
+        "end_line": 1765
+      },
+      {
+        "prompt": 207,
+        "start_line": 1813,
+        "end_line": 1824
+      },
+      {
+        "prompt": 527,
+        "start_line": 4657,
+        "end_line": 4726
+      }
+    ]
+  },
+  {
+    "id": "NOT-03",
+    "group": "通知与标记",
+    "title": "装柜通知取代列表放货",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      552
+    ],
+    "requirement": "箱单文档票件操作入口改为装柜通知，使用用户指定英文模板；其他放货业务入口仍存在。",
+    "acceptance": "箱单文档该入口不误发放货指令，装柜日期取真实装柜资料。",
+    "source_refs": [
+      {
+        "prompt": 552,
+        "start_line": 4951,
+        "end_line": 4994
+      }
+    ]
+  },
+  {
+    "id": "NOT-04",
+    "group": "通知与标记",
+    "title": "通知标记永久保存",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      117,
+      155,
+      428,
+      516,
+      532,
+      533
+    ],
+    "requirement": "收货和到货通知复制后标记可回查；合并箱单任一票复制后，同组关联票均显示已通知。",
+    "acceptance": "刷新、重传、并发后标记存在，包含时间、操作者与撤销历史。",
+    "source_refs": [
+      {
+        "prompt": 117,
+        "start_line": 1126,
+        "end_line": 1129
+      },
+      {
+        "prompt": 155,
+        "start_line": 1424,
+        "end_line": 1427
+      },
+      {
+        "prompt": 428,
+        "start_line": 3770,
+        "end_line": 3773
+      },
+      {
+        "prompt": 516,
+        "start_line": 4570,
+        "end_line": 4573
+      },
+      {
+        "prompt": 532,
+        "start_line": 4743,
+        "end_line": 4750
+      },
+      {
+        "prompt": 533,
+        "start_line": 4751,
+        "end_line": 4754
+      }
+    ]
+  },
+  {
+    "id": "NOT-05",
+    "group": "通知与标记",
+    "title": "装柜黄底与撤销",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      553,
+      554,
+      555,
+      557
+    ],
+    "requirement": "复制装柜通知后，该票及合并关联票整行黄底黑字，并有📦已通知装柜✕可撤销。",
+    "acceptance": "撤销作用到正确组，记录保持，不影响付款或实际放货。",
+    "source_refs": [
+      {
+        "prompt": 553,
+        "start_line": 4995,
+        "end_line": 4998
+      },
+      {
+        "prompt": 554,
+        "start_line": 4999,
+        "end_line": 5002
+      },
+      {
+        "prompt": 555,
+        "start_line": 5003,
+        "end_line": 5006
+      },
+      {
+        "prompt": 557,
+        "start_line": 5011,
+        "end_line": 5014
+      }
+    ]
+  },
+  {
+    "id": "NOT-06",
+    "group": "通知与标记",
+    "title": "复制当日文本日期",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      559
+    ],
+    "requirement": "收货、到货、放货、REMOVE ON HOLD四类文本复制日期使用本次生成当日；不改原始数据库事件日期。",
+    "acceptance": "跨日复制显示新日期，银行交易日期/入库原始时间不被更新。",
+    "source_refs": [
+      {
+        "prompt": 559,
+        "start_line": 5093,
+        "end_line": 5096
+      }
+    ]
+  },
+  {
+    "id": "NOT-07",
+    "group": "通知与标记",
+    "title": "人工发送习惯",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      168,
+      169,
+      171
+    ],
+    "requirement": "保留一键生成并由人员在微信/WhatsApp手工发送的路径，点击复制不能声称客户实际已收到。",
+    "acceptance": "复制状态和真实投递状态分别保存，不自动群发或自动建客户群。",
+    "source_refs": [
+      {
+        "prompt": 168,
+        "start_line": 1524,
+        "end_line": 1527
+      },
+      {
+        "prompt": 169,
+        "start_line": 1528,
+        "end_line": 1531
+      },
+      {
+        "prompt": 171,
+        "start_line": 1536,
+        "end_line": 1539
+      }
+    ]
+  },
+  {
+    "id": "NOT-08",
+    "group": "通知与标记",
+    "title": "文字复制可用",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      174,
+      271,
+      484,
+      485,
+      541
+    ],
+    "requirement": "到货、收货与放货的文字复制保持可用；文字版与图片版并存，不能因一次修复只剩图片。",
+    "acceptance": "真实微信和WhatsApp粘贴保留完整文本与格式，无法复制时可选中原文且不虚报成功。",
+    "source_refs": [
+      {
+        "prompt": 174,
+        "start_line": 1548,
+        "end_line": 1551
+      },
+      {
+        "prompt": 271,
+        "start_line": 2368,
+        "end_line": 2428
+      },
+      {
+        "prompt": 484,
+        "start_line": 4223,
+        "end_line": 4226
+      },
+      {
+        "prompt": 485,
+        "start_line": 4227,
+        "end_line": 4230
+      },
+      {
+        "prompt": 541,
+        "start_line": 4839,
+        "end_line": 4905
+      }
+    ]
+  },
+  {
+    "id": "WH-01",
+    "group": "仓储入出库",
+    "title": "统一入库管理",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      165,
+      292,
+      396,
+      402,
+      408,
+      413,
+      415
+    ],
+    "requirement": "支持在本系统登记原始入库、编辑、库存查询及出库，并保留外部F6数据导入。",
+    "acceptance": "可从入库记录追溯至装柜、出运及目的港阶段。",
+    "source_refs": [
+      {
+        "prompt": 165,
+        "start_line": 1467,
+        "end_line": 1470
+      },
+      {
+        "prompt": 292,
+        "start_line": 2705,
+        "end_line": 2708
+      },
+      {
+        "prompt": 396,
+        "start_line": 3536,
+        "end_line": 3539
+      },
+      {
+        "prompt": 402,
+        "start_line": 3601,
+        "end_line": 3604
+      },
+      {
+        "prompt": 408,
+        "start_line": 3625,
+        "end_line": 3630
+      },
+      {
+        "prompt": 413,
+        "start_line": 3647,
+        "end_line": 3650
+      },
+      {
+        "prompt": 415,
+        "start_line": 3670,
+        "end_line": 3674
+      }
+    ]
+  },
+  {
+    "id": "WH-02",
+    "group": "仓储入出库",
+    "title": "基础资料与运输类型",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      410,
+      423,
+      427,
+      436,
+      448,
+      489
+    ],
+    "requirement": "展示/输入收据号、日期、客户、客户号码、供应商号码、品名、目的港及四种运输类型；工作号统一称收据号。",
+    "acceptance": "收据号和客户可进入详情，内部兼容旧字段但全站展示用新名。",
+    "source_refs": [
+      {
+        "prompt": 410,
+        "start_line": 3635,
+        "end_line": 3638
+      },
+      {
+        "prompt": 423,
+        "start_line": 3703,
+        "end_line": 3706
+      },
+      {
+        "prompt": 427,
+        "start_line": 3766,
+        "end_line": 3769
+      },
+      {
+        "prompt": 436,
+        "start_line": 3802,
+        "end_line": 3806
+      },
+      {
+        "prompt": 448,
+        "start_line": 3851,
+        "end_line": 3854
+      },
+      {
+        "prompt": 489,
+        "start_line": 4303,
+        "end_line": 4311
+      }
+    ]
+  },
+  {
+    "id": "WH-03",
+    "group": "仓储入出库",
+    "title": "库房与手工输入",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      184,
+      190,
+      196,
+      414,
+      436
+    ],
+    "requirement": "库房可选义乌仓、佛山仓、办公室仓并允许手写；缺失信息在原字段补录，不另加错误列。",
+    "acceptance": "库房与地理目的港分开，人工输入准确持久保存。",
+    "source_refs": [
+      {
+        "prompt": 184,
+        "start_line": 1588,
+        "end_line": 1594
+      },
+      {
+        "prompt": 190,
+        "start_line": 1615,
+        "end_line": 1618
+      },
+      {
+        "prompt": 196,
+        "start_line": 1639,
+        "end_line": 1642
+      },
+      {
+        "prompt": 414,
+        "start_line": 3651,
+        "end_line": 3669
+      },
+      {
+        "prompt": 436,
+        "start_line": 3802,
+        "end_line": 3806
+      }
+    ]
+  },
+  {
+    "id": "WH-04",
+    "group": "仓储入出库",
+    "title": "多规格明细与体积",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      412,
+      427,
+      479
+    ],
+    "requirement": "一票支持至少20种长宽高、件数与重量规格；自动计算每行体积及合计。",
+    "acceptance": "单位明确，逐行和总件数/CBM/KG可复核，修改后合计准确。",
+    "source_refs": [
+      {
+        "prompt": 412,
+        "start_line": 3643,
+        "end_line": 3646
+      },
+      {
+        "prompt": 427,
+        "start_line": 3766,
+        "end_line": 3769
+      },
+      {
+        "prompt": 479,
+        "start_line": 4194,
+        "end_line": 4197
+      }
+    ]
+  },
+  {
+    "id": "WH-05",
+    "group": "仓储入出库",
+    "title": "货堆照片粘贴",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      480
+    ],
+    "requirement": "入库底部可粘贴货堆照片并与该票绑定。",
+    "acceptance": "多张照片保存后可看，原文件与来源不可被其他票覆盖。",
+    "source_refs": [
+      {
+        "prompt": 480,
+        "start_line": 4198,
+        "end_line": 4201
+      }
+    ]
+  },
+  {
+    "id": "WH-06",
+    "group": "仓储入出库",
+    "title": "收据号唯一与断号预警",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      182,
+      429
+    ],
+    "requirement": "仓储收据号顺序管理、不重复；同序列中间缺号给出预警。",
+    "acceptance": "新建重复被拒；作废号仍占用，明细续行或分批不是新收据号重复。",
+    "source_refs": [
+      {
+        "prompt": 182,
+        "start_line": 1580,
+        "end_line": 1583
+      },
+      {
+        "prompt": 429,
+        "start_line": 3774,
+        "end_line": 3777
+      }
+    ]
+  },
+  {
+    "id": "WH-07",
+    "group": "仓储入出库",
+    "title": "快递单号关联查货",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      430
+    ],
+    "requirement": "保存快递公司/快递单号与入库收据号关系，客户可凭快递单号查对应货物。",
+    "acceptance": "查货仍执行客户验证；一号多票有明确选择，不导出其他客户全单。",
+    "source_refs": [
+      {
+        "prompt": 430,
+        "start_line": 3778,
+        "end_line": 3781
+      }
+    ]
+  },
+  {
+    "id": "WH-08",
+    "group": "仓储入出库",
+    "title": "正报选项",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      433,
+      435
+    ],
+    "requirement": "正报下拉为要/不要；新建表单初始要，未选择/旧数据空值按不要呈现，保留原始未知来源。",
+    "acceptance": "新建默认、清空提交与旧值显示均有明确可测试规则。",
+    "source_refs": [
+      {
+        "prompt": 433,
+        "start_line": 3790,
+        "end_line": 3793
+      },
+      {
+        "prompt": 435,
+        "start_line": 3798,
+        "end_line": 3801
+      }
+    ]
+  },
+  {
+    "id": "WH-09",
+    "group": "仓储入出库",
+    "title": "筛选框与焦点",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      434,
+      436,
+      438,
+      439,
+      467,
+      471
+    ],
+    "requirement": "收据号、客户、品名、目的港筛选为手写输入；库房等用下拉；EXPRESS可搜索；输入不丢焦点。",
+    "acceptance": "连续输入中文/英文不被重绘抢走，筛选正确且可清空。",
+    "source_refs": [
+      {
+        "prompt": 434,
+        "start_line": 3794,
+        "end_line": 3797
+      },
+      {
+        "prompt": 436,
+        "start_line": 3802,
+        "end_line": 3806
+      },
+      {
+        "prompt": 438,
+        "start_line": 3811,
+        "end_line": 3814
+      },
+      {
+        "prompt": 439,
+        "start_line": 3815,
+        "end_line": 3818
+      },
+      {
+        "prompt": 467,
+        "start_line": 4108,
+        "end_line": 4114
+      },
+      {
+        "prompt": 471,
+        "start_line": 4157,
+        "end_line": 4160
+      }
+    ]
+  },
+  {
+    "id": "WH-10",
+    "group": "仓储入出库",
+    "title": "列宽与冻结",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      417,
+      437,
+      441,
+      442,
+      443,
+      445,
+      447,
+      493
+    ],
+    "requirement": "列宽可自由拖动，冻结运输方式/收据号/客户/客户号码；操作列紧接客户号码，提供中部/浮动横滚。",
+    "acceptance": "拖列宽与横滚同时可用，列宽按操作人保存。",
+    "source_refs": [
+      {
+        "prompt": 417,
+        "start_line": 3679,
+        "end_line": 3682
+      },
+      {
+        "prompt": 437,
+        "start_line": 3807,
+        "end_line": 3810
+      },
+      {
+        "prompt": 441,
+        "start_line": 3823,
+        "end_line": 3826
+      },
+      {
+        "prompt": 442,
+        "start_line": 3827,
+        "end_line": 3830
+      },
+      {
+        "prompt": 443,
+        "start_line": 3831,
+        "end_line": 3834
+      },
+      {
+        "prompt": 445,
+        "start_line": 3839,
+        "end_line": 3842
+      },
+      {
+        "prompt": 447,
+        "start_line": 3847,
+        "end_line": 3850
+      },
+      {
+        "prompt": 493,
+        "start_line": 4350,
+        "end_line": 4353
+      }
+    ]
+  },
+  {
+    "id": "WH-11",
+    "group": "仓储入出库",
+    "title": "可见及全量Excel",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      440,
+      449
+    ],
+    "requirement": "明确区分导出可见数据与所有数据；字体、间距、字号和布局按用户原模板。",
+    "acceptance": "筛选导出与全量行数分别准确；模板缺失时不能宣称版式验收通过。",
+    "source_refs": [
+      {
+        "prompt": 440,
+        "start_line": 3819,
+        "end_line": 3822
+      },
+      {
+        "prompt": 449,
+        "start_line": 3855,
+        "end_line": 3858
+      }
+    ]
+  },
+  {
+    "id": "WH-12",
+    "group": "仓储入出库",
+    "title": "入库行操作限制",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      467,
+      472,
+      496,
+      497,
+      501,
+      532
+    ],
+    "requirement": "入库行保留收货通知、收费标签、普通标签，并按后续532增加不含费用确认标签；移除行内出库键。",
+    "acceptance": "普通标签可打印、收费/确认标签可复制；出库通过明确批次/详情流程，不误触。",
+    "source_refs": [
+      {
+        "prompt": 467,
+        "start_line": 4108,
+        "end_line": 4114
+      },
+      {
+        "prompt": 472,
+        "start_line": 4161,
+        "end_line": 4169
+      },
+      {
+        "prompt": 496,
+        "start_line": 4410,
+        "end_line": 4413
+      },
+      {
+        "prompt": 497,
+        "start_line": 4414,
+        "end_line": 4417
+      },
+      {
+        "prompt": 501,
+        "start_line": 4430,
+        "end_line": 4434
+      },
+      {
+        "prompt": 532,
+        "start_line": 4743,
+        "end_line": 4750
+      }
+    ]
+  },
+  {
+    "id": "WH-13",
+    "group": "仓储入出库",
+    "title": "中国仓分批出库",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      482,
+      487,
+      488
+    ],
+    "requirement": "海运拼柜、整柜及空运拼货可多票出库，同收据号允许分批，记录批次件数/CBM/KG、柜号/航班和经手人。",
+    "acceptance": "出库不超剩余，分批合计与库存一致，目的港实际放货仍为空。",
+    "source_refs": [
+      {
+        "prompt": 482,
+        "start_line": 4209,
+        "end_line": 4218
+      },
+      {
+        "prompt": 487,
+        "start_line": 4292,
+        "end_line": 4298
+      },
+      {
+        "prompt": 488,
+        "start_line": 4299,
+        "end_line": 4302
+      }
+    ]
+  },
+  {
+    "id": "WH-14",
+    "group": "仓储入出库",
+    "title": "改包压包与作废",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      481
+    ],
+    "requirement": "支持改包/压包后的新旧资料留痕、合并来源、作废及恢复管理，并共享变更。",
+    "acceptance": "不复用作废收据号，不丢原规格与数量变化依据。",
+    "source_refs": [
+      {
+        "prompt": 481,
+        "start_line": 4202,
+        "end_line": 4208
+      }
+    ]
+  },
+  {
+    "id": "WH-15",
+    "group": "仓储入出库",
+    "title": "复核与主管权限",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      481,
+      483
+    ],
+    "requirement": "变更后有待复核状态、复核入口和主管确认记录。",
+    "acceptance": "普通录入人员不能冒充主管完成复核，版本改变后旧确认被拒。",
+    "source_refs": [
+      {
+        "prompt": 481,
+        "start_line": 4202,
+        "end_line": 4208
+      },
+      {
+        "prompt": 483,
+        "start_line": 4219,
+        "end_line": 4222
+      }
+    ]
+  },
+  {
+    "id": "WH-16",
+    "group": "仓储入出库",
+    "title": "入库即节点",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      416,
+      419,
+      421
+    ],
+    "requirement": "入库成功即形成该票入库节点，未装柜的在库货也能查到；不得提前显示已放货。",
+    "acceptance": "仅入库的一票可查询且放货节点为空。",
+    "source_refs": [
+      {
+        "prompt": 416,
+        "start_line": 3675,
+        "end_line": 3678
+      },
+      {
+        "prompt": 419,
+        "start_line": 3687,
+        "end_line": 3690
+      },
+      {
+        "prompt": 421,
+        "start_line": 3695,
+        "end_line": 3698
+      }
+    ]
+  },
+  {
+    "id": "WH-17",
+    "group": "仓储入出库",
+    "title": "中文品名自动译英文",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      478
+    ],
+    "requirement": "在入库登记输入中文品名后自动生成对应英文候选，原始中文与人工确认版本同时保留。",
+    "acceptance": "翻译可见且可修改，失败保留原文待补，不凭空增加货品属性或资质。",
+    "source_refs": [
+      {
+        "prompt": 478,
+        "start_line": 4190,
+        "end_line": 4193
+      }
+    ]
+  },
+  {
+    "id": "F6-01",
+    "group": "F6数据与标签",
+    "title": "F6原Excel字段映射",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      178,
+      180,
+      181,
+      183,
+      184,
+      189,
+      190,
+      286
+    ],
+    "requirement": "导入外部F6 Excel，目的地取目的港/目的地(MBL)，库房取库房名称，电话依原数据，乱码可诊断。",
+    "acceptance": "核对原行字段，无号码不从其他同名客户补入。",
+    "source_refs": [
+      {
+        "prompt": 178,
+        "start_line": 1564,
+        "end_line": 1567
+      },
+      {
+        "prompt": 180,
+        "start_line": 1572,
+        "end_line": 1575
+      },
+      {
+        "prompt": 181,
+        "start_line": 1576,
+        "end_line": 1579
+      },
+      {
+        "prompt": 183,
+        "start_line": 1584,
+        "end_line": 1587
+      },
+      {
+        "prompt": 184,
+        "start_line": 1588,
+        "end_line": 1594
+      },
+      {
+        "prompt": 189,
+        "start_line": 1611,
+        "end_line": 1614
+      },
+      {
+        "prompt": 190,
+        "start_line": 1615,
+        "end_line": 1618
+      },
+      {
+        "prompt": 286,
+        "start_line": 2542,
+        "end_line": 2545
+      }
+    ]
+  },
+  {
+    "id": "F6-02",
+    "group": "F6数据与标签",
+    "title": "查询排序及文字复制",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      245,
+      281
+    ],
+    "requirement": "F6记录支持单号模糊查询、按收据号/日期/目的港/客户排序，并能选择复制列表文字。",
+    "acceptance": "排序、搜索和复制不改变原始数据及当前选择。",
+    "source_refs": [
+      {
+        "prompt": 245,
+        "start_line": 2163,
+        "end_line": 2169
+      },
+      {
+        "prompt": 281,
+        "start_line": 2509,
+        "end_line": 2517
+      }
+    ]
+  },
+  {
+    "id": "F6-03",
+    "group": "F6数据与标签",
+    "title": "前一日来货分析",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      472,
+      473
+    ],
+    "requirement": "F6页面名为F6仓储数据分析，展示入库前一天数据和各港口占比，操作条在来货分析上方。",
+    "acceptance": "可选日期、导出Excel并汇总重量、CBM、件数，数据来自入库台账而非任意推算。",
+    "source_refs": [
+      {
+        "prompt": 472,
+        "start_line": 4161,
+        "end_line": 4169
+      },
+      {
+        "prompt": 473,
+        "start_line": 4170,
+        "end_line": 4173
+      }
+    ]
+  },
+  {
+    "id": "F6-04",
+    "group": "F6数据与标签",
+    "title": "业务员业绩下钻",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      411,
+      458
+    ],
+    "requirement": "业务员分析排除MC开头内部录单人，业务员可点击查看对应收据号明细。",
+    "acceptance": "统计和下钻同范围，原业务员信息不被删除。",
+    "source_refs": [
+      {
+        "prompt": 411,
+        "start_line": 3639,
+        "end_line": 3642
+      },
+      {
+        "prompt": 458,
+        "start_line": 3959,
+        "end_line": 3962
+      }
+    ]
+  },
+  {
+    "id": "LABEL-01",
+    "group": "F6数据与标签",
+    "title": "竖版标签尺寸",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      197,
+      198,
+      200,
+      204,
+      206
+    ],
+    "requirement": "标签纸使用竖版76×130mm；带费标签复制，不带费用普通标签可打印。",
+    "acceptance": "实际打印尺寸和截图可核验，无自动打印/下载替代复制。",
+    "source_refs": [
+      {
+        "prompt": 197,
+        "start_line": 1643,
+        "end_line": 1649
+      },
+      {
+        "prompt": 198,
+        "start_line": 1650,
+        "end_line": 1653
+      },
+      {
+        "prompt": 200,
+        "start_line": 1658,
+        "end_line": 1664
+      },
+      {
+        "prompt": 204,
+        "start_line": 1766,
+        "end_line": 1769
+      },
+      {
+        "prompt": 206,
+        "start_line": 1809,
+        "end_line": 1812
+      }
+    ]
+  },
+  {
+    "id": "LABEL-02",
+    "group": "F6数据与标签",
+    "title": "标签抬头与字段",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      208,
+      209,
+      210,
+      211,
+      212,
+      213,
+      214,
+      215,
+      216,
+      217,
+      218,
+      219,
+      221,
+      224
+    ],
+    "requirement": "最终标题CARGO RECEIPT，保留用户后续要求的MC STAR LOGISTICS/广州铭鑫思达；条码在日期上方，CBM另行，目的港单行。",
+    "acceptance": "无重叠，页眉页尾留白，冒号后值加粗；具体截图指向字号列为待核，不凭空设计。",
+    "source_refs": [
+      {
+        "prompt": 208,
+        "start_line": 1825,
+        "end_line": 1852
+      },
+      {
+        "prompt": 209,
+        "start_line": 1853,
+        "end_line": 1868
+      },
+      {
+        "prompt": 210,
+        "start_line": 1869,
+        "end_line": 1872
+      },
+      {
+        "prompt": 211,
+        "start_line": 1873,
+        "end_line": 1876
+      },
+      {
+        "prompt": 212,
+        "start_line": 1877,
+        "end_line": 1883
+      },
+      {
+        "prompt": 213,
+        "start_line": 1884,
+        "end_line": 1887
+      },
+      {
+        "prompt": 214,
+        "start_line": 1888,
+        "end_line": 1891
+      },
+      {
+        "prompt": 215,
+        "start_line": 1892,
+        "end_line": 1895
+      },
+      {
+        "prompt": 216,
+        "start_line": 1896,
+        "end_line": 1902
+      },
+      {
+        "prompt": 217,
+        "start_line": 1903,
+        "end_line": 1906
+      },
+      {
+        "prompt": 218,
+        "start_line": 1907,
+        "end_line": 1910
+      },
+      {
+        "prompt": 219,
+        "start_line": 1911,
+        "end_line": 1914
+      },
+      {
+        "prompt": 221,
+        "start_line": 1922,
+        "end_line": 1925
+      },
+      {
+        "prompt": 224,
+        "start_line": 1934,
+        "end_line": 1943
+      }
+    ]
+  },
+  {
+    "id": "LABEL-03",
+    "group": "F6数据与标签",
+    "title": "费用文字与千分位",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      208,
+      209,
+      222,
+      223,
+      253
+    ],
+    "requirement": "费用采用Freight/Clearing，千分位；最终Total cost按第253条USD金额+NGN金额排列。",
+    "acceptance": "不把223取消恢复的中间版当最终版，数值与原票/价目对应。",
+    "source_refs": [
+      {
+        "prompt": 208,
+        "start_line": 1825,
+        "end_line": 1852
+      },
+      {
+        "prompt": 209,
+        "start_line": 1853,
+        "end_line": 1868
+      },
+      {
+        "prompt": 222,
+        "start_line": 1926,
+        "end_line": 1929
+      },
+      {
+        "prompt": 223,
+        "start_line": 1930,
+        "end_line": 1933
+      },
+      {
+        "prompt": 253,
+        "start_line": 2251,
+        "end_line": 2254
+      }
+    ]
+  },
+  {
+    "id": "LABEL-04",
+    "group": "F6数据与标签",
+    "title": "运输变化与确认标签",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      531,
+      532
+    ],
+    "requirement": "修改运输方式后收费标签切换正确通道；旁边有相同格式但不含费用的确认标签。",
+    "acceptance": "SEA/AIR/EXPRESS来回修改后价格与标题正确，确认标签无费用内容。",
+    "source_refs": [
+      {
+        "prompt": 531,
+        "start_line": 4739,
+        "end_line": 4742
+      },
+      {
+        "prompt": 532,
+        "start_line": 4743,
+        "end_line": 4750
+      }
+    ]
+  },
+  {
+    "id": "LABEL-05",
+    "group": "F6数据与标签",
+    "title": "删除多余仓储展示",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      192,
+      207
+    ],
+    "requirement": "用户指定的F6列表/通知不展示仓储费预估和不需要的状态/催提段落。",
+    "acceptance": "这些删除不等于取消所有物流状态，按所指页面范围执行。",
+    "source_refs": [
+      {
+        "prompt": 192,
+        "start_line": 1623,
+        "end_line": 1626
+      },
+      {
+        "prompt": 207,
+        "start_line": 1813,
+        "end_line": 1824
+      }
+    ]
+  },
+  {
+    "id": "MBL-01",
+    "group": "MBL与单证",
+    "title": "MBL数据建设",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      462
+    ],
+    "requirement": "录入MBL所需资料，导出BOOKING ORDER及SHIPPING INSTRUCTION，上传查看船东S/O。",
+    "acceptance": "同一MBL与出运单关联稳定，导出字段按实际模板核对。",
+    "source_refs": [
+      {
+        "prompt": 462,
+        "start_line": 3975,
+        "end_line": 3978
+      }
+    ]
+  },
+  {
+    "id": "TRACK-01",
+    "group": "节点与客户查货",
+    "title": "按票件的全流程透明",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      133,
+      135,
+      264,
+      545
+    ],
+    "requirement": "按客户票件记录箱单制作/发送、运输、清关到货、付款核实、费用核实/指令及实物放货照片等协作事实。",
+    "acceptance": "可以查看每票的经手人和事件，不能只做整柜节点或凭状态补拍照证据。",
+    "source_refs": [
+      {
+        "prompt": 133,
+        "start_line": 1259,
+        "end_line": 1262
+      },
+      {
+        "prompt": 135,
+        "start_line": 1267,
+        "end_line": 1275
+      },
+      {
+        "prompt": 264,
+        "start_line": 2335,
+        "end_line": 2338
+      },
+      {
+        "prompt": 545,
+        "start_line": 4918,
+        "end_line": 4921
+      }
+    ]
+  },
+  {
+    "id": "TRACK-02",
+    "group": "节点与客户查货",
+    "title": "双语客户跟踪",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      375,
+      377,
+      382,
+      383,
+      384
+    ],
+    "requirement": "客户入口按收据号实时查货，中英文可切换，客户跟踪页面与API不返回品名列。",
+    "acceptance": "页面切换不影响查询，未授权字段在接口中也不存在。",
+    "source_refs": [
+      {
+        "prompt": 375,
+        "start_line": 3445,
+        "end_line": 3448
+      },
+      {
+        "prompt": 377,
+        "start_line": 3456,
+        "end_line": 3459
+      },
+      {
+        "prompt": 382,
+        "start_line": 3479,
+        "end_line": 3482
+      },
+      {
+        "prompt": 383,
+        "start_line": 3483,
+        "end_line": 3486
+      },
+      {
+        "prompt": 384,
+        "start_line": 3487,
+        "end_line": 3490
+      }
+    ]
+  },
+  {
+    "id": "TRACK-03",
+    "group": "节点与客户查货",
+    "title": "后四位验证与柜号限制",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      401,
+      547,
+      549
+    ],
+    "requirement": "按收据号查询需验证收货人手机号后四位；输入柜号不能导出全部客户票件。",
+    "acceptance": "错误尾号无货物明细，其他接口不得旁路获取全柜联系人和费用。",
+    "source_refs": [
+      {
+        "prompt": 401,
+        "start_line": 3597,
+        "end_line": 3600
+      },
+      {
+        "prompt": 547,
+        "start_line": 4931,
+        "end_line": 4934
+      },
+      {
+        "prompt": 549,
+        "start_line": 4939,
+        "end_line": 4942
+      }
+    ]
+  },
+  {
+    "id": "TRACK-04",
+    "group": "节点与客户查货",
+    "title": "入库及快递查货",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      419,
+      430
+    ],
+    "requirement": "未装柜的入库记录可查，快递号可以映射到相应收据号，查询范围仍需验证。",
+    "acceptance": "不依赖先创建出运单才有入库信息，禁止跨客户批量泄漏。",
+    "source_refs": [
+      {
+        "prompt": 419,
+        "start_line": 3687,
+        "end_line": 3690
+      },
+      {
+        "prompt": 430,
+        "start_line": 3778,
+        "end_line": 3781
+      }
+    ]
+  },
+  {
+    "id": "TRACK-05",
+    "group": "节点与客户查货",
+    "title": "主分单同步与独立调整",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      545,
+      546,
+      548,
+      550,
+      551
+    ],
+    "requirement": "出运管理与箱单文档共用主单节点；分单跟随主单，并允许按实际事件独立调整；放货节点除外。",
+    "acceptance": "主单更新到跟随分票，分票修改不影响主/其他分票，不能自动点亮放货。",
+    "source_refs": [
+      {
+        "prompt": 545,
+        "start_line": 4918,
+        "end_line": 4921
+      },
+      {
+        "prompt": 546,
+        "start_line": 4922,
+        "end_line": 4930
+      },
+      {
+        "prompt": 548,
+        "start_line": 4935,
+        "end_line": 4938
+      },
+      {
+        "prompt": 550,
+        "start_line": 4943,
+        "end_line": 4946
+      },
+      {
+        "prompt": 551,
+        "start_line": 4947,
+        "end_line": 4950
+      }
+    ]
+  },
+  {
+    "id": "TRACK-06",
+    "group": "节点与客户查货",
+    "title": "海空运时间线",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      422,
+      459,
+      467,
+      471
+    ],
+    "requirement": "海运、空运和EXPRESS使用正确运输环节与标识，不能把EXPRESS隐藏或显示成海运。",
+    "acceptance": "同一记录内部和客户端运输类型一致。",
+    "source_refs": [
+      {
+        "prompt": 422,
+        "start_line": 3699,
+        "end_line": 3702
+      },
+      {
+        "prompt": 459,
+        "start_line": 3963,
+        "end_line": 3966
+      },
+      {
+        "prompt": 467,
+        "start_line": 4108,
+        "end_line": 4114
+      },
+      {
+        "prompt": 471,
+        "start_line": 4157,
+        "end_line": 4160
+      }
+    ]
+  },
+  {
+    "id": "TRACK-07",
+    "group": "节点与客户查货",
+    "title": "暂停通用开放节点API",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      265,
+      266
+    ],
+    "requirement": "泛化对外节点API已被用户暂缓；新系统只实现明确授权的客户查货及内部受权接口。",
+    "acceptance": "不存在默认无鉴权导出全量节点/票件的通用入口。",
+    "source_refs": [
+      {
+        "prompt": 265,
+        "start_line": 2339,
+        "end_line": 2342
+      },
+      {
+        "prompt": 266,
+        "start_line": 2343,
+        "end_line": 2346
+      }
+    ]
+  },
+  {
+    "id": "PORTAL-01",
+    "group": "客户注册入口",
+    "title": "手机号注册及自助资料",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      518
+    ],
+    "requirement": "客户以其联系号码注册后可查询并导出该号码下的入库与箱单；号码归属必须实际验证。",
+    "acceptance": "不能直接把验证码回给匿名申请人冒领号码，客户只能读取自己资料。",
+    "source_refs": [
+      {
+        "prompt": 518,
+        "start_line": 4583,
+        "end_line": 4586
+      }
+    ]
+  },
+  {
+    "id": "PORTAL-02",
+    "group": "客户注册入口",
+    "title": "导出正式客户箱单",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      303,
+      381,
+      386,
+      518
+    ],
+    "requirement": "客户入口展示对应入库及可用客户箱单，不以无图像导出的HTML表格冒充图片功能。",
+    "acceptance": "客户可取得本人箱单，格式与内部已确认客户箱单一致；外发复制要求可验。",
+    "source_refs": [
+      {
+        "prompt": 303,
+        "start_line": 2846,
+        "end_line": 2849
+      },
+      {
+        "prompt": 381,
+        "start_line": 3475,
+        "end_line": 3478
+      },
+      {
+        "prompt": 386,
+        "start_line": 3495,
+        "end_line": 3498
+      },
+      {
+        "prompt": 518,
+        "start_line": 4583,
+        "end_line": 4586
+      }
+    ]
+  },
+  {
+    "id": "HOME-01",
+    "group": "首页与多语言",
+    "title": "打开先欢迎页",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      509,
+      517,
+      558,
+      561,
+      562,
+      570,
+      573,
+      574,
+      577
+    ],
+    "requirement": "电脑和手机打开网址均先显示公司介绍欢迎页，未登录不先弹登录；进入系统后能返回首页。",
+    "acceptance": "新浏览器、有效/失效会话和慢API下均先见首页，进入系统再处理登录。",
+    "source_refs": [
+      {
+        "prompt": 509,
+        "start_line": 4463,
+        "end_line": 4466
+      },
+      {
+        "prompt": 517,
+        "start_line": 4574,
+        "end_line": 4582
+      },
+      {
+        "prompt": 558,
+        "start_line": 5015,
+        "end_line": 5092
+      },
+      {
+        "prompt": 561,
+        "start_line": 5104,
+        "end_line": 5107
+      },
+      {
+        "prompt": 562,
+        "start_line": 5108,
+        "end_line": 5111
+      },
+      {
+        "prompt": 570,
+        "start_line": 5188,
+        "end_line": 5191
+      },
+      {
+        "prompt": 573,
+        "start_line": 5201,
+        "end_line": 5204
+      },
+      {
+        "prompt": 574,
+        "start_line": 5205,
+        "end_line": 5208
+      },
+      {
+        "prompt": 577,
+        "start_line": 5232,
+        "end_line": 5235
+      }
+    ]
+  },
+  {
+    "id": "HOME-02",
+    "group": "首页与多语言",
+    "title": "三语首页",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      558
+    ],
+    "requirement": "欢迎页中英法三语可切换，内部系统继续按SYS-02中英文要求。",
+    "acceptance": "三语按钮和业务介绍可用，缺少经确认翻译保持待审不发布编造事实。",
+    "source_refs": [
+      {
+        "prompt": 558,
+        "start_line": 5015,
+        "end_line": 5092
+      }
+    ]
+  },
+  {
+    "id": "HOME-03",
+    "group": "首页与多语言",
+    "title": "六板块及EXPRESS位置",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      558,
+      567,
+      569
+    ],
+    "requirement": "六个服务板块桌面每行3个共2行等间距，EXPRESS在首排与AIR CARGO并排，使用用户给定2–3天实时报价文案。",
+    "acceptance": "不恢复已取消的旧卡片；不额外创造固定船期、7–10天或自营资质承诺。",
+    "source_refs": [
+      {
+        "prompt": 558,
+        "start_line": 5015,
+        "end_line": 5092
+      },
+      {
+        "prompt": 567,
+        "start_line": 5164,
+        "end_line": 5167
+      },
+      {
+        "prompt": 569,
+        "start_line": 5172,
+        "end_line": 5187
+      }
+    ]
+  },
+  {
+    "id": "HOME-04",
+    "group": "首页与多语言",
+    "title": "中国及尼日利亚仓资料",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      558
+    ],
+    "requirement": "按用户最新资料展示广州佛山仓、义乌仓及尼日利亚仓/办公室，保留地址、收货时间及联系角色。",
+    "acceptance": "真实地址与电话来自受控配置和用户记录，而非AI生成。",
+    "source_refs": [
+      {
+        "prompt": 558,
+        "start_line": 5015,
+        "end_line": 5092
+      }
+    ]
+  },
+  {
+    "id": "HOME-05",
+    "group": "首页与多语言",
+    "title": "宣传图完整及位置",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      563,
+      566,
+      569,
+      571
+    ],
+    "requirement": "中间使用指定大图，小图/指定照片位于客户自助查询下方最底部，并留间距。",
+    "acceptance": "两张真实资源均可加载；缺原图不能用空白或生成图当完成。",
+    "source_refs": [
+      {
+        "prompt": 563,
+        "start_line": 5112,
+        "end_line": 5115
+      },
+      {
+        "prompt": 566,
+        "start_line": 5160,
+        "end_line": 5163
+      },
+      {
+        "prompt": 569,
+        "start_line": 5172,
+        "end_line": 5187
+      },
+      {
+        "prompt": 571,
+        "start_line": 5192,
+        "end_line": 5195
+      }
+    ]
+  },
+  {
+    "id": "HOME-06",
+    "group": "首页与多语言",
+    "title": "客户查询卡片及热线",
+    "status": "mandatory",
+    "source_kind": "mcstar_user_prompt",
+    "prompts": [
+      569,
+      575,
+      576
+    ],
+    "requirement": "客户自助查询标题大号粗体，卡片可链接查询端；显示Hotline和Openshipment及对应联系人。",
+    "acceptance": "整卡/明确链接均可操作，号码按用户原资料，无错误人员对应。",
+    "source_refs": [
+      {
+        "prompt": 569,
+        "start_line": 5172,
+        "end_line": 5187
+      },
+      {
+        "prompt": 575,
+        "start_line": 5209,
+        "end_line": 5227
+      },
+      {
+        "prompt": 576,
+        "start_line": 5228,
+        "end_line": 5231
+      }
+    ]
+  },
+  {
+    "id": "INT-01",
+    "group": "110集成",
+    "title": "统一项目及需求优先",
+    "status": "mandatory",
+    "source_kind": "current_user_command",
+    "prompts": [],
+    "requirement": "本轮用户已选择在D:\\work\\110-ALL建立统一项目，以MCSTAR源码参考、用户提示词为业务约束，集成110并回填数据。",
+    "acceptance": "每项业务实现和验收可追到本清单；旧项目只读保留。",
+    "source_refs": []
+  },
+  {
+    "id": "INT-02",
+    "group": "110集成",
+    "title": "110证据链复用",
+    "status": "mandatory",
+    "source_kind": "current_user_command",
+    "prompts": [],
+    "requirement": "复用110消息来源、原图、识别候选、银行流水、人工复核和Excel归档能力，适配统一权限与数据库。",
+    "acceptance": "网页和授权小号处理同一凭证版本，原图及银行行可追溯。",
+    "source_refs": []
+  },
+  {
+    "id": "INT-03",
+    "group": "110集成",
+    "title": "到账核验与核销分开",
+    "status": "mandatory",
+    "source_kind": "current_user_command",
+    "prompts": [],
+    "requirement": "110银行核验不自动等于MCSTAR账单已核销；增加付款-账单分配关系，保留人工审核路径。",
+    "acceptance": "无明确账单归属不能自动分摊或放货；银行占用只归一笔付款。",
+    "source_refs": []
+  },
+  {
+    "id": "INT-04",
+    "group": "110集成",
+    "title": "不扩大特殊差额规则",
+    "status": "mandatory",
+    "source_kind": "current_user_command",
+    "prompts": [],
+    "requirement": "110特定NGN差额、历史人工确认、日期推算按来源和适用范围约束，不成为全局容差。",
+    "acceptance": "未授权差额进入待核；MCSTAR5000尾款放货规则不参与银行匹配。",
+    "source_refs": []
+  },
+  {
+    "id": "INT-05",
+    "group": "110集成",
+    "title": "沿用发送与采集边界",
+    "status": "mandatory",
+    "source_kind": "current_user_command",
+    "prompts": [],
+    "requirement": "保留主号只读、授权操作人员、选群/启用起点、投递幂等及暂停配置；迁移不能重发历史消息。",
+    "acceptance": "历史及不确定发送留痕但不自动重放，验证前不启用新外发。",
+    "source_refs": []
+  },
+  {
+    "id": "INT-06",
+    "group": "110集成",
+    "title": "旧人工核销不冒充银行验证",
+    "status": "mandatory",
+    "source_kind": "current_user_command",
+    "prompts": [],
+    "requirement": "MCSTAR已有审核按历史状态迁入；110确认的银行证据单独关联，未核验保持未知。",
+    "acceptance": "恢复后已收/欠款不被自动回滚或升级为银行已验证。",
+    "source_refs": []
+  },
+  {
+    "id": "MIG-01",
+    "group": "数据回填与交付",
+    "title": "全域回填和来源核对",
+    "status": "mandatory",
+    "source_kind": "current_user_command",
+    "prompts": [],
+    "requirement": "从确认快照导入客户、运单、原始票件、账单、水单、台账、标记、回收站与设置，并迁移110正式库和附件。",
+    "acceptance": "逐项有来源/目标ID映射、计数及差额报告，缺失模块明确待补。",
+    "source_refs": []
+  },
+  {
+    "id": "MIG-02",
+    "group": "数据回填与交付",
+    "title": "幂等与异常保留",
+    "status": "mandatory",
+    "source_kind": "current_user_command",
+    "prompts": [],
+    "requirement": "回填可预检、试运行、重跑和回滚；多行同号、缺UID、孤立引用保留待核，禁止自动去掉合法交易。",
+    "acceptance": "同一来源批次重复导入不新增账/款；异常可查且不伪造父单或客户。",
+    "source_refs": []
+  },
+  {
+    "id": "MIG-03",
+    "group": "数据回填与交付",
+    "title": "正式与测试隔离",
+    "status": "mandatory",
+    "source_kind": "current_user_command",
+    "prompts": [],
+    "requirement": "110本地QA/样本库、MCSTAR data_test及旧部署快照不混入正式金额；历史副本只作证据与补缺候选。",
+    "acceptance": "正式统计只包含确认来源，样本和未知关系保持隔离。",
+    "source_refs": []
+  },
+  {
+    "id": "MIG-04",
+    "group": "数据回填与交付",
+    "title": "完整包与文档",
+    "status": "mandatory",
+    "source_kind": "current_user_command",
+    "prompts": [
+      578
+    ],
+    "requirement": "交付源码、完整资源、脱敏需求追溯及可复现部署/恢复说明；历史明文凭据打包动作不作为本次重放命令。",
+    "acceptance": "从交付包重建并回读验收；密钥、业务附件和完整私有提示词另在受控存储。",
+    "source_refs": [
+      {
+        "prompt": 578,
+        "start_line": 5236,
+        "end_line": 5239
+      }
+    ]
+  }
+]
