@@ -108,11 +108,12 @@ def validate(archive_path):
     for file in (ROOT/'tools/specs').glob('*.py'):
         compile(file.read_text(encoding='utf-8'),str(file),'exec')
     check('文档工具Python语法有效', True)
-    check('未把应用验收或生产迁移标为完成', inv['production_migration_executed'] is False and '尚未实现业务程序' in (ROOT/'README.md').read_text(encoding='utf-8'))
+    check('未把应用验收或生产迁移标为完成', inv['production_migration_executed'] is False and '尚未完成正式业务验收或生产迁移' in (ROOT/'README.md').read_text(encoding='utf-8'))
     report = {'date':'2026-11-04','scope':'仅文档、追溯与来源完整性；不是应用验收',
               'checks_passed':len(checks),'checks':checks,'requirements':len(req),'prompt_sections':len(trace),
               'known_secrets_found':False,'source_archive_unchanged':True,'reference_110_unchanged':True,
-              'application_implemented':False,'production_migration_executed':False}
+              'application_code_present':(ROOT/'backend/app/main.py').exists(),
+              'application_complete':False,'production_migration_executed':False}
     (ROOT/'docs/acceptance/文档校验报告.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
     print(json.dumps(report,ensure_ascii=False,indent=2))
 
