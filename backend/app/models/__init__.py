@@ -1,4 +1,4 @@
-"""Infrastructure only; each domain owns its later typed tables and migrations."""
+"""Infrastructure models and explicit domain model registry."""
 from datetime import datetime, timezone
 from uuid import uuid4
 from sqlalchemy import String, Text, Boolean, DateTime, ForeignKey, Integer, UniqueConstraint
@@ -105,3 +105,5 @@ class Outbox(Record, Base):
     status: Mapped[str] = mapped_column(String(32), default='pending', nullable=False)
     delivered_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
     idempotency_key: Mapped[str] = mapped_column(String(200), unique=True, nullable=False)
+
+from .finance import (Warehouse, Party, Invoice, InvoiceAdjustment, Discount, Payment, Allocation, OpeningBalance, EvidenceCase, EvidenceImage, EvidenceReview, RecognitionJob, BankAccount, BankFile, BankEntry, BankSourceRow, BankClaim, BankMatch, ChannelMessage, ChannelAction, Delivery, FinanceEvent)
