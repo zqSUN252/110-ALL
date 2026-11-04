@@ -101,7 +101,7 @@ export const shipmentFields: Field[] = [
 export const partyFields: Field[] = [
   lookup("warehouse_id", "warehouses", true),
   required("name"),
-  select("classification", [
+  {...select("classification", [
     "客户",
     "供应商",
     "清关代理",
@@ -116,7 +116,9 @@ export const partyFields: Field[] = [
     "ABUJA仓",
     "PORT HARCOURT仓",
     "LAGOS仓",
-  ]),
+  ]),optionLabels:Object.fromEntries([
+    ['客户','Customer'],['供应商','Supplier'],['清关代理','Clearance agent'],['报关行','Customs broker'],['拖车行','Haulage company'],['订舱代理','Booking agent'],['目的港杂费','Destination port charges'],['WAYBILL费用','Waybill charges'],['其他','Other'],['ONITSHA仓','ONITSHA warehouse'],['ABA仓','ABA warehouse'],['ABUJA仓','ABUJA warehouse'],['PORT HARCOURT仓','PORT HARCOURT warehouse'],['LAGOS仓','LAGOS warehouse']
+  ].map(([zh,en])=>[zh,[zh,en] as [string,string]]))},
   f("phone"),
   f("phone_source"),
   f("address", "textarea"),
@@ -531,7 +533,7 @@ export const pages: Record<string, PageSpec> = {
   release: {
     title: ["目的仓实际提货", "Destination pickup"],
     endpoint: "/api/release-orders",
-    columns: cols(["id", "mode", "valid", "members", "created_at"]),
+    columns: [{key:"id"}, {key:"eligible",title:["当前指令资格","Current instruction eligibility"]}, {key:"members",title:["授权成员 / 剩余件数","Authorized members / remaining pieces"],render:(row)=>row.members?.map((m:Row)=>`${m.receipt} · ${m.remaining.pieces}`).join(" / ")}],
     cap: "release.read",
   },
   f6: {
@@ -782,7 +784,7 @@ for (const [kind, title, columns] of [
 export function clean(value: Row): Row {
   return Object.fromEntries(
     Object.entries(value)
-      .filter(([, v]) => v !== "" && v !== undefined)
+      .filter(([, v]) => v !== undefined)
       .map(([k, v]) => [
         k,
         Array.isArray(v)
@@ -793,11 +795,14 @@ export function clean(value: Row): Row {
       ]),
   );
 }
-export function formInitial(fields: Field[], row: Row) {
+export function formInitial(fields: Field[], row: Row): Row {
   return Object.fromEntries(
     fields
-      .map((f) => [f.key, row[f.key]])
-      .filter(([, v]) => v !== undefined && v !== null),
+      .map((f) => {
+        const value=row[f.key];
+        return [f.key,f.type==='rows'&&Array.isArray(value)?value.map(item=>formInitial(f.fields||[],item)):f.type==='group'&&value&&typeof value==='object'?formInitial(f.fields||[],value):value];
+      })
+      .filter(([, v]) => v !== undefined),
   );
 }
 export async function versions(items: Row[], field: string, path: string) {

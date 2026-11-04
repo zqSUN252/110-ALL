@@ -41,7 +41,7 @@
       "task5_role": "existing_domain_or_task6_acceptance",
       "task5_evidence": null,
       "whole_requirement_acceptance": "local_implementation_pending_final_review",
-      "implementation": "内部语言切换、字段/状态/错误词典；英文仓库新建与入库录入浏览器验证，完整所有字段人工语言验收未声称。",
+      "implementation": "内部语言/固定分类双语显示，保留原存储与业务文本；查询同页中英切换保留输入/结果；完整全部字段人工语言验收未声称。",
       "implementation_files": [
         "web/src/App.tsx",
         "web/src/ui.tsx",
@@ -54,7 +54,13 @@
         "backend/tests/test_workspace.py"
       ],
       "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
-      "external_unaccepted": null
+      "external_unaccepted": null,
+      "covering_review_tests": [
+        "backend/tests/test_workspace_fix1.py",
+        "backend/tests/test_workspace_performance.py",
+        "web/tests/task6-fixes.spec.ts"
+      ],
+      "review_fix_round": 1
     },
     {
       "requirement_id": "SYS-03",
@@ -71,7 +77,7 @@
       "task5_role": "migration_or_recovery_support",
       "task5_evidence": "docs/development/migration-contract.md",
       "whole_requirement_acceptance": "local_implementation_pending_final_review",
-      "implementation": "按能力显示导航；API逐请求校验actor/仓库/版本/幂等；同浏览器切换低权限及撤权清草稿。",
+      "implementation": "按能力显示导航；API逐请求actor/范围/版本/幂等；授权先读取现集合+版本，增删预览/撤权勾选/受控PUT；切换低权限及撤权清草稿。",
       "implementation_files": [
         "web/src/App.tsx",
         "web/src/ui.tsx",
@@ -84,7 +90,13 @@
         "backend/tests/test_workspace.py"
       ],
       "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
-      "external_unaccepted": null
+      "external_unaccepted": null,
+      "covering_review_tests": [
+        "backend/tests/test_workspace_fix1.py",
+        "backend/tests/test_workspace_performance.py",
+        "web/tests/task6-fixes.spec.ts"
+      ],
+      "review_fix_round": 1
     },
     {
       "requirement_id": "SYS-04",
@@ -282,7 +294,7 @@
       "task5_role": "migration_or_recovery_support",
       "task5_evidence": "docs/development/migration-contract.md",
       "whole_requirement_acceptance": "local_implementation_pending_final_review",
-      "implementation": "独立PG17、真实25k/125k和10会话实测；启动和包重建单列；PG18生产环境未验收。",
+      "implementation": "独立PG17；授权选择器50项稳定游标/业务引用搜索并保留选中项；25k/125k旧全负载与修复后受影响list/search按各自版本分列，PG18生产环境未验收。",
       "implementation_files": [
         "web/src/App.tsx",
         "web/src/ui.tsx",
@@ -295,7 +307,13 @@
         "backend/tests/test_workspace.py"
       ],
       "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
-      "external_unaccepted": null
+      "external_unaccepted": null,
+      "covering_review_tests": [
+        "backend/tests/test_workspace_fix1.py",
+        "backend/tests/test_workspace_performance.py",
+        "web/tests/task6-fixes.spec.ts"
+      ],
+      "review_fix_round": 1
     },
     {
       "requirement_id": "SYS-10",
@@ -349,7 +367,7 @@
       "task5_role": "migration_or_recovery_support",
       "task5_evidence": "docs/development/migration-contract.md",
       "whole_requirement_acceptance": "local_implementation_pending_final_review",
-      "implementation": "未知KG/电话/汇率/原始资源保留未知；不填假默认客户与收费事实。",
+      "implementation": "区分未触碰/创建可选空值/显式清空；空串与null保留接口意图，数量不变0；嵌套只提交可编辑字段，预览/保存同变更集；控货历史保留。",
       "implementation_files": [
         "web/src/App.tsx",
         "web/src/ui.tsx",
@@ -362,7 +380,13 @@
         "backend/tests/test_workspace.py"
       ],
       "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
-      "external_unaccepted": null
+      "external_unaccepted": null,
+      "covering_review_tests": [
+        "backend/tests/test_workspace_fix1.py",
+        "backend/tests/test_workspace_performance.py",
+        "web/tests/task6-fixes.spec.ts"
+      ],
+      "review_fix_round": 1
     },
     {
       "requirement_id": "SYS-12",
@@ -652,7 +676,7 @@
       "task5_role": "migration_or_recovery_support",
       "task5_evidence": "docs/development/migration-contract.md",
       "whole_requirement_acceptance": "local_implementation_pending_final_review",
-      "implementation": "票件报价与应收生成分离；真实分批到货后产生对应AR。",
+      "implementation": "票件报价与应收生成分离；SEA详情独立港/计费Arrival数量/来源/version表单；AIR/EXPRESS分批到货；普通港节点不生成AR/目的仓事实。",
       "implementation_files": [
         "web/src/catalog.ts",
         "web/src/workflows.tsx",
@@ -664,7 +688,13 @@
         "backend/tests/test_logistics.py"
       ],
       "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
-      "external_unaccepted": null
+      "external_unaccepted": null,
+      "covering_review_tests": [
+        "backend/tests/test_workspace_fix1.py",
+        "backend/tests/test_workspace_performance.py",
+        "web/tests/task6-fixes.spec.ts"
+      ],
+      "review_fix_round": 1
     },
     {
       "requirement_id": "SHIP-05",
@@ -763,7 +793,13 @@
         "backend/tests/test_logistics.py"
       ],
       "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
-      "external_unaccepted": null
+      "external_unaccepted": null,
+      "covering_review_tests": [
+        "backend/tests/test_workspace_fix1.py",
+        "backend/tests/test_workspace_performance.py",
+        "web/tests/task6-fixes.spec.ts"
+      ],
+      "review_fix_round": 1
     },
     {
       "requirement_id": "PL-01",
@@ -1367,7 +1403,7 @@
       "task5_role": "existing_domain_or_task6_acceptance",
       "task5_evidence": null,
       "whole_requirement_acceptance": "external_input_or_environment_pending",
-      "implementation": "预生成真实PNG Blob与ClipboardItem；失败不标记、不替代打印。",
+      "implementation": "PNG预生成绑定当前任务/来源/actor；新任务清旧图并丢弃迟到结果；点击ClipboardItem手势中重新取当前服务器授权PNG；失败明确反馈。",
       "implementation_files": [
         "web/src/workflows.tsx",
         "web/src/ExportJob.tsx",
@@ -1379,7 +1415,13 @@
         "backend/tests/test_documents_review.py"
       ],
       "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
-      "external_unaccepted": "真实微信/WhatsApp粘贴未测试"
+      "external_unaccepted": "真实微信/WhatsApp粘贴未测试",
+      "covering_review_tests": [
+        "backend/tests/test_workspace_fix1.py",
+        "backend/tests/test_workspace_performance.py",
+        "web/tests/task6-fixes.spec.ts"
+      ],
+      "review_fix_round": 1
     },
     {
       "requirement_id": "DOC-06",
@@ -1404,7 +1446,13 @@
         "backend/tests/test_documents_review.py"
       ],
       "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
-      "external_unaccepted": null
+      "external_unaccepted": null,
+      "covering_review_tests": [
+        "backend/tests/test_workspace_fix1.py",
+        "backend/tests/test_workspace_performance.py",
+        "web/tests/task6-fixes.spec.ts"
+      ],
+      "review_fix_round": 1
     },
     {
       "requirement_id": "DOC-07",
@@ -1956,7 +2004,13 @@
         "backend/tests/test_permissions.py"
       ],
       "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
-      "external_unaccepted": null
+      "external_unaccepted": null,
+      "covering_review_tests": [
+        "backend/tests/test_workspace_fix1.py",
+        "backend/tests/test_workspace_performance.py",
+        "web/tests/task6-fixes.spec.ts"
+      ],
+      "review_fix_round": 1
     },
     {
       "requirement_id": "PARTY-03",
@@ -1989,7 +2043,13 @@
         "backend/tests/test_permissions.py"
       ],
       "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
-      "external_unaccepted": "缺失真实仓库资料未补造"
+      "external_unaccepted": "缺失真实仓库资料未补造",
+      "covering_review_tests": [
+        "backend/tests/test_workspace_fix1.py",
+        "backend/tests/test_workspace_performance.py",
+        "web/tests/task6-fixes.spec.ts"
+      ],
+      "review_fix_round": 1
     },
     {
       "requirement_id": "PARTY-04",
@@ -2508,7 +2568,7 @@
       "task5_role": "migration_or_recovery_support",
       "task5_evidence": "docs/development/migration-contract.md",
       "whole_requirement_acceptance": "local_implementation_pending_final_review",
-      "implementation": "PhysicalRelease独立库存余量及原件，指令、付款或中国出库不生成实放。",
+      "implementation": "目的仓最小release.read+physical从指令当前scoped members/remaining选票；专用版本化照片上传/原件回读，实际提货独立事实；已提完仍可读授权历史照片。",
       "implementation_files": [
         "web/src/HoldReview.tsx",
         "web/src/workflows.tsx",
@@ -2520,7 +2580,13 @@
         "backend/tests/test_tracking.py"
       ],
       "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
-      "external_unaccepted": null
+      "external_unaccepted": null,
+      "covering_review_tests": [
+        "backend/tests/test_workspace_fix1.py",
+        "backend/tests/test_workspace_performance.py",
+        "web/tests/task6-fixes.spec.ts"
+      ],
+      "review_fix_round": 1
     },
     {
       "requirement_id": "NOT-01",
@@ -2615,7 +2681,7 @@
       "task5_role": "existing_domain_or_task6_acceptance",
       "task5_evidence": null,
       "whole_requirement_acceptance": "local_implementation_pending_final_review",
-      "implementation": "复制成功保存对应业务版本的持久标记；浏览器复制失败不记成功。",
+      "implementation": "成功复制保存持久copy事件；列表一次批量查询当前标记并黄底黑字；标记不进入通知/导出业务fingerprint。",
       "implementation_files": [
         "web/src/workflows.tsx",
         "backend/app/documents/notifications.py"
@@ -2626,7 +2692,13 @@
         "backend/tests/test_documents_review.py"
       ],
       "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
-      "external_unaccepted": null
+      "external_unaccepted": null,
+      "covering_review_tests": [
+        "backend/tests/test_workspace_fix1.py",
+        "backend/tests/test_workspace_performance.py",
+        "web/tests/task6-fixes.spec.ts"
+      ],
+      "review_fix_round": 1
     },
     {
       "requirement_id": "NOT-05",
@@ -2641,7 +2713,7 @@
       "task5_role": "existing_domain_or_task6_acceptance",
       "task5_evidence": null,
       "whole_requirement_acceptance": "local_implementation_pending_final_review",
-      "implementation": "装柜黄底黑字与主管撤销命令，独立于AR黄色条件。",
+      "implementation": "UI按原copy ID/version/reason撤销，按生成时原成员清标记并保留历史；不依赖票后来所属箱单。",
       "implementation_files": [
         "web/src/workflows.tsx",
         "backend/app/documents/notifications.py"
@@ -2652,7 +2724,13 @@
         "backend/tests/test_documents_review.py"
       ],
       "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
-      "external_unaccepted": null
+      "external_unaccepted": null,
+      "covering_review_tests": [
+        "backend/tests/test_workspace_fix1.py",
+        "backend/tests/test_workspace_performance.py",
+        "web/tests/task6-fixes.spec.ts"
+      ],
+      "review_fix_round": 1
     },
     {
       "requirement_id": "NOT-06",
@@ -3420,7 +3498,7 @@
       "task5_role": "existing_domain_or_task6_acceptance",
       "task5_evidence": null,
       "whole_requirement_acceptance": "local_implementation_pending_final_review",
-      "implementation": "运输方式变化及确认标签取当前版本，旧报价标签过期。",
+      "implementation": "标签取当前来源版本；改价、任务切换、格式切换和撤权不允许复用旧PNG；真实客户端粘贴未验收。",
       "implementation_files": [
         "web/src/workflows.tsx",
         "backend/app/documents/rendering.py"
@@ -3431,7 +3509,13 @@
         "backend/tests/test_documents_review.py"
       ],
       "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
-      "external_unaccepted": null
+      "external_unaccepted": null,
+      "covering_review_tests": [
+        "backend/tests/test_workspace_fix1.py",
+        "backend/tests/test_workspace_performance.py",
+        "web/tests/task6-fixes.spec.ts"
+      ],
+      "review_fix_round": 1
     },
     {
       "requirement_id": "LABEL-05",
@@ -3520,7 +3604,7 @@
       "task5_role": "existing_domain_or_task6_acceptance",
       "task5_evidence": null,
       "whole_requirement_acceptance": "local_implementation_pending_final_review",
-      "implementation": "客户跟踪中文/英文，错误不泄露存在性；正式本人箱单是另一授权入口。",
+      "implementation": "查询同页中文/英文切换保留当前输入和结果；错误不泄露存在性；本人箱单另有号码归属授权。",
       "implementation_files": [
         "web/src/App.tsx",
         "web/src/workflows.tsx",
@@ -3531,7 +3615,13 @@
         "backend/tests/test_tracking.py"
       ],
       "verification_boundary": "关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。",
-      "external_unaccepted": null
+      "external_unaccepted": null,
+      "covering_review_tests": [
+        "backend/tests/test_workspace_fix1.py",
+        "backend/tests/test_workspace_performance.py",
+        "web/tests/task6-fixes.spec.ts"
+      ],
+      "review_fix_round": 1
     },
     {
       "requirement_id": "TRACK-03",
@@ -4135,9 +4225,12 @@
     "web/tests/workspace.spec.ts": "reload CSRF/权限/焦点/409/离线/ClipboardItem/跨账号及撤权",
     "web/tests/customer.spec.ts": "号码归属/本人导出/退出/另一号码；仅outbound phone transport fake",
     "web/tests/english.spec.ts": "英文新仓/入库表单保存",
-    "web/tests/review-fixes.spec.ts": "手机冻结电话可见/联系人三语/安全号码链接，不实际跳转或发送"
+    "web/tests/review-fixes.spec.ts": "手机冻结电话可见/联系人三语/安全号码链接，不实际跳转或发送",
+    "web/tests/task6-fixes.spec.ts": "15项真实浏览器回归：SEA/最小目的仓照片及提货/>50付款和claim/显式清空/grants/PNG竞态与撤权/原成员通知撤销/同页语言"
   },
   "runtime": "http://127.0.0.1:8011",
   "runtime_data": "supplied package snapshot, controlled authentication; not asserted current production",
-  "prior_task5_evidence": "docs/acceptance/迁移审查记录.md"
+  "prior_task5_evidence": "docs/acceptance/迁移审查记录.md",
+  "review_fix_round": 1,
+  "verification_receipt": "task6-fix1-verification.json"
 }

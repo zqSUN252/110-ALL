@@ -114,6 +114,18 @@ textarea {
 textarea {
   resize: vertical;
 }
+.grant-revocation-confirmation {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.grant-revocation-confirmation input {
+  width: 20px;
+  min-height: 20px;
+  height: 20px;
+  flex: 0 0 20px;
+}
 label {
   display: block;
   font-size: 0.875rem;
@@ -508,6 +520,15 @@ th .resize:hover {
 .loading-notified td {
   background: #ffe978;
   color: #111;
+}
+.loading-notified .text-button,
+.loading-notified .row-actions button {
+  color: #111;
+}
+.loading-mark {
+  background: #ffe978;
+  color: #111;
+  padding: 8px 12px;
 }
 .text-button {
   padding: 0;

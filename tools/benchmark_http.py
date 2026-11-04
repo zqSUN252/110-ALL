@@ -44,7 +44,7 @@ def process_pairs():
 
 
 def main():
-    p=argparse.ArgumentParser();p.add_argument('--tickets',type=int,required=True);p.add_argument('--base',default='http://127.0.0.1:8017');p.add_argument('--label',default='initial');p.add_argument('--round-offset',type=int,default=0);a=p.parse_args()
+    p=argparse.ArgumentParser();p.add_argument('--tickets',type=int,required=True);p.add_argument('--base',default='http://127.0.0.1:8017');p.add_argument('--label',default='initial');p.add_argument('--round-offset',type=int,default=0);p.add_argument('--read-only',action='store_true',help='Only the existing 50-row ticket list/search workload; no review or bank mutations');a=p.parse_args()
     settings=load_settings();root=settings.private_root.parent;engine=make_engine(settings.database_url)
     with engine.connect() as db:
         if not db.scalar(text('select current_schema()')).startswith('test_bench_'):raise ValueError('Fresh owned benchmark schema only')
@@ -87,6 +87,7 @@ def main():
         for iteration in range(6):
             timed('ticket_list_50','GET','/api/tickets?limit=50&offset='+str(iteration*50))
             timed('ticket_search_50','GET','/api/tickets?limit=50&receipt=BENCH-001')
+            if a.read_only:continue
             timed('bank_search_50','GET','/api/workspace/bank-entries?account_id='+ids['account']+'&query=BENCH-BANK-1&limit=50')
             ticket=bench_id('tickets',index*100+iteration+1);current=client.get('/api/tickets/'+ticket).json();key=uuid4().hex
             body={'expected_version':current['version'],'decision':'approved'}
@@ -119,8 +120,9 @@ def main():
             'bank_entries':db.scalar(text("select count(*) from bank_entries where reference like 'BENCH-BANK-%'")),
             'duplicate_active_claims':db.scalar(text("select count(*) from (select entry_id from bank_claims where state<>'released' group by entry_id having count(*)>1) s")),
             'review_facts':db.scalar(text("select count(*) from ticket_reviews where ticket_id in (select id from tickets where receipt like 'BENCH-%')"))}
+        notification_population={'members':db.scalar(text('select count(*) from notification_members')),'active_loading_copies':db.scalar(text("select count(*) from notification_copy_events c join notifications n on n.id=c.notification_id where c.cancelled_at is null and n.kind='loading'"))}
     report={'tickets':a.tickets,'sessions':10,'population':json.loads((root/('population-'+str(a.tickets)+'.json')).read_text()),'label':a.label,'elapsed_seconds':time.perf_counter()-started,'api_peak_sampled_working_set_bytes':max(samples) if samples else None,'memory_sample_count':len(samples),'results':groups,'invariants':invariants,'external_calls':0}
-    report.update(source_digest=source_digest,source_hashes=source_hashes,warmup_requests=0,authentication_barrier=True,round_offset=a.round_offset,api_pids=sorted(pids),postgres_pids=sorted(pg_pids),postgres_peak_sampled_working_set_bytes=max(pg_samples) if pg_samples else None,memory_definition='50ms sampled process-tree working-set sum; PostgreSQL shared pages may be counted per process; not unique resident memory or whole-machine peak')
+    report.update(source_digest=source_digest,source_hashes=source_hashes,notification_population=notification_population,warmup_requests=0,authentication_barrier=True,round_offset=a.round_offset,read_only=a.read_only,request_count=len(results),total_errors=sum(r['status']!=200 for r in results),api_pids=sorted(pids),postgres_pids=sorted(pg_pids),postgres_peak_sampled_working_set_bytes=max(pg_samples) if pg_samples else None,memory_definition='50ms sampled process-tree working-set sum; PostgreSQL shared pages may be counted per process; not unique resident memory or whole-machine peak')
     destination=root/('http-'+str(a.tickets)+'-'+a.label+'.json');destination.write_text(json.dumps(report,indent=2));print(json.dumps({k:v for k,v in report.items() if k!='source_hashes'}));engine.dispose()
 
 

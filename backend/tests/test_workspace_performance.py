@@ -24,7 +24,8 @@ def test_fifty_legitimate_equal_amount_candidates_keep_all_sources_with_bounded_
 
 
 def test_fifty_ticket_page_preserves_detail_projection_with_bounded_queries(app):
-    from app.models import Ticket,CargoChargeComponent
+    from app.models import Ticket,CargoChargeComponent,Notification,NotificationMember,CopyEvent
+    from datetime import date
     from app.packing import service as packing
     from test_logistics import who,seed as cargo_seed
     from test_packing import make_document
@@ -37,6 +38,9 @@ def test_fifty_ticket_page_preserves_detail_projection_with_bounded_queries(app)
             db.add(ticket);db.flush()
             db.add(CargoChargeComponent(ticket_id=ticket.id,ticket_version=1,position=0,component='freight',currency='USD',unit='KG',amount='1',source='Synthetic reviewed basis'))
         db.flush()
+        notice=Notification(kind='loading',template_version='synthetic-query-bound',actor_id=current.id,generated_on=date(2026,11,5),timezone='Asia/Shanghai',body='Synthetic copied notice',source_snapshot={})
+        db.add(notice);db.flush()
+        db.add(NotificationMember(notification_id=notice.id,ticket_id=original.id,source_version=original.version,warehouse_id=wh));db.add(CopyEvent(notification_id=notice.id,actor_id=current.id));db.flush()
         expected=packing.ticket_json(db,original)
         queries=[]
         def observe(conn,cursor,statement,parameters,context,many):
@@ -47,4 +51,6 @@ def test_fifty_ticket_page_preserves_detail_projection_with_bounded_queries(app)
         assert len(result)==50
         assert next(r for r in result if r['id']==original.id)==expected
         assert all(r['charge_components'] for r in result)
+        assert sum(r['loading_notified'] for r in result)==1
+        assert len(expected['notification_marks'])==1
         assert len(queries)<=12, f'50 ticket page required {len(queries)} SELECTs'

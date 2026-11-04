@@ -273,9 +273,12 @@ def cancel_copy(db,actor,p):
     return {'id':c.id,'version':c.version,'notification_id':c.notification_id,'ticket_ids':[m.ticket_id for m in members if m.ticket_id],'receipt_ids':[m.receipt_id for m in members if m.receipt_id],'cancelled':True}
 
 
-def marks(db,source_ids,source_type='ticket'):
+def marks(db,source_ids,source_type='ticket',include_cancelled=False):
     column={'ticket':NotificationMember.ticket_id,'receipt':NotificationMember.receipt_id}[source_type]
     result={i:[] for i in source_ids}
-    for m,n,c in db.execute(select(NotificationMember,Notification,CopyEvent).join(Notification,Notification.id==NotificationMember.notification_id).join(CopyEvent,CopyEvent.notification_id==Notification.id).where(column.in_(source_ids),CopyEvent.cancelled_at.is_(None)).order_by(CopyEvent.created_at,CopyEvent.id)):
+    query=select(NotificationMember,Notification,CopyEvent).join(Notification,Notification.id==NotificationMember.notification_id).join(CopyEvent,CopyEvent.notification_id==Notification.id).where(column.in_(source_ids))
+    if not include_cancelled:query=query.where(CopyEvent.cancelled_at.is_(None))
+    for m,n,c in db.execute(query.order_by(CopyEvent.created_at,CopyEvent.id)):
         result[getattr(m,column.key)].append({'copy_id':c.id,'version':c.version,'kind':n.kind,'copied_at':c.created_at.isoformat(),'actor_id':c.actor_id,'label':'📦已通知装柜 ✕' if n.kind=='loading' else '已复制通知','background':'yellow' if n.kind=='loading' else None,'foreground':'black' if n.kind=='loading' else None})
+        if include_cancelled:result[getattr(m,column.key)][-1].update(cancelled_at=c.cancelled_at.isoformat() if c.cancelled_at else None,cancelled_by=c.cancelled_by,reason=c.reason)
     return result

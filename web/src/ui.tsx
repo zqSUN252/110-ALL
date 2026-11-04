@@ -401,6 +401,7 @@ export type Field = {
   default?: any;
   help?: [string, string];
   multi?: boolean;
+  upload?: (file:File,values:Row)=>Promise<Row>;
 };
 export const f = (
   key: string,
@@ -424,34 +425,41 @@ export function Picker({
 }) {
   const [search, setSearch] = useState(""),
     [options, setOptions] = useState<Row[]>([]),
-    [error, setError] = useState<any>();
+    [error, setError] = useState<any>(),[cursor,setCursor]=useState(''),[trail,setTrail]=useState<string[]>([]),[next,setNext]=useState<string|null>(null),[busy,setBusy]=useState(false);
+  const selectedLabels=useRef(new Map<string,Row>());
   const t = useT();
   useEffect(() => {
     let live = true;
+    setBusy(true);
     const timer = setTimeout(
       () =>
         api(
           "/api/workspace/options?kind=" +
             encodeURIComponent(kind) +
             "&query=" +
-            encodeURIComponent(search),
+            encodeURIComponent(search) + '&after=' + encodeURIComponent(cursor),
         )
           .then((d) => {
             if (live) {
               setOptions(rows(d));
+              setNext(d.next||null);
+              for(const o of rows(d))if(multi?value?.includes(o.id):value===o.id)selectedLabels.current.set(o.id,o);
               setError(null);
             }
           })
           .catch((e) => {
-            if (live) setError(e);
-          }),
+            if (live) {
+              setError(e);setOptions([]);setNext(null);
+              if(e instanceof ApiError&&[401,403].includes(e.status)){selectedLabels.current.clear();onChange(multi?[]:'')}
+            }
+          }).finally(()=>{if(live)setBusy(false)}),
       180,
     );
     return () => {
       live = false;
       clearTimeout(timer);
     };
-  }, [kind, search]);
+  }, [kind, search,cursor]);
   return (
     <div className="picker">
       <div className="search-input">
@@ -459,7 +467,7 @@ export function Picker({
         <input
           aria-label={t("搜索", "Search") + " " + title}
           value={search}
-          onChange={(e) => setSearch(e.target.value)}
+          onChange={(e) => {setSearch(e.target.value);setCursor('');setTrail([])}}
           placeholder={t(
             "按单号 / 名称 / 电话搜索",
             "Search reference / name / phone",
@@ -471,20 +479,21 @@ export function Picker({
         required={required}
         value={value || (multi ? [] : "")}
         multiple={multi}
-        onChange={(e) =>
+        onChange={(e) => {
+          for(const o of options)if(Array.from(e.target.selectedOptions).some(v=>v.value===o.id))selectedLabels.current.set(o.id,o);
           onChange(
             multi
               ? Array.from(e.target.selectedOptions).map((o) => o.value)
               : e.target.value,
-          )
-        }
+          );
+        }}
       >
         {!multi && <option value="">{t("请选择", "Select")}</option>}
         {value && !multi && !options.some((o) => o.id === value) && (
-          <option value={value}>{value}</option>
+          <option value={value}>{selectedLabels.current.get(value)?.label||value}</option>
         )}
         {multi && Array.isArray(value) && value.filter(id => !options.some(o => o.id === id)).map(id => (
-          <option key={id} value={id}>{id}</option>
+          <option key={id} value={id}>{selectedLabels.current.get(id)?.label||id}</option>
         ))}
         {options.map((o) => (
           <option key={o.id} value={o.id}>
@@ -492,6 +501,7 @@ export function Picker({
           </option>
         ))}
       </select>
+      <div className="form-actions"><button type="button" disabled={busy||!trail.length} onClick={()=>{setCursor(trail.at(-1)||'');setTrail(trail.slice(0,-1))}}>{t('上一组选项','Previous options')}</button><button type="button" disabled={busy||!next} onClick={()=>{setTrail([...trail,cursor]);setCursor(next!)}}>{t('下一组选项','Next options')}</button></div>
       <ErrorBox error={error} />
     </div>
   );
@@ -603,7 +613,7 @@ export function Fields({
                 id={id}
                   aria-label={title}
                 value={v === true ? "true" : v === false ? "false" : ""}
-                onChange={(e) => set(field.key, e.target.value === "true")}
+                onChange={(e) => set(field.key, e.target.value === "" ? (field.key==='declaration_required'?false:null) : e.target.value === "true")}
               >
                 <option value="">
                   {t("未选 / 不要", "Not selected / No")}
@@ -656,7 +666,7 @@ export function Fields({
                     try {
                       const result = [];
                       for (const file of Array.from(e.target.files || []))
-                        result.push(await upload(file));
+                        result.push(await (field.upload ? field.upload(file,value) : upload(file)));
                       set(
                         field.key,
                         field.multi ? result.map((r) => r.id) : result[0]?.id,
@@ -674,7 +684,7 @@ export function Fields({
                     const images: Row[]=[];
                     for(const item of await navigator.clipboard.read()) {
                       const type=item.types.find(type=>['image/png','image/jpeg','image/webp'].includes(type));
-                      if(type){const blob=await item.getType(type);images.push(await upload(new File([blob],'clipboard-original.'+type.split('/')[1],{type})))}
+                      if(type){const blob=await item.getType(type);const file=new File([blob],'clipboard-original.'+type.split('/')[1],{type});images.push(await (field.upload?field.upload(file,value):upload(file)))}
                       if(images.length&&!field.multi)break;
                     }
                     if(!images.length)throw new ApiError(422,'clipboard_image_missing',null);
@@ -717,6 +727,25 @@ export function Fields({
     </div>
   );
 }
+// Empty HTML controls carry intent only when present in the form state. Optional
+// creation fields may be omitted; edits preserve explicit clears and unknowns.
+const nullableText = new Set(['kg','cbm','freight_usd','clearing_ngn','ngn_per_usd','cny_per_usd','rate','amount','amount_ngn','amount_original','discount_total_ngn','length','width','height','phone_normalized']);
+export function formPayload(fields: Field[], value: Row, initial: Row = {}): Row {
+  const result: Row = {};
+  for (const [key, raw] of Object.entries(value)) {
+    if (raw === undefined) continue;
+    const field = fields.find(f => f.key === key);
+    let v = raw;
+    if (v === '') {
+      if (!Object.hasOwn(initial, key) && !Object.hasOwn(initial, 'expected_version') && !field?.required) continue;
+      if (field && (['number','date','datetime-local','lookup','bool','select'].includes(field.type || '') || nullableText.has(key))) v = null;
+    }
+    if (field?.type === 'group' && v && typeof v === 'object') v = formPayload(field.fields || [], v, initial[key] || {});
+    if (field?.type === 'rows' && Array.isArray(v)) v = v.map((row, i) => formPayload(field.fields || [], row, initial[key]?.[i] || {}));
+    result[key] = v;
+  }
+  return result;
+}
 export function Form({
   fields,
   initial = {},
@@ -724,6 +753,7 @@ export function Form({
   onSaved,
   title,
   submitLabel,
+  successLabel,
   transform,
 }: {
   fields: Field[];
@@ -732,6 +762,7 @@ export function Form({
   onSaved?: (r: Row) => void;
   title?: string;
   submitLabel?: [string, string];
+  successLabel?: [string,string];
   transform?: (v: Row) => Row;
 }) {
   const t = useT();
@@ -754,11 +785,8 @@ export function Form({
         setBusy(true);
         setError(null);
         setSaved(false);
-        const body = transform
-          ? transform(value)
-          : Object.fromEntries(
-              Object.entries(value).filter(([, v]) => v !== ""),
-            );
+        const prepared = formPayload(fields, value, initial);
+        const body = transform ? transform(prepared) : prepared;
         const json = JSON.stringify(body);
         if (retry.current.body !== json)
           retry.current = { body: json, key: crypto.randomUUID() };
@@ -795,7 +823,7 @@ export function Form({
               ? t(...submitLabel)
               : t("保存", "Save")}
         </button>
-        {saved && <span role="status">{t("已保存", "Saved")}</span>}
+        {saved && <span role="status">{successLabel?t(...successLabel):t("已保存", "Saved")}</span>}
       </div>
     </form>
   );

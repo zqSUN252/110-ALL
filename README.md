@@ -4,6 +4,8 @@
 
 **统一React工作台已运行于本机 `http://127.0.0.1:8011`，需受控账号登录查看包内已回填数据。** 真实浏览器、HTTP/PG、后端全套与25k/125k规模结果分别记录于[运行验证](docs/acceptance/运行验证.json)，包括失败及同条件重试。这里不是当前生产库或正式HTTPS部署。见[运行与交付](docs/development/运行与交付.md)、[规模与优化](docs/acceptance/规模与优化.md)、[146项实现与证据](docs/acceptance/实现与证据.json)及[验证边界](docs/acceptance/验证边界.md)。
 
+Task6首轮审查修复的独立回归与运行证据见[fix1验证收据](docs/acceptance/task6-fix1-verification.json)。旧25k/125k完整负载与新版受影响列表/搜索按版本分列；准确修复ZIP及重建结果由同名fix1 companion收据绑定，不能把旧包收据套用到新源码。
+
 尚未完成正式业务验收或生产迁移；本机验证与包内快照回填不替代真实生产来源及外部业务验收。
 
 | 阅读顺序 | 文档 | 作用 |

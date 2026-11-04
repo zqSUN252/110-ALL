@@ -1,4 +1,4 @@
-from fastapi import APIRouter,Depends,Request,Body,Response
+from fastapi import APIRouter,Depends,Request,Body,Response,UploadFile,File,Form
 from app.api.dependencies import Database,get_actor,mutate
 from app.common import DomainError,require
 from app.documents import release,notifications,exports,mbl
@@ -50,6 +50,30 @@ def mbl_file(id:str,attachment_id:str,request:Request,db:Database,actor=Depends(
 def eligibility(id:str,db:Database,actor=Depends(get_actor)):return release.eligible_order(db,actor,id)
 
 
+@router.post('/release-orders/{id}/photos',status_code=201)
+async def upload_pickup_photo(id:str,request:Request,db:Database,ticket_id:str=Form(...),expected_version:int=Form(...),file:UploadFile=File(...),actor=Depends(mutate)):
+    import hashlib
+    from app.attachments import store_authorized_file
+    from app.common import run_command,audit
+    if set(await request.form())-{'ticket_id','expected_version','file'}:raise DomainError('unknown_fields','Only the scoped pickup member, version and file are accepted',422)
+    release.pickup_photo_scope(db,actor,id,ticket_id,expected_version)
+    content=await file.read(request.app.state.settings.max_attachment_bytes+1)
+    if len(content)>request.app.state.settings.max_attachment_bytes:raise DomainError('file_too_large','File exceeds configured limit',413)
+    release.validate_pickup_image(content,file.content_type)
+    payload={'order_id':id,'ticket_id':ticket_id,'expected_version':expected_version,'sha256':hashlib.sha256(content).hexdigest(),'filename':file.filename,'media_type':file.content_type}
+    def apply():
+        row=store_authorized_file(db,actor,content,file.filename or 'pickup',file.content_type,'release_photo',release.pickup_photo_owner(id,ticket_id,expected_version))
+        result={key:getattr(row,key) for key in ('id','version','sha256','filename','size_bytes')}
+        audit(db,actor,'release.photo.upload','attachment',row.id,None,result|payload)
+        return result
+    return run_command(db,actor,'release.photo.upload',request.headers.get('Idempotency-Key'),payload,apply)
+
+
+@router.get('/release-orders/{id}/photos/{attachment_id}')
+def uploaded_pickup_photo(id:str,attachment_id:str,ticket_id:str,expected_version:int,request:Request,db:Database,actor=Depends(get_actor)):
+    return file_response(*release.uploaded_pickup_photo(db,request.app.state.settings,actor,id,ticket_id,expected_version,attachment_id))
+
+
 @router.get('/release-orders')
 def orders(db:Database,limit:int=50,offset:int=0,actor=Depends(get_actor)):return release.list_orders(db,actor,limit,offset)
 
@@ -87,19 +111,19 @@ def receipt_holds(id:str,db:Database,actor=Depends(get_actor)):
 
 
 @router.get('/tickets/{id}/notification-marks')
-def notification_marks(id:str,db:Database,actor=Depends(get_actor)):
+def notification_marks(id:str,db:Database,history:bool=False,actor=Depends(get_actor)):
     from app.models import Ticket
     from app.finance.service import locked
     t=locked(db,Ticket,id);require(actor,'documents.read',t.warehouse_id)
-    return notifications.marks(db,[id])[id]
+    return notifications.marks(db,[id],include_cancelled=history)[id]
 
 
 @router.get('/receipts/{id}/notification-marks')
-def receipt_notification_marks(id:str,db:Database,actor=Depends(get_actor)):
+def receipt_notification_marks(id:str,db:Database,history:bool=False,actor=Depends(get_actor)):
     from app.models import Receipt
     from app.finance.service import locked
     receipt=locked(db,Receipt,id);require(actor,'documents.read',receipt.warehouse_id)
-    return notifications.marks(db,[id],source_type='receipt')[id]
+    return notifications.marks(db,[id],source_type='receipt',include_cancelled=history)[id]
 
 
 @router.get('/tickets/{id}/timeline')

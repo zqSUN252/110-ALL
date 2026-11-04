@@ -1,0 +1,279 @@
+{
+  "checked_at": "2026-11-04T22:52:01.197755+00:00",
+  "task": 6,
+  "review_fix_round": 1,
+  "status": "LOCAL_CHECKS_COMPLETE_INDEPENDENT_TASK_REVIEW_PENDING",
+  "source_commit_binding": "Exact final commit is in package-manifest.json and the companion package verification receipt; runtime/test files are separately hash-frozen.",
+  "runtime_test_freeze": {
+    "path": "source-freeze-fix1-final.json",
+    "sha256": "74d6431fb0241a10d16c0151e618910a8672fe37b1d6b0d4759362e282a83d1a",
+    "files": 202
+  },
+  "full_backend": {
+    "state": "passed",
+    "summary": "318 passed, 1 warning in 1041.44s (0:17:21)",
+    "counts": {
+      "passed": 318,
+      "failed": 0,
+      "error": 0,
+      "warning": 1
+    },
+    "log_sha256": "f2221717e688efdd6a88e3c56b565875897aeed1abf6160ec69c8a6595d94313"
+  },
+  "full_browser": {
+    "state": "passed",
+    "summary": "27 passed (1.6m)",
+    "counts": {
+      "passed": 27,
+      "failed": 0,
+      "error": 0,
+      "warning": 0
+    },
+    "log_sha256": "85c403a55e559fa57497fc3f4ac2a7170835a87f6045ef8860c96e464519a8b5"
+  },
+  "retained_iterations": {
+    "fix1-backend-red.log": {
+      "state": "failed_or_incomplete",
+      "summary": "3 failed, 1 warning in 8.88s",
+      "counts": {
+        "passed": 0,
+        "failed": 3,
+        "error": 0,
+        "warning": 1
+      },
+      "log_sha256": "a98c87bccdc354d5b814a25ff74165415b276ffe80e87b6db218bcb44b41fbd3"
+    },
+    "fix1-options-d26-red.log": {
+      "state": "failed_or_incomplete",
+      "summary": "1 failed, 3 deselected, 1 warning in 7.60s",
+      "counts": {
+        "passed": 0,
+        "failed": 1,
+        "error": 0,
+        "warning": 1
+      },
+      "log_sha256": "2c8dbb160c0ca14738013df27cc1565a9cfb6474d3618e60ca4be53a244740b5"
+    },
+    "fix1-photo-red.log": {
+      "state": "failed_or_incomplete",
+      "summary": "1 failed, 3 deselected, 1 warning in 4.21s",
+      "counts": {
+        "passed": 0,
+        "failed": 1,
+        "error": 0,
+        "warning": 1
+      },
+      "log_sha256": "684db849ad7a5575c054d214314853bc538b8c90c64db6501456f3e1e39c477e"
+    },
+    "fix1-export-red-corrected.log": {
+      "state": "failed_or_incomplete",
+      "summary": "1 failed",
+      "counts": {
+        "passed": 0,
+        "failed": 1,
+        "error": 0,
+        "warning": 0
+      },
+      "log_sha256": "9309a8dd504e183e4b0ec9383a7a65bc9f19279b5a2581718d4c1a9c3ffd21d9"
+    },
+    "fix1-marks-browser-red.log": {
+      "state": "failed_or_incomplete",
+      "summary": "1 failed",
+      "counts": {
+        "passed": 0,
+        "failed": 1,
+        "error": 0,
+        "warning": 0
+      },
+      "log_sha256": "13f4777be6bd29ad2118d66dac0110f64e59a83f5a4296639362c33b56a04fdd"
+    },
+    "fix1-backend-focused-5.log": {
+      "state": "passed",
+      "summary": "6 passed, 1 warning in 25.16s",
+      "counts": {
+        "passed": 6,
+        "failed": 0,
+        "error": 0,
+        "warning": 1
+      },
+      "log_sha256": "30aaa06850042e6764a668fe5867557156262ad78f78c2c57882fa3d977a3df7"
+    },
+    "fix1-browser-functional-1.log": {
+      "state": "passed",
+      "summary": "14 passed (1.0m)",
+      "counts": {
+        "passed": 14,
+        "failed": 0,
+        "error": 0,
+        "warning": 0
+      },
+      "log_sha256": "e1a5f33ff8308fa9d615feca925f07b7292363d2e09f72bb598e0d2be67e9ec8"
+    },
+    "fix1-browser-full-1.log": {
+      "state": "failed_or_incomplete",
+      "summary": "2 failed; 24 passed (1.8m)",
+      "counts": {
+        "passed": 24,
+        "failed": 2,
+        "error": 0,
+        "warning": 0
+      },
+      "log_sha256": "95e531d8a95635a292262dffb1f878464fed2534e0d3c8bab185bd391dd3f165"
+    },
+    "fix1-browser-full-2.log": {
+      "state": "failed_or_incomplete",
+      "summary": "1 failed; 25 passed (1.7m)",
+      "counts": {
+        "passed": 25,
+        "failed": 1,
+        "error": 0,
+        "warning": 0
+      },
+      "log_sha256": "68d2b3b3f1742d7fb00a6ed0fe6cdbd64fc66b5d84562c7ad40c39699d34b333"
+    },
+    "fix1-browser-full-3.log": {
+      "state": "failed_or_incomplete",
+      "summary": "1 failed; 25 passed (1.5m)",
+      "counts": {
+        "passed": 25,
+        "failed": 1,
+        "error": 0,
+        "warning": 0
+      },
+      "log_sha256": "1aa918490cb985454b895ff7a8932100f1dd24e492674763dd40ba65edea3580"
+    },
+    "fix1-manual-refresh-red.log": {
+      "state": "failed_or_incomplete",
+      "summary": "1 failed",
+      "counts": {
+        "passed": 0,
+        "failed": 1,
+        "error": 0,
+        "warning": 0
+      },
+      "log_sha256": "797fd75309b4cbcddd70e76a45a7fc26c679f2fdab310c2048dca652e6e1b358"
+    },
+    "fix1-manual-refresh-green.log": {
+      "state": "passed",
+      "summary": "2 passed (11.5s)",
+      "counts": {
+        "passed": 2,
+        "failed": 0,
+        "error": 0,
+        "warning": 0
+      },
+      "log_sha256": "aa157abb5c89a0bbd0dbe7d61719e6da978d8e9e79b794087c292bbc74b8d46d"
+    }
+  },
+  "iteration_classification": {
+    "fix1-backend-red.log": "I03 nonexistent fixture function was not business RED; corrected exact-base options route reproduction is separately retained. Grants/version and marks projection were genuine RED.",
+    "fix1-browser-full-1.log": "24 passed; two old helpers assumed target in first50, corrected to UI search.",
+    "fix1-browser-full-2.log": "25 passed; same assumption in English helper, corrected to UI search.",
+    "fix1-browser-full-3.log": "25 passed; genuine existing5/10min customer IP rate limit429 after repeated runs. No threshold or attempts changed; final run after natural window expiry.",
+    "fix1-manual-refresh-red.log": "Delayed manual job refresh could replace newer task result; real current-build browser reproduction before epoch/job/source guard."
+  },
+  "affected_list_search_benchmark": {
+    "tickets": 125000,
+    "sessions": 10,
+    "population": {
+      "tickets": 125000,
+      "receipts": 125000,
+      "receipt_specs": 250000,
+      "bank_entries": 50000,
+      "bank_source_observations": 100000,
+      "evidence_cases": 5000,
+      "equal_amount_bucket": 50,
+      "elapsed_seconds": 41.62244229999487,
+      "charge_components": 250000,
+      "bank_original_workbooks": 2,
+      "bank_original_rows_per_file": 50000
+    },
+    "notification_population": {
+      "members": 1,
+      "active_loading_copies": 0
+    },
+    "label": "fix1-readonly",
+    "elapsed_seconds": 8.553467999998247,
+    "results": {
+      "ticket_list_50": {
+        "requests": 60,
+        "p50_seconds": 0.4508073000033619,
+        "p95_seconds": 0.5599795000016456,
+        "max_seconds": 0.6541410000063479,
+        "errors": 0,
+        "error_codes": [],
+        "response_bytes_max": 77585
+      },
+      "ticket_search_50": {
+        "requests": 60,
+        "p50_seconds": 0.5509797999984585,
+        "p95_seconds": 0.8468016000115313,
+        "max_seconds": 0.9330052000004798,
+        "errors": 0,
+        "error_codes": [],
+        "response_bytes_max": 77541
+      }
+    },
+    "source_digest": "2128c09148396dce878ab2f11a516026fdfd53ed4269a5f9fc98575d787f038b",
+    "warmup_requests": 0,
+    "authentication_barrier": true,
+    "read_only": true,
+    "request_count": 120,
+    "total_errors": 0,
+    "api_peak_sampled_working_set_bytes": 483643392,
+    "postgres_peak_sampled_working_set_bytes": 1148375040,
+    "memory_definition": "50ms sampled process-tree working-set sum; PostgreSQL shared pages may be counted per process; not unique resident memory or whole-machine peak"
+  },
+  "benchmark_boundary": "Only affected125k ticket list/search repeated after marker projection. Ten authenticated sessions,60 requests each kind,0warmup,50rows. Historical25k/125k bank/write/export/backup figures remain in运行验证.json with original source versions, not newly measured values.",
+  "normal_runtime": {
+    "status": "passed",
+    "url": "http://127.0.0.1:8011",
+    "profile": "supplied-snapshot",
+    "source_list_rows": {
+      "来源客户": 50,
+      "来源出运单": 28,
+      "来源箱单票件": 50,
+      "来源账款": 50
+    },
+    "anonymous_status": 401,
+    "private_path_status": 404,
+    "reload_csrf": true,
+    "api_paths": 205,
+    "fix1_scoped_photo_route": true,
+    "source_business_mutations": 0,
+    "external_calls": 0
+  },
+  "current_snapshot_counts": {
+    "schema_head": "g11000600002",
+    "counts": {
+      "legacy_parties": 439,
+      "legacy_shipments": 28,
+      "legacy_tickets": 964,
+      "legacy_bills": 619
+    },
+    "external_flags": {
+      "collection_enabled": false,
+      "summaries_enabled": false,
+      "model_calls_enabled": false,
+      "sending_enabled": false,
+      "phone_delivery_enabled": false,
+      "connection_control_enabled": false
+    },
+    "business_mutations": 0,
+    "source": "explicit supplied-snapshot controlled profile; read-only transaction"
+  },
+  "benchmark_first_error": "Initial read workload completed but added population metadata query used nonexistent copy_events table; no result receipt was published. Corrected to notification_copy_events and repeated the bounded workload. Original failure log retained.",
+  "known_secret_scan": {
+    "files_checked": 290,
+    "known_secret_substring_matches": 9,
+    "reviewed_nonsecret_collisions": 9,
+    "unreviewed_matches": 0,
+    "scope": "Known original archive and controlled local credentials only; not proof of absence of every possible secret or business value"
+  },
+  "schema_and_backup_core": "No schema/migration or backup-core change; original g2 backup remains compatible. New ZIP reconstructed and isolated restore recorded in companion receipt.",
+  "ui_evidence": "UI实现审阅记录.md; originalc97 is historical and three old contact screenshot paths were overwritten; new functional screenshots independently versioned.",
+  "M01": "Existing Starlette TestClient / AnyIO BlockingPortal deprecation retained. No dependency upgrade or warning suppression.",
+  "external_boundary": "Full146 preserved; actual production sources, missing artwork/templates, OCR accuracy, live OTP/account/message delivery, external clipboard paste, physical printing and HTTPS are not accepted by these local tests.",
+  "diagnostic_boundary": "验证边界.md; no claim the historical tool transcript contained zero payload or secrets.",
+  "package_reconstruction": "New companion receipt binds exact ZIP SHA256, source commit, fresh venv/npm ci/build,108-table isolated restore, frozen-writer and anonymous/private-path negatives. Historicald26 ZIP/receipt remain superseded records."
+}

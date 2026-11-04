@@ -103,7 +103,7 @@ def finance_list(db: Database, actor=Depends(get_actor), kind: str='AR', warehou
 
 
 @router.get('/workspace/options')
-def options(kind: str, db: Database, actor=Depends(get_actor), query: str = Query('',max_length=200), offset: int = Query(0,ge=0)):
+def options(kind: str, db: Database, actor=Depends(get_actor), query: str = Query('',max_length=200), offset: int = Query(0,ge=0),after: str | None = Query(None,max_length=36)):
     kinds={
         'warehouses':(Warehouse,'warehouses.read',['name']),
         'parties':(Party,'parties.read',['name','phone']),
@@ -113,7 +113,7 @@ def options(kind: str, db: Database, actor=Depends(get_actor), query: str = Quer
         'documents':(PackingDocument,'packing.read',['reference']),
         'invoices':(Invoice,'finance.read',['reference']),
         'payables':(Invoice,'payables.read',['reference']),
-        'payments':(Payment,'finance.read',[]),
+        'payments':(Payment,'finance.read',['source_key','period']),
         'evidence':(EvidenceCase,'evidence.read',['business_reference','payer_name']),
         'accounts':(BankAccount,'bank.read',['bank_name','account_number']),
         'entries':(BankEntry,'bank.read',['reference','description']),
@@ -128,6 +128,7 @@ def options(kind: str, db: Database, actor=Depends(get_actor), query: str = Quer
     statement=select(model)
     if model is Invoice: statement=statement.where(Invoice.kind==('AP' if kind=='payables' else 'AR'),Invoice.scope=='live')
     if model is Payment: statement=statement.where(Payment.direction=='in',Payment.scope=='live')
+    if model is BankClaim:statement=statement.join(BankEntry,BankEntry.id==BankClaim.entry_id).join(EvidenceCase,EvidenceCase.id==BankClaim.case_id)
     if '*' not in actor.capabilities:
         if model is Warehouse: statement=statement.where(Warehouse.id.in_(actor.warehouse_ids))
         elif model is BankAccount: statement=statement.where(BankAccount.id.in_(select(BankAccountWarehouse.account_id).where(BankAccountWarehouse.active.is_(True),BankAccountWarehouse.warehouse_id.in_(actor.warehouse_ids))))
@@ -136,22 +137,38 @@ def options(kind: str, db: Database, actor=Depends(get_actor), query: str = Quer
         elif model in (BankEntry,BankClaim):
             accounts=select(BankAccountWarehouse.account_id).where(BankAccountWarehouse.active.is_(True),BankAccountWarehouse.warehouse_id.in_(actor.warehouse_ids))
             if model is BankEntry: statement=statement.where(BankEntry.account_id.in_(accounts))
-            else: statement=statement.join(BankEntry,BankEntry.id==BankClaim.entry_id).where(BankEntry.account_id.in_(accounts))
-    columns=[getattr(model,n) for n in names if hasattr(model,n)]
-    if query and columns: statement=statement.where(or_(*(c.ilike('%'+query.replace('%','\\%').replace('_','\\_')+'%',escape='\\') for c in columns)))
-    result=[]
-    for row in db.scalars(statement.order_by(model.id).offset(offset).limit(50)):
-        try:
-            if model is Payment:
-                from app.finance.access import payment_access
-                payment_access(db,actor,row,'finance.read')
-            elif model is BankAccount: account_access(db,actor,row,'bank.read')
-            elif model is BankEntry: account_access(db,actor,db.get(BankAccount,row.account_id),'bank.read')
-            elif model is BankClaim: claim_detail(row.id,db,actor)
-        except DomainError: continue
-        text=' · '.join(str(getattr(row,n)) for n in names if getattr(row,n,None)) or row.id
-        result.append({'id':row.id,'version':row.version,'label':text})
-    return {'items':result}
+            else: statement=statement.where(BankEntry.account_id.in_(accounts),EvidenceCase.warehouse_id.in_(actor.warehouse_ids))
+    columns=[model.id]+[getattr(model,n) for n in names if hasattr(model,n)]
+    if model is BankClaim:columns += [BankClaim.entry_id,BankClaim.case_id,BankEntry.reference,EvidenceCase.business_reference]
+    if query: statement=statement.where(or_(*(c.ilike('%'+query.replace('\\','\\\\').replace('%','\\%').replace('_','\\_')+'%',escape='\\') for c in columns)))
+    # Only authorized IDs may become public cursors. A same-warehouse claim can
+    # still fail message-context authorization, or a payment can span warehouses.
+    # Scan bounded chunks until 51 visible rows; never return a rejected row ID.
+    result=[];cursor=after;skip=offset if not after else 0
+    while len(result)<51:
+        scoped=statement.where(model.id>cursor) if cursor else statement
+        page=list(db.scalars(scoped.order_by(model.id).offset(skip).limit(51)));skip=0
+        if not page:break
+        entries={e.id:e for e in db.scalars(select(BankEntry).where(BankEntry.id.in_([r.entry_id for r in page])))} if model is BankClaim else {}
+        for row in page:
+            try:
+                if model is Payment:
+                    from app.finance.access import payment_access
+                    payment_access(db,actor,row,'finance.read')
+                elif model is BankAccount: account_access(db,actor,row,'bank.read')
+                elif model is BankEntry: account_access(db,actor,db.get(BankAccount,row.account_id),'bank.read')
+                elif model is BankClaim: claim_detail(row.id,db,actor)
+            except DomainError: continue
+            text=' · '.join(str(getattr(row,n)) for n in names if getattr(row,n,None)) or row.id
+            if model is Payment:text=' · '.join(str(v) for v in [row.id,row.paid_on,row.currency,row.amount,row.source_key] if v is not None)
+            if model is BankClaim:
+                entry=entries[row.entry_id]
+                text=' · '.join(str(v) for v in [row.id,entry.reference,entry.transaction_date,entry.currency,entry.credit,row.state] if v is not None)
+            result.append({'id':row.id,'version':row.version,'label':text})
+            if len(result)==51:break
+        if len(page)<51:break
+        cursor=page[-1].id
+    return {'items':result[:50],'next':result[49]['id'] if len(result)>50 else None}
 
 
 @router.get('/workspace/bank-entry/{identity}')
@@ -238,7 +255,10 @@ def update_notice(identity: str, payload: NoticePatch, request: Request, db: Dat
 @router.get('/admin/users/{identity}/grants')
 def user_grants(identity: str, db: Database, actor=Depends(get_actor)):
     require(actor, 'users.read')
-    return {'capabilities': list(db.scalars(select(Grant.capability).where(Grant.user_id == identity))),
+    from app.models import User
+    user=db.get(User,identity)
+    if not user:raise DomainError('not_found','User unavailable',404)
+    return {'id':identity,'version':user.version,'capabilities': list(db.scalars(select(Grant.capability).where(Grant.user_id == identity).order_by(Grant.capability))),
         'warehouse_ids': list(db.scalars(select(WarehouseScope.warehouse_id).where(WarehouseScope.user_id == identity)))}
 
 

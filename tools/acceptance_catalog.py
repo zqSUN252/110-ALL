@@ -3,16 +3,16 @@ import argparse,json
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
 DETAILS='''SYS-01|欢迎、工作台、正式单证均使用MC STAR LOGISTICS及原Logo。
-SYS-02|内部语言切换、字段/状态/错误词典；英文仓库新建与入库录入浏览器验证，完整所有字段人工语言验收未声称。
-SYS-03|按能力显示导航；API逐请求校验actor/仓库/版本/幂等；同浏览器切换低权限及撤权清草稿。
+SYS-02|内部语言/固定分类双语显示，保留原存储与业务文本；查询同页中英切换保留输入/结果；完整全部字段人工语言验收未声称。
+SYS-03|按能力显示导航；API逐请求actor/范围/版本/幂等；授权先读取现集合+版本，增删预览/撤权勾选/受控PUT；切换低权限及撤权清草稿。
 SYS-04|每账号独立HttpOnly会话；刷新恢复CSRF，不覆盖其他会话。
 SYS-05|共享PostgreSQL事实与原件存储；多个授权HTTP会话读写同一记录，非浏览器整库同步。
 SYS-06|挂载式页面保留筛选、焦点、详情与脏值；退出/撤权清空旧actor状态；409及离线保留输入。
 SYS-07|每项服务端命令同事务审计；管理页查询审计与责任人。
 SYS-08|全局授权模糊查找票件/客户/收据/出运/账款；精确链接打开详情。
-SYS-09|独立PG17、真实25k/125k和10会话实测；启动和包重建单列；PG18生产环境未验收。
+SYS-09|独立PG17；授权选择器50项稳定游标/业务引用搜索并保留选中项；25k/125k旧全负载与修复后受影响list/search按各自版本分列，PG18生产环境未验收。
 SYS-10|共享DataTable横滚与同步浮动滚动条；390px保留字段和可达性。
-SYS-11|未知KG/电话/汇率/原始资源保留未知；不填假默认客户与收费事实。
+SYS-11|区分未触碰/创建可选空值/显式清空；空串与null保留接口意图，数量不变0；嵌套只提交可编辑字段，预览/保存同变更集；控货历史保留。
 SYS-12|受权资料原件/模板、版本及团队归档适配器；实际团队空间未配置。
 SYS-13|管理页备份任务、全模块format1流式备份/校验恢复、空库与只读恢复栅栏。
 SYS-14|独立账号/语言/公告按钮；公告版本化新增修改撤回，手机导航折叠不遮账号。
@@ -22,7 +22,7 @@ SYS-17|本机127.0.0.1入口已运行；正式域名、TLS与HTTPS部署尚未�
 SHIP-01|出运单表单SEA/AIR/EXPRESS及独立状态命令，保留库存/放货分离。
 SHIP-02|出运单清关日期、成本账单方与应付联动，不猜成本方。
 SHIP-03|单据关联已确认客户及仓库成员资格；收据到票件原生链接。
-SHIP-04|票件报价与应收生成分离；真实分批到货后产生对应AR。
+SHIP-04|票件报价与应收生成分离；SEA详情独立港/计费Arrival数量/来源/version表单；AIR/EXPRESS分批到货；普通港节点不生成AR/目的仓事实。
 SHIP-05|作废命令显示关系及版本，保留原文与既有财务证据，禁止级联抹除。
 SHIP-06|主箱单/文档与多个票件关系；票件编辑和整组历史变更预览确认。
 SHIP-07|AIR/EXPRESS专用分批到货表单，件/KG/CBM独立累计。
@@ -47,7 +47,7 @@ DOC-01|正式客户箱单共用projection及PDF/XLSX/PNG任务。
 DOC-02|正式生成件使用原Logo及确认公司抬头。
 DOC-03|海运/空运标题和字段按运输类型投影；原模板缺图项单列。
 DOC-04|海运清关单价及真实费用单位显示，不伪造按CBM费率。
-DOC-05|预生成真实PNG Blob与ClipboardItem；失败不标记、不替代打印。
+DOC-05|PNG预生成绑定当前任务/来源/actor；新任务清旧图并丢弃迟到结果；点击ClipboardItem手势中重新取当前服务器授权PNG；失败明确反馈。
 DOC-06|导出选中票/当前筛选/全量各有明确入口与后台授权。
 DOC-07|客户XLSX保留正式模板、字段、金额类型；精确截图543/24仍缺。
 DOC-08|PL保留原字段、费用、联系、到货和复核列，宽表不压缩丢列。
@@ -87,12 +87,12 @@ REL-04|厂家控货解除按指定票和来源确认，电话与解除事实独�
 REL-05|控货通知要求实际清关及目的仓确认，不以账款到港自动READY。
 REL-06|明确解除时间/原文/取消状态，历史证据保留。
 REL-07|主管撤销解控需版本与权限，不移除原控货事实。
-REL-08|PhysicalRelease独立库存余量及原件，指令、付款或中国出库不生成实放。
+REL-08|目的仓最小release.read+physical从指令当前scoped members/remaining选票；专用版本化照片上传/原件回读，实际提货独立事实；已提完仍可读授权历史照片。
 NOT-01|最新到货通知按确认日期/仓/原始票据与可用数量投影。
 NOT-02|收货通知使用当前收据与CBM，签名核对旧版本不可复制标记。
 NOT-03|PL行内只装柜通知；中国仓出库走明确批次。
-NOT-04|复制成功保存对应业务版本的持久标记；浏览器复制失败不记成功。
-NOT-05|装柜黄底黑字与主管撤销命令，独立于AR黄色条件。
+NOT-04|成功复制保存持久copy事件；列表一次批量查询当前标记并黄底黑字；标记不进入通知/导出业务fingerprint。
+NOT-05|UI按原copy ID/version/reason撤销，按生成时原成员清标记并保留历史；不依赖票后来所属箱单。
 NOT-06|复制日期签名每日刷新，旧图片重核；不以创建时间冒充当前日期。
 NOT-07|图片/文字准备供人员明确复制，默认发送与采集关闭。
 NOT-08|实际navigator.clipboard.writeText成功后记录事件，失败显示错误并保留内容。
@@ -120,11 +120,11 @@ F6-04|按业务员分析及下钻，排除MC规则作用于业务员而非收据
 LABEL-01|76×130竖版标签生成，物理打印尺寸仍需真实打印验收。
 LABEL-02|普通/收费/确认标签使用实际抬头和字段，原图不足部分不宣称像素一致。
 LABEL-03|费用类型、币种和千分位按真实计价组件渲染。
-LABEL-04|运输方式变化及确认标签取当前版本，旧报价标签过期。
+LABEL-04|标签取当前来源版本；改价、任务切换、格式切换和撤权不允许复用旧PNG；真实客户端粘贴未验收。
 LABEL-05|按最后有效要求省略多余仓储展示，不删底层库存数据。
 MBL-01|MBL字段表单、真实模板/原件上传、出运关联、版本编辑与授权生成。
 TRACK-01|逐票入库/装柜/出运/港口/清关/仓确认/实放时间线，事实彼此独立。
-TRACK-02|客户跟踪中文/英文，错误不泄露存在性；正式本人箱单是另一授权入口。
+TRACK-02|查询同页中文/英文切换保留当前输入和结果；错误不泄露存在性；本人箱单另有号码归属授权。
 TRACK-03|收据/快递号及电话后四位逐候选证明，拒绝整柜遍历与其他客户信息。
 TRACK-04|原生收据/快递号同号多行逐条核对后聚合。
 TRACK-05|主单跟随与每票manual/follow明确覆盖；仓确认覆盖既有到货批次。
@@ -173,11 +173,11 @@ GROUPS={
 EXTERNAL={
 'SYS-12':'团队空间实际归档服务未配置','SYS-17':'正式域名/TLS/HTTPS未部署','SYS-16':'精确模板543/24原图未取得','DOC-01':'精确模板截图缺失','DOC-07':'原截图543/24缺失，不能声明像素同版','DOC-11':'部分原业务模板尚未提供','MBL-01':'缺模板时明确不可生成，需真实模板验收','HOME-04':'未提供的仓库/联系人保持缺失','HOME-05':'宣传原图1/2未提供','PARTY-03':'缺失真实仓库资料未补造','PAY-03':'真实OCR模型与准确率未验收','WH-17':'实际付费翻译模型未开启','PORTAL-01':'真实短信/WhatsApp归属通道未配置，仅窄运输fake本机验证','NOT-07':'真实客户端投递未测试','DOC-05':'真实微信/WhatsApp粘贴未测试','NOT-08':'真实客户端粘贴未测试','LABEL-01':'真实打印机与纸张尺寸未验收','LABEL-02':'部分原标签截图未提供','MIG-01':'未取得当前MCSTAR/110生产一致性备份','MIG-03':'当前生产正式源未取得，包内快照非现网状态','INT-05':'真实账号配对/采集/发送按边界禁用'}
 def main():
-    parser=argparse.ArgumentParser();parser.add_argument('--final-local',action='store_true');args=parser.parse_args()
+    parser=argparse.ArgumentParser();parser.add_argument('--final-local',action='store_true');parser.add_argument('--review-fix1',action='store_true');args=parser.parse_args()
     if args.final_local:
         from publish_acceptance_evidence import test_receipt
-        assert test_receipt('backend-final-isolated.log')['state']=='passed', 'Final whole backend run must pass'
-        assert test_receipt('browser-final-stable.log')['state']=='passed', 'Final whole browser run must pass'
+        assert test_receipt('fix1-backend-full.log' if args.review_fix1 else 'backend-final-isolated.log')['state']=='passed', 'Final whole backend run must pass'
+        assert test_receipt('fix1-browser-final.log' if args.review_fix1 else 'browser-final-stable.log')['state']=='passed', 'Final whole browser run must pass'
     original=json.loads((ROOT/'docs/acceptance/实现与证据.json').read_text('utf-8'));prior={r['requirement_id']:r for r in original['requirements']}
     details=dict(line.split('|',1) for line in DETAILS.strip().splitlines());requirements=json.loads((ROOT/'docs/requirements/requirements.json').read_text('utf-8'))
     assert set(details)=={r['id'] for r in requirements} and len(details)==146
@@ -186,5 +186,13 @@ def main():
         key=r['id'];source,tests,route=GROUPS[key.split('-')[0]]
         records.append({**prior.get(key,{}),'requirement_id':key,'title':r['title'],'source_prompt_numbers':r['prompts'],'implementation':details[key],'implementation_files':source.split(';'),'ui_entry':route,'covering_domain_tests':['backend/tests/'+name for name in tests.split(';')],'verification_boundary':'关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。','external_unaccepted':EXTERNAL.get(key),'whole_requirement_acceptance':'external_input_or_environment_pending' if key in EXTERNAL else 'local_implementation_pending_final_review'})
     output={'task':6,'status':'IMPLEMENTED_LOCAL_CHECKS_COMPLETE_REVIEW_PENDING' if args.final_local else 'IMPLEMENTING_FINAL_VERIFICATION','schema_head':'g11000600002','requirements_total':146,'requirements':records,'browser_evidence':{'web/tests/full-chain.spec.ts':'真实UI跨页面主链，3条主资料API fixture，其余主要动作UI操作','web/tests/workspace.spec.ts':'reload CSRF/权限/焦点/409/离线/ClipboardItem/跨账号及撤权','web/tests/customer.spec.ts':'号码归属/本人导出/退出/另一号码；仅outbound phone transport fake','web/tests/english.spec.ts':'英文新仓/入库表单保存','web/tests/review-fixes.spec.ts':'手机冻结电话可见/联系人三语/安全号码链接，不实际跳转或发送'},'runtime':'http://127.0.0.1:8011','runtime_data':'supplied package snapshot, controlled authentication; not asserted current production','prior_task5_evidence':'docs/acceptance/迁移审查记录.md'}
+    if args.review_fix1:
+        output['review_fix_round']=1
+        output['verification_receipt']='task6-fix1-verification.json'
+        output['browser_evidence']['web/tests/task6-fixes.spec.ts']='15项真实浏览器回归：SEA/最小目的仓照片及提货/>50付款和claim/显式清空/grants/PNG竞态与撤权/原成员通知撤销/同页语言'
+        for item in output['requirements']:
+            if item['requirement_id'] in {'SYS-02','SYS-03','SYS-09','SYS-11','SHIP-04','SHIP-08','REL-08','DOC-05','DOC-06','LABEL-04','NOT-04','NOT-05','TRACK-02','PARTY-02','PARTY-03'}:
+                item['covering_review_tests']=['backend/tests/test_workspace_fix1.py','backend/tests/test_workspace_performance.py','web/tests/task6-fixes.spec.ts']
+                item['review_fix_round']=1
     (ROOT/'docs/acceptance/实现与证据.json').write_text(json.dumps(output,ensure_ascii=False,indent=2)+'\n',encoding='utf-8');print('Mapped 146 requirements; no inferred external acceptance.')
 if __name__=='__main__':main()

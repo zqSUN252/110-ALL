@@ -3,10 +3,12 @@ import {readFileSync} from 'node:fs';
 test('real customer ownership flow, reload CSRF, own export, logout and another phone',async({page})=>{
   test.setTimeout(90000);
   page.setDefaultTimeout(10000);
-  const base='http://127.0.0.1:8018';
+  const base=process.env.MCSTAR_CUSTOMER_TEST_URL||'http://127.0.0.1:8018';
   const profile=JSON.parse(readFileSync(readFileSync('../private/ui-validation/latest-profile.txt','utf8').trim(),'utf8'));
   const enter=async()=>{await page.getByRole('link',{name:/客户自助查询/}).click();await page.getByRole('button',{name:'验证本人手机号 / 本人箱单',exact:true}).click()};
-  await page.goto(base);await enter();
+  await page.goto(base);
+  expect((await(await page.request.get(base+'/openapi.json')).json()).paths['/api/release-orders/{id}/photos']).toBeDefined();
+  await enter();
   async function verify(number:string){await page.getByLabel('电话',{exact:true}).fill(number);const sent=page.waitForResponse(r=>new URL(r.url()).pathname==='/api/customer/verification');await page.getByRole('button',{name:'发送验证码',exact:true}).click();expect((await sent).status()).toBe(200);await expect(page.getByLabel('验证码',{exact:true})).toBeVisible();const delivery=JSON.parse(readFileSync(profile.private_root+'/phone-transport.json','utf8'));await page.getByLabel('验证码',{exact:true}).fill(delivery.code);await page.getByRole('button',{name:'验证号码归属',exact:true}).click();await expect(page.getByRole('button',{name:'退出客户账号',exact:true})).toBeVisible()}
   await verify('+2347000000000');await expect(page.locator('tbody tr').first()).toBeVisible();
   expect((await page.request.get(base+'/api/receipts')).status()).toBe(401);

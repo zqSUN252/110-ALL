@@ -1,5 +1,5 @@
 import { useContext, useEffect, useRef, useState } from "react";
-import { Plus, ArrowLeft, RefreshCw } from "lucide-react";
+import { Plus, ArrowLeft, RefreshCw, X } from "lucide-react";
 import { api, rows, query, type Row } from "./api";
 import { pages, formInitial, clean, lookup, required, select } from "./catalog";
 import {
@@ -22,6 +22,7 @@ import {
   ActionForm,
   Notice,
   ExportPanel,
+  CopyMarks,
   type Action,
 } from "./workflows";
 
@@ -125,6 +126,8 @@ export function EntityPage({
     (kind === "rates" || kind === "mbl" ? spec.create?.fields : undefined);
   const editPath =
     kind === "users" ? "/api/admin/users/" : spec.detail || spec.endpoint + "/";
+  const editableInitial=detail&&editFields?formInitial(editFields,detail):{};
+  const changedValues=(values:Row)=>Object.fromEntries(Object.entries(values).filter(([name,value])=>name==='expected_version'||JSON.stringify(value)!==JSON.stringify(editableInitial[name])));
   const editing: Action | undefined =
     detail && editFields
       ? {
@@ -133,13 +136,13 @@ export function EntityPage({
           cap: spec.create?.cap || "",
           fields: editFields,
           initial: {
-            ...formInitial(editFields, detail),
+            ...editableInitial,
             expected_version: detail.version,
           },
           preview:
             kind === "tickets"
               ? (b) => {
-                  const { expected_version, ...changes } = b;
+                  const { expected_version, ...changes } = changedValues(b);
                   return api(
                     "/api/tickets/" + detail.id + "/change-preview",
                     changes,
@@ -148,13 +151,7 @@ export function EntityPage({
               : undefined,
           run: async (b, k) => {
             const { preview, ...values } = b;
-            const dirty = Object.fromEntries(
-              Object.entries(values).filter(
-                ([name, v]) =>
-                  name === "expected_version" ||
-                  JSON.stringify(v) !== JSON.stringify(detail[name]),
-              ),
-            );
+            const dirty = changedValues(values);
             if (kind === "tickets" && preview)
               dirty.finance_preview = preview.finance_preview;
             return kind==='mbl'?api('/api/mbl',{...clean(values),shipment_id:detail.shipment_id},'POST',k):api(editPath + detail.id, clean(dirty), "PATCH", k);
@@ -202,9 +199,12 @@ export function EntityPage({
                   </button>
                 </>
               ) : (
+                <>
                 <button onClick={() => setNotice(r.id)}>
                   {t("装柜通知", "Loading notice")}
                 </button>
+                {r.loading_notified&&<button className="loading-mark" onClick={async()=>{await open(r);setTab('marks');try{setAux(await api('/api/tickets/'+r.id+'/notification-marks?history=true'))}catch(e){setError(e)}}}>{t('已通知装柜','Loading notice copied')}<X size={14}/></button>}
+                </>
               )}
             </div>
           ),
@@ -368,7 +368,7 @@ export function EntityPage({
       )}
       {['invoices','payables'].includes(kind)&&filters.party_id&&<PartyLedger partyId={filters.party_id} user={user} openRecord={openRecord} ticketsOnly/>}
       {notice && (
-        <Notice kind={kind} identity={notice} onClose={() => setNotice(null)} />
+        <Notice kind={kind} identity={notice} onClose={() => setNotice(null)} onCopied={()=>void load()}/>
       )}
       {detail && (
         <div className="detail-pane">
@@ -477,7 +477,7 @@ export function EntityPage({
                             kind +
                             "/" +
                             detail.id +
-                            "/notification-marks",
+                            "/notification-marks?history=true",
                         ),
                       );
                     } catch (e) {
@@ -556,7 +556,7 @@ export function EntityPage({
             </>
           ) : tab === "holds" ? (
             aux&&<HoldReview data={aux} onSaved={async r=>{await update(r);setAux(await api('/api/'+kind+'/'+detail.id+'/holds'))}}/>
-          ) : tab==='bank' ? <BankEntries key={detail.id} accountId={detail.id}/> : aux ? (
+          ) : tab==='marks' ? <CopyMarks marks={rows(aux)} canCancel={allowed('documents.notify')} onSaved={async r=>{await update(r);setAux(await api('/api/'+kind+'/'+detail.id+'/notification-marks?history=true'))}}/> : tab==='bank' ? <BankEntries key={detail.id} accountId={detail.id}/> : aux ? (
             <RecordView data={aux} />
           ) : (
             <>

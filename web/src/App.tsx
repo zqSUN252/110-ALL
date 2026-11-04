@@ -261,7 +261,7 @@ function Welcome({
     </main>
   );
 }
-function Tracking({ back }: { back: () => void }) {
+function Tracking({ back,language,setLanguage }: { back: () => void;language:Language;setLanguage:(v:Language)=>void }) {
   const t = useT();
   const [result, setResult] = useState<Row>(),
     [register, setRegister] = useState(false),
@@ -274,6 +274,10 @@ function Tracking({ back }: { back: () => void }) {
   return (
     <main className="public-form">
       <button onClick={back}>{t("返回首页", "Back to home")}</button>
+      <div className="language-switch" aria-label={t('语言','Language')}>
+        <button aria-pressed={language==='zh'} onClick={()=>setLanguage('zh')}>中文</button>
+        <button aria-pressed={language==='en'} onClick={()=>setLanguage('en')}>EN</button>
+      </div>
       <img src="/logo.png" alt="MC STAR LOGISTICS" />
       <h1>{t("客户自助查询", "Track your cargo")}</h1>
       <Form
@@ -288,6 +292,7 @@ function Tracking({ back }: { back: () => void }) {
           },
         ]}
         submitLabel={["查询", "Track"]}
+        successLabel={["查询完成", "Query complete"]}
         submit={async (b) => {
           const r = await api("/api/tracking/query", {
             ...b,
@@ -549,7 +554,7 @@ export default function App() {
           <ErrorBox error={error} />
         </>
       ) : screen === "tracking" ? (
-        <Tracking back={() => setScreen("home")} />
+        <Tracking back={() => setScreen("home")} language={language} setLanguage={setLanguage}/>
       ) : screen === "login" ? (
         <div className="login">
           <button onClick={() => setScreen("home")}>

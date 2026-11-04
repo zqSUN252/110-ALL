@@ -134,7 +134,18 @@ def eligible_order(db,actor,identity):
             'covered_kg':{'value':arrived['kg'],'known_subtotal':sum((a.kg for a in actual if a.kg is not None),Decimal(0)),'pending_count':sum(a.kg is None for a in actual)},
             'original_kg':t.kg,'remaining':{k:quantity_remaining(arrived[k],used[k]) for k in used}})
     if not result:raise DomainError('forbidden','No authorized destination members',403)
-    return json_value({'id':order.id,'version':order.version,'eligible':valid,'members':result})
+    return json_value({'id':order.id,'version':order.version,'eligible':valid,'members':result,'physical_releases':pickup_history(db,actor,order.id,[m['ticket_id'] for m in result])})
+
+
+def pickup_history(db,actor,order_id,ticket_ids):
+    """Destination-scoped historical facts remain readable after stock is exhausted."""
+    query=select(PhysicalRelease).where(PhysicalRelease.order_id==order_id,PhysicalRelease.ticket_id.in_(ticket_ids)).order_by(PhysicalRelease.occurred_at,PhysicalRelease.id)
+    if '*' not in actor.capabilities:query=query.where(PhysicalRelease.warehouse_id.in_(actor.warehouse_ids))
+    releases=list(db.scalars(query))
+    photos={r.id:[] for r in releases}
+    if releases:
+        for photo in db.scalars(select(PhysicalPhoto).where(PhysicalPhoto.release_id.in_(photos)).order_by(PhysicalPhoto.id)):photos[photo.release_id].append(photo.attachment_id)
+    return [finance.record(r)|{'photo_ids':photos[r.id]} for r in releases]
 
 
 def list_orders(db,actor,limit=50,offset=0):
@@ -161,6 +172,44 @@ def photo_bytes(db,settings,release_id,attachment_id,actor=None,customer=None):
     a=finance.locked(db,Attachment,attachment_id);return read_file(settings,a),a.media_type
 
 
+def pickup_photo_scope(db,actor,order_id,ticket_id,expected_version):
+    order=finance.locked(db,ReleaseOrder,order_id)
+    projection=eligible_order(db,actor,order.id)
+    member=next((m for m in projection['members'] if m['ticket_id']==ticket_id),None)
+    if not member:raise DomainError('release_member','Ticket is outside the authorized instruction',403)
+    require(actor,'release.physical',member['destination_warehouse_id'])
+    check_version(order,expected_version)
+    if not projection['eligible']:raise DomainError('stale_release','Re-confirm current instruction sources',409)
+    if member['remaining']['pieces'] is None or Decimal(member['remaining']['pieces'])<=0:raise DomainError('remaining','No arrived pieces remain for pickup',409)
+    return order
+
+
+def pickup_photo_owner(order_id,ticket_id,version):
+    return f'{order_id}:{ticket_id}:{version}'
+
+
+def validate_pickup_image(content,media_type):
+    from PIL import Image
+    from io import BytesIO
+    formats={'image/png':'PNG','image/jpeg':'JPEG','image/webp':'WEBP'}
+    if media_type not in formats:raise DomainError('photo_invalid','Pickup evidence must be PNG, JPEG or WebP')
+    try:
+        with Image.open(BytesIO(content)) as im:
+            if im.format!=formats[media_type]:raise ValueError()
+            im.verify()
+    except (OSError,ValueError,Image.DecompressionBombError):raise DomainError('photo_invalid','Pickup evidence must contain valid image bytes') from None
+
+
+def uploaded_pickup_photo(db,settings,actor,order_id,ticket_id,version,attachment_id):
+    from app.models import Attachment
+    from app.attachments import read_file
+    pickup_photo_scope(db,actor,order_id,ticket_id,version)
+    photo=finance.locked(db,Attachment,attachment_id)
+    if photo.owner_type!='release_photo' or photo.owner_id!=pickup_photo_owner(order_id,ticket_id,version) or photo.created_by!=actor.id:
+        raise DomainError('forbidden','Photo is outside this pickup upload',403)
+    return read_file(settings,photo),photo.media_type
+
+
 @command('release.physical','order_id expected_version ticket_id pieces kg cbm occurred_at photo_ids','release.physical')
 def physical_release(db,actor,p):
     order=finance.locked(db,ReleaseOrder,p['order_id']);check_version(order,p.get('expected_version'))
@@ -179,7 +228,11 @@ def physical_release(db,actor,p):
     from PIL import Image
     from io import BytesIO
     for pid in p['photo_ids']:
-        photo=own_upload(db,actor,pid)
+        from app.models import Attachment
+        photo=finance.locked(db,Attachment,pid)
+        if photo.owner_type=='release_photo':
+            if photo.owner_id!=pickup_photo_owner(order.id,t.id,order.version) or photo.created_by!=actor.id:raise DomainError('forbidden','Photo belongs to another pickup or instruction version',403)
+        else:photo=own_upload(db,actor,pid)
         try:
             with Image.open(BytesIO(read_file(db.info['settings'],photo))) as im:im.verify()
         except (OSError,ValueError):raise DomainError('photo_invalid','Pickup evidence must be a real image') from None

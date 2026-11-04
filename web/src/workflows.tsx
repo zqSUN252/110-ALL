@@ -3,6 +3,8 @@ import { api, download, fileBlob, rows, ApiError, type Row } from "./api";
 import { ErrorBox, Form, RecordView, FileViewer, f, type Field } from "./ui";
 import { LangContext, useT } from "./i18n";
 import {ExportJob} from './ExportJob';
+import {GrantsForm,PickupForm} from './WorkflowForms';
+export {CopyMarks} from './WorkflowForms';
 import {
   lookup,
   select,
@@ -24,6 +26,7 @@ export type Action = {
   initial?: Row;
   run: (body: Row, key: string) => Promise<Row>;
   preview?: (body: Row) => Promise<Row>;
+  load?: () => Promise<Row>;
 };
 export function ActionForm({
   action,
@@ -32,6 +35,11 @@ export function ActionForm({
   action: Action;
   onSaved: (r: Row) => void;
 }) {
+  if (action.key === 'grants') return <GrantsForm action={action} onSaved={onSaved}/>;
+  if (action.key === 'physical') return <PickupForm action={action} onSaved={onSaved}/>;
+  return <CommandForm action={action} onSaved={onSaved}/>;
+}
+function CommandForm({action,onSaved}:{action:Action;onSaved:(r:Row)=>void}) {
   const t = useT();
   const [pending, setPending] = useState<{ body: Row; preview: Row } | null>(
       null,
@@ -50,6 +58,7 @@ export function ActionForm({
         submitLabel={
           action.preview ? ["核对变更预览", "Review change preview"] : undefined
         }
+        successLabel={action.preview?['预览已就绪，请确认后执行','Preview ready; confirm to apply']:undefined}
         submit={async (body, k) => {
           if (action.preview) {
             const preview = await action.preview(clean(body));
@@ -267,6 +276,9 @@ export function actionsFor(kind: string, row: Row): Action[] {
           { ...v, mode: "air" },
         ),
       );
+    if (row.transport === 'SEA') result.push(action('sea-arrive',['海运港口 / 计费到货','SEA port / billing arrival'],'packing.arrive',[
+      required('pieces','number'),f('kg','text',{help:['仅非KG计费且原件未提供重量时保留未知。','Keep unknown weight only when the source omits it and all charges use non-KG units.']}),required('cbm'),required('occurred_on','date'),required('source')
+    ],send('/arrive'),{...v,mode:'sea',kg:row.kg===null?null:undefined}));
     result.push(
       action(
         "release",
@@ -605,7 +617,7 @@ export function actionsFor(kind: string, row: Row): Action[] {
     );
   if (kind === "users")
     result.push(
-      action(
+      {...action(
         "grants",
         ["分配权限与仓库", "Assign capabilities & warehouses"],
         "users.manage",
@@ -622,14 +634,14 @@ export function actionsFor(kind: string, row: Row): Action[] {
           api(
             "/api/admin/users/" + row.id + "/grants",
             {
-              ...b,
+              expected_version: b.expected_version,
               capabilities: b.capabilities || [],
               warehouse_ids: b.warehouse_ids || [],
             },
             "PUT",
             k,
           ),
-      ),
+      ), initial:{...v,user_id:row.id},load:()=>api('/api/admin/users/'+row.id+'/grants')},
     );
   if (kind === "connections")
     result.push(
@@ -877,10 +889,12 @@ export function Notice({
   kind,
   identity,
   onClose,
+  onCopied,
 }: {
   kind: string;
   identity: string;
   onClose: () => void;
+  onCopied?: () => void;
 }) {
   const t = useT();
   const [notice, setNotice] = useState<Row>(),
@@ -932,6 +946,7 @@ export function Notice({
       await api('/api/notifications/'+notice.id+'/copy-events', {expected_version:notice.version,clipboard_success:true}, 'POST', token.current);
       setMarkerPending(false); setError(null);
       setState(t('已复制并保存标记；尚未投递。','Copied and recorded; not delivered.'));
+      onCopied?.();
     } catch(e) { setError(e); setMarkerPending(true); setState(t('内容已复制，标记尚未保存。可重试标记。','Content copied; marker not saved. Retry the marker.')); }
   };
   const copy = async (image: boolean) => {
@@ -1028,25 +1043,27 @@ export function ExportPanel({
 }) {
   const t = useT();
   const [result, setResult] = useState<Row>(),
-    [blob, setBlob] = useState<Blob>(),
+    [prepared, setPrepared] = useState<{id:string;source:string;blob:Blob}>(),
     [error, setError] = useState<any>();
+  const source=JSON.stringify({kind,ids,documentId});
+  const active=useRef({epoch:0,id:'',source});
+  const currentSource=useRef(source);currentSource.current=source;
+  const [copied,setCopied]=useState(false);
+  useEffect(()=>{active.current={epoch:active.current.epoch+1,id:'',source};setResult(undefined);setPrepared(undefined);setError(null);setCopied(false);return()=>{active.current.epoch++}},[source]);
   useEffect(() => {
     if (!result?.id || result.ready || ['ready','completed','failed'].includes(result.status)) return;
     let live = true;
+    const expected={...active.current};
     const timer = setInterval(
       () =>
         api("/api/exports/" + result.id)
           .then((r) => {
-            if (live) {
+            if (live && active.current.epoch===expected.epoch && active.current.id===expected.id && currentSource.current===expected.source) {
               setResult(r);
-              if (r.status === "ready" || r.ready)
-                fileBlob("/api/exports/" + result.id + "/clipboard")
-                  .then(setBlob)
-                  .catch(() => {});
             }
           })
           .catch((e) => {
-            if (live) setError(e);
+            if (live && active.current.epoch===expected.epoch && active.current.id===expected.id && currentSource.current===expected.source) setError(e);
           }),
       1500,
     );
@@ -1055,6 +1072,15 @@ export function ExportPanel({
       clearInterval(timer);
     };
   }, [result?.id, result?.status]);
+  useEffect(()=>{
+    setPrepared(undefined);
+    if(!result||result.format!=='png'||!(result.ready||['ready','completed'].includes(result.status)))return;
+    let live=true;const expected={...active.current};
+    fileBlob('/api/exports/'+result.id+'/clipboard').then(blob=>{
+      if(live&&active.current.epoch===expected.epoch&&active.current.id===result.id&&currentSource.current===expected.source){setPrepared({id:result.id,source:expected.source,blob});setError(null)}
+    }).catch(e=>{if(live&&active.current.epoch===expected.epoch){setPrepared(undefined);setError(e)}});
+    return()=>{live=false};
+  },[result?.id,result?.status,result?.format,source]);
   return (
     <section>
       <Form
@@ -1069,6 +1095,8 @@ export function ExportPanel({
         ]}
         initial={{ kind: preset, format: preset==='packing'?'xlsx':'png' }}
         submit={async (b, k) => {
+          const expected={epoch:active.current.epoch+1,id:'',source};active.current=expected;
+          setPrepared(undefined);setResult(undefined);setError(null);setCopied(false);
           const r = await api(
             "/api/exports",
             {
@@ -1082,7 +1110,7 @@ export function ExportPanel({
             "POST",
             k,
           );
-          setResult(r);
+          if(active.current.epoch===expected.epoch&&currentSource.current===expected.source){active.current={...expected,id:r.id};setResult(r)}
           return r;
         }}
       />
@@ -1093,10 +1121,12 @@ export function ExportPanel({
           <div className="toolbar">
             <button
               onClick={async () => {
+                const expected={...active.current};
                 try {
-                  setResult(await api("/api/exports/" + result.id));
+                  const refreshed=await api("/api/exports/" + result.id);
+                  if(active.current.epoch===expected.epoch&&active.current.id===expected.id&&currentSource.current===expected.source)setResult(refreshed);
                 } catch (e) {
-                  setError(e);
+                  if(active.current.epoch===expected.epoch&&active.current.id===expected.id&&currentSource.current===expected.source)setError(e);
                 }
               }}
             >
@@ -1117,15 +1147,26 @@ export function ExportPanel({
                   {t("下载文件", "Download file")}
                 </button>
                 <button
-                  disabled={!blob}
+                  disabled={!prepared||prepared.id!==result.id||prepared.source!==source||result.format!=='png'}
                   onClick={async () => {
+                    const expected={...active.current};
+                    setError(null);setCopied(false);
+                    let serverError:any;
                     try {
-                      if (!blob || blob.type !== "image/png") throw new Error();
+                      // Construct ClipboardItem during the user gesture; the promise
+                      // obtains fresh, currently authorized bytes for this exact job.
+                      const fresh=fileBlob('/api/exports/'+result.id+'/clipboard').then(blob=>{
+                        if(active.current.epoch!==expected.epoch||active.current.id!==expected.id||currentSource.current!==expected.source)throw new ApiError(409,'stale_export',null);
+                        if(blob.type!=='image/png'||!blob.size)throw new ApiError(422,'clipboard_failed',null);
+                        return blob;
+                      }).catch(e=>{serverError=e;throw e});
+                      void fresh.catch(()=>{}); // Clipboard construction can fail synchronously; the visible error below still reports it.
                       await navigator.clipboard.write([
-                        new ClipboardItem({ "image/png": blob }),
+                        new ClipboardItem({ "image/png": fresh }),
                       ]);
-                    } catch {
-                      setError(new ApiError(0, "clipboard_failed", null));
+                      if(active.current.epoch===expected.epoch)setCopied(true);
+                    } catch (e) {
+                      if(active.current.epoch===expected.epoch){setPrepared(undefined);setError(serverError||e instanceof ApiError&&e||new ApiError(0, "clipboard_failed", null))}
                     }
                   }}
                 >
@@ -1134,6 +1175,7 @@ export function ExportPanel({
               </>
             )}
           </div>
+          {copied&&<p role="status">{t('已复制当前任务图片','Current job image copied')}</p>}
         </>
       )}
     </section>

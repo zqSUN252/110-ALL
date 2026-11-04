@@ -9,6 +9,11 @@ from app.models import Attachment
 
 def put_file(db, actor, content, filename, media_type, owner_type, owner_id):
     require(actor, 'attachments.write')
+    return store_authorized_file(db,actor,content,filename,media_type,owner_type,owner_id)
+
+
+def store_authorized_file(db, actor, content, filename, media_type, owner_type, owner_id):
+    """Private byte storage. Callers must first authorize their specific owner/purpose."""
     # Domain services add their own owner validation; HTTP currently accepts user ownership only.
     settings = db.info.get('settings')
     if settings is None:

@@ -36,7 +36,10 @@ def ticket_json(db,t,bundle=None):
     observed_kg=known_sum(Decimal(a['kg']) if a['kg'] is not None else None for a in arrivals)
     attachments=bundle['attachments'].get(t.id,[]) if bundle is not None else list(db.scalars(select(TicketAttachment).where(TicketAttachment.ticket_id==t.id)))
     quote=(bundle['quotes'].get(t.quote_id) if bundle is not None else db.get(QuoteSnapshot,t.quote_id)) if t.quote_id and t.pricing_authority=='quote' else None
+    from app.documents.notifications import marks
+    current_marks=bundle['marks'].get(t.id,[]) if bundle is not None else marks(db,[t.id]).get(t.id,[])
     return finance.record(t)|{'charge_components':lines,'arrivals':arrivals,'arrived':{'pieces':sum(a['pieces'] for a in arrivals),'kg':f'{observed_kg:.6f}' if observed_kg is not None else None,'cbm':f"{sum((Decimal(a['cbm']) for a in arrivals),Decimal(0)):.6f}"},
+        'notification_marks':current_marks,'loading_notified':any(m['kind']=='loading' for m in current_marks),
         'attachments':[finance.record(a) for a in attachments],
         'quote_id':t.quote_id if t.pricing_authority=='quote' else None,'quote':finance.record(quote) if quote else None,'historical_quote_id':t.quote_id if t.pricing_authority!='quote' else None,'actual_release_at':pickup.isoformat() if pickup else None}
 
@@ -45,8 +48,10 @@ def ticket_page_bundle(db,tickets):
     from app.models import PhysicalRelease,CargoChargeComponent
     from collections import defaultdict
     ids=[t.id for t in tickets]
-    bundle={'pickup':{},'components':defaultdict(list),'arrivals':defaultdict(list),'attachments':defaultdict(list),'quotes':{}}
+    bundle={'pickup':{},'components':defaultdict(list),'arrivals':defaultdict(list),'attachments':defaultdict(list),'quotes':{},'marks':{}}
     if not ids:return bundle
+    from app.documents.notifications import marks
+    bundle['marks']=marks(db,ids)
     bundle['pickup']=dict(db.execute(select(PhysicalRelease.ticket_id,func.max(PhysicalRelease.occurred_at)).where(PhysicalRelease.ticket_id.in_(ids)).group_by(PhysicalRelease.ticket_id)).all())
     revisions=select(CargoChargeComponent.ticket_id,func.max(CargoChargeComponent.ticket_version).label('revision')).join(Ticket,Ticket.id==CargoChargeComponent.ticket_id).where(Ticket.id.in_(ids),CargoChargeComponent.ticket_version<=Ticket.version).group_by(CargoChargeComponent.ticket_id).subquery()
     lines=select(CargoChargeComponent).join(revisions,(revisions.c.ticket_id==CargoChargeComponent.ticket_id)&(revisions.c.revision==CargoChargeComponent.ticket_version)).order_by(CargoChargeComponent.ticket_id,CargoChargeComponent.position)
