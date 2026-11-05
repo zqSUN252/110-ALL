@@ -27,6 +27,26 @@ import {
   type Action,
 } from "./workflows";
 
+function RouteRail({ detail }: { detail: Row }) {
+  const t = useT();
+  const steps = [
+    ["收据", "Receipt", Boolean(detail.receipt)],
+    ["到货", "Arrived", Boolean((detail.arrivals || []).length)],
+    ["计费", "Billed", Boolean(detail.invoice_id)],
+    ["放货", "Released", Boolean(detail.actual_release_at)],
+  ] as const;
+  return (
+    <ol className="route-rail" aria-label={t("货运进度", "Cargo route")}>
+      {steps.map(([zh, en, done]) => (
+        <li key={zh} className={done ? "done" : ""}>
+          <span className="route-dot" aria-hidden="true" />
+          <span className="route-label">{t(zh, en)}</span>
+        </li>
+      ))}
+    </ol>
+  );
+}
+
 export function EntityPage({
   kind,
   user,
@@ -335,6 +355,8 @@ export function EntityPage({
           {t("正在读取…", "Loading…")}
         </div>
       )}
+      <div className={"workbench" + (detail ? " has-detail" : "")}>
+        <div className="workbench-list">
       <DataTable
         identity={user.id + ":" + kind}
         columns={columns}
@@ -376,7 +398,9 @@ export function EntityPage({
       {notice && (
         <Notice kind={kind} identity={notice} onClose={() => setNotice(null)} onCopied={()=>void load()}/>
       )}
+        </div>
       {detail && (
+        <div className="workbench-detail">
         <div className="detail-pane">
           {kind==='parties'&&<PartyLedger partyId={detail.id} user={user} openRecord={openRecord}/>}
           <div className="section-heading">
@@ -398,6 +422,18 @@ export function EntityPage({
               {t("收起详情", "Close details")}
             </button>
           </div>
+          <div className="waybill">
+            <div className="waybill-main">
+              <span className="waybill-kicker">{t("MC STAR 货运记录", "MC STAR cargo record")}</span>
+              <strong className="waybill-id">
+                {detail.reference || detail.receipt || detail.name || detail.username || detail.id}
+              </strong>
+            </div>
+            <span className={`waybill-state state-${String(detail.state || "unknown").toLowerCase()}`}>
+              {detail.state || t("未标记", "Unmarked")}
+            </span>
+          </div>
+          {kind === "tickets" && <RouteRail detail={detail} />}
           <div className="tabs">
             <button
               className={tab === "details" ? "active" : ""}
@@ -592,7 +628,9 @@ export function EntityPage({
             </>
           )}
         </div>
+        </div>
       )}
+      </div>
     </section>
   );
 }

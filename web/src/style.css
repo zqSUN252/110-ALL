@@ -863,3 +863,363 @@ summary {
     scroll-behavior: auto !important;
   }
 }
+
+/* ── Port console, phase 1: internal workspace ─────────────────────────────
+   Warm sand ground, ink-navy rail, waybill strips and a four-stop route.
+   Business state colours and every field/function remain unchanged. */
+:root {
+  --blue: #1a56db;
+  --nav: #0d1b2e;
+  --canvas: #f2eee6;
+  --surface: #fffdf8;
+  --paper: #faf7ef;
+  --ink: #141a22;
+  --muted: #58616c;
+  --line: #d8d0c0;
+  --divider: #e6dfd2;
+  --field-border: #b9b1a2;
+  --signal: #b45309;
+  --route: #0f766e;
+  --stamp-ink: #3f4650;
+  color: var(--ink);
+  background: var(--canvas);
+}
+body { background: var(--canvas); }
+::selection { background: #c9dcff; color: #10151c; }
+:root { scrollbar-color: #b9b1a2 transparent; scrollbar-width: thin; }
+*::-webkit-scrollbar { width: 10px; height: 10px; }
+*::-webkit-scrollbar-thumb { background: #b9b1a2; border: 3px solid var(--canvas); border-radius: 8px; }
+*::-webkit-scrollbar-track { background: transparent; }
+
+h1, h2, h3 { color: var(--ink); letter-spacing: -0.01em; }
+h1 { font-size: 1.72rem; font-weight: 700; }
+h2 { font-size: 1.22rem; font-weight: 700; }
+h3 { font-size: 1rem; font-weight: 700; }
+p { line-height: 1.6; }
+
+button {
+  min-height: 36px;
+  border-color: var(--line);
+  border-radius: 4px;
+  background: var(--surface);
+  color: var(--ink);
+  padding: 8px 12px;
+}
+button:hover { background: #f2ebdd; border-color: #b9a98d; }
+button:active { background: #eae1d0; }
+button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
+  outline: 2px solid var(--route);
+  outline-offset: 2px;
+}
+.primary { background: var(--blue); border-color: var(--blue); color: #fff; }
+.primary:hover { background: #1444ad; border-color: #1444ad; color: #fff; }
+input, select, textarea {
+  border-color: var(--field-border);
+  border-radius: 4px;
+  background: #fffefb;
+  min-height: 38px;
+  caret-color: var(--blue);
+}
+label { font-size: 0.8rem; letter-spacing: 0.01em; color: #343b44; }
+input[type="checkbox"], input[type="radio"] {
+  width: 16px;
+  height: 16px;
+  min-height: 16px;
+  flex: 0 0 16px;
+  margin: 0;
+  accent-color: var(--route);
+}
+label:has(> input[type="checkbox"]), label:has(> input[type="radio"]) {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.grant-revocation-confirmation input {
+  width: 20px;
+  min-height: 20px;
+  height: 20px;
+  flex: 0 0 20px;
+}
+code, .waybill-id { font-family: "Cascadia Mono", "Consolas", ui-monospace, monospace; }
+
+.app-header {
+  height: 64px;
+  padding: 8px 18px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--line);
+}
+.app-header .brand img { width: 76px; }
+.app-header .brand strong {
+  font-size: 0.78rem;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: #2f3742;
+}
+.account-controls { gap: 8px; }
+.account-controls select { min-height: 32px; height: 32px; width: 72px; padding: 4px 6px; }
+.account-controls > span { font-size: 0.8rem; color: var(--muted); }
+.account-controls button { min-height: 32px; padding: 6px 8px; border-color: transparent; background: transparent; }
+.account-controls button:hover { background: #f2ebdd; border-color: var(--line); }
+
+.sidebar {
+  top: 64px;
+  width: 208px;
+  padding: 14px 10px 26px;
+  background: var(--nav);
+  border-right: 1px solid #1b3049;
+  color: #e8edf5;
+}
+.sidebar > button, .sidebar section > button {
+  position: relative;
+  min-height: 34px;
+  padding: 7px 10px 7px 18px;
+  border-radius: 3px;
+  font-size: 0.82rem;
+  letter-spacing: 0.01em;
+  color: #dbe4f0;
+}
+.sidebar section { margin: 15px 0; }
+.sidebar h2 {
+  margin: 0 10px 6px;
+  font-size: 0.63rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: #8fa6c0;
+}
+.sidebar button:hover { background: #ffffff10; color: #fff; }
+.sidebar button.active { background: #ffffff14; color: #fff; font-weight: 650; }
+.sidebar button.active::before {
+  content: "";
+  position: absolute;
+  left: 6px;
+  top: 50%;
+  width: 4px;
+  height: 4px;
+  margin-top: -2px;
+  background: #63d3c6;
+  border-radius: 1px;
+}
+.workspace-content {
+  margin-left: 208px;
+  padding: 84px 20px 40px;
+}
+.page-heading { margin-bottom: 16px; align-items: flex-start; }
+.page-heading h1 { font-size: 1.58rem; line-height: 1.15; }
+.page-heading .toolbar { padding-top: 3px; }
+.toolbar { gap: 7px; }
+
+.filters {
+  background: var(--paper);
+  border-color: var(--line);
+  border-radius: 4px;
+  padding: 14px 16px;
+  margin-bottom: 14px;
+}
+.table-hint { color: var(--muted); font-size: 0.74rem; }
+.table-wrap {
+  border-color: var(--line);
+  border-radius: 3px;
+  background: var(--surface);
+}
+table { font-size: 0.8rem; }
+th, td {
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--divider);
+  border-right: 1px solid var(--divider);
+  background: var(--surface);
+  vertical-align: top;
+  overflow-wrap: anywhere;
+  line-height: 1.45;
+}
+th {
+  background: #ece5d7;
+  color: #3d444d;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 9px 10px;
+}
+th .resize:hover { background: #c8bca5; }
+tbody tr:hover td { background: #fbf7ef; }
+.selected td { background: #eef3fa; }
+.ar-red td { background: #fff5f3; }
+.ar-red td:first-child { box-shadow: inset 3px 0 0 #b42318; }
+.ar-yellow td { background: #fcf7e8; }
+.ar-yellow td:first-child { box-shadow: inset 3px 0 0 #b45309; }
+.loading-notified td { background: #fcf4e1; color: var(--ink); }
+.loading-notified td:first-child { box-shadow: inset 3px 0 0 var(--signal); }
+.loading-notified .text-button, .loading-notified .row-actions button { color: var(--ink); }
+button.loading-mark {
+  background: #fcf4e1;
+  border-color: #dfc18b;
+  color: #5b3a05;
+  padding: 5px 8px;
+  min-height: 30px;
+  font-size: 0.76rem;
+}
+p.loading-mark {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  padding: 5px 8px;
+  border: 1px solid #dfc18b;
+  border-radius: 3px;
+  background: #fcf4e1;
+  color: #5b3a05;
+  font-size: 0.78rem;
+}
+.text-button { color: #164fbc; text-underline-offset: 2px; }
+.text-button:hover { color: #0f3a8a; }
+.floating-scroll { background: #e9e1d2; }
+.row-actions button { min-height: 28px; padding: 4px 7px; font-size: 0.76rem; }
+
+/* Workbench: list and record live side by side on wide screens. */
+.workbench { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; align-items: start; }
+.workbench.has-detail { grid-template-columns: minmax(0, 1fr) minmax(420px, 44%); }
+.workbench-list { min-width: 0; }
+.workbench-detail { min-width: 0; position: sticky; top: 80px; max-height: calc(100vh - 100px); overflow: auto; }
+.workbench-detail .detail-pane { margin-top: 0; }
+.detail-pane, .workflow, .notice-panel {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 20px;
+}
+.detail-pane { margin-top: 0; }
+.workbench-detail .detail-pane > .section-heading {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  margin-bottom: 12px;
+  padding: 2px 0 10px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--divider);
+}
+.section-heading { margin-bottom: 14px; gap: 12px; }
+.section-heading h2 { font-size: 1.05rem; line-height: 1.25; overflow-wrap: anywhere; }
+.section-heading > button { min-height: 30px; padding: 5px 8px; font-size: 0.76rem; }
+.tabs {
+  gap: 0;
+  flex-wrap: wrap;
+  padding-bottom: 0;
+  margin-bottom: 14px;
+  border-bottom: 1px solid var(--line);
+}
+.tabs button {
+  flex: 0 0 auto;
+  min-height: 34px;
+  padding: 7px 9px;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  border-radius: 0;
+  background: transparent;
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+.tabs button:hover { background: #f5efe3; border-color: transparent; }
+.tabs button.active {
+  border-color: var(--route);
+  background: transparent;
+  color: var(--ink);
+  font-weight: 700;
+}
+
+/* Waybill strip and route: the one signature move on a record. */
+.waybill {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 0 0 10px;
+  padding: 9px 10px;
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--blue);
+  border-radius: 3px;
+  background: var(--paper);
+}
+.waybill-main { min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.waybill-kicker {
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.waybill-id {
+  font-size: 0.8rem;
+  font-weight: 650;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+.waybill-state {
+  flex: 0 0 auto;
+  padding: 3px 7px;
+  border: 1px solid #cfc5b3;
+  border-radius: 2px;
+  background: var(--surface);
+  color: var(--stamp-ink);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+.waybill-state.state-void, .waybill-state.state-rejected { border-color: #e3b6b6; color: #9f1239; background: #fff4f2; }
+.waybill-state.state-active, .waybill-state.state-open, .waybill-state.state-arrived { border-color: #a9cdbd; color: #166534; background: #f1f8f2; }
+.waybill-state.state-merged, .waybill-state.state-superseded { color: #6b5f45; background: #f4eee1; }
+.route-rail {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  list-style: none;
+  margin: 0 0 14px;
+  padding: 2px 0 0;
+}
+.route-rail li {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  padding-right: 10px;
+  color: #8b8477;
+  font-size: 0.7rem;
+  white-space: nowrap;
+}
+.route-rail li:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  left: 13px;
+  right: 2px;
+  top: 5px;
+  border-top: 1px solid #d8d0c0;
+}
+.route-dot {
+  position: relative;
+  z-index: 1;
+  width: 9px;
+  height: 9px;
+  flex: 0 0 9px;
+  border: 1px solid #b9b1a2;
+  border-radius: 50%;
+  background: var(--surface);
+}
+.route-rail li.done { color: var(--ink); font-weight: 650; }
+.route-rail li.done .route-dot { background: var(--route); border-color: var(--route); }
+.route-rail li.done:not(:last-child)::after { border-color: #9fc8bf; }
+.route-label { overflow: hidden; text-overflow: ellipsis; }
+
+@media (max-width: 1180px) {
+  .workbench.has-detail { grid-template-columns: minmax(0, 1fr); }
+  .workbench-detail { position: static; max-height: none; overflow: visible; }
+}
+@media (max-width: 700px) {
+  .app-header { height: 60px; padding: 6px 10px; }
+  .app-header .brand img { width: 54px; }
+  .sidebar { top: 60px; width: 208px; }
+  .workspace-content { margin-left: 0; padding: 74px 12px 24px; }
+  .page-heading h1 { font-size: 1.35rem; }
+  .filters, .detail-pane, .notice-panel { padding: 14px; }
+  .route-rail { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 8px; }
+  .waybill { align-items: flex-start; }
+}
