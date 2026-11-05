@@ -68,6 +68,47 @@ def test_native_reservations_concurrent_create_and_edit_cannot_overdraw(app):
             call(db,actor,packing.update_ticket,id=b['id'],expected_version=b['version'],kg='5')
 
 
+def test_final_i04_recovery_cannot_exceed_shared_source(app):
+    from test_packing import make_document
+    with app.state.session_factory() as db,db.begin():
+        actor=who(db);wh,party=seed(db,actor)
+        p=receipt_payload(wh,party);p['specs']=[dict(length='1',width='1',height='1',unit='M',pieces=10,kg='10')]
+        source=call(db,actor,cargo.create_receipt,**p)
+        doc1,a=make_document(db,actor,wh,party)
+        a=call(db,actor,packing.update_ticket,id=a['id'],expected_version=a['version'],native_receipt_id=source['id'],receipt=source['reference'],pieces=4,kg='4',cbm='4',repricing='retain_totals',reason='Synthetic source allocation')
+        doc2,b=make_document(db,actor,wh,party)
+        b=call(db,actor,packing.update_ticket,id=b['id'],expected_version=b['version'],native_receipt_id=source['id'],receipt=source['reference'],pieces=6,kg='6',cbm='6',repricing='retain_totals',reason='Synthetic source allocation')
+        preview=packing.void_preview(db,actor,doc1['id'])
+        call(db,actor,packing.void_document,id=doc1['id'],expected_version=preview['version'],preview=preview,reason='Synthetic cancellation')
+        current=db.get(Ticket,b['id'])
+        call(db,actor,packing.update_ticket,id=b['id'],expected_version=current.version,pieces=8,kg='8',cbm='8',repricing='retain_totals',reason='Synthetic source allocation')
+        recovery=packing.recover_preview(db,actor,doc1['id'])
+        with pytest.raises(DomainError,match='source|Source|quantity'):
+            call(db,actor,packing.recover_document,id=doc1['id'],expected_version=recovery['version'],preview=recovery,reason='Synthetic over-quantity recovery')
+
+
+def test_final_i04_replacement_cannot_exceed_shared_source(app):
+    from app.packing import imports
+    from test_packing import make_document,upload
+    from openpyxl import Workbook
+    from io import BytesIO
+    with app.state.session_factory() as db,db.begin():
+        db.info['settings']=app.state.settings
+        actor=who(db);wh,party=seed(db,actor)
+        p=receipt_payload(wh,party);p['specs']=[dict(length='1',width='1',height='1',unit='M',pieces=10,kg='10')]
+        source=call(db,actor,cargo.create_receipt,**p)
+        doc,a=make_document(db,actor,wh,party)
+        a=call(db,actor,packing.update_ticket,id=a['id'],expected_version=a['version'],native_receipt_id=source['id'],receipt=source['reference'],pieces=4,kg='4',cbm='4',repricing='retain_totals',reason='Synthetic source allocation')
+        b=call(db,actor,packing.create_ticket,document_id=doc['id'],party_id=party,receipt=source['reference'],native_receipt_id=source['id'],pieces=6,kg='6',cbm='6',transport='AIR',freight_usd='0',clearing_ngn='0')
+        book=Workbook();sheet=book.active;sheet.append(['RECEIPT NO.','PCS','KG','CBM']);sheet.append([source['reference'],8,8,8]);sheet.append([source['reference'],6,6,6]);stream=BytesIO();book.save(stream)
+        batch=call(db,actor,imports.preview_import,warehouse_id=wh,attachment_id=upload(db,actor,stream.getvalue()),kind='packing')
+        rows=[r for r in batch['rows'] if r['eligible']]
+        mapping=[dict(row_id=rows[0]['id'],ticket_id=a['id'],values=dict(pieces=8,kg='8',cbm='8')),dict(row_id=rows[1]['id'],ticket_id=b['id'])]
+        preview=imports.replacement_preview(db,actor,doc['id'],batch['id'],mapping)
+        with pytest.raises(DomainError,match='source|Source|quantity'):
+            call(db,actor,imports.replace_document,id=doc['id'],expected_version=preview['version'],batch_id=batch['id'],mapping=mapping,preview=preview,reason='Synthetic over-quantity replacement')
+
+
 def test_unknown_old_void_requires_explicit_current_selection_not_guessing(app):
     from test_packing import make_document
     with app.state.session_factory() as db,db.begin():

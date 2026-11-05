@@ -30,6 +30,21 @@ test('FR-I08 customer copy always fetches the current PNG job',async({page})=>{
   expect(fetched.every(path=>path.includes('/customer/exports/'+second.id+'/clipboard'))).toBeTruthy();
 });
 
+test('FR-I08 customer copy is denied after ownership changes',async({page})=>{
+  test.setTimeout(120000);await page.context().grantPermissions(['clipboard-read','clipboard-write']);
+  const {receipt}=await customer(page);
+  const docs=await(await page.request.get('/api/customer/documents')).json();
+  const row=docs.rows.find((r:any)=>r.receipt===receipt.reference);expect(row).toBeTruthy();
+  const job=await exportCustomer(page,'png');const copy=page.getByRole('button',{name:'复制图片',exact:true});await expect(copy).toBeEnabled({timeout:20000});
+  const login=await page.request.post('/api/auth/login',{data:{username:'admin',password:'synthetic-password-123'}});const csrf=(await login.json()).csrf_token;
+  const current=await(await page.request.get('/api/receipts/'+row.id)).json();
+  const changed=await page.request.fetch('/api/receipts/'+row.id,{method:'PATCH',data:{expected_version:current.version,customer_phone:'+2347000000999'},headers:{'X-CSRF-Token':csrf,'Idempotency-Key':crypto.randomUUID()}});
+  expect(changed.ok()).toBeTruthy();
+  const denied=await page.request.get('/api/customer/exports/'+job.id+'/clipboard');expect(denied.status()).toBe(404);
+  await copy.click();
+  await expect(page.getByRole('alert')).toBeVisible({timeout:20000});
+});
+
 test('FR-I09 clearing cost normal editor previews and submits stable AP with existing payment',async({page})=>{
   const csrf=await login(page),wh=await cmd(page,csrf,'/warehouses',{name:'Synthetic clearing '+Date.now()}),party=await cmd(page,csrf,'/parties',{warehouse_id:wh.id,name:'Synthetic clearing creditor'});
   const shipment=await cmd(page,csrf,'/shipments',{warehouse_id:wh.id,reference:'Final AP '+Date.now(),transport:'SEA',clearing_on:'2026-11-04',clearing_party_id:party.id,clearing_amount_ngn:'1000'});

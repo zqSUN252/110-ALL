@@ -63,6 +63,18 @@ def test_native_merge_and_explicit_split_preserve_each_cash_source(app):
         active=[finance.get_invoice(db,actor,db.get(Ticket,ticket['id']).invoice_id) for ticket in (a,b)]
         assert sum(Decimal(x['discount_ngn']) for x in active)==50
         assert sum(Decimal(finance.payment_json(db,p)['available_ngn']) for p in db.scalars(select(Payment)))==800
+        # Recovered group invoices accept a fresh explicit allocation; recovery
+        # itself never auto-allocates cash.
+        outstanding=sum(Decimal(finance.get_invoice(db,actor,x['id'])['outstanding_ngn']) for x in active)
+        assert outstanding==Decimal('1450')
+        allocations=[]
+        for x in active:
+            inv=finance.get_invoice(db,actor,x['id']);due=Decimal(inv['outstanding_ngn'])
+            if due:allocations.append(dict(invoice_id=inv['id'],expected_version=inv['version'],amount_ngn=str(due)))
+        ticket=db.get(Ticket,a['id'])
+        pay=call(db,actor,finance.create_payment,warehouse_id=ticket.warehouse_id,party_id=ticket.party_id,amount=str(outstanding),currency='NGN')
+        call(db,actor,finance.post_payment,id=pay['id'],expected_version=pay['version'],approval='manual',allocations=allocations)
+        assert sum(Decimal(finance.get_invoice(db,actor,x['id'])['outstanding_ngn']) for x in active)==0
 
 
 def test_native_new_member_does_not_join_manual_invoice_group(app):
@@ -114,6 +126,17 @@ def test_group_preview_concurrent_with_invoice_read_has_no_deadlock(app):
         except Exception as exc:errors.append(repr(exc))
     with ThreadPoolExecutor(max_workers=8) as pool:list(pool.map(run,range(20)))
     assert errors==[]
+
+
+def test_editing_old_ungrouped_ticket_to_same_identity_regroups(app):
+    with app.state.session_factory() as db,db.begin():
+        actor=who(db);wh,party=seed(db,actor);doc,a=make_document(db,actor,wh,party)
+        a=call(db,actor,packing.update_ticket,id=a['id'],expected_version=a['version'],mark='SAME',contact_raw='+2347000000000',phone_normalized='+2347000000000',phone_confirmed=True,destination='LAGOS')
+        b=call(db,actor,packing.create_ticket,document_id=doc['id'],party_id=party,receipt='SYN-OLD-2',mark='SAME',contact_raw='+2347000000000',phone_normalized='+2347000000000',phone_confirmed=True,destination='LAGOS',pieces=1,kg='1',cbm='1')
+        first=db.get(Ticket,a['id']);group=first.billing_group_id
+        first.billing_group_id=None;db.flush()
+        call(db,actor,packing.update_ticket,id=a['id'],expected_version=first.version,mark='SAME',reason='Synthetic legacy regroup')
+        assert db.get(Ticket,a['id']).billing_group_id==db.get(Ticket,b['id']).billing_group_id==group
 
 
 def test_group_preview_rejects_stale_cash_source(app):

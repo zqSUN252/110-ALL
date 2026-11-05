@@ -45,6 +45,9 @@ test('complete cross-page browser business chain with real HTTP and PostgreSQL',
   await dispatchAllocation.getByLabel('出库批次及剩余数量',{exact:true}).selectOption(dispatchOptions[0].id);await dispatchAllocation.getByLabel('件数',{exact:true}).fill('1');await dispatchAllocation.getByLabel('KG',{exact:true}).fill('1');await dispatchAllocation.getByLabel('CBM',{exact:true}).fill('1');
   const arrived=await submit(form,'/api/tickets/'+ticket.id+'/arrive');
   const invoice=await (await page.request.get('/api/invoices/'+arrived.invoice_id)).json();expect(invoice.amount_ngn).toBe('1000.00');
+  const collapse=visible().getByRole('button',{name:'收起详情',exact:true});
+  if(await collapse.count())await collapse.click();
+  await visible().getByRole('button',{name:receipt.reference,exact:true}).first().click();
   form=await command('物流节点');await form.getByLabel('物流节点',{exact:true}).selectOption('warehouse_arrived');await fill(form,'实际时间','2026-11-04T08:00');await pick(form,'目的仓',wh.id);await fill(form,'依据 / 来源','Synthetic actual destination receiving');await submit(form,'/api/tracking/nodes');
 
   await nav('导入银行流水');form=visible().locator('form').first();await pick(form,'银行账户',account.id);await form.getByLabel('原文件',{exact:true}).setInputFiles('../private/ui-validation/browser-assets/bank.xlsx');await expect(form.getByText(/原件已保存/)).toBeVisible();const imported=await submit(form,'/api/bank/imports/preview');form=visible().locator('.detail-pane form');await fill(form,'确认工作表','Access');await form.getByLabel('原日期顺序',{exact:true}).selectOption('dmy');await submit(form,'/api/bank/imports/'+imported.id+'/confirm');

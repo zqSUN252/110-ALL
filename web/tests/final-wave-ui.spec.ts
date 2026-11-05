@@ -1,8 +1,16 @@
 import {test,expect,type Page} from '@playwright/test';
-import {readFileSync} from 'node:fs';
+import {readFileSync,mkdirSync,writeFileSync} from 'node:fs';
+import {resolve} from 'node:path';
 import {execFileSync} from 'node:child_process';
 test.beforeEach(async({page})=>{await page.setViewportSize({width:1440,height:1000})});
 const profilePath=readFileSync('../private/ui-validation/latest-profile.txt','utf8').trim();
+async function capture(page:Page,name:string,target?:any){
+  if(!process.env.MCSTAR_FIX_SHOTS)return;
+  const directory=resolve(process.env.MCSTAR_FIX_SHOTS);mkdirSync(directory,{recursive:true});
+  const original=page.viewportSize()!;const scroll=await page.evaluate(()=>({x:scrollX,y:scrollY}));
+  for(const width of [1440,390]){const height=width===1440?1000:844;await page.setViewportSize({width,height});if(target)await target.evaluate((el:HTMLElement)=>scrollTo(0,el.getBoundingClientRect().top+scrollY-90));await page.screenshot({path:resolve(directory,name+'-'+width+'.png'),animations:'disabled'});writeFileSync(resolve(directory,name+'-'+width+'.json'),JSON.stringify({name,width,height,url:page.url(),scope:'Final wave synthetic UI; no real customer data'},null,2))}
+  await page.setViewportSize(original);await page.evaluate(({x,y})=>scrollTo(x,y),scroll);
+}
 function clearVoidMembers(documentId:string){
   execFileSync('../.venv/Scripts/python.exe',['-c',`import sys
 from sqlalchemy import create_engine,text
@@ -58,6 +66,7 @@ test('FR-M01 copy history shows the authorized operator and time',async({page})=
   await area(page).getByRole('button',{name:'复制记录',exact:true}).click();
   const mark=area(page).locator('p').filter({hasText:'已通知装柜'}).first();
   await expect(mark).toContainText('admin');await expect(mark).toContainText('20');
+  await capture(page,'final-m01-copy-history',mark);
 });
 
 test('FR-I05 billing group UI previews and confirms two members into one invoice',async({page})=>{
@@ -78,6 +87,7 @@ test('FR-I05 billing group UI previews and confirms two members into one invoice
   await area(page).getByLabel('变更原因',{exact:true}).fill('Synthetic explicit same customer billing group');
   await area(page).getByRole('button',{name:'核对分组与资金预览',exact:true}).click();
   await expect(area(page).getByRole('button',{name:'确认分组与来源分配',exact:true})).toBeVisible();
+  await capture(page,'final-i05-billing-group-preview');
   await area(page).getByRole('button',{name:'确认分组与来源分配',exact:true}).click();
   await expect.poll(async()=>{const x=await(await page.request.get('/api/tickets/'+a.id)).json();const y=await(await page.request.get('/api/tickets/'+b.id)).json();return [x.invoice_id,y.invoice_id]}).toEqual([expect.any(String),expect.any(String)]);
   const first=await(await page.request.get('/api/tickets/'+a.id)).json();const secondTicket=await(await page.request.get('/api/tickets/'+b.id)).json();
@@ -96,6 +106,7 @@ test('FR-I02 recovery normal UI restores recorded members through preview',async
   await area(page).getByRole('button',{name:'恢复整份箱单',exact:true}).click();
   await area(page).getByLabel('恢复原因',{exact:true}).fill('Synthetic explicit recovery');
   await area(page).getByRole('button',{name:'核对恢复与财务预览',exact:true}).click();
+  await capture(page,'final-i02-recovery-preview');
   await area(page).getByRole('button',{name:'确认恢复所列成员',exact:true}).click();
   await expect.poll(async()=>{const t=await(await page.request.get('/api/tickets/'+data.ticket.id)).json();return t.state}).toBe('active');
   const current=await(await page.request.get('/api/tickets/'+data.ticket.id)).json();
@@ -119,8 +130,10 @@ test('FR-I02 unknown old cancellation requires explicit current member selection
   await area(page).getByRole('button',{name:'恢复整份箱单',exact:true}).click();
   await expect(area(page).getByText('历史整单作废的成员范围未知',{exact:false})).toBeVisible({timeout:20000});
   await area(page).getByRole('checkbox',{name:ref+'-A',exact:true}).check();
+  await capture(page,'final-i02-unknown-members');
   await area(page).getByLabel('恢复原因',{exact:true}).fill('Synthetic explicit current member decision');
   await area(page).getByRole('button',{name:'核对恢复与财务预览',exact:true}).click();
+  await capture(page,'final-i02-unknown-preview');
   await area(page).getByRole('button',{name:'确认恢复所列成员',exact:true}).click();
   await expect.poll(async()=>{const x=await(await page.request.get('/api/tickets/'+a.id)).json();const y=await(await page.request.get('/api/tickets/'+b.id)).json();return [x.state,y.state].sort().join(',')}).toBe('active,void');
 });
@@ -135,7 +148,7 @@ test('FR-I03 manufacturer hold UI removes and cancels with source evidence',asyn
   const ticket=await cmd(page,csrf,'/tickets',payload);
   await nav(page,'PACKING LIST');await area(page).getByLabel('收据号',{exact:true}).fill(ticket.receipt);await openNamed(page,ticket.receipt);
   await area(page).getByRole('button',{name:'厂家控货',exact:true}).click();
-  const box=area(page).getByRole('checkbox',{name:/选择控货事实/}).first();await expect(box).toBeVisible();await box.check();
+  const box=area(page).getByRole('checkbox',{name:/选择控货事实/}).first();await expect(box).toBeVisible();await capture(page,'final-i03-manufacturer-hold',box);await box.check();
   await area(page).getByLabel('原因',{exact:true}).fill('Synthetic supplier release evidence');
   await area(page).getByLabel('解控日期',{exact:true}).fill('2026-11-04');
   await area(page).getByLabel('确认客户号码',{exact:true}).fill('+2347000000000');
@@ -177,6 +190,7 @@ test('FR-I04 native arrival UI selects an actual outbound batch',async({page})=>
   await row.getByLabel('件数',{exact:true}).fill('4');
   await row.getByLabel('KG',{exact:true}).fill('4');
   await row.getByLabel('CBM',{exact:true}).fill('4');
+  await capture(page,'final-i04-native-arrival',form);
   await form.getByRole('button',{name:'保存',exact:true}).click();
   await expect.poll(async()=>{const t=await(await page.request.get('/api/tickets/'+ticket.id)).json();return t.arrivals.length}).toBe(1);
   const options=await(await page.request.get('/api/tickets/'+ticket.id+'/native-dispatches')).json();

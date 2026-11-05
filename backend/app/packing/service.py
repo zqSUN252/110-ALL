@@ -256,6 +256,12 @@ def edit_ticket(db,actor,t,p):
                 raise DomainError('arrived_quantity','Existing unknown batches require explicit quantity reconciliation',409)
     q=pricing.apply(db,t,p,before)
     bump(t);allocation.revise(db,t,p,q)
+    identity_changed=any(k in p for k in ('party_id','mark','phone_normalized','phone_confirmed'))
+    if identity_changed and not t.billing_group_id and not t.invoice_id and not db.scalar(select(Arrival.id).where(Arrival.ticket_id==t.id)):
+        # Old ungrouped tickets become group members only while they have no
+        # financial or arrival facts; funded/billed tickets keep explicit regroup.
+        from .groups import attach
+        attach(db,actor,t)
     if pricing.requested(p) or allocation.ready(db,t):sync_invoice(db,actor,t,p)
 
 

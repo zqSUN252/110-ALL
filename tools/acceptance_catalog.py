@@ -176,12 +176,14 @@ def main():
     parser=argparse.ArgumentParser();parser.add_argument('--final-local',action='store_true');parser.add_argument('--review-fix1',action='store_true');parser.add_argument('--final-wave',action='store_true');args=parser.parse_args()
     if args.final_wave:
         import re
-        def whole(name):
-            text=(ROOT/'private'/name).read_text('utf-8',errors='replace')
+        def whole(path):
+            text=path.read_text('utf-8',errors='replace')
             passed=re.search(r'(\d+) passed',text)
             return bool(passed) and not re.search(r'(\d+) failed',text) and not re.search(r'(\d+) error',text)
-        assert whole('final-wave-full-backend-r5.log'), 'Final whole backend run must pass'
-        assert whole('final-wave-full-browser-r6.log'), 'Final whole browser run must pass'
+        backend=max((ROOT/'private').glob('final-wave-full-backend-r*.log'),key=lambda p:p.stat().st_mtime)
+        browser=max((ROOT/'private').glob('final-wave-full-browser-r*.log'),key=lambda p:p.stat().st_mtime)
+        assert whole(backend), 'Final whole backend run must pass'
+        assert whole(browser), 'Final whole browser run must pass'
     elif args.final_local:
         from publish_acceptance_evidence import test_receipt
         assert test_receipt('fix1-backend-full.log' if args.review_fix1 else 'backend-final-isolated.log')['state']=='passed', 'Final whole backend run must pass'

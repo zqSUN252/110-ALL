@@ -3,31 +3,53 @@
   "task": 6,
   "review_fix_round": 2,
   "status": "FINAL_WAVE_REVIEW_CLOSED",
-  "implementation_commit": "6295c59c356a88cb7d4cde05f1c3a231b947d8da",
+  "implementation_commit": "6295c59c356a88cb7d4cde05f1c3a231b947d8da plus later tooling/evidence commits",
   "source_binding": "The exact final commit and package SHA256 are recorded in package-manifest.json and the companion package validation receipt; this file does not embed its own package hash.",
   "schema_head": "h11000800003",
   "backend": {
-    "log": "final-wave-full-backend-r5.log",
-    "passed": 354,
+    "log": "final-wave-full-backend-r6.log",
+    "passed": 359,
     "failed": 0,
     "errors": 0,
     "warnings": 1,
-    "seconds": 1241.69,
-    "note": "Final full backend run after the rereview fixes, with no synthetic service or local worker competing for PostgreSQL."
+    "seconds": 1192.81,
+    "note": "Final full backend after the rereview fixes and gap tests, with no synthetic service or local worker competing for PostgreSQL."
   },
   "browser": {
-    "log": "final-wave-full-browser-r6.log",
-    "passed": 36,
+    "log": "final-wave-full-browser-r9.log",
+    "passed": 37,
     "failed": 0,
     "seconds": 132,
     "fresh_schema": true,
+    "screenshots": "16 synthetic screens captured at 1440 and 390 widths (32 PNG files plus metadata); retained in private evidence",
     "note": "One complete suite run on a fresh synthetic UI schema; OTP rate limits and the 3-second database connection timeout were not changed."
   },
   "rereview": {
     "report": "final-rereview.md",
     "result": "FR-I01--I09, FR-M01, FR-M02 CLOSED",
-    "new_findings": "NEW-I01 CLOSED after guard/recovery-preview fixes; NEW-M01/M03/M04/M05 adopted; NEW-M02/M06/M07 recorded as accepted minor boundaries",
-    "new_breakage": "none reported after the fix confirmation"
+    "new_findings": "NEW-I01 CLOSED; NEW-M01 CLOSED after member-warehouse write checks; NEW-M03/M04/M05 adopted; NEW-M02/M06/M07 recorded as accepted minor boundaries",
+    "new_breakage": "none reported after the fix confirmations"
+  },
+  "rereview_gap_tests": [
+    "old ungrouped ticket edited to the same identity regroups (FR-I05)",
+    "active manufacturer hold blocks release order (FR-I03)",
+    "document recovery cannot exceed the shared native source (FR-I04)",
+    "replacement cannot exceed the shared native source (FR-I04)",
+    "clearing AP preview is idempotent and a stale preview is rejected (FR-I09)",
+    "recovered group invoices accept a fresh explicit allocation; recovery never auto-allocates (FR-I01)",
+    "customer copy is denied after ownership changes (FR-I08)"
+  ],
+  "native_group_scale": {
+    "scope": "Owned synthetic 125k benchmark extension; no production data",
+    "groups": 25000,
+    "members": 125000,
+    "member_distribution": {"5": 25000},
+    "group_invoices": 25000,
+    "arrived_members": 125000,
+    "group_list_sql_ms": 1.504,
+    "document_groups_seconds_50_tickets": 0.35366255,
+    "packing_projection_seconds_50_tickets": 0.69274572,
+    "note": "Warm local synthetic measurement; not a production SLA. Larger memberships, concurrency and cold caches remain unverified."
   },
   "migration": {
     "normal_entry": "http://127.0.0.1:8011",
@@ -55,8 +77,7 @@
     "PG18, production HTTPS/domain/reverse proxy, multi-device SLA",
     "Real team-space archive destination",
     "Full diagnostic-transcript secret exposure audit",
-    "Native-group scale benchmark on a non-zero group population",
-    "FR-I08 post-generation ownership revocation, FR-I04 replacement/restore over-quantity, FR-I09 duplicate/stale preview, FR-I05 pre-existing ungrouped edit, FR-I03 HOLD blocking release assertion, FR-I01 group-scenario naming"
+    "Native-group behavior at larger memberships, concurrency or cold caches"
   ],
   "external_unaccepted": 21
 }

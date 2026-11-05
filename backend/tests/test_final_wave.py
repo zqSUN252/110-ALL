@@ -9,7 +9,7 @@ from app.common import DomainError
 from app.finance import service as finance
 from app.packing import service as packing
 from app.cargo import service as cargo
-from app.models import Invoice, Ticket, HoldFact
+from app.models import Invoice, Ticket, HoldFact, Shipment
 from test_logistics import who, call, seed, receipt_payload
 from test_packing import make_document
 
@@ -117,6 +117,37 @@ def test_final_new_i01_recovery_preview_rejects_merged_native_source(app):
         native=db.get(Receipt,source['id']);native.state='merged';native.version+=1;db.flush()
         with pytest.raises(DomainError,match='merged'):
             packing.recover_preview(db,actor,doc['id'])
+
+
+def test_final_i09_clearing_ap_preview_is_idempotent_and_stale_rejected(app):
+    from app.shipments import service as shipping
+    with app.state.session_factory() as db,db.begin():
+        actor=who(db);wh,party=seed(db,actor)
+        shipment=call(db,actor,shipping.create_shipment,warehouse_id=wh,reference='Synthetic clearing AP',transport='SEA',clearing_on='2026-11-04',clearing_party_id=party,clearing_amount_ngn='1000')
+        invoice=finance.get_invoice(db,actor,shipment['clearing_invoice_id'])
+        preview=finance.adjustment_preview(db,actor,invoice['id'],'1200')
+        payload=dict(id=shipment['id'],expected_version=shipment['version'],clearing_amount_ngn='1200',finance_preview=preview,idempotency_key='synthetic-clearing-idempotent')
+        first=shipping.update_shipment(db,actor,dict(payload))
+        again=shipping.update_shipment(db,actor,dict(payload))
+        assert again==first
+        assert finance.get_invoice(db,actor,invoice['id'])['amount_ngn']=='1200.00'
+        current=db.get(Shipment,shipment['id'])
+        with pytest.raises(DomainError,match='preview_changed|Financial impact changed'):
+            shipping.update_shipment(db,actor,dict(id=shipment['id'],expected_version=current.version,clearing_amount_ngn='1300',finance_preview=preview,idempotency_key='synthetic-clearing-stale'))
+        assert finance.get_invoice(db,actor,invoice['id'])['amount_ngn']=='1200.00'
+
+
+def test_final_i03_active_hold_blocks_release_order(app):
+    from app.tracking import service as tracking
+    from app.documents import release
+    with app.state.session_factory() as db,db.begin():
+        actor=who(db);wh,party=seed(db,actor);doc,t=make_document(db,actor,wh,party)
+        t=call(db,actor,packing.update_ticket,id=t['id'],expected_version=t['version'],contact_raw='ON HOLD BY SUPPLIER',phone_normalized=None,phone_confirmed=False,destination_warehouse_id=wh,address='Synthetic address')
+        t=arrive(db,actor,t)
+        call(db,actor,tracking.set_node,target_type='ticket',target_id=t['id'],expected_version=t['version'],node='warehouse_arrived',mode='manual',destination_warehouse_id=wh,occurred_at='2026-11-04T10:00:00+08:00',source='Synthetic warehouse receipt')
+        t=packing.get_ticket(db,actor,t['id'])
+        with pytest.raises(DomainError,match='manufacturer'):
+            call(db,actor,release.issue_order,members=[dict(ticket_id=t['id'],expected_version=t['version'])],mode='paid')
 
 
 def test_final_i04_linked_tickets_share_source_quantity_ceiling(app):
