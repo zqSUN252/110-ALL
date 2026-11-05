@@ -1287,9 +1287,160 @@ input[inputmode="decimal"], .billing-source input, .billing-members input {
   .workbench-detail .form-grid { grid-template-columns: 1fr; }
 }
 
+/* ── Manifest Desk polish: unslop pass ─────────────────────────────────────
+   Neutral warm-grey surfaces, one blue accent, 4px rhythm, weights <=600,
+   8px controls / 12px panels, one 16px icon system. Content moments stay:
+   the waybill strip and the four-stop route. */
+:root {
+  --canvas: #f7f4ee;
+  --surface: #fdfbf7;
+  --paper: #f2eee6;
+  --ink: #1f1b16;
+  --secondary: #5e554a;
+  --muted: #7b7266;
+  --line: #e2dcd2;
+  --divider: #ece7de;
+  --field-border: #cfc7ba;
+  --nav: #161513;
+  --nav-ink: #efe9de;
+  --blue: #1a56db;
+  --route: #1a56db;
+  --signal: #b45309;
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  color: var(--ink);
+  background: var(--canvas);
+}
+body { background: var(--canvas); color: var(--ink); }
+h1 { font-size: 1.75rem; line-height: 1.15; font-weight: 500; }
+h2 { font-size: 1.125rem; line-height: 1.25; font-weight: 500; }
+h3 { font-size: 1rem; line-height: 1.3; font-weight: 500; }
+p { color: var(--secondary); }
+label { font-size: 0.8125rem; font-weight: 500; letter-spacing: 0; color: var(--secondary); margin-bottom: 8px; }
+button, input, select, textarea { border-radius: 8px; }
+button { min-height: 36px; padding: 8px 12px; font-size: 0.875rem; }
+input, select, textarea { min-height: 40px; border-color: var(--field-border); background: var(--surface); }
+button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+svg.lucide { width: 16px; height: 16px; stroke-width: 1.5; }
+.app-header { height: 64px; padding: 8px 24px; background: var(--surface); border-bottom: 1px solid var(--line); }
+.app-header .brand strong { font-size: 0.875rem; font-weight: 500; letter-spacing: 0.01em; text-transform: none; color: var(--secondary); }
+.account-controls > span { color: var(--muted); font-size: 0.8125rem; }
+.sidebar {
+  top: 64px;
+  width: 240px;
+  padding: 16px 12px 24px;
+  background: var(--nav);
+  border-right: 1px solid #2a2722;
+  color: var(--nav-ink);
+  transition: transform 180ms var(--ease);
+}
+.sidebar > button, .sidebar section > button {
+  min-height: 36px;
+  padding: 8px 12px 8px 20px;
+  margin-bottom: 4px;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+.sidebar h2 {
+  margin: 0 12px 8px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
+  color: #a8a094;
+}
+.sidebar section { margin: 24px 0 8px; }
+.sidebar button.active { background: #ffffff0d; font-weight: 500; }
+.sidebar button.active::before { background: #8fb3ff; }
+.workspace-content { margin-left: 240px; padding: 88px 24px 40px; }
+.page-heading { margin-bottom: 24px; gap: 16px; }
+.page-heading h1 { font-size: 1.75rem; font-weight: 500; }
+.page-heading .toolbar { gap: 8px; }
+.filters { padding: 16px; margin-bottom: 16px; border-radius: 12px; }
+.table-wrap { border-radius: 12px; }
+table { font-size: 0.8125rem; }
+th, td { padding: 10px 12px; }
+th {
+  background: #efe9df;
+  color: var(--secondary);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
+}
+tbody tr:hover td { background: var(--paper); }
+.selected td { background: #eef3fa; }
+.ar-red td { background: #fff5f3; }
+.ar-yellow td { background: #fcf7e8; }
+.loading-notified td { background: #fcf4e1; }
+button.loading-mark, p.loading-mark { border-radius: 4px; }
+.text-button { color: #1444ad; }
+.row-actions button { min-height: 32px; padding: 4px 8px; font-size: 0.8125rem; }
+.workbench { gap: 16px; }
+.workbench.has-detail { grid-template-columns: minmax(0, 1fr) minmax(420px, 44%); }
+.detail-pane, .workflow, .notice-panel { padding: 20px; border-radius: 12px; }
+.section-heading { margin-bottom: 16px; gap: 12px; }
+.section-heading h2 { font-size: 1rem; font-weight: 500; }
+.section-heading > button { min-height: 36px; padding: 8px 12px; font-size: 0.8125rem; }
+.record-commands { padding: 8px; gap: 8px; margin-bottom: 12px; border-radius: 8px; }
+.record-commands button { min-height: 36px; padding: 8px 12px; font-size: 0.8125rem; }
+.record-commands button.active { font-weight: 500; }
+.tabs button { min-height: 36px; padding: 8px 12px; font-size: 0.8125rem; font-weight: 400; }
+.tabs button.active { font-weight: 500; }
+.waybill { padding: 8px 12px; margin-bottom: 12px; border-radius: 8px; }
+.waybill-kicker { font-size: 0.75rem; font-weight: 400; letter-spacing: 0; text-transform: none; color: var(--muted); }
+.waybill-id { font-size: 0.8125rem; font-weight: 500; }
+.waybill-state { border-radius: 4px; font-size: 0.75rem; font-weight: 500; letter-spacing: 0; }
+.route-rail { margin-bottom: 16px; }
+.route-rail li { font-size: 0.75rem; }
+.route-label { font-weight: 400; }
+.route-rail li.done { font-weight: 500; }
+.form-grid { gap: 16px; }
+fieldset { padding: 16px; border-radius: 8px; }
+legend { font-size: 0.75rem; font-weight: 500; letter-spacing: 0; text-transform: none; color: var(--secondary); }
+.billing-source, .billing-controls { padding: 16px; border-radius: 8px; }
+.billing-source h4 { font-size: 0.875rem; font-weight: 500; }
+.hold-fact { padding: 16px; border-radius: 8px; }
+.confirmation { border-radius: 12px; }
+.facts dt { color: var(--muted); font-size: 0.75rem; }
+.facts dd { font-size: 0.875rem; }
+.filters, .detail-pane, .table-wrap, .notice-panel { box-shadow: 0 1px 2px rgba(31, 27, 22, 0.05); }
+
+@media (max-width: 700px) {
+  .app-header { padding: 8px 12px; }
+  .sidebar { width: 240px; }
+  .workspace-content { padding: 80px 16px 24px; }
+  .page-heading h1 { font-size: 1.5rem; }
+}
+
 @media (max-width: 1180px) {
   .workbench.has-detail { grid-template-columns: minmax(0, 1fr); }
   .workbench-detail { position: static; max-height: none; overflow: visible; }
+}
+
+/* unslop spacing / weight normalization over legacy rules */
+button { gap: 8px; }
+input, select, textarea { padding: 8px 12px; }
+.toolbar, .form-actions, .row-actions { gap: 8px; }
+.field small { margin-top: 4px; }
+.pager { gap: 12px; margin: 12px 0 24px; }
+.facts { gap: 12px 16px; }
+.records > .record { padding: 12px 0; margin: 0; }
+.confirmation { margin-top: 24px; }
+.notice-panel .toolbar { margin-top: 16px; }
+.search-input { margin-bottom: 4px; }
+.dashboard-links { gap: 16px; }
+.source-note { padding: 12px 16px; border-radius: 8px; }
+.floating-scroll { height: 16px; }
+.waybill-state { padding: 4px 8px; }
+h1, h2, h3, strong, th, legend { font-weight: 500; }
+b { font-weight: 500; }
+@media (max-width: 700px) {
+  .account-controls { gap: 8px; }
+  .page-heading { gap: 16px; }
+  .login, .public-form { margin: 16px; }
+  .public-contacts { gap: 16px; }
 }
 @media (max-width: 700px) {
   .app-header { height: 60px; padding: 6px 10px; }

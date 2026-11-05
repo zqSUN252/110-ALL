@@ -16,7 +16,7 @@
     "note": "Final full backend after the rereview fixes and gap tests, with no synthetic service or local worker competing for PostgreSQL."
   },
   "browser": {
-    "log": "ui-phase2-browser-final.log",
+    "log": "unslop-browser-final.log",
     "passed": 37,
     "failed": 0,
     "seconds": 132,
@@ -25,10 +25,11 @@
     "note": "Final phase-2 Port Console UI run on a fresh synthetic schema; OTP rate limits and the 3-second database connection timeout were not changed."
   },
   "ui_replan": {
-    "direction": "Port Console (Impeccable Operate mode)",
-    "phases": "phase 1 shell + phase 2 record command bar, billing source structure, form rhythm; internal workspace only",
+    "direction": "Port Console (Impeccable Operate mode), polished with unslop Manifest Desk",
+    "phases": "phase 1 shell + phase 2 record command bar, billing source structure, form rhythm; unslop neutral ramp, 4px rhythm, weights <=500, 8/12px radii and one 16px icon system; internal workspace only",
     "design_document": "DESIGN.md",
     "screenshots": 32,
+    "unslop_credit": "unslop by Damir Sokolovsky (@heydamir), CC BY 4.0, github.com/heydamir/unslop",
     "unchanged": "business fields, labels, field order, state meanings, permissions, APIs and external acceptance boundaries"
   },
   "rereview": {

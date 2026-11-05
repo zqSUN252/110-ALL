@@ -3,23 +3,24 @@ name: MC STAR LOGISTICS
 description: Observed blue-brand logistics workspace and public welcome system.
 colors:
   blue: "#1a56db"
-  nav: "#0d1b2e"
+  nav: "#161513"
   signal: "#b45309"
-  route: "#0f766e"
-  focus: "#0ea5e9"
-  link: "#164fbc"
-  canvas: "#f2eee6"
-  surface: "#fffdf8"
-  paper: "#faf7ef"
-  ink: "#141a22"
-  muted: "#58616c"
-  line: "#d8d0c0"
-  divider: "#e6dfd2"
-  field-border: "#b9b1a2"
-  control-hover: "#f2ebdd"
-  control-hover-border: "#b9a98d"
-  control-active: "#eae1d0"
-  table-heading: "#ece5d7"
+  route: "#1a56db"
+  focus: "#1a56db"
+  link: "#1444ad"
+  canvas: "#f7f4ee"
+  surface: "#fdfbf7"
+  paper: "#f2eee6"
+  ink: "#1f1b16"
+  secondary: "#5e554a"
+  muted: "#7b7266"
+  line: "#e2dcd2"
+  divider: "#ece7de"
+  field-border: "#cfc7ba"
+  control-hover: "#f2eee6"
+  control-hover-border: "#cfc7ba"
+  control-active: "#ece7de"
+  table-heading: "#efe9df"
   selected: "#eef3fa"
   receivable-red: "#ffe4e6"
   receivable-yellow: "#fff1b8"
@@ -35,17 +36,17 @@ colors:
 typography:
   headline:
     fontFamily: 'Ebrima, "Microsoft YaHei", "Segoe UI", sans-serif'
-    fontSize: "1.72rem"
+    fontSize: "1.75rem"
     lineHeight: 1.15
-    fontWeight: 700
+    fontWeight: 500
   title:
     fontFamily: 'Ebrima, "Microsoft YaHei", "Segoe UI", sans-serif'
-    fontSize: "1.22rem"
-    fontWeight: 700
+    fontSize: "1.125rem"
+    fontWeight: 500
   section-title:
     fontFamily: 'Ebrima, "Microsoft YaHei", "Segoe UI", sans-serif'
     fontSize: "1rem"
-    fontWeight: 700
+    fontWeight: 500
   public-headline:
     fontFamily: 'Ebrima, "Microsoft YaHei", "Segoe UI", sans-serif'
     fontSize: "1.9rem"
@@ -71,9 +72,9 @@ typography:
     fontFamily: 'Ebrima, "Microsoft YaHei", "Segoe UI", sans-serif'
     fontSize: "0.9rem"
 rounded:
-  field: "5px"
-  control: "6px"
-  panel: "8px"
+  field: "8px"
+  control: "8px"
+  panel: "12px"
   public-form: "12px"
   public-card: "13px"
 spacing:
@@ -174,6 +175,10 @@ The internal workspace was replanned with the user in Impeccable Operate mode. T
 Phase 1 replaced the generic card-and-blue shell, calmed whole-row status fills into a three-pixel state bar plus a light tint, separated business commands from view tabs, corrected checkbox-row layout and themed focus, selection and scrollbars. Phase 2 added the record command bar, the billing member/source/confirmation structure, grouped field rhythm, right-aligned tabular money inputs and bilingual labels for hold evidence fields.
 
 Business fields, field order, labels, status meanings, permissions, API behavior and external-acceptance boundaries are unchanged. No gradients, glass, decorative shadows, emoji icons or new brand claims were introduced. The final phase-2 synthetic browser run passed 37/37 at 1440 and 390 widths; the existing backend suite (359 passed) is unaffected.
+
+### Manifest Desk unslop pass
+
+The internal workspace was then polished with **unslop** by Damir Sokolovsky ([@heydamir](https://x.com/heydamir), CC BY 4.0; skill source `github.com/heydamir/unslop`). Audit verdict: light slop, so this is a polish pass, not a replacement world. The brand blue leaves the chrome and becomes the single accent; the canvas and rail move to a neutral warm-grey ramp; spacing is normalized toward the 4px scale; headings and labels cap at weight 500; controls use 8px and panels 12px radii; all lucide icons are one 16px/1.5 system; uppercase tracking is removed from table and section labels. The two content moments remain the waybill strip and the four-stop route. Business fields, labels, field order, state meanings, permissions and APIs are unchanged.
 
 Source authority: `web/src/style.css`, `web/src/ui.tsx`, `web/src/WorkflowForms.tsx`, `web/src/workflows.tsx`, `web/src/EntityPage.tsx`, `web/src/catalog.ts`, `web/src/App.tsx`, `PRODUCT.md` and the truthful incumbent-direction record in `docs/development/ui-contract.md`. This scan records Task 6 fix 1's final-guard 22-file source/build snapshot, digest `eabed45247a37e1df66814f3c32832d77a9f1ff9ec0fb5b24bbfd70916b25c15`; current source/build provenance and verification limits are in `.superpowers/sdd/2026-11-04-unified-implementation/task-6-ui-documentation-fix-1.md`. The earlier documentation report and four-fix ship verdict are historical scope. This scan does not certify whole-app or production acceptance.
 
