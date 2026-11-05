@@ -1,7 +1,7 @@
 {
   "task": 6,
-  "status": "IMPLEMENTED_LOCAL_CHECKS_COMPLETE_REVIEW_PENDING",
-  "schema_head": "g11000600002",
+  "status": "IMPLEMENTED_LOCAL_CHECKS_COMPLETE_FINAL_WAVE_REVIEW_CLOSED",
+  "schema_head": "h11000800003",
   "requirements_total": 146,
   "requirements": [
     {
@@ -624,7 +624,7 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#SHIP-02",
       "task5_role": "migration_or_recovery_support",
       "task5_evidence": "docs/development/migration-contract.md",
-      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "whole_requirement_acceptance": "local_implementation_final_wave_finding_closed",
       "implementation": "出运单清关日期、成本账单方与应付联动，不猜成本方。",
       "implementation_files": [
         "web/src/catalog.ts",
@@ -706,7 +706,7 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#SHIP-05",
       "task5_role": "migration_or_recovery_support",
       "task5_evidence": "docs/development/migration-contract.md",
-      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "whole_requirement_acceptance": "local_implementation_final_wave_finding_closed",
       "implementation": "作废命令显示关系及版本，保留原文与既有财务证据，禁止级联抹除。",
       "implementation_files": [
         "web/src/catalog.ts",
@@ -1006,7 +1006,7 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#PL-07",
       "task5_role": "migration_or_recovery_support",
       "task5_evidence": "docs/development/migration-contract.md",
-      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "whole_requirement_acceptance": "local_implementation_final_wave_finding_closed",
       "implementation": "票件专用编辑表单、报价影响预览、版本确认。",
       "implementation_files": [
         "web/src/Operations.tsx",
@@ -1031,7 +1031,7 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#PL-08",
       "task5_role": "existing_domain_or_task6_acceptance",
       "task5_evidence": null,
-      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "whole_requirement_acceptance": "local_implementation_final_wave_finding_closed",
       "implementation": "改港使用当前费率/人工计价权限，财务预览后确认，旧指令失效。",
       "implementation_files": [
         "web/src/Operations.tsx",
@@ -1598,7 +1598,7 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#AR-01",
       "task5_role": "existing_domain_or_task6_acceptance",
       "task5_evidence": null,
-      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "whole_requirement_acceptance": "local_implementation_final_wave_finding_closed",
       "implementation": "原生票/历史完整组对应一金融身份，USD与NGN按明确汇率合并。",
       "implementation_files": [
         "web/src/EntityPage.tsx",
@@ -1625,7 +1625,7 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#AR-02",
       "task5_role": "existing_domain_or_task6_acceptance",
       "task5_evidence": null,
-      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "whole_requirement_acceptance": "local_implementation_final_wave_finding_closed",
       "implementation": "服务端授权范围总计覆盖全部页；客户账款及名下运单联动。",
       "implementation_files": [
         "web/src/EntityPage.tsx",
@@ -1825,7 +1825,7 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#AR-09",
       "task5_role": "migration_or_recovery_support",
       "task5_evidence": "docs/development/migration-contract.md",
-      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "whole_requirement_acceptance": "local_implementation_final_wave_finding_closed",
       "implementation": "一款多账/多款一账分配、撤销及跨方影响预览，Decimal守恒。",
       "implementation_files": [
         "web/src/EntityPage.tsx",
@@ -1855,7 +1855,7 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#AR-10",
       "task5_role": "migration_or_recovery_support",
       "task5_evidence": "docs/development/migration-contract.md",
-      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "whole_requirement_acceptance": "local_implementation_final_wave_finding_closed",
       "implementation": "票件改价预览旧新余额和冲回分配，实收不丢，旧指令不可复用。",
       "implementation_files": [
         "web/src/EntityPage.tsx",
@@ -2374,7 +2374,7 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#REL-01",
       "task5_role": "existing_domain_or_task6_acceptance",
       "task5_evidence": null,
-      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "whole_requirement_acceptance": "local_implementation_final_wave_finding_closed",
       "implementation": "放货指令文字和PNG单独复制及持久化标记，实际提货另记。",
       "implementation_files": [
         "web/src/HoldReview.tsx",
@@ -2404,7 +2404,7 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#REL-02",
       "task5_role": "existing_domain_or_task6_acceptance",
       "task5_evidence": null,
-      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "whole_requirement_acceptance": "local_implementation_final_wave_finding_closed",
       "implementation": "有授权的信用放货命令和审核依据，不能伪造已付款。",
       "implementation_files": [
         "web/src/HoldReview.tsx",
@@ -2461,7 +2461,7 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#REL-04",
       "task5_role": "existing_domain_or_task6_acceptance",
       "task5_evidence": null,
-      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "whole_requirement_acceptance": "local_implementation_final_wave_finding_closed",
       "implementation": "厂家控货解除按指定票和来源确认，电话与解除事实独立。",
       "implementation_files": [
         "web/src/HoldReview.tsx",
@@ -2486,7 +2486,7 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#REL-05",
       "task5_role": "existing_domain_or_task6_acceptance",
       "task5_evidence": null,
-      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "whole_requirement_acceptance": "local_implementation_final_wave_finding_closed",
       "implementation": "控货通知要求实际清关及目的仓确认，不以账款到港自动READY。",
       "implementation_files": [
         "web/src/HoldReview.tsx",
@@ -2538,7 +2538,7 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#REL-07",
       "task5_role": "existing_domain_or_task6_acceptance",
       "task5_evidence": null,
-      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "whole_requirement_acceptance": "local_implementation_final_wave_finding_closed",
       "implementation": "主管撤销解控需版本与权限，不移除原控货事实。",
       "implementation_files": [
         "web/src/HoldReview.tsx",
@@ -2567,7 +2567,7 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#REL-08",
       "task5_role": "migration_or_recovery_support",
       "task5_evidence": "docs/development/migration-contract.md",
-      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "whole_requirement_acceptance": "local_implementation_final_wave_finding_closed",
       "implementation": "目的仓最小release.read+physical从指令当前scoped members/remaining选票；专用版本化照片上传/原件回读，实际提货独立事实；已提完仍可读授权历史照片。",
       "implementation_files": [
         "web/src/HoldReview.tsx",
@@ -2680,7 +2680,7 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#NOT-04",
       "task5_role": "existing_domain_or_task6_acceptance",
       "task5_evidence": null,
-      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "whole_requirement_acceptance": "local_implementation_final_wave_finding_closed",
       "implementation": "成功复制保存持久copy事件；列表一次批量查询当前标记并黄底黑字；标记不进入通知/导出业务fingerprint。",
       "implementation_files": [
         "web/src/workflows.tsx",
@@ -3167,7 +3167,7 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#WH-13",
       "task5_role": "existing_domain_or_task6_acceptance",
       "task5_evidence": null,
-      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "whole_requirement_acceptance": "local_implementation_final_wave_finding_closed",
       "implementation": "出运批次选择收据与实际数量；并发不能超出余量，不自动目的仓放货。",
       "implementation_files": [
         "web/src/catalog.ts",
@@ -3193,7 +3193,7 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#WH-14",
       "task5_role": "existing_domain_or_task6_acceptance",
       "task5_evidence": null,
-      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "whole_requirement_acceptance": "local_implementation_final_wave_finding_closed",
       "implementation": "改包压包保留旧规格修订与库存事实，明确作废不可整表覆盖。",
       "implementation_files": [
         "web/src/catalog.ts",
@@ -3785,7 +3785,7 @@
       "source_requirement": "docs/requirements/必须遵守的功能清单.md#PORTAL-02",
       "task5_role": "existing_domain_or_task6_acceptance",
       "task5_evidence": null,
-      "whole_requirement_acceptance": "local_implementation_pending_final_review",
+      "whole_requirement_acceptance": "local_implementation_final_wave_finding_closed",
       "implementation": "本人选择正式箱单XLSX/PDF/PNG任务、下载及权限；另一号码不可读。",
       "implementation_files": [
         "web/src/App.tsx",
@@ -4226,11 +4226,19 @@
     "web/tests/customer.spec.ts": "号码归属/本人导出/退出/另一号码；仅outbound phone transport fake",
     "web/tests/english.spec.ts": "英文新仓/入库表单保存",
     "web/tests/review-fixes.spec.ts": "手机冻结电话可见/联系人三语/安全号码链接，不实际跳转或发送",
-    "web/tests/task6-fixes.spec.ts": "15项真实浏览器回归：SEA/最小目的仓照片及提货/>50付款和claim/显式清空/grants/PNG竞态与撤权/原成员通知撤销/同页语言"
+    "web/tests/final-wave.spec.ts": "FR-I08/I09 true browser flow on fresh schema",
+    "web/tests/final-wave-ui.spec.ts": "FR-M01/I02/I03/I04/I05 normal UI incl. unknown old cancellation selection"
   },
   "runtime": "http://127.0.0.1:8011",
   "runtime_data": "supplied package snapshot, controlled authentication; not asserted current production",
   "prior_task5_evidence": "docs/acceptance/迁移审查记录.md",
-  "review_fix_round": 1,
-  "verification_receipt": "task6-fix1-verification.json"
+  "review_fix_round": 2,
+  "verification_receipt": "final-wave-verification.json",
+  "final_review": {
+    "reviewed": "FR-I01--I09, FR-M01, FR-M02",
+    "result": "CLOSED",
+    "new_findings": "NEW-I01 closed; adopted NEW-M01/M03/M04/M05; recorded NEW-M02/M06/M07",
+    "verification_gaps": "listed in final-wave-verification.json and final-rereview.md",
+    "external_unaccepted": 21
+  }
 }

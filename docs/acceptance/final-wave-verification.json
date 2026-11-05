@@ -1,0 +1,62 @@
+{
+  "checked_at": "2026-11-05",
+  "task": 6,
+  "review_fix_round": 2,
+  "status": "FINAL_WAVE_REVIEW_CLOSED",
+  "implementation_commit": "6295c59c356a88cb7d4cde05f1c3a231b947d8da",
+  "source_binding": "The exact final commit and package SHA256 are recorded in package-manifest.json and the companion package validation receipt; this file does not embed its own package hash.",
+  "schema_head": "h11000800003",
+  "backend": {
+    "log": "final-wave-full-backend-r5.log",
+    "passed": 354,
+    "failed": 0,
+    "errors": 0,
+    "warnings": 1,
+    "seconds": 1241.69,
+    "note": "Final full backend run after the rereview fixes, with no synthetic service or local worker competing for PostgreSQL."
+  },
+  "browser": {
+    "log": "final-wave-full-browser-r6.log",
+    "passed": 36,
+    "failed": 0,
+    "seconds": 132,
+    "fresh_schema": true,
+    "note": "One complete suite run on a fresh synthetic UI schema; OTP rate limits and the 3-second database connection timeout were not changed."
+  },
+  "rereview": {
+    "report": "final-rereview.md",
+    "result": "FR-I01--I09, FR-M01, FR-M02 CLOSED",
+    "new_findings": "NEW-I01 CLOSED after guard/recovery-preview fixes; NEW-M01/M03/M04/M05 adopted; NEW-M02/M06/M07 recorded as accepted minor boundaries",
+    "new_breakage": "none reported after the fix confirmation"
+  },
+  "migration": {
+    "normal_entry": "http://127.0.0.1:8011",
+    "pre_upgrade_schema": "g11000600002",
+    "pre_upgrade_tables": 109,
+    "pre_upgrade_dump_sha256": "34aa85cc8d832700d3f0b2222ade19fc4491afdc82d012bba6ea56ae65ae29fd",
+    "pre_upgrade_isolated_restore": "verified in a separate owned database",
+    "post_upgrade_schema": "h11000800003",
+    "post_upgrade_tables": 112,
+    "source_counts": {
+      "legacy_tickets": 964,
+      "legacy_bills": 619,
+      "legacy_shipments": 28,
+      "legacy_parties": 439,
+      "attachments": 144
+    },
+    "post_upgrade_backup": "created and verified by isolated restore (runtime fence frozen)",
+    "readonly_smoke": "welcome 200, public profile 200, unauthenticated session 401, 209 API paths"
+  },
+  "unverified": [
+    "Current MCSTAR/110 production consistency and cutover",
+    "Real model/OCR/translation accuracy and cost",
+    "Real OTP ownership, pairing and message delivery",
+    "Missing original artwork, exact templates and physical printing",
+    "PG18, production HTTPS/domain/reverse proxy, multi-device SLA",
+    "Real team-space archive destination",
+    "Full diagnostic-transcript secret exposure audit",
+    "Native-group scale benchmark on a non-zero group population",
+    "FR-I08 post-generation ownership revocation, FR-I04 replacement/restore over-quantity, FR-I09 duplicate/stale preview, FR-I05 pre-existing ungrouped edit, FR-I03 HOLD blocking release assertion, FR-I01 group-scenario naming"
+  ],
+  "external_unaccepted": 21
+}

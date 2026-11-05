@@ -173,8 +173,16 @@ GROUPS={
 EXTERNAL={
 'SYS-12':'团队空间实际归档服务未配置','SYS-17':'正式域名/TLS/HTTPS未部署','SYS-16':'精确模板543/24原图未取得','DOC-01':'精确模板截图缺失','DOC-07':'原截图543/24缺失，不能声明像素同版','DOC-11':'部分原业务模板尚未提供','MBL-01':'缺模板时明确不可生成，需真实模板验收','HOME-04':'未提供的仓库/联系人保持缺失','HOME-05':'宣传原图1/2未提供','PARTY-03':'缺失真实仓库资料未补造','PAY-03':'真实OCR模型与准确率未验收','WH-17':'实际付费翻译模型未开启','PORTAL-01':'真实短信/WhatsApp归属通道未配置，仅窄运输fake本机验证','NOT-07':'真实客户端投递未测试','DOC-05':'真实微信/WhatsApp粘贴未测试','NOT-08':'真实客户端粘贴未测试','LABEL-01':'真实打印机与纸张尺寸未验收','LABEL-02':'部分原标签截图未提供','MIG-01':'未取得当前MCSTAR/110生产一致性备份','MIG-03':'当前生产正式源未取得，包内快照非现网状态','INT-05':'真实账号配对/采集/发送按边界禁用'}
 def main():
-    parser=argparse.ArgumentParser();parser.add_argument('--final-local',action='store_true');parser.add_argument('--review-fix1',action='store_true');args=parser.parse_args()
-    if args.final_local:
+    parser=argparse.ArgumentParser();parser.add_argument('--final-local',action='store_true');parser.add_argument('--review-fix1',action='store_true');parser.add_argument('--final-wave',action='store_true');args=parser.parse_args()
+    if args.final_wave:
+        import re
+        def whole(name):
+            text=(ROOT/'private'/name).read_text('utf-8',errors='replace')
+            passed=re.search(r'(\d+) passed',text)
+            return bool(passed) and not re.search(r'(\d+) failed',text) and not re.search(r'(\d+) error',text)
+        assert whole('final-wave-full-backend-r5.log'), 'Final whole backend run must pass'
+        assert whole('final-wave-full-browser-r6.log'), 'Final whole browser run must pass'
+    elif args.final_local:
         from publish_acceptance_evidence import test_receipt
         assert test_receipt('fix1-backend-full.log' if args.review_fix1 else 'backend-final-isolated.log')['state']=='passed', 'Final whole backend run must pass'
         assert test_receipt('fix1-browser-final.log' if args.review_fix1 else 'browser-final-stable.log')['state']=='passed', 'Final whole browser run must pass'
@@ -185,7 +193,17 @@ def main():
     for r in requirements:
         key=r['id'];source,tests,route=GROUPS[key.split('-')[0]]
         records.append({**prior.get(key,{}),'requirement_id':key,'title':r['title'],'source_prompt_numbers':r['prompts'],'implementation':details[key],'implementation_files':source.split(';'),'ui_entry':route,'covering_domain_tests':['backend/tests/'+name for name in tests.split(';')],'verification_boundary':'关联域回归与具体浏览器证据分列；并不声称每项外部/像素/真实投递条件已验收。最终执行结果见验证收据。','external_unaccepted':EXTERNAL.get(key),'whole_requirement_acceptance':'external_input_or_environment_pending' if key in EXTERNAL else 'local_implementation_pending_final_review'})
-    output={'task':6,'status':'IMPLEMENTED_LOCAL_CHECKS_COMPLETE_REVIEW_PENDING' if args.final_local else 'IMPLEMENTING_FINAL_VERIFICATION','schema_head':'g11000600002','requirements_total':146,'requirements':records,'browser_evidence':{'web/tests/full-chain.spec.ts':'真实UI跨页面主链，3条主资料API fixture，其余主要动作UI操作','web/tests/workspace.spec.ts':'reload CSRF/权限/焦点/409/离线/ClipboardItem/跨账号及撤权','web/tests/customer.spec.ts':'号码归属/本人导出/退出/另一号码；仅outbound phone transport fake','web/tests/english.spec.ts':'英文新仓/入库表单保存','web/tests/review-fixes.spec.ts':'手机冻结电话可见/联系人三语/安全号码链接，不实际跳转或发送'},'runtime':'http://127.0.0.1:8011','runtime_data':'supplied package snapshot, controlled authentication; not asserted current production','prior_task5_evidence':'docs/acceptance/迁移审查记录.md'}
+    output={'task':6,'status':'IMPLEMENTED_LOCAL_CHECKS_COMPLETE_FINAL_WAVE_REVIEW_CLOSED' if args.final_wave else 'IMPLEMENTED_LOCAL_CHECKS_COMPLETE_REVIEW_PENDING' if args.final_local else 'IMPLEMENTING_FINAL_VERIFICATION','schema_head':'h11000800003' if args.final_wave else 'g11000600002','requirements_total':146,'requirements':records,'browser_evidence':{'web/tests/full-chain.spec.ts':'真实UI跨页面主链，3条主资料API fixture，其余主要动作UI操作','web/tests/workspace.spec.ts':'reload CSRF/权限/焦点/409/离线/ClipboardItem/跨账号及撤权','web/tests/customer.spec.ts':'号码归属/本人导出/退出/另一号码；仅outbound phone transport fake','web/tests/english.spec.ts':'英文新仓/入库表单保存','web/tests/review-fixes.spec.ts':'手机冻结电话可见/联系人三语/安全号码链接，不实际跳转或发送'},'runtime':'http://127.0.0.1:8011','runtime_data':'supplied package snapshot, controlled authentication; not asserted current production','prior_task5_evidence':'docs/acceptance/迁移审查记录.md'}
+    if args.final_wave:
+        output['review_fix_round']=2
+        output['verification_receipt']='final-wave-verification.json'
+        output['browser_evidence']['web/tests/final-wave.spec.ts']='FR-I08/I09 true browser flow on fresh schema'
+        output['browser_evidence']['web/tests/final-wave-ui.spec.ts']='FR-M01/I02/I03/I04/I05 normal UI incl. unknown old cancellation selection'
+        closed={'SHIP-05','SHIP-02','AR-01','AR-02','AR-09','AR-10','REL-01','REL-02','REL-04','REL-05','REL-07','REL-08','WH-13','WH-14','PL-07','PL-08','PORTAL-01','PORTAL-02','NOT-04','INT-05'}
+        for item in output['requirements']:
+            if item['requirement_id'] in closed and item['whole_requirement_acceptance']!='external_input_or_environment_pending':
+                item['whole_requirement_acceptance']='local_implementation_final_wave_finding_closed'
+        output['final_review']={'reviewed':'FR-I01--I09, FR-M01, FR-M02','result':'CLOSED','new_findings':'NEW-I01 closed; adopted NEW-M01/M03/M04/M05; recorded NEW-M02/M06/M07','verification_gaps':'listed in final-wave-verification.json and final-rereview.md','external_unaccepted':21}
     if args.review_fix1:
         output['review_fix_round']=1
         output['verification_receipt']='task6-fix1-verification.json'
