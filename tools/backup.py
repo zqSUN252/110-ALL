@@ -62,4 +62,4 @@ def main():
 
 if __name__=='__main__':
     try:main()
-    except Exception as error:print(json.dumps({'state':'failed','error_type':type(error).__name__}),file=sys.stderr);sys.exit(1)
+    except Exception as error:print(json.dumps({'state':'failed','error_type':type(error).__name__,'error_message':str(error)[:300]}),file=sys.stderr);sys.exit(1)
