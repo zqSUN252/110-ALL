@@ -16,13 +16,20 @@
     "note": "Final full backend after the rereview fixes and gap tests, with no synthetic service or local worker competing for PostgreSQL."
   },
   "browser": {
-    "log": "final-wave-full-browser-r9.log",
+    "log": "ui-phase2-browser-final.log",
     "passed": 37,
     "failed": 0,
     "seconds": 132,
     "fresh_schema": true,
     "screenshots": "16 synthetic screens captured at 1440 and 390 widths (32 PNG files plus metadata); retained in private evidence",
-    "note": "One complete suite run on a fresh synthetic UI schema; OTP rate limits and the 3-second database connection timeout were not changed."
+    "note": "Final phase-2 Port Console UI run on a fresh synthetic schema; OTP rate limits and the 3-second database connection timeout were not changed."
+  },
+  "ui_replan": {
+    "direction": "Port Console (Impeccable Operate mode)",
+    "phases": "phase 1 shell + phase 2 record command bar, billing source structure, form rhythm; internal workspace only",
+    "design_document": "DESIGN.md",
+    "screenshots": 32,
+    "unchanged": "business fields, labels, field order, state meanings, permissions, APIs and external acceptance boundaries"
   },
   "rereview": {
     "report": "final-rereview.md",

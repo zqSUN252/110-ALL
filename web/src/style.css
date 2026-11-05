@@ -1209,6 +1209,84 @@ p.loading-mark {
 .route-rail li.done:not(:last-child)::after { border-color: #9fc8bf; }
 .route-label { overflow: hidden; text-overflow: ellipsis; }
 
+/* Record command bar, then quieter view tabs. */
+.record-commands {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 8px;
+  margin-bottom: 10px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+}
+.record-commands button { min-height: 30px; padding: 5px 8px; font-size: 0.76rem; }
+.record-commands button.active {
+  border-color: var(--route);
+  background: #eaf5f1;
+  color: var(--ink);
+  font-weight: 700;
+}
+.record-commands + .tabs { margin-top: 0; }
+
+/* Form rhythm: grouped fields read as sections, money reads as numbers. */
+.form-grid { gap: 14px; }
+fieldset {
+  background: var(--paper);
+  border-color: var(--line);
+  border-radius: 4px;
+  padding: 14px;
+}
+legend {
+  padding: 0 5px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+input[inputmode="decimal"], .billing-source input, .billing-members input {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.billing-members { margin-top: 12px; }
+.billing-sources { display: grid; gap: 12px; margin-top: 10px; }
+.billing-source {
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  padding: 12px;
+  background: var(--paper);
+}
+.billing-source h4 { margin: 0 0 8px; font-size: 0.8rem; letter-spacing: 0.01em; }
+.billing-controls {
+  margin-top: 12px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  background: var(--paper);
+}
+.billing-controls label { display: block; margin-bottom: 10px; }
+.billing-controls label:has(> input[type="checkbox"]) { display: flex; align-items: flex-start; gap: 8px; }
+.billing-controls > button { margin-top: 4px; }
+.confirmation { border-radius: 4px; border-color: #dfc18b; background: #fdf6e8; }
+.hold-fact {
+  margin: 10px 0;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  background: var(--paper);
+}
+.workbench-detail .facts {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px 14px;
+}
+.workbench-detail .facts dd { word-break: break-word; }
+.workbench-detail .form-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+@media (max-width: 700px) {
+  .workbench-detail .facts,
+  .workbench-detail .form-grid { grid-template-columns: 1fr; }
+}
+
 @media (max-width: 1180px) {
   .workbench.has-detail { grid-template-columns: minmax(0, 1fr); }
   .workbench-detail { position: static; max-height: none; overflow: visible; }

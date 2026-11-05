@@ -3,21 +3,24 @@ name: MC STAR LOGISTICS
 description: Observed blue-brand logistics workspace and public welcome system.
 colors:
   blue: "#1a56db"
-  nav: "#12409e"
+  nav: "#0d1b2e"
+  signal: "#b45309"
+  route: "#0f766e"
   focus: "#0ea5e9"
   link: "#164fbc"
-  canvas: "#f1f5f9"
-  surface: "#fff"
-  ink: "#0f172a"
-  muted: "#475569"
-  line: "#cbd5e1"
-  divider: "#e2e8f0"
-  field-border: "#94a3b8"
-  control-hover: "#eaf0fb"
-  control-hover-border: "#8ba7d9"
-  control-active: "#dce8fc"
-  table-heading: "#eaf0f8"
-  selected: "#edf4ff"
+  canvas: "#f2eee6"
+  surface: "#fffdf8"
+  paper: "#faf7ef"
+  ink: "#141a22"
+  muted: "#58616c"
+  line: "#d8d0c0"
+  divider: "#e6dfd2"
+  field-border: "#b9b1a2"
+  control-hover: "#f2ebdd"
+  control-hover-border: "#b9a98d"
+  control-active: "#eae1d0"
+  table-heading: "#ece5d7"
+  selected: "#eef3fa"
   receivable-red: "#ffe4e6"
   receivable-yellow: "#fff1b8"
   loading-notified: "#ffe978"
@@ -32,14 +35,17 @@ colors:
 typography:
   headline:
     fontFamily: 'Ebrima, "Microsoft YaHei", "Segoe UI", sans-serif'
-    fontSize: "1.6rem"
-    lineHeight: 1.3
+    fontSize: "1.72rem"
+    lineHeight: 1.15
+    fontWeight: 700
   title:
     fontFamily: 'Ebrima, "Microsoft YaHei", "Segoe UI", sans-serif'
-    fontSize: "1.25rem"
+    fontSize: "1.22rem"
+    fontWeight: 700
   section-title:
     fontFamily: 'Ebrima, "Microsoft YaHei", "Segoe UI", sans-serif'
-    fontSize: "1.05rem"
+    fontSize: "1rem"
+    fontWeight: 700
   public-headline:
     fontFamily: 'Ebrima, "Microsoft YaHei", "Segoe UI", sans-serif'
     fontSize: "1.9rem"
@@ -156,9 +162,18 @@ The system supports dense, evidence-oriented work. Lists and their detail forms 
 
 **Key Characteristics:**
 - Original MC STAR logo and established blue identity.
-- Light, bordered operational surfaces with explicit field labels.
+- Warm sand operational ground, ink-navy department rail and paper surfaces.
+- Two-pane workbench, waybill strip and a four-stop cargo route.
 - Broad tables, tabular numerals and context-preserving detail forms.
 - Responsive reflow without deleting required information.
+
+## Port console extension (2026-11-05)
+
+The internal workspace was replanned with the user in Impeccable Operate mode. The direction is **Port Console**: warm sand canvas, ink-navy navigation, a single signal amber for exceptions, and one signature move — the waybill strip plus a four-stop route (receipt, arrival, billing, release) that reads real record fields. Lists and records share a two-pane workbench on wide screens; narrow screens stack them without deleting fields.
+
+Phase 1 replaced the generic card-and-blue shell, calmed whole-row status fills into a three-pixel state bar plus a light tint, separated business commands from view tabs, corrected checkbox-row layout and themed focus, selection and scrollbars. Phase 2 added the record command bar, the billing member/source/confirmation structure, grouped field rhythm, right-aligned tabular money inputs and bilingual labels for hold evidence fields.
+
+Business fields, field order, labels, status meanings, permissions, API behavior and external-acceptance boundaries are unchanged. No gradients, glass, decorative shadows, emoji icons or new brand claims were introduced. The final phase-2 synthetic browser run passed 37/37 at 1440 and 390 widths; the existing backend suite (359 passed) is unaffected.
 
 Source authority: `web/src/style.css`, `web/src/ui.tsx`, `web/src/WorkflowForms.tsx`, `web/src/workflows.tsx`, `web/src/EntityPage.tsx`, `web/src/catalog.ts`, `web/src/App.tsx`, `PRODUCT.md` and the truthful incumbent-direction record in `docs/development/ui-contract.md`. This scan records Task 6 fix 1's final-guard 22-file source/build snapshot, digest `eabed45247a37e1df66814f3c32832d77a9f1ff9ec0fb5b24bbfd70916b25c15`; current source/build provenance and verification limits are in `.superpowers/sdd/2026-11-04-unified-implementation/task-6-ui-documentation-fix-1.md`. The earlier documentation report and four-fix ship verdict are historical scope. This scan does not certify whole-app or production acceptance.
 

@@ -281,6 +281,9 @@ export function EntityPage({
     ];
   const list = rows(data);
   const attachments = detail?.images || detail?.attachments || [];
+  const recordActions = detail
+    ? actionsFor(kind, detail).filter((a) => allowed(a.cap))
+    : [];
   return (
     <section className="entity-page">
       <div className="page-heading">
@@ -434,6 +437,22 @@ export function EntityPage({
             </span>
           </div>
           {kind === "tickets" && <RouteRail detail={detail} />}
+          {recordActions.length > 0 && (
+            <div className="record-commands" role="group" aria-label={t("业务操作", "Record actions")}>
+              {recordActions.map((a) => (
+                <button
+                  key={a.key}
+                  className={action?.key === a.key ? "active" : ""}
+                  onClick={() => {
+                    setTab(a.key);
+                    setAction(a);
+                  }}
+                >
+                  {t(...a.title)}
+                </button>
+              ))}
+            </div>
+          )}
           <div className="tabs">
             <button
               className={tab === "details" ? "active" : ""}
@@ -454,20 +473,6 @@ export function EntityPage({
                 {t("编辑", "Edit")}
               </button>
             )}
-            {actionsFor(kind, detail)
-              .filter((a) => allowed(a.cap))
-              .map((a) => (
-                <button
-                  key={a.key}
-                  className={action?.key === a.key ? "active" : ""}
-                  onClick={() => {
-                    setTab(a.key);
-                    setAction(a);
-                  }}
-                >
-                  {t(...a.title)}
-                </button>
-              ))}
             {kind==='release' && allowed('documents.notify') && <button onClick={()=>setNotice(detail.id)}>{t('放货通知','Release notice')}</button>}
             {["tickets", "shipments"].includes(kind) && (
               <button
