@@ -118,3 +118,4 @@ from .migration import (MigrationBatch, LegacyParty, LegacyShipment, LegacyTicke
 from .migration import LegacyBankEvidence,LegacyBankCoverage
 from .migration import BankIdentityDecision,LegacyBillApplication,LegacyGroupRevision,RecoveryCheckpoint
 from .workspace import Announcement
+from .logistics import ArrivalDispatch,NativeBillingGroup,NativeGroupRevision

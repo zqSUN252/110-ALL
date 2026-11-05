@@ -117,6 +117,11 @@ def access(db, actor, cls, identity, capability, expected=None):
     obj=locked(db,cls,identity)
     if isinstance(obj,BankAccount):account_access(db,actor,obj,capability)
     elif isinstance(obj,Payment):payment_access(db,actor,obj,capability)
+    elif cls is Invoice:
+        # Writing a shared invoice requires the same every-member warehouse
+        # participation as reading it.
+        from .access import invoice_access
+        invoice_access(db,actor,obj,capability)
     else:require(actor,capability,getattr(obj,'warehouse_id',None))
     if expected is not None:
         check_version(obj,expected)
@@ -147,13 +152,18 @@ def payment_json(db,payment):
 
 
 def get_invoice(db,actor,identity):
-    inv=locked(db,Invoice,identity)
-    require(actor,'payables.read' if inv.kind=='AP' else 'finance.read',inv.warehouse_id)
+    # Reads must not take row locks: concurrent preview/groups transactions
+    # lock several invoices and a read-side FOR UPDATE can deadlock with them.
+    inv=db.scalar(select(Invoice).where(Invoice.id==identity))
+    if inv is None:raise DomainError('not_found','Record not found',404)
+    from .access import invoice_access
+    invoice_access(db,actor,inv,'payables.read' if inv.kind=='AP' else 'finance.read')
     return invoice_json(db,inv)
 
 
 def get_payment(db,actor,identity):
-    payment=locked(db,Payment,identity)
+    payment=db.scalar(select(Payment).where(Payment.id==identity))
+    if payment is None:raise DomainError('not_found','Record not found',404)
     payment_access(db,actor,payment,'payables.read' if payment.direction=='out' else 'finance.read')
     return payment_json(db,payment)
 
@@ -352,7 +362,10 @@ def unallocate(db,actor,inv,amount,reason,payment_id=None):
 
 @command('invoice.adjust','id expected_version amount_ngn reason pricing preview discount_total_ngn charge_usd charge_ngn ngn_per_usd rounding_basis')
 def adjust_invoice(db,actor,p):
-    inv=locked(db,Invoice,p['id']); require(actor,'payables.manage' if inv.kind=='AP' else 'finance.adjust',inv.warehouse_id); check_version(inv,p.get('expected_version'))
+    inv=locked(db,Invoice,p['id'])
+    from .access import invoice_access
+    invoice_access(db,actor,inv,'payables.manage' if inv.kind=='AP' else 'finance.adjust')
+    check_version(inv,p.get('expected_version'))
     if (inv.source_key or '').startswith('legacy:') and db.info.get('legacy_group_revision')!=inv.id:
         raise DomainError('legacy_group_review','Use the versioned whole-group revision for historical source controls and cargo facts',409)
     before=invoice_json(db,inv); new=decimal(p['amount_ngn'])
@@ -397,7 +410,10 @@ def adjust_invoice(db,actor,p):
 
 
 def adjustment_preview(db,actor,identity,amount_ngn,discount_total_ngn=None,rounding_basis=None):
-    inv=locked(db,Invoice,identity); require(actor,'payables.manage' if inv.kind=='AP' else 'finance.adjust',inv.warehouse_id); new=decimal(amount_ngn)
+    inv=locked(db,Invoice,identity)
+    from .access import invoice_access
+    invoice_access(db,actor,inv,'payables.manage' if inv.kind=='AP' else 'finance.adjust')
+    new=decimal(amount_ngn)
     allocated=total(db,Allocation,'amount_ngn',invoice_id=inv.id); old_discounts=total(db,Discount,'amount_ngn',invoice_id=inv.id)
     from app.migration.service import historical_received,historical_discount
     historical=historical_received(db,inv.id)

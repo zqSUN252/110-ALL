@@ -18,7 +18,7 @@ from app.migration.source import digest
 from app.migration.bundle_stream import tables as stream_tables,ArrayHash,file_hash,canonical_hash
 
 EXCLUDED={'sessions','customer_sessions','phone_challenges','channel_actions','dialogue_proposals'}
-PAUSED={'jobs':'status','outbox':'status','recognition_jobs':'state','channel_deliveries':'state','connection_operations':'state'}
+PAUSED={'jobs':'status','outbox':'status','recognition_jobs':'state','channel_deliveries':'state','connection_operations':'state','translation_candidates':'status'}
 
 
 def inert(name,row):

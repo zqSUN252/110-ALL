@@ -65,26 +65,42 @@ def export_inbound(db,actor,p):
 
 
 def export_once(factory,settings):
-    with factory() as db,db.begin():
-        job=db.scalar(select(Job).where(Job.kind=='cargo_export',Job.status=='pending').order_by(Job.created_at).with_for_update(skip_locked=True).limit(1))
-        if not job:return {'status':'idle'}
-        job.status='running';job.attempts+=1;identity=job.id;payload=job.payload
-    with factory() as db,db.begin():
-        db.info['settings']=settings;user=db.get(User,payload['actor_id'])
-        actor=Actor(payload['actor_id'],set(db.scalars(select(Grant.capability).where(Grant.user_id==payload['actor_id']))),set(db.scalars(select(WarehouseScope.warehouse_id).where(WarehouseScope.user_id==payload['actor_id']))))
-        job=locked(db,Job,identity)
-        try:
-            if not user or not user.active:raise DomainError('inactive','Actor inactive',403)
+    from datetime import timedelta
+    from app.migration.operations import worker_gate,worker_write_gate
+    from app.channels.worker import actor_now
+    from app.models import utcnow
+    worker_gate(factory,settings)
+    identity=lease=None
+    try:
+        with factory() as db,db.begin():
+            worker_write_gate(db,settings)
+            job=db.scalar(select(Job).where(Job.kind=='cargo_export',((Job.status=='pending')|((Job.status=='running')&(Job.locked_at<utcnow()-timedelta(minutes=5))))).order_by(Job.created_at).with_for_update(skip_locked=True).limit(1))
+            if not job:return {'status':'idle'}
+            payload=job.payload;actor=actor_now(db,payload['actor_id'])
             require(actor,'cargo.export',payload['warehouse_id']);require(actor,'cargo.read',payload['warehouse_id'])
-        except DomainError:job.status='failed';job.error_code='authorization_changed';return {'id':identity,'status':'failed'}
-        rows=[record(r) for r in db.scalars(select(Receipt).where(Receipt.warehouse_id==payload['warehouse_id']).order_by(Receipt.received_on,Receipt.id))]
-    # File rendering occurs with no held mutation lock.
-    content=workbook(rows,['Receipt','Received','Transport','Item','PCS','KG','CBM','Destination','Storage'],['reference','received_on','transport','item_zh','pieces','kg','cbm','destination','storage_location'])
-    with factory() as db,db.begin():
-        db.info['settings']=settings;job=locked(db,Job,identity)
-        actor=Actor(payload['actor_id'],set(db.scalars(select(Grant.capability).where(Grant.user_id==payload['actor_id']))),set(db.scalars(select(WarehouseScope.warehouse_id).where(WarehouseScope.user_id==payload['actor_id']))))
-        require(actor,'cargo.export',payload['warehouse_id']);require(actor,'cargo.read',payload['warehouse_id'])
-        a=put_file(db,actor,content,'receipts-all.xlsx','application/vnd.openxmlformats-officedocument.spreadsheetml.sheet','cargo_export',payload['warehouse_id'])
-        job.status='complete';job.payload=payload|{'attachment_id':a.id,'count':len(rows)};job.version+=1
-        audit(db,actor,'cargo.export.complete','job',job.id,None,job.payload)
-        return {'id':job.id,'status':'complete','attachment_id':a.id,'rows':len(rows)}
+            job.status='running';job.locked_at=utcnow();job.attempts+=1;identity=job.id;lease=job.locked_at
+            receipts=list(db.scalars(select(Receipt).where(Receipt.warehouse_id==payload['warehouse_id']).order_by(Receipt.received_on,Receipt.id)))
+            rows=[record(r) for r in receipts];sources={r.id:r.version for r in receipts}
+        # Rendering occurs with no held mutation lock; freeze/generation is
+        # rechecked before and after it, never inferred from time alone.
+        worker_gate(factory,settings)
+        content=workbook(rows,['Receipt','Received','Transport','Item','PCS','KG','CBM','Destination','Storage'],['reference','received_on','transport','item_zh','pieces','kg','cbm','destination','storage_location'])
+        with factory() as db,db.begin():
+            worker_write_gate(db,settings);job=locked(db,Job,identity)
+            if job.status!='running' or job.locked_at!=lease:return {'id':identity,'status':'lease_lost'}
+            actor=actor_now(db,payload['actor_id'])
+            require(actor,'cargo.export',payload['warehouse_id']);require(actor,'cargo.read',payload['warehouse_id'])
+            current={r.id:r.version for r in db.scalars(select(Receipt).where(Receipt.warehouse_id==payload['warehouse_id']))}
+            if current!=sources:raise DomainError('stale_export','Receipt sources changed during export',409)
+            a=put_file(db,actor,content,'receipts-all.xlsx','application/vnd.openxmlformats-officedocument.spreadsheetml.sheet','cargo_export',payload['warehouse_id'])
+            job.status='complete';job.payload=payload|{'attachment_id':a.id,'count':len(rows)};job.version+=1
+            audit(db,actor,'cargo.export.complete','job',job.id,None,job.payload)
+            return {'id':job.id,'status':'complete','attachment_id':a.id,'rows':len(rows)}
+    except Exception as exc:
+        if isinstance(exc,DomainError) and exc.code=='writer_frozen':raise
+        if not identity:raise
+        with factory() as db,db.begin():
+            worker_write_gate(db,settings);job=locked(db,Job,identity)
+            if job.status=='pending' or (job.status=='running' and job.locked_at==lease):
+                job.status='failed';job.error_code=exc.code if isinstance(exc,DomainError) else 'render_failed';job.version+=1
+        return {'id':identity,'status':'failed','error_code':exc.code if isinstance(exc,DomainError) else 'render_failed'}

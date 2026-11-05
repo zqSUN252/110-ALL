@@ -39,7 +39,11 @@ test('complete cross-page browser business chain with real HTTP and PostgreSQL',
   const charge=form.locator('.field').filter({has:page.locator('label', {hasText:'计费依据'})}).first();
   for(const [component,currency,amount] of [['freight','USD','2'],['clearing','NGN','0']]){await charge.getByRole('button',{name:'增加明细',exact:true}).click();const row=charge.locator('fieldset').last();await row.getByLabel('费用类型',{exact:true}).selectOption(component);await row.getByLabel('币种',{exact:true}).selectOption(currency);await row.getByLabel('单位',{exact:true}).selectOption('KG');await fill(row,'原币金额',amount);await fill(row,'依据 / 来源','Synthetic explicit rate source')}
   await pick(form,'关联原始入库',receipt.id);const ticket=await submit(form,'/api/tickets');expect(ticket.invoice_id).toBeNull();await closeCreate();await visible().locator('.filters').getByLabel('收据号',{exact:true}).fill(receipt.reference);await open(receipt.reference);
-  form=await command('空运 / EXPRESS分批到货');await fill(form,'件数','1');await fill(form,'KG','1');await fill(form,'CBM','1');await fill(form,'实际日期','2026-11-03');await fill(form,'依据 / 来源','Synthetic air arrival');const arrived=await submit(form,'/api/tickets/'+ticket.id+'/arrive');
+  const dispatchOptions=await (await page.request.get('/api/tickets/'+ticket.id+'/native-dispatches')).json();expect(dispatchOptions.length).toBeGreaterThan(0);
+  form=await command('空运 / EXPRESS分批到货');await fill(form,'件数','1');await fill(form,'KG','1');await fill(form,'CBM','1');await fill(form,'实际日期','2026-11-03');await fill(form,'依据 / 来源','Synthetic air arrival');
+  await form.getByRole('button',{name:'增加明细',exact:true}).click();const dispatchAllocation=form.locator('.repeatable fieldset').last();
+  await dispatchAllocation.getByLabel('出库批次及剩余数量',{exact:true}).selectOption(dispatchOptions[0].id);await dispatchAllocation.getByLabel('件数',{exact:true}).fill('1');await dispatchAllocation.getByLabel('KG',{exact:true}).fill('1');await dispatchAllocation.getByLabel('CBM',{exact:true}).fill('1');
+  const arrived=await submit(form,'/api/tickets/'+ticket.id+'/arrive');
   const invoice=await (await page.request.get('/api/invoices/'+arrived.invoice_id)).json();expect(invoice.amount_ngn).toBe('1000.00');
   form=await command('物流节点');await form.getByLabel('物流节点',{exact:true}).selectOption('warehouse_arrived');await fill(form,'实际时间','2026-11-04T08:00');await pick(form,'目的仓',wh.id);await fill(form,'依据 / 来源','Synthetic actual destination receiving');await submit(form,'/api/tracking/nodes');
 

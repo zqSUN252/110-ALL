@@ -22,10 +22,17 @@ def hold_state(db,kind,identity):
 
 def cargo_hold_state(db,obj):
     own=hold_state(db,'ticket' if isinstance(obj,Ticket) else 'receipt',obj.id)
-    if isinstance(obj,Ticket) and obj.native_receipt_id:
-        native=hold_state(db,'receipt',obj.native_receipt_id)
-        return {'active':own['active'] or native['active'],'label':'ON HOLD' if own['active'] or native['active'] else own['label'] or native['label'],'facts':own['facts']+native['facts']}
-    return own
+    identity=obj.native_receipt_id if isinstance(obj,Ticket) else obj.id
+    if not identity:return own
+    from app.cargo.lineage import receipt_lineage
+    lineage=receipt_lineage(db,identity)
+    states=[hold_state(db,'receipt',r['id']) for r in lineage['receipts']]
+    facts={h['id']:h for state in [own,*states] for h in state['facts']}
+    versions={r['id']:r['version'] for r in lineage['receipts']}
+    for fact in facts.values():fact['current_source_version']=obj.version if fact.get('ticket_id')==obj.id else versions.get(fact.get('receipt_id'))
+    active=any(h['state']=='active' for h in facts.values())
+    return {'active':active,'label':'ON HOLD' if active else next((s['label'] for s in [own,*states] if s['label']),None),
+            'facts':list(facts.values()),'lineage':lineage}
 
 
 def physical_totals(db,identity):
@@ -43,13 +50,17 @@ def _basis(db,t):
     claims=list(db.scalars(select(BankClaim).where(BankClaim.payment_id.in_([p.id for p in payments])).order_by(BankClaim.id))) if payments else []
     result={'ticket':finance.record(t),'document':finance.record(d),'shipment':finance.record(s),
         'destination':finance.record(db.get(Warehouse,t.destination_warehouse_id)) if t.destination_warehouse_id else None,
-        'holds':hold_state(db,'ticket',t.id),'components':components(db,t),
+        'holds':cargo_hold_state(db,t),'components':components(db,t),
         'arrivals':[finance.record(a) for a in db.scalars(select(Arrival).where(Arrival.ticket_id==t.id).order_by(Arrival.id))],
         'invoice':finance.invoice_json(db,inv) if inv else None,
         'allocations':[finance.record(a) for a in allocations],'payments':[finance.record(p) for p in payments],
         'claims':[finance.record(c) for c in claims]}
     from app.tracking.service import warehouse_basis
     result['warehouse_confirmation']=warehouse_basis(db,t)
+    if t.billing_group_id:
+        from app.models import NativeBillingGroup
+        from app.packing.groups import snapshot
+        result['billing_group']=snapshot(db,db.get(NativeBillingGroup,t.billing_group_id))
     if t.native_receipt_id:result['native']=finance.record(db.get(Receipt,t.native_receipt_id));result['native_hold']=hold_state(db,'receipt',t.native_receipt_id)
     if t.party_id:
         result['party']=finance.record(db.get(Party,t.party_id))
@@ -59,6 +70,8 @@ def _basis(db,t):
 
 
 def _eligible(db,t,mode):
+    from app.cargo.source_allocations import validate_consumption
+    validate_consumption(db,t)
     basis=_basis(db,t)
     if t.state!='active' or basis['document']['state']!='active':raise DomainError('inactive_cargo','Cargo is not active',409)
     if basis['holds']['active'] or basis.get('native_hold',{}).get('active'):raise DomainError('manufacturer_hold','Active manufacturer hold prevents freight release',409)

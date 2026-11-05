@@ -260,10 +260,19 @@ def test_group_copy_expands_original_members_and_new_member_invalidates_order(ap
             call(db,actor,release.issue_order,members=[{'ticket_id':t['id'],'expected_version':t['version']}],mode='credit',promise_on='2026-12-01',guarantor='Actual guarantor')
 
 
+def clear_native_groups(app):
+    from sqlalchemy import text
+    with app.state.session_factory() as db,db.begin():
+        db.execute(text('UPDATE tickets SET billing_group_id=NULL'))
+        db.execute(text('DELETE FROM native_group_revisions'))
+        db.execute(text('DELETE FROM native_billing_groups'))
+
+
 def test_nonempty_document_migration_refuses_downgrade(app):
     from alembic import command
     from app.cli import migration_config
     with app.state.session_factory() as db,db.begin():prepared(db,app,hold=True)
+    clear_native_groups(app)
     cfg=migration_config();cfg.attributes['database_url']=app.state.settings.database_url
     with pytest.raises(RuntimeError,match='Cannot discard nonempty'):command.downgrade(cfg,'c11000300006')
     command.check(cfg)
@@ -337,6 +346,7 @@ def test_c6_still_independently_protects_ticket_without_phone_history(app):
     with app.state.session_factory() as db,db.begin():
         actor=who(db);wh,party=seed(db,actor);doc,t=make_document(db,actor,wh,party)
         assert not list(db.scalars(select(CargoPhoneHistory)))
+    clear_native_groups(app)
     cfg=migration_config();cfg.attributes['database_url']=app.state.settings.database_url
     with pytest.raises(RuntimeError,match='Cannot discard pricing authority'):command.downgrade(cfg,'c11000300005')
     with app.state.session_factory() as db:
@@ -347,11 +357,25 @@ def test_linked_native_owner_hold_blocks_ordinary_notice(app):
     from app.documents import notifications,release
     from app.cargo import service as cargo
     from app.packing import service as packing
+    from app.tracking import service as tracking
+    from app.models import StockEvent
     from test_logistics import receipt_payload
     with app.state.session_factory() as db,db.begin():
-        actor,wh,doc,t=prepared(db,app)
-        native=call(db,actor,cargo.create_receipt,**receipt_payload(wh,t['party_id'],customer_phone='ON HOLD BY SUPPLIER'))
-        t=call(db,actor,packing.update_ticket,id=t['id'],expected_version=t['version'],native_receipt_id=native['id'])
+        db.info['settings']=app.state.settings
+        actor=who(db);wh,party=seed(db,actor);doc,t=make_document(db,actor,wh,party)
+        native=call(db,actor,cargo.create_receipt,**receipt_payload(wh,party,customer_phone='ON HOLD BY SUPPLIER'))
+        # Bind the native source before actual arrival; consumed cargo cannot be reassigned.
+        t=call(db,actor,packing.update_ticket,id=t['id'],expected_version=t['version'],
+            native_receipt_id=native['id'],receipt=native['reference'],destination_warehouse_id=wh,address='Synthetic address')
+        call(db,actor,cargo.dispatch,shipment_id=doc['shipment_id'],occurred_on='2026-11-02',
+            rows=[dict(receipt_id=native['id'],expected_version=native['version'],pieces=3,kg='3',cbm='1')])
+        event=db.scalar(select(StockEvent).where(StockEvent.kind=='outbound'))
+        t=call(db,actor,packing.arrive,id=t['id'],expected_version=t['version'],pieces=3,kg='3',cbm='1',
+            occurred_on='2026-11-03',source='Synthetic actual arrival',mode='air',
+            dispatch_allocations=[dict(stock_event_id=event.id,expected_version=event.version,pieces=3,kg='3',cbm='1')])
+        call(db,actor,tracking.set_node,target_type='ticket',target_id=t['id'],expected_version=t['version'],
+            node='warehouse_arrived',mode='manual',destination_warehouse_id=wh,occurred_at='2026-11-04T10:00:00+08:00',
+            source='Synthetic warehouse receipt')
         assert release.cargo_hold_state(db,db.get(Ticket,t['id']))['active']
         with pytest.raises(DomainError,match='manufacturer'):
             call(db,actor,notifications.render,kind='arrival',ticket_ids=[t['id']])

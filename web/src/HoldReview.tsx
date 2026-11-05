@@ -7,7 +7,7 @@ import {useT} from './i18n';
 
 export function HoldReview({data,onSaved}:{data:Row;onSaved:(r:Row)=>void}) {
   const t=useT(),[selected,setSelected]=useState(new Set<string>());
-  const facts=[...(data.facts||data.ticket?.facts||[]).map((h:Row)=>({...h,source_version:data.source_version})),...(data.native?.facts||[]).map((h:Row)=>({...h,source_version:data.native.source_version}))];
+  const facts=[...(data.facts||data.ticket?.facts||[]).map((h:Row)=>({...h,source_version:h.current_source_version??data.source_version})),...(data.native?.facts||[]).map((h:Row)=>({...h,source_version:h.current_source_version??data.native.source_version}))];
   return <section><RecordView data={{label:data.label||data.ticket?.label}}/>{facts.map((h:Row)=><article key={h.id}><label><input type="checkbox" disabled={h.state!=='active'} checked={selected.has(h.id)} onChange={e=>setSelected(old=>{const next=new Set(old);if(e.target.checked)next.add(h.id);else next.delete(h.id);return next})}/>{t('选择控货事实','Select hold fact')} · {h.raw_value||h.source||h.id}</label><RecordView data={h}/>
     {h.state==='removed'&&<Form title={t('撤销此次解控','Cancel this removal')} fields={[required('reason')]} initial={{expected_version:h.version}} submit={(b,k)=>api('/api/holds/'+h.id+'/cancel',b,'POST',k)} onSaved={onSaved}/>}
   </article>)}

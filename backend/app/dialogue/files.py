@@ -185,10 +185,12 @@ def pending_html(cases):
 
 
 def file_once(factory,settings):
+    from app.migration.operations import worker_gate,worker_write_gate
+    worker_gate(factory,settings)
     identity=None;lease=None
     try:
         with factory() as db,db.begin():
-            db.info['settings']=settings
+            worker_write_gate(db,settings)
             j=db.scalar(select(Job).where(Job.kind=='assistant.file',(Job.status=='pending')|((Job.status=='running')&(Job.locked_at<utcnow()-timedelta(minutes=10)))).order_by(Job.created_at).with_for_update(skip_locked=True).limit(1))
             if not j:return {'status':'idle','called':False}
             identity=j.id;actor=actor_now(db,j.payload['actor_id']);f=locked(db,DialogueFile,j.payload['file_id']);thread=thread_access(db,actor,f.thread_id,'assistant.act');authorize_file(db,actor,thread,f)
@@ -197,6 +199,7 @@ def file_once(factory,settings):
             template=None
             if kind=='bank_archive':template=read_file(settings,locked(db,Attachment,sources['payload']['template_attachment_id']))
         # Parser/render work is outside all database transactions and financial guards.
+        worker_gate(factory,settings)
         parsed=None
         if kind=='pending':content=pending_html(sources['snapshot']);mime='text/html';filename='pending-complete.html'
         elif kind=='bank_archive':
@@ -207,7 +210,7 @@ def file_once(factory,settings):
             parsed=parse_bytes(settings,original)
         with factory() as db,db.begin():
             from .commands import domain_guard
-            db.info['settings']=settings;domain_guard(db);j=locked(db,Job,identity)
+            worker_write_gate(db,settings);domain_guard(db);j=locked(db,Job,identity)
             if j.status!='running' or j.locked_at!=lease:return {'status':'lease_lost','called':False}
             actor=actor_now(db,j.payload['actor_id']);f=locked(db,DialogueFile,fid);thread=thread_access(db,actor,f.thread_id,'assistant.act');authorize_file(db,actor,thread,f)
             if kind=='bank_preview':
@@ -222,8 +225,10 @@ def file_once(factory,settings):
             f.version+=1;j.status='completed';j.error_code=None
             return {'id':fid,'status':'completed','called':False}
     except (DomainError,ValueError,OSError) as exc:
+        if isinstance(exc,DomainError) and exc.code=='writer_frozen':raise
         if identity:
             with factory() as db,db.begin():
+                worker_write_gate(db,settings)
                 j=locked(db,Job,identity)
                 if j.status=='pending' or (j.status=='running' and j.locked_at==lease):j.status='failed';j.error_code=exc.code if isinstance(exc,DomainError) else 'file_failed'
             return {'status':'failed','called':False}

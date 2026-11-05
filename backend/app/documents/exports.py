@@ -120,10 +120,12 @@ def download(db,settings,identity,actor=None,customer=None):
 
 
 def export_once(settings,factory):
+    from app.migration.operations import worker_gate,worker_write_gate
+    worker_gate(factory,settings)
     e_id=None;lease=None
     try:
         with factory() as db,db.begin():
-            db.info['settings']=settings;db.execute(text('SELECT pg_advisory_xact_lock(110002)'))
+            worker_write_gate(db,settings)
             j=db.scalar(select(Job).where(Job.kind=='document_export',((Job.status=='pending')|((Job.status=='running')&(Job.locked_at<utcnow()-timedelta(minutes=5))))).order_by(Job.created_at).with_for_update(skip_locked=True).limit(1))
             if not j:return False
             e=db.scalar(select(DocumentExport).where(DocumentExport.job_id==j.id));e_id=e.id
@@ -133,13 +135,14 @@ def export_once(settings,factory):
             if fingerprint(current)!=e.source_fingerprint:raise DomainError('stale_export','Sources changed before export',409)
             j.status='running';j.locked_at=utcnow();j.attempts+=1;lease=j.locked_at
             data=e.source_snapshot;fmt=e.format;kind=e.kind
+        worker_gate(factory,settings)
         if 'mbl' in data:
             from .mbl import render_template
             from .rendering import MIME
             content,media=render_template(settings,data),MIME['xlsx']
         else:content,media=render_artifact(settings,data,fmt,kind)
         with factory() as db,db.begin():
-            db.info['settings']=settings;db.execute(text('SELECT pg_advisory_xact_lock(110002)'));e=locked(db,DocumentExport,e_id);j=locked(db,Job,e.job_id)
+            worker_write_gate(db,settings);e=locked(db,DocumentExport,e_id);j=locked(db,Job,e.job_id)
             if j.status!='running' or j.locked_at!=lease:return False
             customer=db.get(CustomerIdentity,e.customer_id) if e.customer_id else None
             actor=refresh_actor(db,e.actor_id) if not customer else None
@@ -152,8 +155,10 @@ def export_once(settings,factory):
             audit(db,storage,'document.export.completed','document_export',e.id,None,{'attachment_id':a.id,'sha256':a.sha256})
         return True
     except Exception as exc:
+        if isinstance(exc,DomainError) and exc.code=='writer_frozen':raise
         if not e_id:raise
         with factory() as db,db.begin():
+            worker_write_gate(db,settings)
             e=locked(db,DocumentExport,e_id);j=locked(db,Job,e.job_id)
             if j.status=='pending' or (j.status=='running' and j.locked_at==lease):
                 j.status='failed';j.error_code=exc.code if isinstance(exc,DomainError) else 'render_failed'

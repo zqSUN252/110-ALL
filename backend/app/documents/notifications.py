@@ -4,7 +4,7 @@ from app.common import DomainError,require,check_version
 from app.models import Ticket,Receipt,Notification,NotificationMember,CopyEvent,ReleaseOrder,ReleaseMember,Arrival,HoldFact,Payment,EvidenceCase,AppSetting,Invoice,utcnow
 from app.finance import service as finance
 from .access import command,authorize,fingerprint
-from .projection import packing_projection,today,shown,total_text,rates,profile
+from .projection import packing_projection,today,shown,total_text,rates,profile,financial_totals
 from . import release
 
 VERSIONS={'arrival':'ARRIVAL-510-512-v1','receipt':'RECEIPT-527-v1','release':'RELEASE-486-541-543-v1','hold':'HOLD-345-v1','remove_hold':'REMOVE-HOLD-464-465-560-v1','loading':'LOADING-552-v1','rates':'RATE-185-207-v1'}
@@ -115,15 +115,45 @@ Thanks for your support.
         elif kind=='rates':
             price=data['rate_dependencies'][index];out.append(f"💰 CHARGING STANDARD — {price['heading']}\n"+'\n'.join(price['lines']))
     if kind in ('hold','remove_hold','release'):
+        from collections import defaultdict
+        from .projection import aggregate
         groups={}
         for r in rows:groups.setdefault((r['destination_warehouse_id'],r['container']),[]).append(r)
+        owners=defaultdict(set)
+        for group_key,members in groups.items():
+            for r in members:owners[r['invoice_id'] or r['id']].add(group_key)
+        # One shared invoice stays one financial control even when its physical
+        # rows span destination warehouses or containers: print its money once.
+        shared={identity for identity,keys in owners.items() if len(keys)>1}
+        def payment_lines(members):
+            payments=[]
+            from app.models import Allocation
+            from sqlalchemy import func
+            invoice_ids={r['invoice_id'] for r in members if r['invoice_id']}
+            allocated_rows=db.execute(select(Allocation.payment_id,func.sum(Allocation.amount_ngn)).where(Allocation.invoice_id.in_(invoice_ids)).group_by(Allocation.payment_id).order_by(Allocation.payment_id)).all()
+            for pid,allocated in allocated_rows:
+                if allocated<=0:continue
+                p=db.get(Payment,pid)
+                evidence=db.scalar(select(EvidenceCase).where(EvidenceCase.payment_id==pid).order_by(EvidenceCase.created_at.desc()))
+                payments.append(f"{shown(evidence.bank_name if evidence else None)} | {shown(evidence.payer_name if evidence else None)} | **NGN {allocated} | {shown(p.paid_on)}**")
+                original=finance.payment_json(db,p)
+                if Decimal(original['available_ngn'])>0:payments.append(f"Original received: NGN {p.amount_ngn} | Unallocated carry-forward balance: NGN {original['available_ngn']}")
+            historical=financial_totals(members)['historical_received_ngn']
+            if historical['pending_count'] or Decimal(historical['known_subtotal'])>0:
+                text='Historical received: NGN '+total_text(historical)
+                if historical['pending_count']:text+=' | Original payer / currency / bank evidence: TO BE CONFIRMED'
+                payments.append(text)
+            return payments
         for (_,container),members in groups.items():
             first=members[0];warehouse=shown(first['warehouse']);details='\n'.join(f"📦 {shown(r['receipt'])} / {shown(r['mark'])} / {shown(r['pieces'])} PCS / {shown(r['cbm'])} CBM\n（CONTAINER NO.: {shown(container)}）" for r in members)
-            from .projection import aggregate
-            pcs=total_text(aggregate(members,'pieces'));cbm=total_text(aggregate(members,'cbm'));total=total_text(aggregate(members,'invoice_total_ngn'))
+            local=[r for r in members if (r['invoice_id'] or r['id']) not in shared]
+            money=financial_totals(local) if local else None
+            pcs=total_text(aggregate(members,'pieces'));cbm=total_text(aggregate(members,'cbm'))
             if kind=='hold':out.append(f"{details}\n\n您好，{len(members)} 票控货的货物已完成清关入我方 {warehouse} 仓库，请通知客户尽快结清货款。\n如客户已结清货款，请尽快告知收货人姓名及联系电话，谢谢。")
             elif kind=='remove_hold':
                 holds=[h for r in members for h in release.cargo_hold_state(db,db.get(Ticket if r['source_type']=='ticket' else Receipt,r['id']))['facts'] if h['state']=='removed']
+                charges='\n'.join(_charge_lines(r) for r in local)
+                payable=f"Total Payable: NGN {total_text(money['invoice_total_ngn'])}" if money else 'Total Payable: see shared invoice summary below'
                 out.append(f'''📦 REMOVE ON HOLD INSTRUCTION - {warehouse} WAREHOUSE
 Container: {shown(container)}
 Total: {len(members)} Receipts / {pcs} Packages / {cbm} CBM
@@ -133,8 +163,8 @@ Mark: {shown(first['mark'])}
 {details}
 --- END OF RECEIPTS ---
 
-{chr(10).join(_charge_lines(r) for r in members)}
-Total Payable: NGN {total}
+{charges}
+{payable}
 Client Contact: {shown(first['phone'])}
 {chr(10).join('Reason: '+shown(h['reason'])+chr(10)+'Released On: '+shown(h['removed_on'])+chr(10)+'Approved By: '+shown(h['removed_by']) for h in holds)}
 
@@ -145,20 +175,20 @@ pls notify Customer to pay our Freight and carry goods ontime to avoid the demur
 {COMPANY}
 {date}''')
             else:
-                payments=[]
-                for r in members:
-                    basis=release._basis(db,db.get(Ticket,r['id']))
-                    for p in basis['payments']:
-                        allocated=sum((Decimal(a['amount_ngn']) for a in basis['allocations'] if a['payment_id']==p['id']),Decimal(0))
-                        if allocated<=0:continue
-                        evidence=db.scalar(select(EvidenceCase).where(EvidenceCase.payment_id==p['id']).order_by(EvidenceCase.created_at.desc()))
-                        payments.append(f"{shown(evidence.bank_name if evidence else p['approval'])} | {shown(evidence.payer_name if evidence else None)} | **NGN {allocated} | {shown(p['paid_on'])}**")
-                        original=finance.payment_json(db,db.get(Payment,p['id']))
-                        if Decimal(original['available_ngn'])>0:payments.append(f"Original received: NGN {p['amount_ngn']} | Unallocated carry-forward balance: NGN {original['available_ngn']}")
-                received=total_text(aggregate(members,'allocated_ngn'));owed=total_text(aggregate(members,'outstanding_ngn'))
+                payments=payment_lines(local) if local else []
+                if money:
+                    summary=f'''Full Original Invoice Payable Amount: NGN {total_text(money['invoice_total_ngn'])}
+
+PAYMENT SUMMARY
+Received Payment List:
+{chr(10).join(payments) or 'No allocated payment'}
+Total Received: NGN {total_text(money['received_total_ngn'])}
+Outstanding Balance: NGN {total_text(money['outstanding_ngn'])}'''
+                else:
+                    summary='Full Original Invoice Payable Amount: see shared invoice summary below\n\nPAYMENT SUMMARY: see shared invoice summary below'
                 conclusion='RELEASE ON CREDIT, bill cares by client' if order.mode=='credit' else 'Balance waived to release' if order.mode=='waiver' else 'FULL RELEASE - release all goods'
                 if order.mode=='credit':conclusion+=f"\nPromise payment day: {order.promise_on}\nGuarantor: {order.guarantor}\nOther historical debt: NGN {data['credit_debt']['total_ngn']}"
-                if order.mode=='waiver':conclusion+='\nExplicit discount (NGN): '+total_text(aggregate(members,'discount_ngn'))
+                if order.mode=='waiver' and money:conclusion+='\nExplicit discount (NGN): '+total_text(money['discount_ngn'])
                 out.append(f'''📦 **RELEASE INSTRUCTIONS - {warehouse} WAREHOUSE**
 Client Mark: **{shown(first['mark'])} Tel: {shown(first['phone'])}**
 ====================================================
@@ -166,18 +196,32 @@ SHIPMENT DETAILS
 {details}
 Total Volume: {cbm} CBM
 Total Packages: **{pcs} PCS**
-Full Original Invoice Payable Amount: NGN {total}
-
-PAYMENT SUMMARY
-Received Payment List:
-{chr(10).join(payments) or 'No allocated payment'}
-Total Received: NGN {received}
-Outstanding Balance: NGN {owed}
+{summary}
 {conclusion}
 
 <Thanks for your support>
 Issued by: **{COMPANY}**
 Date: **{date}**''')
+        if shared and kind in ('remove_hold','release'):
+            for identity in sorted(shared):
+                covered=[r for r in rows if (r['invoice_id'] or r['id'])==identity]
+                money=financial_totals(covered)
+                covers='; '.join(f"{shown(r['receipt'])} @ {shown(r['warehouse'])} / {shown(r['container'])}" for r in covered)
+                if kind=='remove_hold':
+                    out.append(f'''--- SHARED INVOICE FINANCIAL SUMMARY (once per invoice) ---
+Invoice covers: {covers}
+{chr(10).join(_charge_lines(r) for r in covered)}
+Total Payable: NGN {total_text(money['invoice_total_ngn'])}''')
+                else:
+                    out.append(f'''--- SHARED INVOICE FINANCIAL SUMMARY (once per invoice) ---
+Invoice covers: {covers}
+Full Original Invoice Payable Amount: NGN {total_text(money['invoice_total_ngn'])}
+
+PAYMENT SUMMARY
+Received Payment List:
+{chr(10).join(payment_lines(covered)) or 'No allocated payment'}
+Total Received: NGN {total_text(money['received_total_ngn'])}
+Outstanding Balance: NGN {total_text(money['outstanding_ngn'])}'''+(f"\nExplicit discount (NGN): {total_text(money['discount_ngn'])}" if order and order.mode=='waiver' else ''))
     return '\n\n'.join(out)
 
 
@@ -274,11 +318,13 @@ def cancel_copy(db,actor,p):
 
 
 def marks(db,source_ids,source_type='ticket',include_cancelled=False):
+    from app.models import User
     column={'ticket':NotificationMember.ticket_id,'receipt':NotificationMember.receipt_id}[source_type]
     result={i:[] for i in source_ids}
-    query=select(NotificationMember,Notification,CopyEvent).join(Notification,Notification.id==NotificationMember.notification_id).join(CopyEvent,CopyEvent.notification_id==Notification.id).where(column.in_(source_ids))
+    query=select(NotificationMember,Notification,CopyEvent,User.username).join(Notification,Notification.id==NotificationMember.notification_id).join(CopyEvent,CopyEvent.notification_id==Notification.id).join(User,User.id==CopyEvent.actor_id).where(column.in_(source_ids))
     if not include_cancelled:query=query.where(CopyEvent.cancelled_at.is_(None))
-    for m,n,c in db.execute(query.order_by(CopyEvent.created_at,CopyEvent.id)):
+    for m,n,c,operator in db.execute(query.order_by(CopyEvent.created_at,CopyEvent.id)):
         result[getattr(m,column.key)].append({'copy_id':c.id,'version':c.version,'kind':n.kind,'copied_at':c.created_at.isoformat(),'actor_id':c.actor_id,'label':'📦已通知装柜 ✕' if n.kind=='loading' else '已复制通知','background':'yellow' if n.kind=='loading' else None,'foreground':'black' if n.kind=='loading' else None})
+        result[getattr(m,column.key)][-1]['operator_name']=operator
         if include_cancelled:result[getattr(m,column.key)][-1].update(cancelled_at=c.cancelled_at.isoformat() if c.cancelled_at else None,cancelled_by=c.cancelled_by,reason=c.reason)
     return result

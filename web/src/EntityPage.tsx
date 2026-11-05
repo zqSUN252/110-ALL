@@ -16,6 +16,7 @@ import { LangContext, useT } from "./i18n";
 import {HoldReview} from './HoldReview';
 import {PartyLedger} from './PartyLedger';
 import {BankEntries} from './BankEntries';
+import {BillingGroups} from './BillingGroups';
 import {ContactLinks} from './ContactLinks';
 import {
   actionsFor,
@@ -148,11 +149,16 @@ export function EntityPage({
                     changes,
                   );
                 }
-              : undefined,
+              : kind==='shipments'&&detail.clearing_invoice_id ? async(b)=>{
+                  const changes=changedValues(b);
+                  return changes.clearing_amount_ngn!==undefined
+                    ? {finance_preview:await api('/api/invoices/'+detail.clearing_invoice_id+'/adjust-preview?'+query({amount_ngn:changes.clearing_amount_ngn}))}
+                    : {finance_preview:null};
+                } : undefined,
           run: async (b, k) => {
             const { preview, ...values } = b;
             const dirty = changedValues(values);
-            if (kind === "tickets" && preview)
+            if ((kind === "tickets"||kind==='shipments') && preview?.finance_preview)
               dirty.finance_preview = preview.finance_preview;
             return kind==='mbl'?api('/api/mbl',{...clean(values),shipment_id:detail.shipment_id},'POST',k):api(editPath + detail.id, clean(dirty), "PATCH", k);
           },
@@ -509,10 +515,11 @@ export function EntityPage({
               </button>
             )}
             {kind==='documents'&&<button onClick={async()=>{setTab('history');setAction(null);try{setAux(await api('/api/packing/documents/'+detail.id+'/history'))}catch(e){setError(e)}}}>{t('替换修订历史','Replacement history')}</button>}
+            {kind==='documents'&&allowed('packing.manage')&&<button onClick={()=>{setTab('billing');setAction(null)}}>{t('客户应收分组','Customer billing groups')}</button>}
           </div>
           {action ? (
             <ActionForm key={action.key} action={action} onSaved={update} />
-          ) : tab === "nodes" ? (
+          ) : tab==='billing'? <BillingGroups documentId={detail.id} onSaved={update}/> : tab === "nodes" ? (
             <>
               <Form
                 fields={[

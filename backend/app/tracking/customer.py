@@ -64,7 +64,12 @@ def session(db,request,mutation=False):
 
 def owns(db,c,obj):
     if not c.active or source_phone(obj)!=c.phone or obj.state!='active':return False
-    return not isinstance(obj,Ticket) or db.get(PackingDocument,obj.document_id).state=='active'
+    if not isinstance(obj,Ticket):return True
+    if db.get(PackingDocument,obj.document_id).state!='active':return False
+    if obj.invoice_id:
+        for other in db.scalars(select(Ticket).where(Ticket.invoice_id==obj.invoice_id,Ticket.state=='active')):
+            if source_phone(other)!=c.phone or db.get(PackingDocument,other.document_id).state!='active':return False
+    return True
 
 
 def require_owned(db,c,objects):
@@ -74,6 +79,11 @@ def require_owned(db,c,objects):
 def documents(db,c,limit=50,offset=0):
     if not 1<=limit<=200 or offset<0:raise DomainError('pagination','Use page size 1..200')
     ticket_query=select(Ticket).join(PackingDocument,Ticket.document_id==PackingDocument.id).where(Ticket.phone_confirmed.is_(True),Ticket.phone_normalized==c.phone,Ticket.state=='active',PackingDocument.state=='active')
+    from sqlalchemy.orm import aliased
+    from sqlalchemy import or_
+    other=aliased(Ticket);other_doc=aliased(PackingDocument)
+    hidden=select(other.id).join(other_doc,other_doc.id==other.document_id).where(other.invoice_id==Ticket.invoice_id,other.state=='active',or_(other.phone_confirmed.is_(False),other.phone_normalized.is_(None),other.phone_normalized!=c.phone,other_doc.state!='active')).exists()
+    ticket_query=ticket_query.where(~hidden)
     ticket_count=db.scalar(select(func.count()).select_from(ticket_query.subquery()))
     tickets=list(db.scalars(ticket_query.order_by(Ticket.id).limit(limit).offset(offset))) if offset<ticket_count else []
     receipts=list(db.scalars(select(Receipt).where(Receipt.customer_phone==c.phone,Receipt.state=='active').order_by(Receipt.id).limit(limit-len(tickets)).offset(max(0,offset-ticket_count)))) if len(tickets)<limit else []

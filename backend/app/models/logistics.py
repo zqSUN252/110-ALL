@@ -180,6 +180,7 @@ class PackingDocument(Record,Base):
     uploaded_on:Mapped[date]=col(Date)
     state:Mapped[str]=col(String(20),default='active')
     parent_id:Mapped[str|None]=col(ForeignKey('packing_documents.id'))
+    void_members:Mapped[list|None]=col(JSONB)
 
 
 class ImportBatch(Record,Base):
@@ -224,8 +225,27 @@ class Ticket(Record,Base):
     pricing_authority:Mapped[str]=col(String(12),default='pending')
     quote_id:Mapped[str|None]=col(ForeignKey('quote_snapshots.id'))
     invoice_id:Mapped[str|None]=col(ForeignKey('invoices.id'),index=True)
+    billing_group_id:Mapped[str|None]=col(ForeignKey('native_billing_groups.id'),index=True)
     state:Mapped[str]=col(String(20),default='active')
     review_state:Mapped[str]=col(String(20),default='pending')
+
+
+class NativeBillingGroup(Record,Base):
+    __tablename__='native_billing_groups'
+    document_id:Mapped[str]=col(ForeignKey('packing_documents.id'),index=True)
+    warehouse_id:Mapped[str]=col(ForeignKey('warehouses.id'))
+    party_id:Mapped[str|None]=col(ForeignKey('parties.id'))
+    invoice_id:Mapped[str|None]=col(ForeignKey('invoices.id'),unique=True)
+    state:Mapped[str]=col(String(20),default='active')
+
+
+class NativeGroupRevision(Record,Base):
+    __tablename__='native_group_revisions'
+    document_id:Mapped[str]=col(ForeignKey('packing_documents.id'),index=True)
+    actor_id:Mapped[str]=col(ForeignKey('users.id'))
+    reason:Mapped[str]=col(Text)
+    before:Mapped[dict]=col(JSONB)
+    after:Mapped[dict]=col(JSONB)
 
 
 class CargoSourceRow(Record,Base):
@@ -283,6 +303,18 @@ class Arrival(Record,Base):
     actor_id:Mapped[str]=col(ForeignKey('users.id'))
     source:Mapped[str]=col(Text)
     charge_basis:Mapped[list|None]=col(JSONB)
+
+
+class ArrivalDispatch(Record,Base):
+    __tablename__='arrival_dispatch_allocations'
+    __table_args__=(UniqueConstraint('arrival_id','stock_event_id'),CheckConstraint('pieces > 0 AND kg >= 0 AND cbm >= 0'))
+    arrival_id:Mapped[str]=col(ForeignKey('cargo_arrivals.id'),index=True)
+    stock_event_id:Mapped[str]=col(ForeignKey('stock_events.id'),index=True)
+    source_version:Mapped[int]=col(Integer)
+    receipt_id:Mapped[str]=col(ForeignKey('receipts.id'))
+    pieces:Mapped[int]=col(Integer)
+    kg:Mapped[Decimal]=col(Quantity)
+    cbm:Mapped[Decimal]=col(Quantity)
 
 
 class CargoChargeComponent(Record,Base):

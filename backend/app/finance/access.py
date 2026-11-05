@@ -1,7 +1,22 @@
 """Identity participation is explicit; financial authorization covers every affected warehouse."""
 from sqlalchemy import select
 from app.common import DomainError,require
-from app.models import PartyWarehouse,BankAccountWarehouse,Invoice,Allocation,EvidenceCase,Payment
+from app.models import PartyWarehouse,BankAccountWarehouse,Invoice,Allocation,EvidenceCase,Payment,Ticket,Receipt
+
+
+def invoice_access(db,actor,invoice,capability):
+    require(actor,capability,invoice.warehouse_id)
+    if '*' in actor.capabilities:return
+    warehouses=set(db.scalars(select(Ticket.warehouse_id).where(Ticket.invoice_id==invoice.id)))
+    warehouses.update(db.scalars(select(Receipt.warehouse_id).join(Ticket,Ticket.native_receipt_id==Receipt.id).where(Ticket.invoice_id==invoice.id)))
+    for warehouse in warehouses:require(actor,capability,warehouse)
+
+
+def visible_invoices(query,actor):
+    if '*' in actor.capabilities:return query
+    hidden=select(Ticket.invoice_id).where(Ticket.invoice_id.is_not(None),Ticket.warehouse_id.not_in(actor.warehouse_ids))
+    hidden_native=select(Ticket.invoice_id).join(Receipt,Receipt.id==Ticket.native_receipt_id).where(Ticket.invoice_id.is_not(None),Receipt.warehouse_id.not_in(actor.warehouse_ids))
+    return query.where(Invoice.warehouse_id.in_(actor.warehouse_ids),Invoice.id.not_in(hidden),Invoice.id.not_in(hidden_native))
 
 
 def party_member(db,party_id,warehouse_id):
@@ -21,10 +36,11 @@ def account_access(db,actor,account,capability,warehouse_id=None):
 
 
 def payment_warehouses(db,payment):
-    return {payment.warehouse_id}|set(db.scalars(select(Invoice.warehouse_id).join(Allocation,Allocation.invoice_id==Invoice.id).where(Allocation.payment_id==payment.id)))|set(db.scalars(select(EvidenceCase.warehouse_id).where(EvidenceCase.payment_id==payment.id)))
+    return {payment.warehouse_id}|set(db.scalars(select(Invoice.warehouse_id).join(Allocation,Allocation.invoice_id==Invoice.id).where(Allocation.payment_id==payment.id)))|set(db.scalars(select(EvidenceCase.warehouse_id).where(EvidenceCase.payment_id==payment.id)))|set(db.scalars(select(Ticket.warehouse_id).join(Allocation,Allocation.invoice_id==Ticket.invoice_id).where(Allocation.payment_id==payment.id)))|set(db.scalars(select(Receipt.warehouse_id).join(Ticket,Ticket.native_receipt_id==Receipt.id).join(Allocation,Allocation.invoice_id==Ticket.invoice_id).where(Allocation.payment_id==payment.id)))
 
 
 def payment_access(db,actor,payment,capability):
+    if '*' in actor.capabilities:return
     for warehouse in payment_warehouses(db,payment):require(actor,capability,warehouse)
 
 

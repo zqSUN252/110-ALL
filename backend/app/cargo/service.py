@@ -75,7 +75,8 @@ def create_receipt(db,actor,p):
 @command('receipt.update','id expected_version '+RECEIPT_FIELDS,'cargo.manage',Receipt)
 def update_receipt(db,actor,p):
     r=object_access(db,actor,Receipt,p['id'],'cargo.manage');check_version(r,p.get('expected_version'))
-    if r.state!='active':raise DomainError('receipt_void','Recover receipt before editing',409)
+    removing=r.id in db.info.get('hold_removing',set()) and r.state=='merged' and set(p)<= {'id','expected_version','customer_phone','idempotency_key'}
+    if r.state!='active' and not removing:raise DomainError('receipt_void','Recover receipt before editing',409)
     if 'party_id' in p:member(db,actor,p['party_id'],r.warehouse_id,'cargo.manage')
     if p.get('destination_warehouse_id'):require(actor,'cargo.manage',p['destination_warehouse_id'])
     for k,v in values(p).items():setattr(r,k,v)
@@ -96,6 +97,11 @@ def repack(db,actor,p):
     new=(sum(s['pieces'] for s in specs),sum(s['kg'] for s in specs),sum(s['cbm'] for s in specs))
     if any(Decimal(str(balance[k]))+new[i]-old[i]<0 for i,k in enumerate(('pieces','kg','cbm'))):raise DomainError('stock_remaining','Repack would reduce below already dispatched stock',409)
     r.spec_revision+=1;add_specs(db,r,specs);bump(r)
+    from app.models import Ticket
+    linked=db.scalar(select(Ticket).where(Ticket.native_receipt_id==r.id))
+    if linked:
+        from .source_allocations import reservation
+        reservation(db,linked)
     db.add(StockEvent(receipt_id=r.id,warehouse_id=r.warehouse_id,kind='repack',occurred_on=day(p['occurred_on']),pieces=new[0]-old[0],kg=new[1]-old[1],cbm=new[2]-old[2],actor_id=actor.id,reason=p['reason']))
     from app.pricing.service import refresh_quote
     refresh_quote(db,r);db.flush();return receipt_json(db,r)
@@ -112,6 +118,7 @@ def review_receipt(db,actor,p):
 @command('receipt.state','id expected_version state reason','cargo.manage',Receipt)
 def receipt_state(db,actor,p):
     r=object_access(db,actor,Receipt,p['id'],'cargo.manage');check_version(r,p.get('expected_version'))
+    if r.state=='merged':raise DomainError('merged_source','Merged source remains immutable transfer history',409)
     state=enum(p['state'],('void','active'),'state')
     if not str(p.get('reason','')).strip():raise DomainError('reason_required','Explicit reason required')
     r.state=state;bump(r);db.flush();return receipt_json(db,r)
@@ -176,6 +183,11 @@ def merge_receipts(db,actor,p):
         if r.state!='active' or r.warehouse_id!=target.warehouse_id or r.party_id!=target.party_id or r.transport!=target.transport:raise DomainError('merge_scope','Merge requires active receipts of same warehouse, confirmed party and transport')
         if identity!=target.id:
             request=next(s for s in sources if s['receipt_id']==identity);fields(request,'receipt_id expected_version');check_version(r,request.get('expected_version'))
+            from app.models import Ticket
+            # Void tickets remain recoverable document members; merging their
+            # source would make every later recovery fail permanently.
+            if db.scalar(select(Ticket.id).where(Ticket.native_receipt_id==r.id)):
+                raise DomainError('native_source_referenced','Resolve every ticket source reference, including void members, before merging this source receipt',409)
         balance=remaining(db,r)
         if balance!={'pieces':r.pieces,'kg':f'{r.kg:.6f}','cbm':f'{r.cbm:.6f}'}:raise DomainError('merge_partial','Partly dispatched stock requires explicit remaining specifications before merge',409)
         for spec in db.scalars(select(ReceiptSpec).where(ReceiptSpec.receipt_id==r.id,ReceiptSpec.revision==r.spec_revision).order_by(ReceiptSpec.position)):

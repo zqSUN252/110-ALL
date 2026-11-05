@@ -9,6 +9,8 @@ from app.packing import service as packing,imports
 from app.warehouses import analytics
 from app.warehouses import masters,exports
 from app.cargo import translation
+from app.packing import groups as billing_groups
+from app.cargo.source_allocations import reconcile as reconcile_arrival_sources
 from .logistics_inputs import MODELS
 
 router=APIRouter(prefix='/api')
@@ -45,6 +47,8 @@ for path,fn,method in [
     ('/receipts/{id}/merge',cargo.merge_receipts,'POST'),('/receipts/{id}/attachments',cargo.attach_receipt,'POST'),
     ('/receipts/{id}/translation',translation.request_translation,'POST'),('/translations/{id}/accept',translation.accept_translation,'POST'),
     ('/cargo/exports',exports.export_receipts,'POST'),('/f6/analysis/export',exports.export_inbound,'POST'),
+    ('/packing/documents/{id}/regroup',billing_groups.confirm,'POST'),
+    ('/tickets/{id}/arrival-sources',reconcile_arrival_sources,'POST'),
 ]:add_command(path,fn,method)
 
 
@@ -90,12 +94,24 @@ def document_history(id:str,db:Database,actor=Depends(get_actor)):return packing
 def groups(id:str,db:Database,actor=Depends(get_actor)):return packing.document_groups(db,actor,id)
 
 
+@router.post('/packing/documents/{id}/billing-preview')
+def billing_preview(id:str,db:Database,payload:dict=Body(...),actor=Depends(mutate)):
+    return billing_groups.preview(db,actor,id,payload)
+
+
 @router.get('/packing/documents/{id}/void-preview')
 def document_void_preview(id:str,db:Database,actor=Depends(get_actor)):return packing.void_preview(db,actor,id)
 
 
 @router.get('/packing/documents/{id}/recover-preview')
 def document_recover_preview(id:str,db:Database,actor=Depends(get_actor)):return packing.recover_preview(db,actor,id)
+
+
+@router.post('/packing/documents/{id}/recover-preview')
+def explicit_recover_preview(id:str,db:Database,payload:dict=Body(...),actor=Depends(mutate)):
+    from app.cargo.commands import fields
+    fields(payload,'selected_members')
+    return packing.recover_preview(db,actor,id,payload.get('selected_members'))
 
 
 @router.post('/packing/documents/{id}/replacement-preview')
@@ -111,6 +127,14 @@ def tickets(db:Database,limit:int=50,offset:int=0,receipt:str|None=None,client:s
 
 @router.get('/tickets/{id}')
 def ticket(id:str,db:Database,actor=Depends(get_actor)):return packing.get_ticket(db,actor,id)
+
+
+@router.get('/tickets/{id}/native-dispatches')
+def native_dispatches(id:str,db:Database,actor=Depends(get_actor)):
+    from app.cargo.commands import object_access
+    from app.cargo.source_allocations import dispatch_options
+    from app.models import Ticket
+    return dispatch_options(db,actor,object_access(db,actor,Ticket,id,'packing.read'))
 
 
 @router.post('/tickets/{id}/change-preview')

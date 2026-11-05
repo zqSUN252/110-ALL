@@ -3,6 +3,8 @@ import { api, download, fileBlob, rows, ApiError, type Row } from "./api";
 import { ErrorBox, Form, RecordView, FileViewer, f, type Field } from "./ui";
 import { LangContext, useT } from "./i18n";
 import {ExportJob} from './ExportJob';
+import {copyCurrentPNG} from './clipboard';
+import {NativeArrivalForm,RecoverDocument} from './NativeSources';
 import {GrantsForm,PickupForm} from './WorkflowForms';
 export {CopyMarks} from './WorkflowForms';
 import {
@@ -27,6 +29,8 @@ export type Action = {
   run: (body: Row, key: string) => Promise<Row>;
   preview?: (body: Row) => Promise<Row>;
   load?: () => Promise<Row>;
+  record?: Row;
+  entityKind?:string;
 };
 export function ActionForm({
   action,
@@ -37,6 +41,8 @@ export function ActionForm({
 }) {
   if (action.key === 'grants') return <GrantsForm action={action} onSaved={onSaved}/>;
   if (action.key === 'physical') return <PickupForm action={action} onSaved={onSaved}/>;
+  if (action.entityKind==='documents'&&action.key==='recover')return <RecoverDocument action={action} onSaved={onSaved}/>;
+  if (action.record?.native_receipt_id&&['arrive','sea-arrive','arrival-sources'].includes(action.key))return <NativeArrivalForm action={action} onSaved={onSaved}/>;
   return <CommandForm action={action} onSaved={onSaved}/>;
 }
 function CommandForm({action,onSaved}:{action:Action;onSaved:(r:Row)=>void}) {
@@ -234,6 +240,9 @@ export function actionsFor(kind: string, row: Row): Action[] {
     );
   }
   if (kind === "tickets") {
+    if(row.native_receipt_id&&row.arrivals?.length)result.push(action('arrival-sources',['核对历史到货出库来源','Reconcile historic arrival outbound sources'],'packing.arrive',[
+      {...select('arrival_id',row.arrivals.map((r:Row)=>r.id),true),optionLabels:Object.fromEntries(row.arrivals.map((r:Row)=>[r.id,[r.occurred_on+' · '+r.pieces+' PCS',r.occurred_on+' · '+r.pieces+' PCS']]))},required('reason')
+    ],send('/arrival-sources'),v));
     result.push(
       action(
         "review",
@@ -882,7 +891,7 @@ export function actionsFor(kind: string, row: Row): Action[] {
       );
     }
   }
-  return result;
+  return result.map(a=>({...a,record:row,entityKind:kind}));
 }
 
 export function Notice({
@@ -1151,22 +1160,13 @@ export function ExportPanel({
                   onClick={async () => {
                     const expected={...active.current};
                     setError(null);setCopied(false);
-                    let serverError:any;
                     try {
                       // Construct ClipboardItem during the user gesture; the promise
                       // obtains fresh, currently authorized bytes for this exact job.
-                      const fresh=fileBlob('/api/exports/'+result.id+'/clipboard').then(blob=>{
-                        if(active.current.epoch!==expected.epoch||active.current.id!==expected.id||currentSource.current!==expected.source)throw new ApiError(409,'stale_export',null);
-                        if(blob.type!=='image/png'||!blob.size)throw new ApiError(422,'clipboard_failed',null);
-                        return blob;
-                      }).catch(e=>{serverError=e;throw e});
-                      void fresh.catch(()=>{}); // Clipboard construction can fail synchronously; the visible error below still reports it.
-                      await navigator.clipboard.write([
-                        new ClipboardItem({ "image/png": fresh }),
-                      ]);
+                      await copyCurrentPNG('/api/exports/'+result.id+'/clipboard',()=>active.current.epoch===expected.epoch&&active.current.id===expected.id&&currentSource.current===expected.source);
                       if(active.current.epoch===expected.epoch)setCopied(true);
                     } catch (e) {
-                      if(active.current.epoch===expected.epoch){setPrepared(undefined);setError(serverError||e instanceof ApiError&&e||new ApiError(0, "clipboard_failed", null))}
+                      if(active.current.epoch===expected.epoch){setPrepared(undefined);setError(e)}
                     }
                   }}
                 >

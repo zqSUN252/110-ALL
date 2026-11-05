@@ -1,0 +1,37 @@
+import {useEffect,useRef,useState} from 'react';
+import {api,type Row} from './api';
+import {ErrorBox,RecordView} from './ui';
+import {useT} from './i18n';
+
+export function BillingGroups({documentId,onSaved}:{documentId:string;onSaved:(r:Row)=>void}){
+  const t=useT(),[source,setSource]=useState<Row>(),[error,setError]=useState<any>(),[targets,setTargets]=useState<Row[]>([]),[assignment,setAssignment]=useState<Row>({}),[money,setMoney]=useState<Row>({}),[reason,setReason]=useState(''),[evidence,setEvidence]=useState(''),[ack,setAck]=useState(false),[pending,setPending]=useState<Row>(),[busy,setBusy]=useState(false);
+  const commandKey=useRef(crypto.randomUUID());
+  const path='/api/packing/documents/'+documentId;
+  const load=async()=>{setError(null);setPending(undefined);try{
+    const s=await api(path+'/billing-preview',{});setSource(s);
+    const mapping:Row={},groups:Row[]=[];
+    for(const ticket of s.tickets){const id=ticket.billing_group_id||ticket.invoice_id||ticket.id;let target=groups.find(g=>g.source===id);if(!target){target={key:'g'+(groups.length+1),source:id,invoice_id:ticket.invoice_id||'',party_id:ticket.party_id||''};groups.push(target)}mapping[ticket.id]=target.key}
+    setTargets(groups);setAssignment(mapping);const amounts:Row={};
+    for(const allocation of s.allocations){const owners=s.tickets.filter((r:Row)=>r.invoice_id===allocation.invoice_id);const keys=new Set(owners.map((r:Row)=>mapping[r.id]));if(keys.size===1)amounts['a:'+allocation.id+':'+[...keys][0]]=allocation.remaining_ngn}
+    for(const discount of s.discounts){const owners=s.tickets.filter((r:Row)=>r.invoice_id===discount.invoice_id);const keys=new Set(owners.map((r:Row)=>mapping[r.id]));if(keys.size===1)amounts['d:'+discount.invoice_id+':'+[...keys][0]]=discount.amount_ngn}
+    setMoney(amounts);commandKey.current=crypto.randomUUID();
+  }catch(e){setError(e)}};
+  useEffect(()=>{void load()},[documentId]);
+  const change=()=>{setPending(undefined);commandKey.current=crypto.randomUUID()};
+  const active=targets.filter(g=>Object.values(assignment).includes(g.key));
+  const build=()=>({groups:active.map(g=>({key:g.key,invoice_id:g.invoice_id||null,party_id:g.party_id||undefined,ticket_ids:source!.tickets.filter((r:Row)=>assignment[r.id]===g.key).map((r:Row)=>r.id)})),
+    allocations:source!.allocations.map((r:Row)=>({allocation_id:r.id,targets:[...active.map(g=>g.key),'balance'].filter(k=>Number(money['a:'+r.id+':'+k])>0).map(k=>({key:k==='balance'?null:k,amount_ngn:money['a:'+r.id+':'+k]}))})),
+    discounts:source!.discounts.map((r:Row)=>({invoice_id:r.invoice_id,targets:active.map(g=>g.key).filter(k=>Number(money['d:'+r.invoice_id+':'+k])>0).map(k=>({key:k,amount_ngn:money['d:'+r.invoice_id+':'+k]}))})),
+    confirmed_conflicts:ack,attribution_source:evidence});
+  return <section className="workflow"><h3>{t('客户应收分组与来源分配','Customer billing groups and source allocations')}</h3><ErrorBox error={error}/><button onClick={()=>void load()}>{t('重新读取成员与资金来源','Reload members and financial sources')}</button>{source&&<>
+    <p>{t('保留原票件、原付款和历史账单。逐项确认成员、现有应收及资金去向；空白金额需补齐后预览。','Keep original cargo, payments and invoice history. Confirm each member, retained invoice and source destination before previewing.')}</p>
+    <div className="table-scroll"><table><thead><tr><th>{t('收据号 / Mark','Receipt / Mark')}</th><th>{t('真实电话 / 目的仓','Confirmed phone / Destination')}</th><th>{t('分组','Group')}</th></tr></thead><tbody>{source.tickets.map((r:Row)=><tr key={r.id}><td>{r.receipt} / {r.mark||'—'}</td><td>{r.phone_confirmed?r.phone_normalized:t('电话待核对','Phone unconfirmed')} / {r.destination||'—'} / {r.destination_warehouse_id||'—'}</td><td><select aria-label={t('分组 ','Group ')+r.receipt} value={assignment[r.id]} onChange={e=>{change();setAssignment({...assignment,[r.id]:e.target.value})}}>{targets.map(g=><option key={g.key} value={g.key}>{g.key}</option>)}</select></td></tr>)}</tbody></table></div>
+    <button onClick={()=>{change();setTargets([...targets,{key:'g'+(targets.length+1),invoice_id:'',party_id:''}])}}>{t('新增分组','Add group')}</button>
+    {active.map(g=><div className="form-grid" key={g.key}><label>{g.key} · {t('保留现有应收','Retained invoice')}<select aria-label={g.key+' invoice'} value={g.invoice_id} onChange={e=>{change();setTargets(targets.map(x=>x.key===g.key?{...x,invoice_id:e.target.value}:x))}}><option value="">{t('新建分组应收','New group invoice')}</option>{source.invoices.map((inv:Row)=><option value={inv.id} key={inv.id}>{inv.reference} · NGN {inv.amount_ngn} · {inv.id}</option>)}</select></label><label>{t('已确认客户身份','Confirmed party')}<select aria-label={g.key+' party'} value={g.party_id} onChange={e=>{change();setTargets(targets.map(x=>x.key===g.key?{...x,party_id:e.target.value}:x))}}><option value="">{t('请选择','Select')}</option>{[...new Set<string>(source.tickets.map((r:Row)=>r.party_id).filter(Boolean))].map(p=><option key={p} value={p}>{source.tickets.find((r:Row)=>r.party_id===p)?.mark||p} · {p}</option>)}</select></label></div>)}
+    {(['a','d'] as const).map(kind=><section key={kind}><h4>{kind==='a'?t('每笔原付款核销去向','Each original allocation destination'):t('每张来源账单折扣去向','Each source invoice discount destination')}</h4><div className="table-scroll"><table><thead><tr><th>{t('原来源 / 可分配金额','Original source / Amount')}</th>{active.map(g=><th key={g.key}>{g.key} NGN</th>)}{kind==='a'&&<th>{t('退回原付款人余额 NGN','Return to original payer balance NGN')}</th>}</tr></thead><tbody>{(kind==='a'?source.allocations:source.discounts).map((r:Row)=>{const id=kind==='a'?r.id:r.invoice_id;return <tr key={id}><td>{kind==='a'?r.payment_id:r.invoice_id} · {kind==='a'?r.remaining_ngn:r.amount_ngn}{kind==='a'&&<small>{t('原付款人','Original payer')}: {r.payer_id}</small>}</td>{[...active.map(g=>g.key),...(kind==='a'?['balance']:[])].map(k=><td key={k}><input inputMode="decimal" aria-label={kind+':'+id+':'+k} value={money[kind+':'+id+':'+k]||''} onChange={e=>{change();setMoney({...money,[kind+':'+id+':'+k]:e.target.value})}}/></td>)}</tr>})}</tbody></table></div></section>)}
+    <label>{t('归属依据（存在客户、电话或目的仓差异时必填）','Attribution evidence for party, phone or destination conflicts')}<textarea value={evidence} onChange={e=>{change();setEvidence(e.target.value)}}/></label><label><input type="checkbox" checked={ack} onChange={e=>{change();setAck(e.target.checked)}}/>{t('我已核对上述归属及目的仓差异','I reviewed the attribution and destination differences')}</label>
+    <label>{t('变更原因','Reason')}<input value={reason} onChange={e=>{change();setReason(e.target.value)}}/></label>
+    <button disabled={busy||!reason.trim()} onClick={async()=>{setBusy(true);setError(null);try{const plan=build();const preview=await api(path+'/billing-preview',plan);setPending({plan,preview})}catch(e){setError(e)}finally{setBusy(false)}}}>{t('核对分组与资金预览','Review groups and financial effects')}</button>
+    {pending&&<section className="confirmation"><h4>{t('确认当前应收与原资金去向','Confirm current receivables and original source destinations')}</h4><RecordView data={{targets:pending.preview.targets,invalidate_unexecuted_instructions:true}}/><button className="primary" disabled={busy} onClick={async()=>{setBusy(true);setError(null);try{const result=await api(path+'/regroup',{expected_version:pending.preview.document.version,plan:pending.plan,preview:pending.preview,reason},'POST',commandKey.current);onSaved(result);await load()}catch(e){setError(e)}finally{setBusy(false)}}}>{t('确认分组与来源分配','Confirm groups and source allocations')}</button></section>}
+  </>}</section>
+}

@@ -34,7 +34,7 @@ export function CopyMarks({
               : mark.kind === "loading"
                 ? t("已通知装柜", "Loading notice copied")
                 : t("已复制通知", "Notice copied")}{" "}
-            · {mark.copied_at}
+            · {mark.operator_name||mark.actor_id} · {mark.copied_at}
           </p>
           {mark.cancelled_at ? (
             <RecordView data={mark} />

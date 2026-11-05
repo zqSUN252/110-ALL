@@ -131,6 +131,8 @@ def new_ticket(db,actor,d,p,allow_unresolved=False):
     position=(db.scalar(select(func.max(Ticket.position)).where(Ticket.document_id==d.id)) or 0)+1
     t=Ticket(document_id=d.id,warehouse_id=d.warehouse_id,position=position,**data)
     db.add(t);db.flush()
+    from app.cargo.source_allocations import reservation
+    reservation(db,t)
     q=None
     if 'charge_components' not in p and t.freight_usd is None and t.clearing_ngn is None:
         from app.pricing.service import refresh_quote
@@ -138,6 +140,8 @@ def new_ticket(db,actor,d,p,allow_unresolved=False):
         if q:t.freight_usd=q.charge_usd;t.clearing_ngn=q.charge_ngn;t.ngn_per_usd=q.ngn_per_usd
     t.pricing_authority='quote' if q else 'totals' if 'charge_components' in p or t.freight_usd is not None or t.clearing_ngn is not None else 'pending'
     allocation.revise(db,t,p,q)
+    from .groups import attach
+    attach(db,actor,t)
     d.version+=1;return t
 
 
@@ -183,6 +187,8 @@ def sync_invoice(db,actor,t,p,automatic_arrival=False):
     from app.migration.service import ticket_legacy_bills
     if ticket_legacy_bills(db,t.id):return
     if t.pricing_authority=='review':return
+    from . import groups
+    if t.billing_group_id and groups.sync(db,actor,t,p,automatic_arrival):return
     if automatic_arrival and t.invoice_id:
         financial_access(db,actor,t)
         historical=finance.locked(db,Invoice,t.invoice_id)
@@ -222,6 +228,9 @@ def sync_invoice(db,actor,t,p,automatic_arrival=False):
         if usd:payload['ngn_per_usd']=str(t.ngn_per_usd)
         if basis:payload['rounding_basis']=basis
         t.invoice_id=finance.create_invoice(db,actor,payload)['id']
+        if t.billing_group_id:
+            from app.models import NativeBillingGroup
+            db.get(NativeBillingGroup,t.billing_group_id).invoice_id=t.invoice_id
 
 
 def edit_ticket(db,actor,t,p):
@@ -232,8 +241,12 @@ def edit_ticket(db,actor,t,p):
         member(db,actor,p['party_id'],t.warehouse_id,'packing.manage')
         if t.invoice_id and p['party_id']!=t.party_id:raise DomainError('financial_party','A billed ticket requires explicit financial ownership resolution',409)
     native_change(db,actor,t,p)
+    if 'native_receipt_id' in p and p['native_receipt_id']!=t.native_receipt_id and db.scalar(select(Arrival.id).where(Arrival.ticket_id==t.id)):
+        raise DomainError('native_source_consumed','Actual arrival source cannot be reassigned; preserve original outbound evidence',409)
     before=pricing.snapshot(t)
     for k,v in ticket_values(p).items():setattr(t,k,v)
+    from app.cargo.source_allocations import reservation
+    reservation(db,t)
     if t.transport!=db.get(Shipment,db.get(PackingDocument,t.document_id).shipment_id).transport:raise DomainError('transport_mismatch','Ticket and shipment transport differ')
     existing=list(db.scalars(select(Arrival).where(Arrival.ticket_id==t.id)))
     if existing:
@@ -268,7 +281,11 @@ def ticket_change_preview(db,actor,identity,changes):
         values=charges(db,proposed)
         if values is None:raise DomainError('existing_invoice_unpriced','Existing invoice requires an explicit replacement price',409)
         if db.scalar(select(Arrival.id).where(Arrival.ticket_id==t.id)):
-            basis=cargo_basis(db,proposed);impact=finance.adjustment_preview(db,actor,t.invoice_id,basis['amount_ngn'],changes.get('discount_total_ngn'))
+            from . import groups
+            from app.models import NativeBillingGroup
+            group=db.get(NativeBillingGroup,t.billing_group_id) if t.billing_group_id else None
+            basis=groups.basis(db,group,{t.id:proposed}) if group and (len(groups.members(db,group))>1 or (db.get(Invoice,t.invoice_id).pricing or {}).get('arrival_allocation',{}).get('group_id')) else cargo_basis(db,proposed)
+            impact=finance.adjustment_preview(db,actor,t.invoice_id,basis['amount_ngn'],changes.get('discount_total_ngn'))
             impact.update(new_rounding_adjustment_ngn=basis['rounding_adjustment_ngn'],rounding_basis=basis)
         else:impact=finance.adjustment_preview(db,actor,t.invoice_id,str(invoice_amount(*values,proposed.ngn_per_usd)),changes.get('discount_total_ngn'))
     return {'id':t.id,'version':t.version,'warehouse_id':t.warehouse_id,'changes':json_value(changes),'pricing_authority':proposed.pricing_authority,'quote':finance.record(quote or db.get(QuoteSnapshot,proposed.quote_id)) if proposed.pricing_authority=='quote' and (quote or proposed.quote_id) else None,'historical_quote_id':proposed.quote_id if proposed.pricing_authority=='review' else None,'finance_preview':impact}
@@ -280,7 +297,7 @@ def update_ticket(db,actor,p):
     d=finance.locked(db,PackingDocument,t.document_id);d.version+=1;db.flush();return ticket_json(db,t)|{'previous_native_receipt_id':previous_native}
 
 
-@command('ticket.arrive','id expected_version pieces kg cbm occurred_on source mode','packing.arrive',Ticket,financial=True)
+@command('ticket.arrive','id expected_version pieces kg cbm occurred_on source mode dispatch_allocations','packing.arrive',Ticket,financial=True)
 def arrive(db,actor,p):
     t=preview_access(db,actor,Ticket,p['id'],'packing.arrive');check_version(t,p.get('expected_version'))
     d=finance.locked(db,PackingDocument,t.document_id)
@@ -300,7 +317,10 @@ def arrive(db,actor,p):
     incoming=SimpleNamespace(**quantity)
     _,usd,ngn,charge_basis=allocation.projection(db,t,rows+[incoming])[-1]
     if not str(p.get('source','')).strip():raise DomainError('arrival_source','Actual arrival source required')
-    db.add(Arrival(ticket_id=t.id,occurred_on=finance.day(p['occurred_on']),**quantity,freight_usd=usd,clearing_ngn=ngn,charge_basis=charge_basis,actor_id=actor.id,source=p['source']));db.flush()
+    arrival=Arrival(ticket_id=t.id,occurred_on=finance.day(p['occurred_on']),**quantity,freight_usd=usd,clearing_ngn=ngn,charge_basis=charge_basis,actor_id=actor.id,source=p['source'])
+    db.add(arrival);db.flush()
+    from app.cargo.source_allocations import arrive_sources
+    arrive_sources(db,actor,t,arrival,p.get('dispatch_allocations'))
     bump(t);sync_invoice(db,actor,t,p,automatic_arrival=True);d.version+=1
     shipment=finance.locked(db,Shipment,d.shipment_id)
     shipment.state='partly_arrived'
@@ -341,9 +361,23 @@ def split_document(db,actor,p):
             group=set(db.scalars(select(LegacyTicket.native_id).join(LegacyBillMember,LegacyBillMember.ticket_id==LegacyTicket.id).where(LegacyBillMember.bill_id==bill.id)))
             if None in group or not group.issubset(set(ids)):
                 raise DomainError('legacy_group_split','Move the complete historical billing group together',409)
+    from . import groups
+    from app.models import NativeBillingGroup
+    moved_groups=set()
+    for ticket in tickets:
+        if not ticket.billing_group_id:continue
+        g=db.get(NativeBillingGroup,ticket.billing_group_id)
+        active={t.id for t in groups.members(db,g) if t.state=='active'}
+        if not active.issubset(set(ids)):
+            raise DomainError('native_group_split','Use the billing group plan to split sources before moving selected members',409)
+        moved_groups.add(g.id)
     child=PackingDocument(shipment_id=d.shipment_id,warehouse_id=d.warehouse_id,reference=p['reference'],uploaded_on=d.uploaded_on,parent_id=d.id)
     db.add(child);db.flush()
     for t in tickets:t.document_id=child.id;t.version+=1
+    for gid in moved_groups:
+        g=db.get(NativeBillingGroup,gid);before=groups.snapshot(db,g);g.document_id=child.id;g.version+=1
+        from app.models import NativeGroupRevision
+        db.add(NativeGroupRevision(document_id=child.id,actor_id=actor.id,reason='Complete native billing group moved; cash and due dates retained',before=before,after=groups.snapshot(db,g)))
     # Original files remain source observations linked to the unchanged ticket IDs.
     for r in db.scalars(select(DocumentRevision).where(DocumentRevision.document_id==d.id)):
         db.add(DocumentRevision(document_id=child.id,batch_id=r.batch_id,target_version=child.version,mapping={'inherited_ticket_ids':ids},difference={'split_from':d.id},actor_id=actor.id))
@@ -355,12 +389,13 @@ def void_preview(db,actor,identity):
     from sqlalchemy import text
     db.execute(text('SELECT pg_advisory_xact_lock(110002)'))
     d=preview_access(db,actor,PackingDocument,identity,'packing.manage');rows=[]
-    for t in db.scalars(select(Ticket).where(Ticket.document_id==d.id).order_by(Ticket.id)):
+    if d.state!='active':raise DomainError('document_void','Only an active document can be cancelled',409)
+    for t in db.scalars(select(Ticket).where(Ticket.document_id==d.id,Ticket.state=='active').order_by(Ticket.id)):
         financial_access(db,actor,t)
         from app.migration.service import guard_legacy_ticket
         guard_legacy_ticket(db,t.id,destructive=True)
         impact=finance.adjustment_preview(db,actor,t.invoice_id,'0','0') if t.invoice_id else None
-        rows.append({'ticket_id':t.id,'version':t.version,'invoice_id':t.invoice_id,'finance_preview':impact})
+        rows.append({'ticket_id':t.id,'version':t.version,'original_state':t.state,'invoice_id':t.invoice_id,'finance_preview':impact})
     return {'id':d.id,'version':d.version,'tickets':rows}
 
 
@@ -370,7 +405,18 @@ def ticket_void_preview(db,actor,identity):
     from sqlalchemy import text
     db.execute(text('SELECT pg_advisory_xact_lock(110002)'))
     t=preview_access(db,actor,Ticket,identity,'packing.manage');require(actor,'packing.read',t.warehouse_id);financial_access(db,actor,t)
-    impact=finance.adjustment_preview(db,actor,t.invoice_id,'0','0') if t.invoice_id else None
+    amount='0';discount='0';basis=None
+    if t.billing_group_id:
+        from . import groups
+        from app.models import NativeBillingGroup
+        from types import SimpleNamespace
+        g=db.get(NativeBillingGroup,t.billing_group_id);others=[x for x in groups.members(db,g) if x.id!=t.id and x.state=='active']
+        if others:
+            if groups.has_financial_facts(db,t.invoice_id):raise DomainError('native_group_split','Use an explicit billing source plan before cancelling a funded group member',409)
+            proposed=SimpleNamespace(**{c.name:getattr(t,c.name) for c in t.__table__.columns});proposed.state='void';proposed.version+=1
+            basis=groups.basis(db,g,{t.id:proposed});amount=basis['amount_ngn']
+    impact=finance.adjustment_preview(db,actor,t.invoice_id,amount,discount) if t.invoice_id else None
+    if impact and basis:impact.update(rounding_basis=basis,new_rounding_adjustment_ngn=basis['rounding_adjustment_ngn'])
     return {'id':t.id,'version':t.version,'document_id':t.document_id,'invoice_id':t.invoice_id,'finance_preview':impact}
 
 
@@ -380,11 +426,14 @@ def void_ticket(db,actor,p):
     preview=ticket_void_preview(db,actor,t.id)
     if p.get('preview')!=preview:raise DomainError('preview_changed','Ticket financial relationships changed',409,preview)
     if t.state!='active' or not str(p.get('reason','')).strip():raise DomainError('void_basis','Active ticket and explicit reason required')
+    t.state='void';bump(t)
     if t.invoice_id:
         inv=finance.locked(db,Invoice,t.invoice_id)
-        finance.adjust_invoice(db,actor,dict(id=inv.id,expected_version=inv.version,amount_ngn='0',discount_total_ngn='0',reason=p['reason'],preview=preview['finance_preview'],idempotency_key=p['idempotency_key']+':invoice'))
-        inv.state='void'
-    t.state='void';bump(t);d=finance.locked(db,PackingDocument,t.document_id);d.version+=1
+        impact=preview['finance_preview'];payload=dict(id=inv.id,expected_version=inv.version,amount_ngn=impact['new_ngn'],discount_total_ngn='0',reason=p['reason'],preview=impact,idempotency_key=p['idempotency_key']+':invoice')
+        if impact.get('rounding_basis'):payload['rounding_basis']=impact['rounding_basis']
+        finance.adjust_invoice(db,actor,payload)
+        if not db.scalar(select(Ticket.id).where(Ticket.invoice_id==inv.id,Ticket.state=='active')):inv.state='void'
+    d=finance.locked(db,PackingDocument,t.document_id);d.version+=1
     db.flush();return ticket_json(db,t)
 
 
@@ -394,42 +443,92 @@ def void_document(db,actor,p):
     current=void_preview(db,actor,d.id)
     if p.get('preview')!=current:raise DomainError('preview_changed','Document financial relationships changed',409,current)
     if not str(p.get('reason','')).strip():raise DomainError('reason_required','Explicit cancellation reason required')
+    d.void_members=[{'ticket_id':row['ticket_id'],'original_state':row['original_state'],'original_version':row['version'],'void_version':row['version']+1,
+        'invoice_id':row['invoice_id'],'discount_before':row['finance_preview']['old_discount_ngn'] if row['finance_preview'] else None} for row in current['tickets']]
+    adjusted=set()
     for row in current['tickets']:
         t=finance.locked(db,Ticket,row['ticket_id'])
-        if t.invoice_id:
+        if t.invoice_id and t.invoice_id not in adjusted:
             inv=finance.locked(db,Invoice,t.invoice_id)
             finance.adjust_invoice(db,actor,dict(id=inv.id,expected_version=inv.version,amount_ngn='0',discount_total_ngn='0',reason=p['reason'],preview=row['finance_preview'],idempotency_key=p['idempotency_key']+':'+t.id))
             inv.state='void'
+            adjusted.add(inv.id)
         t.state='void';bump(t)
     d.state='void';d.version+=1;db.flush();return document_json(db,d)
 
 
-def recover_preview(db,actor,identity):
+def recover_preview(db,actor,identity,selected_members=None):
     from sqlalchemy import text
     db.execute(text('SELECT pg_advisory_xact_lock(110002)'))
     d=preview_access(db,actor,PackingDocument,identity,'packing.manage');rows=[]
-    for t in db.scalars(select(Ticket).where(Ticket.document_id==d.id).order_by(Ticket.id)):
+    if d.state!='void':raise DomainError('recovery_source','Only a void document can be recovered',409)
+    original=d.void_members;decision='recorded_cancellation'
+    if original is None:
+        # No reconstruction from an old after-only audit: it does not prove
+        # which rows were already void. An explicit current decision is required.
+        if selected_members is None:
+            candidates=list(db.scalars(select(Ticket).where(Ticket.document_id==d.id,Ticket.state=='void').order_by(Ticket.id)))
+            for t in candidates:financial_access(db,actor,t)
+            return {'id':d.id,'version':d.version,'original_members_unknown':True,'requires_member_selection':True,
+                'candidates':[{'ticket_id':t.id,'version':t.version,'receipt':t.receipt,'invoice_id':t.invoice_id} for t in candidates]}
+        if not isinstance(selected_members,list) or not selected_members or len(set(selected_members))!=len(selected_members):raise DomainError('recovery_selection','Select distinct members for a new recovery decision')
+        original=[];decision='explicit_current_recovery_original_members_unknown'
+        for tid in sorted(selected_members):
+            t=preview_access(db,actor,Ticket,tid,'packing.manage')
+            if t.document_id!=d.id or t.state!='void':raise DomainError('recovery_selection','Only current void members of this document can be selected',409)
+            original.append({'ticket_id':t.id,'original_state':'active','void_version':t.version})
+    elif selected_members is not None:raise DomainError('recovery_selection','Recorded cancellation membership must be preserved')
+    from types import SimpleNamespace
+    from . import groups
+    from app.models import NativeBillingGroup
+    overrides={}
+    for source in original:
+        t=finance.locked(db,Ticket,source['ticket_id']);proposed=SimpleNamespace(**{c.name:getattr(t,c.name) for c in t.__table__.columns});proposed.state=source['original_state'];proposed.version+=1;overrides[t.id]=proposed
+    for member in original:
+        t=finance.locked(db,Ticket,member['ticket_id'])
+        if t.document_id!=d.id or t.state!='void' or t.version!=member['void_version']:
+            raise DomainError('recovery_source_changed','Cancelled member changed after this document operation',409)
+        if t.native_receipt_id:
+            from app.models import Receipt
+            source=finance.locked(db,Receipt,t.native_receipt_id)
+            if source.state!='active':
+                raise DomainError('native_source_merged','Native source was merged after cancellation; resolve source linkage before recovery',409)
         from app.migration.service import guard_legacy_ticket
         guard_legacy_ticket(db,t.id,destructive=True)
         preview=ticket_change_preview(db,actor,t.id,{}) if t.invoice_id else None
-        rows.append({'ticket_id':t.id,'version':t.version,'invoice_id':t.invoice_id,'finance_preview':preview['finance_preview'] if preview else None})
-    return {'id':d.id,'version':d.version,'tickets':rows}
+        if t.invoice_id and t.billing_group_id:
+            g=db.get(NativeBillingGroup,t.billing_group_id)
+            if len(groups.members(db,g))>1 or (db.get(Invoice,t.invoice_id).pricing or {}).get('arrival_allocation',{}).get('group_id'):
+                basis=groups.basis(db,g,overrides);impact=finance.adjustment_preview(db,actor,t.invoice_id,basis['amount_ngn'],member.get('discount_before'))
+                impact.update(rounding_basis=basis,new_rounding_adjustment_ngn=basis['rounding_adjustment_ngn']);preview={'finance_preview':impact}
+            elif member.get('discount_before') is not None and preview:
+                impact=preview['finance_preview'];replacement=finance.adjustment_preview(db,actor,t.invoice_id,impact['new_ngn'],member['discount_before']);replacement.update(rounding_basis=impact.get('rounding_basis'),new_rounding_adjustment_ngn=impact['new_rounding_adjustment_ngn']);preview={'finance_preview':replacement}
+        rows.append({'ticket_id':t.id,'version':t.version,'original_state':member['original_state'],'invoice_id':t.invoice_id,'finance_preview':preview['finance_preview'] if preview else None})
+    return {'id':d.id,'version':d.version,'cancellation_members':original,'original_members_unknown':d.void_members is None,'recovery_decision':decision,'tickets':rows}
 
 
-@command('document.recover','id expected_version reason preview','packing.manage',PackingDocument,financial=True)
+@command('document.recover','id expected_version reason preview selected_members','packing.manage',PackingDocument,financial=True)
 def recover_document(db,actor,p):
     d=preview_access(db,actor,PackingDocument,p['id'],'packing.manage');check_version(d,p.get('expected_version'))
     if d.state!='void' or not str(p.get('reason','')).strip():raise DomainError('recover_basis','Void document and recovery reason required')
-    preview=recover_preview(db,actor,d.id)
+    preview=recover_preview(db,actor,d.id,p.get('selected_members'))
+    if preview.get('requires_member_selection'):raise DomainError('recovery_selection','Explicit current member selection and financial preview required',409)
     if p.get('preview')!=preview:raise DomainError('preview_changed','Review financial restoration before recovery',409,preview)
     # Recovery restores cargo only; prior credits remain in cash balance. Existing AR
     # is explicitly restored with a new adjustment and never re-allocates old cash.
-    for t in db.scalars(select(Ticket).where(Ticket.document_id==d.id).order_by(Ticket.id)):
-        financial_access(db,actor,t);t.state='active';bump(t)
-        if t.invoice_id:
-            inv=finance.locked(db,Invoice,t.invoice_id);inv.state='active'
+    for row in preview['tickets']:
+        t=finance.locked(db,Ticket,row['ticket_id'])
+        financial_access(db,actor,t);t.state=row['original_state'];bump(t)
+        from app.cargo.source_allocations import reservation
+        reservation(db,t)
+    db.flush();adjusted=set()
+    for row in preview['tickets']:
+        t=finance.locked(db,Ticket,row['ticket_id'])
+        if t.invoice_id and t.invoice_id not in adjusted:
+            inv=finance.locked(db,Invoice,t.invoice_id);inv.state='open'
             impact=next(row['finance_preview'] for row in preview['tickets'] if row['ticket_id']==t.id)
-            sync_invoice(db,actor,t,dict(p,idempotency_key=p['idempotency_key']+':'+t.id,finance_preview=impact))
+            sync_invoice(db,actor,t,dict(p,idempotency_key=p['idempotency_key']+':'+t.id,finance_preview=impact,discount_total_ngn=impact['discount_ngn'] if impact else None))
+            adjusted.add(inv.id)
     d.state='active';d.version+=1;db.flush();return document_json(db,d)
 
 
@@ -460,6 +559,10 @@ def list_tickets(db,actor,limit=50,offset=0,receipt=None,client=None,item=None,d
         invoices=list(db.scalars(select(Invoice).where(Invoice.id.in_(invoice_ids))))
         if len(invoices)!=len(invoice_ids):raise DomainError('not_found','Linked invoice unavailable',404)
         for invoice in invoices:require(actor,'payables.read' if invoice.kind=='AP' else 'finance.read',invoice.warehouse_id)
+        if '*' not in actor.capabilities:
+            from app.finance.access import visible_invoices
+            if set(db.scalars(visible_invoices(select(Invoice.id).where(Invoice.id.in_(invoice_ids)),actor)))!=invoice_ids:
+                raise DomainError('forbidden','Shared invoice includes unauthorized source members',403)
     bundle=ticket_page_bundle(db,tickets)
     return [ticket_json(db,ticket,bundle) for ticket in tickets]
 
@@ -472,6 +575,7 @@ def document_groups(db,actor,identity):
         return identity
     for t in tickets:
         keys=[]
+        if t.get('billing_group_id'):keys.append(('native_group',t['billing_group_id']))
         if t.get('invoice_id'):keys.append(('invoice',t['invoice_id']))
         if t['mark']:keys.append(('mark',t['mark']))
         if t['phone_confirmed'] and t['phone_normalized']:keys.append(('phone',t['phone_normalized']))
@@ -483,5 +587,5 @@ def document_groups(db,actor,identity):
     result=[]
     for group in groups.values():
         phones=sorted({t['contact_raw'] for t in group if t['contact_raw']});destinations=sorted({t['destination'] for t in group if t['destination']})
-        result.append({'ticket_ids':[t['id'] for t in group],'member_versions':{t['id']:t['version'] for t in group},'marks':sorted({t['mark'] for t in group if t['mark']}),'phones':phones,'destinations':destinations,'phone_conflict':len(phones)>1,'destination_conflict':len(destinations)>1,'document_version':d['version']})
+        result.append({'group_id':group[0].get('billing_group_id'),'billing_group_ids':sorted({t['billing_group_id'] for t in group if t.get('billing_group_id')}),'invoice_id':group[0].get('invoice_id'),'invoice_ids':sorted({t['invoice_id'] for t in group if t.get('invoice_id')}),'ticket_ids':[t['id'] for t in group],'member_versions':{t['id']:t['version'] for t in group},'marks':sorted({t['mark'] for t in group if t['mark']}),'phones':phones,'destinations':destinations,'phone_conflict':len(phones)>1,'destination_conflict':len(destinations)>1,'document_version':d['version']})
     return result

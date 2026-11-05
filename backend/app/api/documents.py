@@ -98,7 +98,9 @@ def ticket_holds(id:str,db:Database,actor=Depends(get_actor)):
     result={'ticket_id':id,'source_version':t.version,'ticket':release.hold_state(db,'ticket',id),'native':None}
     if t.native_receipt_id:
         native=locked(db,Receipt,t.native_receipt_id);require(actor,'release.read',native.warehouse_id)
-        result['native']={'receipt_id':native.id,'source_version':native.version,**release.hold_state(db,'receipt',native.id)}
+        state=release.cargo_hold_state(db,native)
+        for source in state.get('lineage',{}).get('receipts',[]):require(actor,'release.read',source['warehouse_id'])
+        result['native']={'receipt_id':native.id,'source_version':native.version,**state}
     return result
 
 
@@ -107,7 +109,9 @@ def receipt_holds(id:str,db:Database,actor=Depends(get_actor)):
     from app.models import Receipt
     from app.finance.service import locked
     r=locked(db,Receipt,id);require(actor,'release.read',r.warehouse_id)
-    return {'receipt_id':r.id,'source_version':r.version,**release.hold_state(db,'receipt',r.id)}
+    state=release.cargo_hold_state(db,r)
+    for source in state.get('lineage',{}).get('receipts',[]):require(actor,'release.read',source['warehouse_id'])
+    return {'receipt_id':r.id,'source_version':r.version,**state}
 
 
 @router.get('/tickets/{id}/notification-marks')

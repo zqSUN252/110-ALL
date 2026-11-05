@@ -22,6 +22,15 @@ def aggregate(rows,key):
     return {'value':str(sum(known,Decimal(0))) if not pending else None,'known_subtotal':str(sum(known,Decimal(0))),'pending_count':pending}
 
 
+FINANCIAL_KEYS=('invoice_total_ngn','allocated_ngn','received_total_ngn','historical_received_ngn','outstanding_ngn','discount_ngn','rounding_adjustment_ngn')
+
+
+def financial_totals(rows):
+    """One invoice is one financial control even when many physical rows refer to it."""
+    unique=list({r['invoice_id'] or r['id']:r for r in rows}.values())
+    return {key:aggregate(unique,key) for key in FINANCIAL_KEYS}
+
+
 def shown(value):return PENDING if value is None or value=='' else str(value)
 
 
@@ -61,6 +70,10 @@ def row(db,obj):
         'received_total_ngn':Decimal(invoice['allocated_ngn'])+Decimal(invoice['historical_received_ngn']) if invoice else None,
         'historical_bank_state':invoice['historical_bank_state'] if invoice else None,'discount_ngn':invoice['discount_ngn'] if invoice else None,'outstanding_ngn':invoice['outstanding_ngn'] if invoice else None}
     if ticket:
+        if obj.billing_group_id:
+            from app.models import NativeBillingGroup
+            group=db.get(NativeBillingGroup,obj.billing_group_id)
+            result['billing_group_id']=group.id;result['billing_group_version']=group.version
         from app.packing.allocation import projection as allocated_arrivals
         from app.tracking.service import warehouse_arrivals,warehouse_basis
         actual=list(db.scalars(select(Arrival).where(Arrival.ticket_id==obj.id).order_by(Arrival.created_at,Arrival.id)))
@@ -81,8 +94,7 @@ def row(db,obj):
 
 def packing_projection(db,objects):
     rows=[row(db,o) for o in objects]
-    money_rows=list({r['invoice_id'] or r['id']:r for r in rows}.values())
-    totals={key:aggregate(money_rows if key in ('invoice_total_ngn','allocated_ngn','received_total_ngn','historical_received_ngn','outstanding_ngn') else rows,key) for key in ('pieces','kg','cbm','freight_usd','clearing_ngn','invoice_total_ngn','allocated_ngn','received_total_ngn','historical_received_ngn','outstanding_ngn')}
+    totals={key:aggregate(rows,key) for key in ('pieces','kg','cbm','freight_usd','clearing_ngn')}|financial_totals(rows)
     return {'template_version':'packing-244-535-v1','rows':rows,'totals':totals,'profile':profile(db),'generated_on':today(db).isoformat()}
 
 

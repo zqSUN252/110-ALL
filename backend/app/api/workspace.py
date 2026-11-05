@@ -11,7 +11,7 @@ from app.models import (Announcement, Grant, WarehouseScope, AppSetting, Attachm
     LegacyParty, LegacyShipment, BankClaim, BankAccountWarehouse, Allocation, Discount,
     LegacyBillApplication, PaymentRegistration, ReleaseOrder, ReleaseMember, PartyWarehouse)
 from app.finance.service import record
-from app.finance.access import account_access
+from app.finance.access import account_access,visible_invoices
 from app.attachments import read_file
 
 router = APIRouter(prefix='/api')
@@ -23,7 +23,7 @@ def workspace_summary(db:Database,actor=Depends(get_actor)):
     for model,kind,cap in [(Receipt,'receipts','cargo.read'),(PackingDocument,'documents','packing.read'),(Ticket,'tickets','packing.read'),(Invoice,'invoices','finance.read'),(EvidenceCase,'evidence','evidence.read'),(ReleaseOrder,'release','release.read')]:
         if '*' not in actor.capabilities and cap not in actor.capabilities:continue
         statement=select(func.count()).select_from(model)
-        if model is Invoice:statement=statement.where(Invoice.kind=='AR',Invoice.scope=='live')
+        if model is Invoice:statement=visible_invoices(statement.where(Invoice.kind=='AR',Invoice.scope=='live'),actor)
         if hasattr(model,'warehouse_id') and '*' not in actor.capabilities:statement=statement.where(model.warehouse_id.in_(actor.warehouse_ids))
         # Release orders can span warehouses. The existing projection owns its
         # full membership authorization; do not advertise an unscoped count.
@@ -67,6 +67,8 @@ def finance_list(db: Database, actor=Depends(get_actor), kind: str='AR', warehou
     histories=select(LegacyBill.native_id.label('invoice_id'),LegacyBillApplication.applied_received.label('historical')).join(LegacyBillApplication,LegacyBillApplication.bill_id==LegacyBill.id).subquery()
     allocated=func.coalesce(allocations.c.allocated,0);discount=func.coalesce(discounts.c.discount,0);historical=func.coalesce(histories.c.historical,0)
     statement=select(Invoice,Party.name.label('party_name'),allocated.label('allocated'),discount.label('discount'),historical.label('historical')).join(Party,Party.id==Invoice.party_id).outerjoin(allocations,allocations.c.invoice_id==Invoice.id).outerjoin(discounts,discounts.c.invoice_id==Invoice.id).outerjoin(histories,histories.c.invoice_id==Invoice.id).where(Invoice.kind==kind,Invoice.scope=='live')
+    from app.finance.access import visible_invoices
+    statement=visible_invoices(statement,actor)
     if warehouse_id:statement=statement.where(Invoice.warehouse_id==warehouse_id)
     if '*' not in actor.capabilities:statement=statement.where(Invoice.warehouse_id.in_(actor.warehouse_ids))
     if party_id:statement=statement.where(Invoice.party_id==party_id)
@@ -126,7 +128,7 @@ def options(kind: str, db: Database, actor=Depends(get_actor), query: str = Quer
     model,capability,names=kinds[kind]; require(actor,capability)
     if kind.startswith('legacy-'): require(actor,'finance.read')
     statement=select(model)
-    if model is Invoice: statement=statement.where(Invoice.kind==('AP' if kind=='payables' else 'AR'),Invoice.scope=='live')
+    if model is Invoice: statement=visible_invoices(statement.where(Invoice.kind==('AP' if kind=='payables' else 'AR'),Invoice.scope=='live'),actor)
     if model is Payment: statement=statement.where(Payment.direction=='in',Payment.scope=='live')
     if model is BankClaim:statement=statement.join(BankEntry,BankEntry.id==BankClaim.entry_id).join(EvidenceCase,EvidenceCase.id==BankClaim.case_id)
     if '*' not in actor.capabilities:
@@ -284,7 +286,7 @@ def search(db: Database, actor=Depends(get_actor), query: str = Query('', max_le
             statement=statement.join(PackingDocument,PackingDocument.id==Ticket.document_id).join(Shipment,Shipment.id==PackingDocument.shipment_id)
             conditions.append(Shipment.reference.ilike(pattern,escape='\\'))
         statement=statement.where(or_(*conditions))
-        if model is Invoice: statement = statement.where(Invoice.kind == ('AP' if kind=='payables' else 'AR'), Invoice.scope == 'live')
+        if model is Invoice: statement = visible_invoices(statement.where(Invoice.kind == ('AP' if kind=='payables' else 'AR'), Invoice.scope == 'live'),actor)
         if '*' not in actor.capabilities:
             if model is Party:statement=statement.where(Party.id.in_(select(PartyWarehouse.party_id).where(PartyWarehouse.active.is_(True),PartyWarehouse.warehouse_id.in_(actor.warehouse_ids))))
             else:statement = statement.where(model.warehouse_id.in_(actor.warehouse_ids))

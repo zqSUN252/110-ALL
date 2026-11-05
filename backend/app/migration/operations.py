@@ -75,7 +75,7 @@ def materialize(base,delta,destination):
 def writer_gate(db):
     settings=db.info.get('settings')
     if settings is None:return
-    row=db.scalar(select(AppSetting).where(AppSetting.key=='migration.writer'))
+    row=db.scalar(select(AppSetting).where(AppSetting.key=='migration.writer').execution_options(populate_existing=True))
     if row and (row.value.get('state')!='active' or row.value.get('generation')!=settings.writer_generation):
         raise DomainError('writer_frozen','This runtime is not the current authorized writer',409)
 
@@ -85,6 +85,13 @@ def worker_gate(factory,settings):
     with factory() as db,db.begin():
         db.info['settings']=settings
         writer_gate(db)
+
+
+def worker_write_gate(db,settings):
+    """Serialize only a short admission/publication transaction against cutover."""
+    db.info['settings']=settings
+    db.execute(text('SELECT pg_advisory_xact_lock(110002)'))
+    writer_gate(db)
 
 
 def cutover(db,actor,expected_version,generation,source,active=True):

@@ -160,6 +160,7 @@ class Arrive(Version):
     occurred_on:str
     source:str=Field(min_length=1)
     mode:Literal['air','sea']
+    dispatch_allocations:list[dict]|None=None
 
 
 class DocumentCreate(Input):
@@ -181,6 +182,7 @@ class Void(Version):
 class Recover(Version):
     reason:str=Field(min_length=1)
     preview:dict
+    selected_members:list[str]|None=None
 
 
 class ImportPreview(Input):

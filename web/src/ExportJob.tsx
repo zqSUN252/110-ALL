@@ -1,10 +1,27 @@
-import {useEffect,useState} from 'react';
+import {useEffect,useRef,useState} from 'react';
 import {api,download,fileBlob,ApiError,type Row} from './api';
 import {RecordView,ErrorBox} from './ui';
 import {useT} from './i18n';
+import {copyCurrentPNG} from './clipboard';
 export function ExportJob({identity,customer=false}:{identity:string;customer?:boolean}) {
-  const t=useT(),[state,setState]=useState<Row>(),[error,setError]=useState<any>(),[png,setPNG]=useState<Blob>();
+  const t=useT(),[state,setState]=useState<Row>(),[error,setError]=useState<any>(),[prepared,setPrepared]=useState<string>();
   const path=(customer?'/api/customer/exports/':'/api/exports/')+identity;
-  useEffect(()=>{let live=true;const check=async()=>{try{const current=await api(path);if(!live)return;setState(current);if(current.ready){clearInterval(timer);try{const blob=await fileBlob(path+'/clipboard');if(live&&blob.type==='image/png')setPNG(blob)}catch{}}else if(['failed','blocked','paused','needs_review'].includes(current.status))clearInterval(timer)}catch(e){if(live)setError(e)}};const timer=setInterval(check,1500);void check();return()=>{live=false;clearInterval(timer)}},[identity,customer]);
-  return <section><ErrorBox error={error}/>{state&&<RecordView data={state}/>}<div className="toolbar"><button disabled={!state?.ready} onClick={()=>download(path+'/file','MCSTAR.'+(state?.format||'xlsx')).catch(setError)}>{t('下载文件','Download file')}</button><button disabled={!png} onClick={async()=>{try{await navigator.clipboard.write([new ClipboardItem({'image/png':png!})])}catch{setError(new ApiError(0,'clipboard_failed',null))}}}>{t('复制图片','Copy image')}</button></div></section>;
+  const active=useRef({path,epoch:0});
+  if(active.current.path!==path)active.current={path,epoch:active.current.epoch+1};
+  useEffect(()=>{
+    const expected={...active.current};let live=true,inflight=false;
+    const current=()=>live&&active.current.path===expected.path&&active.current.epoch===expected.epoch;
+    setState(undefined);setError(null);setPrepared(undefined);
+    const check=async()=>{if(inflight)return;inflight=true;try{
+      const result=await api(path);if(!current())return;setState(result);
+      if(result.ready){clearInterval(timer);if(result.format==='png'){
+        const blob=await fileBlob(path+'/clipboard');if(!current())return;
+        if(blob.type!=='image/png'||blob.size<8)throw new ApiError(422,'clipboard_failed',null);
+        setPrepared(path);
+      }}else if(['failed','blocked','paused','needs_review'].includes(result.status)){clearInterval(timer);setPrepared(undefined)}
+    }catch(e){if(current()){setError(e);setPrepared(undefined)}}finally{inflight=false}};
+    const timer=setInterval(check,1500);void check();return()=>{live=false;clearInterval(timer)};
+  },[path]);
+  const shown=state?.id===identity?state:undefined;
+  return <section><ErrorBox error={error}/>{shown&&<RecordView data={shown}/>}<div className="toolbar"><button disabled={!shown?.ready} onClick={()=>download(path+'/file','MCSTAR.'+(shown?.format||'xlsx')).catch(setError)}>{t('下载文件','Download file')}</button><button disabled={!shown?.ready||shown.format!=='png'||prepared!==path} onClick={async()=>{const expected={...active.current};const current=()=>active.current.path===expected.path&&active.current.epoch===expected.epoch;try{setError(null);await copyCurrentPNG(path+'/clipboard',current)}catch(e){if(current()){setPrepared(undefined);setError(e)}}}}>{t('复制图片','Copy image')}</button></div></section>;
 }

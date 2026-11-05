@@ -28,6 +28,16 @@ def cargo_basis(db,ticket):
 
 
 def validate_basis(db,basis,amount,invoice=None,payload=None):
+    if isinstance(basis,dict) and basis.get('group_id'):
+        from app.models import NativeBillingGroup
+        from app.packing import groups
+        from app.finance.service import locked,decimal
+        group=locked(db,NativeBillingGroup,basis['group_id']);current=groups.basis(db,group)
+        if basis!=current or decimal(amount)!=Decimal(current['amount_ngn']):raise DomainError('rounding_basis_changed','Group members or actual arrived charge sources changed',409)
+        if invoice and (group.invoice_id!=invoice.id or invoice.party_id!=group.party_id or invoice.warehouse_id!=group.warehouse_id):raise DomainError('rounding_relationship','Group invoice relationship changed',403)
+        if not invoice and payload and (payload.get('source_key')!='group:'+group.id or payload.get('party_id')!=group.party_id or payload.get('warehouse_id')!=group.warehouse_id):raise DomainError('rounding_relationship','Exact native group identity required',403)
+        if payload and any(k in payload for k in ('charge_usd','charge_ngn','ngn_per_usd')):raise DomainError('rounding_components','Group preserves each original member FX and components separately')
+        return Decimal(current['rounding_adjustment_ngn']),current
     if not isinstance(basis,dict) or not basis.get('ticket_id'):raise DomainError('rounding_basis','Verified cargo allocation basis required')
     from app.finance.service import locked,decimal
     ticket=locked(db,Ticket,basis['ticket_id']);current=cargo_basis(db,ticket)
@@ -45,5 +55,14 @@ def validate_basis(db,basis,amount,invoice=None,payload=None):
 
 def save_basis(db,actor,invoice,basis):
     invoice.pricing=dict(invoice.pricing or {})|{'arrival_allocation':basis}
+    if basis.get('group_id'):
+        for member in basis['members']:
+            if member.get('unarrived'):continue
+            save_settlements(db,actor,invoice,member)
+        return
+    save_settlements(db,actor,invoice,basis)
+
+
+def save_settlements(db,actor,invoice,basis):
     for row in basis['arrivals']:
         db.add(ArrivalSettlement(invoice_id=invoice.id,invoice_version=invoice.version,ticket_id=basis['ticket_id'],ticket_version=basis['ticket_version'],arrival_id=row['arrival_id'],arrival_version=row['arrival_version'],freight_usd=Decimal(row['freight_usd']),charge_ngn=Decimal(row['charge_ngn']),ngn_per_usd=Decimal(basis['ngn_per_usd']) if basis['ngn_per_usd'] else None,settled_ngn=Decimal(row['settled_ngn']),original_total_ngn=Decimal(basis['original_total_ngn']),actor_id=actor.id))
