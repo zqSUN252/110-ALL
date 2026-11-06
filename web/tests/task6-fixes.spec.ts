@@ -1002,7 +1002,7 @@ test("I08 English classification options keep their original stored values", asy
     name: "A FIX English category " + Date.now(),
   });
   await page.getByLabel("语言", { exact: true }).selectOption("en");
-  await nav(page, "Customers & counterparties");
+  await nav(page, "Customers / suppliers");
   await area(page)
     .getByRole("button", { name: "New counterparty", exact: true })
     .click();

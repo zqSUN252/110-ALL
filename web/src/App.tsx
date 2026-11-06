@@ -373,26 +373,35 @@ function Tracking({ back,language,setLanguage }: { back: () => void;language:Lan
     </main>
   );
 }
+const menuTitles: Record<string, [string, string]> = {
+  search: ["查找", "Search"],
+  parties: ["客户 / 供应商", "Customers / suppliers"],
+  f6: ["F6 仓储数据分析", "F6 warehouse data"],
+  mbl: ["MBL/SO", "MBL/SO"],
+  shipments: ["出运单管理", "Shipments"],
+  audit: ["操作日志", "Operation log"],
+  payables: ["应付账款", "Payables"],
+};
 const nav: [string, [string, string], string[]][] = [
-  ["common", ["常用", "Common"], ["dashboard", "search", "rates"]],
+  ["common", ["常用", "Common"], ["dashboard", "search", "parties"]],
   [
     "operations",
     ["操作部", "Operations"],
-    ["receipts", "documents", "shipments", "imports", "dispatch", "f6",'warehouse-report'],
+    ["f6", "receipts", "documents", "dispatch", "imports", "warehouse-report", "rates"],
   ],
   [
     "documentation",
     ["单证部", "Documentation"],
-    ["tickets", "mbl", "document-settings"],
+    ["tickets", "mbl", "shipments", "audit", "document-settings"],
   ],
   [
     "finance",
     ["财务", "Finance"],
     [
       "invoices",
-      "payments",
-      "today",
       "payables",
+      "today",
+      "payments",
       "period",
       "evidence",
       "release",
@@ -418,7 +427,6 @@ const nav: [string, [string, string], string[]][] = [
     "directory",
     ["资料", "Directory"],
     [
-      "parties",
       "warehouses",
       "legacy-parties",
       "legacy-shipments",
@@ -432,7 +440,7 @@ const nav: [string, [string, string], string[]][] = [
   [
     "admin",
     ["管理", "Administration"],
-    ["users", "announcements", "home-settings", "migration", "audit"],
+    ["users", "announcements", "home-settings", "migration"],
   ],
 ];
 export const extraTitles: Record<string, [string, string]> = {
@@ -670,12 +678,14 @@ export default function App() {
               </div>
             </header>
             <aside className={menu ? "sidebar open" : "sidebar"}>
-              <button onClick={() => setScreen("home")}>
-                {language === "zh" ? "首页" : "Home"}
-              </button>
               {nav.map(([id, title, items]) => (
                 <section key={id}>
                   <h2>{title[language === "zh" ? 0 : 1]}</h2>
+                  {id === "common" && (
+                    <button onClick={() => setScreen("home")}>
+                      {language === "zh" ? "首页" : "Home"}
+                    </button>
+                  )}
                   {items
                     .filter(
                       (k) =>
@@ -690,7 +700,7 @@ export default function App() {
                         onClick={() => navigate(k)}
                       >
                         {
-                          (pages[k]?.title || extraTitles[k])[
+                          (menuTitles[k] || pages[k]?.title || extraTitles[k])[
                             language === "zh" ? 0 : 1
                           ]
                         }

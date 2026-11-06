@@ -16,7 +16,7 @@
     "note": "Final full backend after the rereview fixes and gap tests, with no synthetic service or local worker competing for PostgreSQL."
   },
   "browser": {
-    "log": "final-browser-after-backfill.log",
+    "log": "menu-browser-final2.log",
     "passed": 37,
     "failed": 0,
     "seconds": 132,
@@ -30,7 +30,8 @@
     "design_document": "DESIGN.md",
     "screenshots": 32,
     "unslop_credit": "unslop by Damir Sokolovsky (@heydamir), CC BY 4.0, github.com/heydamir/unslop",
-    "unchanged": "business fields, labels, field order, state meanings, permissions, APIs and external acceptance boundaries"
+    "unchanged": "business fields, labels, field order, state meanings, permissions, APIs and external acceptance boundaries",
+    "menu": "sidebar follows supplied MCSTAR package order; extensions follow group leaders"
   },
   "rereview": {
     "report": "final-rereview.md",
