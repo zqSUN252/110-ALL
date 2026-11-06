@@ -153,6 +153,19 @@ function Welcome({
             )}
           </p>
         </section>
+        <div className="route-band" aria-hidden="true">
+          <div className="route-point">
+            <span className="route-city">{t("中国", "China", "Chine")}</span>
+          </div>
+          <div className="route-track">
+            <span className="route-line" />
+            <Ship size={16} />
+            <Plane size={16} />
+          </div>
+          <div className="route-point route-point-end">
+            <span className="route-city">{t("尼日利亚", "Nigeria", "Nigéria")}</span>
+          </div>
+        </div>
         <section className="services">
           {services.map(({ Icon, title, body }) => (
             <article key={title}>
@@ -450,32 +463,48 @@ function Dashboard({
 }) {
   const t = useT(),[summary,setSummary]=useState<Row>({}),[error,setError]=useState<any>();
   useEffect(()=>{let active=true;api('/api/workspace/summary').then(r=>{if(active)setSummary(r.counts)}).catch(e=>{if(active)setError(e)});return()=>{active=false}},[]);
+  const queues = [
+    {
+      key: "daily",
+      title: ["日常队列", "Daily queues"] as [string, string],
+      pages: ["receipts", "documents", "invoices", "evidence"],
+    },
+    {
+      key: "sources",
+      title: ["来源与出库", "Sources & release"] as [string, string],
+      pages: ["legacy-bills", "legacy-tickets", "release"],
+    },
+  ];
   return (
     <section>
       <h1>{t("工作台", "Workspace")}</h1>
       <ErrorBox error={error}/>
-      <div className="dashboard-links">
-        {[
-          "receipts",
-          "documents",
-          "invoices",
-          "evidence",
-          "legacy-bills",
-          'legacy-tickets',
-          "release",
-        ]
-          .filter(
+      <div className="dashboard-board">
+        {queues.map((queue) => {
+          const visible = queue.pages.filter(
             (k) =>
               user.capabilities.includes("*") ||
               user.capabilities.includes(pages[k].cap),
-          )
-          .map((k) => (
-            <button key={k} onClick={() => navigate(k)}>
-              <span>{t(...pages[k].title)}</span>
-              {summary[k]!==undefined&&<span>{summary[k].toLocaleString()} {t('条','records')}</span>}
-              <ArrowRight size={20} />
-            </button>
-          ))}
+          );
+          return (
+            <section className="queue-panel" key={queue.key}>
+              <h2>{t(...queue.title)}</h2>
+              <div className="queue-list">
+                {visible.map((k) => (
+                  <button className="queue-row" key={k} onClick={() => navigate(k)}>
+                    <span className="queue-label">{t(...pages[k].title)}</span>
+                    {summary[k] !== undefined && (
+                      <span className="queue-count">
+                        {summary[k].toLocaleString()}
+                      </span>
+                    )}
+                    <ArrowRight size={16} />
+                  </button>
+                ))}
+              </div>
+            </section>
+          );
+        })}
       </div>
     </section>
   );

@@ -159,7 +159,7 @@ components:
 
 This is the inherited MC STAR visual identity as implemented in the unified React application: the supplied logo, blue navigation, light operational surfaces and ordinary business forms. The name above describes that incumbent; it is not a newly approved concept. User templates, field labels, field order and function sequence take precedence over decorative changes.
 
-The system supports dense, evidence-oriented work. Lists and their detail forms remain together, broad tables keep their column structure, and small screens gain access through navigation collapse, form reflow and horizontal scrolling. The dark public welcome is a separate expression of the same identity, rather than a replacement palette for internal work.
+The system supports dense, evidence-oriented work. Lists and their detail forms remain together, broad tables keep their column structure, and small screens gain access through navigation collapse, form reflow and horizontal scrolling. The public welcome shares the same neutral warm-grey manifest desk and blue accent; the six service blocks stay in their confirmed 3×2 order with EXPRESS in the first row.
 
 **Key Characteristics:**
 - Original MC STAR logo and established blue identity.
@@ -200,7 +200,7 @@ The palette combines established primary blues with white and cool neutral opera
 - **Table heading** (`table-heading`) and **selection tint** (`selected`): header separation and selected records.
 - **Error**, **caution** and **receivable status** primitives: semantic surfaces, not additional brand accents. Loading-notified yellow remains distinct from receivable yellow.
 
-The public surface also uses its existing dark blue gradient, cyan service icons and translucent card fills. Exact gradient and state declarations live in the sidecar snippets and public surface record; they do not replace internal primary colors.
+The public surface uses the same warm-grey ground, ink text and single blue accent as the internal workspace. Service blocks are hairline rows rather than translucent cards; a thin China ⇄ Nigeria route line is the public signature. Missing promotional originals remain absent rather than substituted.
 
 Sidecar tonal ramps are eight-step OKLCH swatch previews synthesized for the design panel, as required by the document format. They are not extracted runtime scales or approved replacement colors; the frontmatter retains the actual source values.
 
@@ -231,7 +231,7 @@ At `max-width: 1000px`, forms, filters and record facts become two columns. At `
 
 Tables retain their actual widths, sticky headings, configured frozen groups and horizontal overflow. The source default column width is `150px`, adjustable down to `70px`; the selection column is `40px`. On a narrow viewport the frozen group may slide left before pinning. Its final frozen column plus the selection width reserve space so the phone is readable while later columns remain reachable. Resizing changes width only; it does not reorder fields. The bottom scrollbar mirrors horizontal scrolling. Table viewport height is limited to `62vh`, or `58vh` on small screens.
 
-The public welcome uses a centered `1120px` maximum container, a desktop three-column service grid and a small-screen single column. Surface-specific composition, confirmed service order and conditional image placement are recorded in `.impeccable/surfaces/public-welcome.md`; internal form and table behavior is in `.impeccable/surfaces/internal-workspace.md`.
+The public welcome uses a `1200px` maximum container, a desktop three-column service grid (two rows, EXPRESS in the first row) and a small-screen single column. A thin China ⇄ Nigeria route band sits between the introduction and the services. Confirmed service order and conditional image placement are recorded in `.impeccable/surfaces/public-welcome.md`; internal form and table behavior is in `.impeccable/surfaces/internal-workspace.md`.
 
 **The Field Order Rule.** Reflow and horizontal scrolling preserve the user's fields and operation sequence; density is not authorization to omit columns or change their meaning.
 
