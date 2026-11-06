@@ -274,8 +274,11 @@ def resolve_bill(db,actor,identity,payload):
         dates_source=payload.get('dates_source') or (obj.pointer+'/date + /dueDate' if obj.kind=='AP' and not payload.get('uploaded_on') and not payload.get('due_on') else None)
         if not str(dates_source or '').strip():raise DomainError('legacy_dates_required','Actual business date evidence required',409)
         if due<uploaded:raise DomainError('legacy_dates_required','Due date cannot precede actual upload date')
+        semantics=payload.get('date_semantics') or ('original_bill_date' if obj.kind=='AP' else 'confirmed_actual_upload')
+        if not isinstance(semantics,str) or not semantics.strip() or len(semantics)>80:
+            raise DomainError('legacy_dates_required','Explicit date semantics required')
         inv=Invoice(warehouse_id=payload['warehouse_id'],party_id=payload['party_id'],scope='live',kind=obj.kind,reference=obj.reference,
-            amount_ngn=obj.amount,uploaded_on=uploaded,due_on=due,source_key='legacy:'+obj.id,pricing={'legacy_control_id':obj.id,'bank_state':'unknown','date_semantics':'original_bill_date' if obj.kind=='AP' else 'confirmed_actual_upload'},state='open')
+            amount_ngn=obj.amount,uploaded_on=uploaded,due_on=due,source_key='legacy:'+obj.id,pricing={'legacy_control_id':obj.id,'bank_state':'unknown','date_semantics':semantics},state='open')
         if payload.get('period') is not None:
             if obj.kind!='AP':raise DomainError('invalid_kind','Settlement period applies to AP')
             require(actor,'payables.manage',inv.warehouse_id)
@@ -365,7 +368,7 @@ def resolve_shipment(db,actor,identity,payload):
             for link in db.scalars(select(MigrationFile).where(MigrationFile.batch_id==source.batch_id,MigrationFile.pointer.in_([source.pointer+'/originalFile',obj.pointer+'/originalFile']))):
                 db.add(TicketAttachment(ticket_id=t.id,attachment_id=link.attachment_id))
         obj.native_id=s.id;obj.physical_reference=physical;obj.state='resolved';obj.version+=1
-        db.add(LegacyResolution(entity_type='shipment',entity_id=obj.id,source_version=obj.version-1,actor_id=actor.id,source=payload['source'],links={'shipment_id':s.id,'document_id':d.id,'physical_reference':physical}))
+        db.add(LegacyResolution(entity_type='shipment',entity_id=obj.id,source_version=obj.version-1,actor_id=actor.id,source=payload['source'],links={'shipment_id':s.id,'document_id':d.id,'physical_reference':physical,'dates_source':payload.get('dates_source'),'date_semantics':payload.get('date_semantics')}))
         audit(db,actor,'legacy.shipment_resolved','legacy_shipment',obj.id,None,{'native_id':s.id,'source':payload['source']})
         db.flush();return {'id':obj.id,'version':obj.version,'native_id':s.id,'document_id':d.id}
     return run_command(db,actor,'legacy.resolve_shipment',payload.get('idempotency_key'),{'id':identity,**payload},apply)

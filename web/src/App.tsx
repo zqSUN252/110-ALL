@@ -158,9 +158,9 @@ function Welcome({
             <span className="route-city">{t("中国", "China", "Chine")}</span>
           </div>
           <div className="route-track">
+            <span className="route-node"><Ship size={16} /></span>
             <span className="route-line" />
-            <Ship size={16} />
-            <Plane size={16} />
+            <span className="route-node"><Plane size={16} /></span>
           </div>
           <div className="route-point route-point-end">
             <span className="route-city">{t("尼日利亚", "Nigeria", "Nigéria")}</span>
@@ -486,21 +486,31 @@ function Dashboard({
               user.capabilities.includes("*") ||
               user.capabilities.includes(pages[k].cap),
           );
+          const values = visible.map((k) => Number(summary[k] || 0));
+          const max = Math.max(1, ...values);
+          const total = values.reduce((sum, value) => sum + value, 0);
           return (
             <section className="queue-panel" key={queue.key}>
-              <h2>{t(...queue.title)}</h2>
+              <h2>
+                {t(...queue.title)}
+                <span className="queue-total">{total.toLocaleString()}</span>
+              </h2>
               <div className="queue-list">
-                {visible.map((k) => (
-                  <button className="queue-row" key={k} onClick={() => navigate(k)}>
-                    <span className="queue-label">{t(...pages[k].title)}</span>
-                    {summary[k] !== undefined && (
-                      <span className="queue-count">
-                        {summary[k].toLocaleString()}
+                {visible.map((k) => {
+                  const value = Number(summary[k] || 0);
+                  return (
+                    <button className="queue-row" key={k} onClick={() => navigate(k)}>
+                      <span className="queue-label">{t(...pages[k].title)}</span>
+                      <span className="queue-meter" aria-hidden="true">
+                        <span style={{ width: `${(value / max) * 100}%` }} />
                       </span>
-                    )}
-                    <ArrowRight size={16} />
-                  </button>
-                ))}
+                      {summary[k] !== undefined && (
+                        <span className="queue-count">{value.toLocaleString()}</span>
+                      )}
+                      <ArrowRight size={16} />
+                    </button>
+                  );
+                })}
               </div>
             </section>
           );

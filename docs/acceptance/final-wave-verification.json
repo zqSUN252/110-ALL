@@ -16,7 +16,7 @@
     "note": "Final full backend after the rereview fixes and gap tests, with no synthetic service or local worker competing for PostgreSQL."
   },
   "browser": {
-    "log": "public-browser-final.log",
+    "log": "final-browser-after-backfill.log",
     "passed": 37,
     "failed": 0,
     "seconds": 132,
@@ -51,7 +51,9 @@
     "scope": "Owned synthetic 125k benchmark extension; no production data",
     "groups": 25000,
     "members": 125000,
-    "member_distribution": {"5": 25000},
+    "member_distribution": {
+      "5": 25000
+    },
     "group_invoices": 25000,
     "arrived_members": 125000,
     "group_list_sql_ms": 1.504,
@@ -87,5 +89,27 @@
     "Full diagnostic-transcript secret exposure audit",
     "Native-group behavior at larger memberships, concurrency or cold caches"
   ],
-  "external_unaccepted": 21
+  "external_unaccepted": 21,
+  "supplied_snapshot_backfill": {
+    "warehouses_created": 8,
+    "parties": 439,
+    "party_warehouses": 439,
+    "invoices": 545,
+    "shipments": 24,
+    "packing_documents": 24,
+    "tickets": 742,
+    "unresolved_bills": 74,
+    "unresolved_shipments": 4,
+    "skipped": {
+      "bill_relation_pending": 42,
+      "bill_party_missing": 13,
+      "bill_date_missing": 17,
+      "shipment_relation_conflict": 3,
+      "shipment_money_review": 1
+    },
+    "date_semantics": "source bill/shipment dates retained; AR upload semantics explicitly marked unverified where the source only provides a bill date",
+    "pre_backfill_backup": "private/backups/pre-backfill-20261106",
+    "source": "supplied MCSTAR package snapshot only",
+    "external_calls": 0
+  }
 }
